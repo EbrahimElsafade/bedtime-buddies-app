@@ -8,6 +8,7 @@ import { stories, getFeaturedStories, getFreeStories } from "@/data/stories";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
+import PricingPopup from "@/components/PricingPopup";
 
 const Index = () => {
   const { isAuthenticated } = useAuth();
@@ -32,6 +33,9 @@ const Index = () => {
 
   return (
     <div className="flex flex-col">
+      {/* Pricing Popup */}
+      <PricingPopup />
+      
       {/* Hero Section */}
       <section className="py-12 md:py-20 px-4 relative overflow-hidden">
         <div className="container mx-auto relative z-10">
@@ -39,18 +43,18 @@ const Index = () => {
             <h1 className="text-4xl md:text-6xl font-bubbly mb-4 text-dream-DEFAULT">
               {t('hero.title')}
             </h1>
-            <p className="text-lg md:text-xl mb-8 text-foreground">
+            <p className="text-lg md:text-xl mb-8 text-dream-DEFAULT dark:text-foreground">
               {t('hero.subtitle')}
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link to="/stories">
-                <Button size="lg" className="rounded-full bg-dream-DEFAULT hover:bg-dream-dark">
+                <Button size="lg" className="rounded-full bg-dream-DEFAULT hover:bg-dream-dark text-white dark:text-white">
                   {t('hero.exploreButton')} <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               {!isAuthenticated && (
                 <Link to="/register">
-                  <Button size="lg" variant="outline" className="rounded-full border-dream-light">
+                  <Button size="lg" variant="outline" className="rounded-full border-dream-light text-dream-DEFAULT">
                     {t('hero.signUpButton')}
                   </Button>
                 </Link>
@@ -90,8 +94,8 @@ const Index = () => {
                 </div>
                 <div className="md:w-2/3 p-6">
                   <CardTitle className="text-xl md:text-2xl mb-2 text-dream-DEFAULT">{freeStory.title}</CardTitle>
-                  <CardDescription className="mb-4 text-foreground">{freeStory.description}</CardDescription>
-                  <div className="flex items-center text-sm text-foreground mb-6">
+                  <CardDescription className="mb-4 text-dream-DEFAULT dark:text-foreground">{freeStory.description}</CardDescription>
+                  <div className="flex items-center text-sm text-dream-DEFAULT dark:text-foreground mb-6">
                     <span className="mr-4">{freeStory.duration} {t('duration')}</span>
                     <span>{freeStory.languages.map(lang => {
                       if (lang === 'en') return 'English';
@@ -101,7 +105,7 @@ const Index = () => {
                     }).join(', ')}</span>
                   </div>
                   <Link to={`/stories/${freeStory.id}`}>
-                    <Button className="bg-dream-DEFAULT hover:bg-dream-dark">{t('button.readStory')}</Button>
+                    <Button className="bg-dream-DEFAULT hover:bg-dream-dark text-white dark:text-white">{t('button.readStory')}</Button>
                   </Link>
                 </div>
               </div>
@@ -125,17 +129,17 @@ const Index = () => {
                     className="w-full h-full object-cover"
                   />
                   {story.isFree && (
-                    <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                    <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white dark:text-white text-xs font-medium px-2 py-1 rounded-full">
                       FREE
                     </div>
                   )}
                 </div>
                 <CardHeader className="pb-2">
                   <CardTitle className="text-xl text-dream-DEFAULT">{story.title}</CardTitle>
-                  <CardDescription className="line-clamp-2 text-foreground">{story.description}</CardDescription>
+                  <CardDescription className="line-clamp-2 text-dream-DEFAULT dark:text-foreground">{story.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="pb-2">
-                  <div className="flex items-center text-sm text-foreground">
+                  <div className="flex items-center text-sm text-dream-DEFAULT dark:text-foreground">
                     <span className="mr-4">{story.duration} {t('duration')}</span>
                     <span>{story.category.charAt(0).toUpperCase() + story.category.slice(1)}</span>
                   </div>
@@ -145,7 +149,9 @@ const Index = () => {
                     <Button 
                       className={cn(
                         "w-full", 
-                        story.isFree ? "bg-dream-DEFAULT hover:bg-dream-dark" : "bg-moon-DEFAULT hover:bg-moon-dark"
+                        story.isFree 
+                          ? "bg-dream-DEFAULT hover:bg-dream-dark text-white dark:text-white" 
+                          : "bg-moon-DEFAULT hover:bg-moon-dark text-dream-DEFAULT dark:text-white"
                       )}
                     >
                       {story.isFree ? t('button.readNow') : t('button.premium')}
@@ -163,7 +169,7 @@ const Index = () => {
         <div className="container mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-12">
             <h2 className="text-2xl md:text-3xl font-bubbly mb-4 text-dream-DEFAULT">{t('features.title')}</h2>
-            <p className="text-foreground">
+            <p className="text-dream-DEFAULT dark:text-foreground">
               {t('features.subtitle')}
             </p>
           </div>
@@ -174,7 +180,7 @@ const Index = () => {
                 <span className="text-2xl">🌙</span>
               </div>
               <h3 className="text-xl font-bubbly mb-2 text-dream-DEFAULT">{t('features.soothing.title')}</h3>
-              <p className="text-foreground">
+              <p className="text-dream-DEFAULT dark:text-foreground">
                 {t('features.soothing.desc')}
               </p>
             </div>
@@ -184,7 +190,7 @@ const Index = () => {
                 <span className="text-2xl">🌎</span>
               </div>
               <h3 className="text-xl font-bubbly mb-2 text-dream-DEFAULT">{t('features.languages.title')}</h3>
-              <p className="text-foreground">
+              <p className="text-dream-DEFAULT dark:text-foreground">
                 {t('features.languages.desc')}
               </p>
             </div>
@@ -194,7 +200,7 @@ const Index = () => {
                 <span className="text-2xl">🎮</span>
               </div>
               <h3 className="text-xl font-bubbly mb-2 text-dream-DEFAULT">{t('features.games.title')}</h3>
-              <p className="text-foreground">
+              <p className="text-dream-DEFAULT dark:text-foreground">
                 {t('features.games.desc')}
               </p>
             </div>

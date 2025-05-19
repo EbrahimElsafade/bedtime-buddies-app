@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { Moon, Sun, Menu, X } from "lucide-react";
+import { Moon, Sun, Menu, X, Home, Book, BookOpen, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -37,9 +37,10 @@ const Layout = () => {
   };
 
   const navItems = [
-    { name: t('nav.home'), path: '/' },
-    { name: t('nav.stories'), path: '/stories' },
-    { name: t('nav.games'), path: '/games' }
+    { name: t('nav.home'), path: '/', icon: Home },
+    { name: t('nav.stories'), path: '/stories', icon: Book },
+    { name: t('nav.games'), path: '/games', icon: BookOpen },
+    { name: t('nav.profile'), path: isAuthenticated ? '/profile' : '/login', icon: User }
   ];
 
   // Handle scrolling when mobile menu is open
@@ -55,7 +56,7 @@ const Layout = () => {
   }, [isMenuOpen]);
 
   return (
-    <div className="min-h-screen flex flex-col nightsky-gradient stars-bg dark:text-white">
+    <div className="min-h-screen flex flex-col nightsky-gradient stars-bg dark:text-white pb-16 md:pb-0">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-purple-900/20 backdrop-blur-lg bg-white/70 dark:bg-nightsky/70">
         <div className="container mx-auto px-4 flex items-center justify-between h-16">
@@ -77,7 +78,7 @@ const Layout = () => {
                   "px-4 py-2 rounded-full text-sm font-medium transition-colors",
                   isActive(item.path)
                     ? "bg-dream-DEFAULT text-white"
-                    : "text-foreground hover:bg-secondary"
+                    : "dark:text-foreground text-dream-DEFAULT hover:bg-secondary"
                 )}
               >
                 {item.name}
@@ -102,18 +103,18 @@ const Layout = () => {
             {isAuthenticated ? (
               <div className="hidden md:flex items-center space-x-2">
                 <Link to="/profile">
-                  <Button variant="ghost" size="sm">
+                  <Button variant="ghost" size="sm" className="text-dream-DEFAULT hover:text-dream-dark dark:text-white">
                     {user?.name || 'Profile'}
                   </Button>
                 </Link>
-                <Button variant="ghost" size="sm" onClick={logout}>
+                <Button variant="ghost" size="sm" onClick={logout} className="text-dream-DEFAULT hover:text-dream-dark dark:text-white">
                   Logout
                 </Button>
               </div>
             ) : (
               <div className="hidden md:flex items-center space-x-2">
                 <Link to="/login">
-                  <Button variant="ghost" size="sm">
+                  <Button variant="ghost" size="sm" className="text-dream-DEFAULT hover:text-dream-dark dark:text-white">
                     Login
                   </Button>
                 </Link>
@@ -150,7 +151,7 @@ const Layout = () => {
                     "px-4 py-3 rounded-md text-center text-lg font-medium",
                     isActive(item.path)
                       ? "bg-dream-DEFAULT text-white"
-                      : "hover:bg-secondary"
+                      : "text-dream-DEFAULT hover:bg-secondary dark:text-white"
                   )}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -162,13 +163,13 @@ const Layout = () => {
                 <>
                   <Link
                     to="/profile"
-                    className="px-4 py-3 rounded-md text-lg font-medium text-center hover:bg-secondary"
+                    className="px-4 py-3 rounded-md text-lg font-medium text-center text-dream-DEFAULT hover:bg-secondary dark:text-white"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Profile
                   </Link>
                   <button
-                    className="px-4 py-3 rounded-md text-lg font-medium text-center hover:bg-secondary w-full"
+                    className="px-4 py-3 rounded-md text-lg font-medium text-center text-dream-DEFAULT hover:bg-secondary dark:text-white w-full"
                     onClick={() => {
                       logout();
                       setIsMenuOpen(false);
@@ -181,7 +182,7 @@ const Layout = () => {
                 <>
                   <Link
                     to="/login"
-                    className="px-4 py-3 rounded-md text-lg font-medium text-center hover:bg-secondary"
+                    className="px-4 py-3 rounded-md text-lg font-medium text-center text-dream-DEFAULT hover:bg-secondary dark:text-white"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Login
@@ -214,14 +215,14 @@ const Layout = () => {
       </main>
 
       {/* Footer */}
-      <footer className="py-6 border-t border-purple-900/20 bg-white/10 dark:bg-nightsky/50">
+      <footer className="py-6 border-t border-purple-900/20 bg-white/10 dark:bg-nightsky/50 hidden md:block">
         <div className="container mx-auto px-4 text-center">
           <div className="flex justify-center space-x-6 mb-4">
-            {navItems.map((item) => (
+            {navItems.slice(0, 3).map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
-                className="text-sm text-muted-foreground hover:text-primary"
+                className="text-sm text-dream-DEFAULT hover:text-dream-dark dark:text-muted-foreground dark:hover:text-primary"
               >
                 {item.name}
               </Link>
@@ -233,11 +234,36 @@ const Layout = () => {
               Subscribe
             </Link>
           </div>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-xs text-dream-DEFAULT dark:text-muted-foreground">
             © {new Date().getFullYear()} Bedtime Stories. All rights reserved.
           </p>
         </div>
       </footer>
+
+      {/* Mobile Bottom Navigation */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-nightsky-light border-t border-purple-900/20 h-16 z-50 flex items-center justify-around px-2">
+        {navItems.map((item) => {
+          const ItemIcon = item.icon;
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={cn(
+                "flex flex-col items-center justify-center w-1/4 py-1 px-2 rounded-lg",
+                isActive(item.path)
+                  ? "text-dream-DEFAULT"
+                  : "text-dream-DEFAULT/70 dark:text-white/70"
+              )}
+            >
+              <ItemIcon className={cn(
+                "h-5 w-5", 
+                isActive(item.path) ? "text-dream-DEFAULT" : "text-dream-DEFAULT/70 dark:text-white/70"
+              )} />
+              <span className="text-xs mt-1 font-medium">{item.name}</span>
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 };
