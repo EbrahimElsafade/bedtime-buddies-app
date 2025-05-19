@@ -1,16 +1,27 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import { Moon, Sun, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { cn } from "@/lib/utils";
 
 const Layout = () => {
   const { isAuthenticated, user, logout } = useAuth();
+  const { t } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const location = useLocation();
+
+  // Check for system preferred color scheme on initial load
+  useEffect(() => {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      document.documentElement.classList.add('dark');
+      setIsDarkMode(true);
+    }
+  }, []);
 
   const toggleDarkMode = () => {
     if (isDarkMode) {
@@ -26,10 +37,22 @@ const Layout = () => {
   };
 
   const navItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Stories', path: '/stories' },
-    { name: 'Games', path: '/games' }
+    { name: t('nav.home'), path: '/' },
+    { name: t('nav.stories'), path: '/stories' },
+    { name: t('nav.games'), path: '/games' }
   ];
+
+  // Handle scrolling when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isMenuOpen]);
 
   return (
     <div className="min-h-screen flex flex-col nightsky-gradient stars-bg dark:text-white">
@@ -64,6 +87,8 @@ const Layout = () => {
 
           {/* Actions */}
           <div className="flex items-center space-x-2">
+            <LanguageSwitcher />
+            
             <Button
               variant="ghost"
               size="icon"
@@ -115,14 +140,14 @@ const Layout = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden px-4 py-2 pb-4 border-t border-border bg-white/90 dark:bg-nightsky/90 backdrop-blur-lg">
-            <nav className="flex flex-col space-y-2">
+          <div className="md:hidden fixed inset-0 top-16 z-50 bg-white/90 dark:bg-nightsky/95 backdrop-blur-lg overflow-y-auto">
+            <nav className="flex flex-col p-4 space-y-3">
               {navItems.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
                   className={cn(
-                    "px-4 py-2 rounded-md text-sm font-medium",
+                    "px-4 py-3 rounded-md text-center text-lg font-medium",
                     isActive(item.path)
                       ? "bg-dream-DEFAULT text-white"
                       : "hover:bg-secondary"
@@ -137,13 +162,13 @@ const Layout = () => {
                 <>
                   <Link
                     to="/profile"
-                    className="px-4 py-2 rounded-md text-sm font-medium hover:bg-secondary"
+                    className="px-4 py-3 rounded-md text-lg font-medium text-center hover:bg-secondary"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Profile
                   </Link>
                   <button
-                    className="px-4 py-2 rounded-md text-sm font-medium hover:bg-secondary text-left"
+                    className="px-4 py-3 rounded-md text-lg font-medium text-center hover:bg-secondary w-full"
                     onClick={() => {
                       logout();
                       setIsMenuOpen(false);
@@ -156,14 +181,14 @@ const Layout = () => {
                 <>
                   <Link
                     to="/login"
-                    className="px-4 py-2 rounded-md text-sm font-medium hover:bg-secondary"
+                    className="px-4 py-3 rounded-md text-lg font-medium text-center hover:bg-secondary"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="px-4 py-2 rounded-md text-sm font-medium bg-dream-DEFAULT text-white"
+                    className="px-4 py-3 rounded-md text-center text-lg font-medium bg-dream-DEFAULT text-white"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Sign Up
@@ -173,7 +198,7 @@ const Layout = () => {
               
               <Link
                 to="/subscription"
-                className="px-4 py-2 rounded-md text-sm font-medium text-moon-DEFAULT font-bold hover:bg-secondary/50"
+                className="px-4 py-3 rounded-md text-center text-lg font-medium text-moon-DEFAULT font-bold hover:bg-secondary/50"
                 onClick={() => setIsMenuOpen(false)}
               >
                 ✨ Subscribe
