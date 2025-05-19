@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,27 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Bedtime Stories custom colors
+				nightsky: {
+					DEFAULT: '#1A1F2C', // Dark blue/purple for night sky background
+					light: '#2D3748', // Slightly lighter night sky
+					accent: '#8B5CF6', // Purple accent for stars/elements
+				},
+				dream: {
+					DEFAULT: '#8B5CF6', // Main purple
+					light: '#A78BFA', // Light purple
+					dark: '#7C3AED', // Dark purple
+				},
+				moon: {
+					DEFAULT: '#F5D77B', // Soft yellow for moon
+					light: '#FDE68A', // Light yellow
+					dark: '#F59E0B', // Dark yellow/orange
+				},
+				cloud: {
+					DEFAULT: '#E2E8F0', // Soft blue-gray for clouds
+					light: '#F8FAFC', // Light cloud color
+					dark: '#CBD5E1', // Darker cloud color
 				}
 			},
 			borderRadius: {
@@ -84,11 +106,25 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' }
+				},
+				'twinkle': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.5' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'float': 'float 6s ease-in-out infinite',
+				'twinkle': 'twinkle 4s ease-in-out infinite'
+			},
+			fontFamily: {
+				'bubbly': ['Bubblegum Sans', 'cursive'],
+				'rounded': ['Varela Round', 'sans-serif']
 			}
 		}
 	},

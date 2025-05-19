@@ -1,0 +1,252 @@
+
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
+
+const Profile = () => {
+  const navigate = useNavigate();
+  const { user, isAuthenticated, updateProfile, logout } = useAuth();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [childName, setChildName] = useState("");
+  const [childAge, setChildAge] = useState("");
+  const [language, setLanguage] = useState<"en" | "ar-eg" | "ar-fos7a">("en");
+  const [isEditing, setIsEditing] = useState(false);
+  
+  useEffect(() => {
+    document.title = "Bedtime Stories - My Profile";
+    
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+    
+    if (user) {
+      setName(user.name || "");
+      setEmail(user.email || "");
+      setChildName(user.childName || "");
+      setChildAge(user.childAge?.toString() || "");
+      setLanguage(user.preferredLanguage || "en");
+    }
+  }, [user, isAuthenticated, navigate]);
+  
+  const handleSaveProfile = () => {
+    if (!user) return;
+    
+    updateProfile({
+      name,
+      childName: childName || undefined,
+      childAge: childAge ? parseInt(childAge) : undefined,
+      preferredLanguage: language
+    });
+    
+    setIsEditing(false);
+    toast.success("Profile updated successfully");
+  };
+  
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
+  if (!user) return null;
+
+  return (
+    <div className="py-12 px-4">
+      <div className="container mx-auto max-w-3xl">
+        <h1 className="text-3xl md:text-4xl font-bubbly mb-6">My Profile</h1>
+        
+        <Tabs defaultValue="profile" className="mb-8">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="favorites">Favorites</TabsTrigger>
+            <TabsTrigger value="subscription">Subscription</TabsTrigger>
+          </TabsList>
+          
+          {/* Profile Tab */}
+          <TabsContent value="profile">
+            <Card>
+              <CardHeader>
+                <CardTitle>Personal Information</CardTitle>
+                <CardDescription>
+                  {isEditing 
+                    ? "Edit your profile information" 
+                    : "View and manage your account details"
+                  }
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Your Name</Label>
+                    <Input
+                      id="name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      disabled={!isEditing}
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      value={email}
+                      disabled
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Email cannot be changed
+                    </p>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="childName">Child's Name</Label>
+                    <Input
+                      id="childName"
+                      value={childName}
+                      onChange={(e) => setChildName(e.target.value)}
+                      disabled={!isEditing}
+                      placeholder={isEditing ? "Enter child's name" : "Not provided"}
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="childAge">Child's Age</Label>
+                    <Input
+                      id="childAge"
+                      type="number"
+                      min="1"
+                      max="12"
+                      value={childAge}
+                      onChange={(e) => setChildAge(e.target.value)}
+                      disabled={!isEditing}
+                      placeholder={isEditing ? "Enter child's age" : "Not provided"}
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="language">Preferred Language</Label>
+                    {isEditing ? (
+                      <Select 
+                        value={language} 
+                        onValueChange={(value) => setLanguage(value as "en" | "ar-eg" | "ar-fos7a")}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="en">English</SelectItem>
+                          <SelectItem value="ar-eg">Arabic (Egyptian)</SelectItem>
+                          <SelectItem value="ar-fos7a">Arabic (Fos7a)</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    ) : (
+                      <Input 
+                        value={
+                          language === "en" ? "English" : 
+                          language === "ar-eg" ? "Arabic (Egyptian)" : 
+                          "Arabic (Fos7a)"
+                        } 
+                        disabled 
+                      />
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-between">
+                {isEditing ? (
+                  <>
+                    <Button variant="outline" onClick={() => setIsEditing(false)}>
+                      Cancel
+                    </Button>
+                    <Button onClick={handleSaveProfile}>
+                      Save Changes
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button variant="outline" onClick={handleLogout}>
+                      Log Out
+                    </Button>
+                    <Button onClick={() => setIsEditing(true)}>
+                      Edit Profile
+                    </Button>
+                  </>
+                )}
+              </CardFooter>
+            </Card>
+          </TabsContent>
+          
+          {/* Favorites Tab */}
+          <TabsContent value="favorites">
+            <Card>
+              <CardHeader>
+                <CardTitle>My Favorite Stories</CardTitle>
+                <CardDescription>
+                  Stories you've marked as favorites
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="text-center py-12">
+                <p className="text-muted-foreground mb-4">
+                  You haven't added any stories to favorites yet.
+                </p>
+                <Button onClick={() => navigate("/stories")}>
+                  Browse Stories
+                </Button>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          {/* Subscription Tab */}
+          <TabsContent value="subscription">
+            <Card>
+              <CardHeader>
+                <CardTitle>My Subscription</CardTitle>
+                <CardDescription>
+                  Manage your subscription plan
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-6">
+                  <div className="inline-block bg-secondary/50 rounded-full px-4 py-2 mb-4">
+                    <span className="text-sm font-medium">
+                      {user.isPremium ? "Premium Plan" : "Free Plan"}
+                    </span>
+                  </div>
+                  
+                  {user.isPremium ? (
+                    <p className="text-muted-foreground mb-6">
+                      You are currently on the Premium plan. Enjoy unlimited access to all stories and features.
+                    </p>
+                  ) : (
+                    <p className="text-muted-foreground mb-6">
+                      Upgrade to Premium for unlimited access to all stories and features.
+                    </p>
+                  )}
+                  
+                  {!user.isPremium && (
+                    <Button 
+                      onClick={() => navigate("/subscription")} 
+                      className="bg-moon-DEFAULT hover:bg-moon-dark"
+                    >
+                      Upgrade to Premium
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+};
+
+export default Profile;
