@@ -8,6 +8,10 @@ import FreeStory from "@/components/home/FreeStory";
 import FeaturedStories from "@/components/home/FeaturedStories";
 import Features from "@/components/home/Features";
 import SubscribeBanner from "@/components/home/SubscribeBanner";
+import PopularStories from "@/components/home/PopularStories";
+import EntertainmentStories from "@/components/home/EntertainmentStories";
+import FeaturedCourses from "@/components/home/FeaturedCourses";
+import FunElements from "@/components/home/FunElements";
 
 const Index = () => {
   const { isAuthenticated } = useAuth();
@@ -29,7 +33,10 @@ const Index = () => {
   }, [language]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col relative">
+      {/* Fun floating elements */}
+      <FunElements />
+      
       {/* PricingPopup - Making sure it's rendered for non-authenticated users */}
       <PricingPopup />
       
@@ -37,6 +44,9 @@ const Index = () => {
       <Hero />
       <FreeStory />
       <FeaturedStories />
+      <PopularStories />
+      <EntertainmentStories />
+      <FeaturedCourses />
       <Features />
       <SubscribeBanner />
     </div>
