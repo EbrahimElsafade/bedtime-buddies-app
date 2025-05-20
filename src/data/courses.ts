@@ -21,7 +21,7 @@ export const courses: Course[] = [
     ageRange: '3-5',
     duration: 120,
     lessons: 26,
-    coverImage: '/placeholder.svg',
+    coverImage: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000',
     isFeatured: true,
     isFree: true
   },
@@ -33,7 +33,7 @@ export const courses: Course[] = [
     ageRange: '3-5',
     duration: 90,
     lessons: 10,
-    coverImage: '/placeholder.svg',
+    coverImage: 'https://images.unsplash.com/photo-1602619075660-15dc4d670860?q=80&w=1000',
     isFeatured: true,
     isFree: false
   },
@@ -45,7 +45,7 @@ export const courses: Course[] = [
     ageRange: '6-8',
     duration: 150,
     lessons: 12,
-    coverImage: '/placeholder.svg',
+    coverImage: 'https://images.unsplash.com/photo-1614732414444-096e5f1122d5?q=80&w=1000',
     isFeatured: false,
     isFree: false
   },
@@ -57,7 +57,7 @@ export const courses: Course[] = [
     ageRange: '4-7',
     duration: 120,
     lessons: 15,
-    coverImage: '/placeholder.svg',
+    coverImage: 'https://images.unsplash.com/photo-1474511320723-9a56873867b5?q=80&w=1000',
     isFeatured: true,
     isFree: false
   },
@@ -69,7 +69,7 @@ export const courses: Course[] = [
     ageRange: '2-4',
     duration: 60,
     lessons: 8,
-    coverImage: '/placeholder.svg',
+    coverImage: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=1000',
     isFeatured: false,
     isFree: true
   }
