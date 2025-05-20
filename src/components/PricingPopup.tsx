@@ -18,10 +18,10 @@ const PricingPopup = () => {
     const showAgain = !lastSeen || (new Date().getTime() - lastSeen.getTime() > 24 * 60 * 60 * 1000); // 24 hours
     
     if (!isAuthenticated && showAgain) {
-      // Delay popup by 2 seconds for better UX
+      // Show popup immediately for testing, later can revert to 2 seconds
       const timer = setTimeout(() => {
         setIsOpen(true);
-      }, 2000);
+      }, 100); // Reduced from 2000ms to 100ms for faster testing
       
       return () => clearTimeout(timer);
     }

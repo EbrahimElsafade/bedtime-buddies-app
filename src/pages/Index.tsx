@@ -30,7 +30,7 @@ const Index = () => {
 
   return (
     <div className="flex flex-col">
-      {/* Pricing Popup */}
+      {/* PricingPopup - Making sure it's rendered for non-authenticated users */}
       <PricingPopup />
       
       {/* Component Sections */}
