@@ -1,3 +1,12 @@
+export type CourseVideo = {
+  id: string;
+  title: string;
+  duration: number; // in minutes
+  thumbnail: string;
+  videoUrl: string;
+  description: string;
+  isFree: boolean;
+};
 
 export type Course = {
   id: string;
@@ -10,6 +19,7 @@ export type Course = {
   coverImage: string;
   isFeatured: boolean;
   isFree: boolean;
+  videos?: CourseVideo[];
 };
 
 export const courses: Course[] = [
@@ -23,7 +33,36 @@ export const courses: Course[] = [
     lessons: 26,
     coverImage: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000',
     isFeatured: true,
-    isFree: true
+    isFree: true,
+    videos: [
+      {
+        id: 'alphabet-1',
+        title: 'Introduction to the Alphabet',
+        duration: 5,
+        thumbnail: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?q=80&w=800',
+        videoUrl: 'https://www.youtube.com/embed/hq3yfQnllfQ',
+        description: 'Start your alphabet journey with this fun introduction to letters.',
+        isFree: true
+      },
+      {
+        id: 'alphabet-2',
+        title: 'Letters A-D',
+        duration: 8,
+        thumbnail: 'https://images.unsplash.com/photo-1594285047779-00b8f027d1f1?q=80&w=800',
+        videoUrl: 'https://www.youtube.com/embed/eMOnyPxE_w8',
+        description: 'Learn the first four letters of the alphabet with fun examples.',
+        isFree: true
+      },
+      {
+        id: 'alphabet-3',
+        title: 'Letters E-H',
+        duration: 7,
+        thumbnail: 'https://images.unsplash.com/photo-1551029506-0807df4e2031?q=80&w=800',
+        videoUrl: 'https://www.youtube.com/embed/pyKdUpJQBTY',
+        description: 'Continue your alphabet adventure with letters E through H.',
+        isFree: false
+      }
+    ]
   },
   {
     id: 'counting-carnival',
@@ -35,7 +74,27 @@ export const courses: Course[] = [
     lessons: 10,
     coverImage: 'https://images.unsplash.com/photo-1602619075660-15dc4d670860?q=80&w=1000',
     isFeatured: true,
-    isFree: false
+    isFree: false,
+    videos: [
+      {
+        id: 'counting-1',
+        title: 'Introduction to Numbers',
+        duration: 6,
+        thumbnail: 'https://images.unsplash.com/photo-1561089489-f13d5e730d72?q=80&w=800',
+        videoUrl: 'https://www.youtube.com/embed/IXwYdAG9wVQ',
+        description: 'Let\'s get started with the wonderful world of numbers!',
+        isFree: true
+      },
+      {
+        id: 'counting-2',
+        title: 'Counting 1-5',
+        duration: 10,
+        thumbnail: 'https://images.unsplash.com/photo-1599987141326-48e722118a2e?q=80&w=800',
+        videoUrl: 'https://www.youtube.com/embed/1h6F-YngTi0',
+        description: 'Practice counting numbers 1 through 5 with fun activities.',
+        isFree: false
+      }
+    ]
   },
   {
     id: 'space-explorers',
