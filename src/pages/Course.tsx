@@ -9,14 +9,16 @@ import { useToast } from "@/components/ui/use-toast";
 import { getCourseById } from "@/data/courses";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { cn } from "@/lib/utils"; // Added missing import for cn utility
 
 const Course = () => {
   const { courseId } = useParams<{ courseId: string }>();
-  const { isAuthenticated, isPremium } = useAuth();
+  const { isAuthenticated, user } = useAuth(); // Changed to use user instead of direct isPremium
   const { t } = useLanguage();
   const { toast } = useToast();
   
   const course = courseId ? getCourseById(courseId) : undefined;
+  const isPremium = user?.isPremium || false; // Extract isPremium from user object
   
   useEffect(() => {
     if (course) {
