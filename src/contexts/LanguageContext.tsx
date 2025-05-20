@@ -34,6 +34,7 @@ const translations = {
     'nav.home': 'Home',
     'nav.stories': 'Stories',
     'nav.games': 'Games',
+    'nav.profile': 'Profile',
     'duration': 'mins',
     'button.readStory': 'Read Story',
     'button.readNow': 'Read Now',
@@ -93,6 +94,7 @@ const translations = {
     'nav.home': 'الرئيسية',
     'nav.stories': 'القصص',
     'nav.games': 'الألعاب',
+    'nav.profile': 'الملف الشخصي',
     'duration': 'دقائق',
     'button.readStory': 'قراءة القصة',
     'button.readNow': 'اقرأ الآن',
@@ -190,7 +192,7 @@ const translations = {
 };
 
 const LanguageContext = createContext<LanguageContextType>({
-  language: 'en',
+  language: 'ar',
   setLanguage: () => {},
   t: (key: string) => key,
 });
@@ -200,7 +202,7 @@ export function useLanguage() {
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>('ar');
 
   const t = (key: string): string => {
     return translations[language]?.[key] || key;

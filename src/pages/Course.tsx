@@ -9,16 +9,16 @@ import { useToast } from "@/components/ui/use-toast";
 import { getCourseById } from "@/data/courses";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { cn } from "@/lib/utils"; // Added missing import for cn utility
+import { cn } from "@/lib/utils";
 
 const Course = () => {
   const { courseId } = useParams<{ courseId: string }>();
-  const { isAuthenticated, user } = useAuth(); // Changed to use user instead of direct isPremium
+  const { isAuthenticated, user } = useAuth();
   const { t } = useLanguage();
   const { toast } = useToast();
   
   const course = courseId ? getCourseById(courseId) : undefined;
-  const isPremium = user?.isPremium || false; // Extract isPremium from user object
+  const isPremium = user?.isPremium || false;
   
   useEffect(() => {
     if (course) {
@@ -31,8 +31,8 @@ const Course = () => {
   const handleStartCourse = () => {
     if (!isAuthenticated) {
       toast({
-        title: t('toast.loginRequired') || "Login Required",
-        description: t('toast.pleaseLoginToStart') || "Please log in to start this course.",
+        title: t('toast.loginRequired'),
+        description: t('toast.pleaseLoginToStart'),
         variant: "destructive"
       });
       return;
@@ -40,8 +40,8 @@ const Course = () => {
     
     if (!course?.isFree && !isPremium) {
       toast({
-        title: t('toast.premiumRequired') || "Premium Required",
-        description: t('toast.upgradeToPremium') || "Please upgrade to premium to access this course.",
+        title: t('toast.premiumRequired'),
+        description: t('toast.upgradeToPremium'),
         variant: "destructive"
       });
       return;
@@ -49,8 +49,8 @@ const Course = () => {
     
     // If authentication and premium check passes, we would start the course
     toast({
-      title: t('toast.courseStarted') || "Course Started",
-      description: `${t('toast.enjoyLearning') || "Enjoy learning"} ${course?.title}!`,
+      title: t('toast.courseStarted'),
+      description: `${t('toast.enjoyLearning')} ${course?.title}!`,
     });
   };
   
@@ -58,14 +58,14 @@ const Course = () => {
     return (
       <div className="py-16 px-4 text-center">
         <h1 className="text-3xl font-bubbly mb-6 text-dream-DEFAULT">
-          {t('course.notFound') || "Course Not Found"}
+          {t('course.notFound')}
         </h1>
         <p className="mb-8 text-dream-DEFAULT dark:text-foreground">
-          {t('course.notFoundDesc') || "The course you are looking for does not exist."}
+          {t('course.notFoundDesc')}
         </p>
         <Link to="/courses">
           <Button variant="outline" className="border-dream-DEFAULT text-dream-DEFAULT">
-            <ArrowLeft className="mr-2 h-4 w-4" /> {t('button.backToCourses') || "Back to Courses"}
+            <ArrowLeft className="mr-2 h-4 w-4" /> {t('button.backToCourses')}
           </Button>
         </Link>
       </div>
@@ -80,7 +80,7 @@ const Course = () => {
       
       <div className="container mx-auto">
         <Link to="/courses" className="inline-flex items-center text-dream-DEFAULT hover:text-dream-dark mb-6">
-          <ArrowLeft className="mr-2 h-4 w-4" /> {t('button.backToCourses') || "Back to Courses"}
+          <ArrowLeft className="mr-2 h-4 w-4" /> {t('button.backToCourses')}
         </Link>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -93,15 +93,15 @@ const Course = () => {
                 {course.category.charAt(0).toUpperCase() + course.category.slice(1)}
               </Badge>
               <Badge className="bg-moon-light/30 text-dream-DEFAULT border-none">
-                {course.ageRange} {t('courses.years') || 'years'}
+                {course.ageRange} {t('courses.years')}
               </Badge>
               {course.isFree ? (
                 <Badge className="bg-dream-DEFAULT/80 text-white border-none">
-                  {t('free.tag') || 'FREE'}
+                  {t('free.tag')}
                 </Badge>
               ) : (
                 <Badge className="bg-moon-DEFAULT/80 text-white border-none">
-                  {t('premium.tag') || 'PREMIUM'}
+                  {t('premium.tag')}
                 </Badge>
               )}
             </div>
@@ -109,23 +109,23 @@ const Course = () => {
             <div className="flex flex-wrap gap-4 mb-6 text-sm text-dream-DEFAULT dark:text-foreground">
               <div className="flex items-center">
                 <Clock className="mr-2 h-4 w-4" />
-                <span>{course.duration} {t('duration') || 'mins'}</span>
+                <span>{course.duration} {t('duration')}</span>
               </div>
               <div className="flex items-center">
                 <BookOpen className="mr-2 h-4 w-4" />
-                <span>{course.lessons} {t('courses.lessons') || 'lessons'}</span>
+                <span>{course.lessons} {t('courses.lessons')}</span>
               </div>
             </div>
             
             <div className="prose prose-dream max-w-none mb-8 text-dream-DEFAULT dark:text-foreground">
-              <h2 className="text-xl font-bubbly mb-3 text-dream-DEFAULT">{t('course.about') || 'About this Course'}</h2>
+              <h2 className="text-xl font-bubbly mb-3 text-dream-DEFAULT">{t('course.about')}</h2>
               <p>{course.description}</p>
               
-              <h2 className="text-xl font-bubbly mt-6 mb-3 text-dream-DEFAULT">{t('course.whatYouLearn') || 'What You Will Learn'}</h2>
+              <h2 className="text-xl font-bubbly mt-6 mb-3 text-dream-DEFAULT">{t('course.whatYouLearn')}</h2>
               <ul className="list-disc pl-5">
-                <li>{t('course.learnPoint1') || 'Fun and interactive lessons suitable for kids'}</li>
-                <li>{t('course.learnPoint2') || 'Engaging activities to reinforce learning'}</li>
-                <li>{t('course.learnPoint3') || 'Progress tracking to celebrate achievements'}</li>
+                <li>{t('course.learnPoint1')}</li>
+                <li>{t('course.learnPoint2')}</li>
+                <li>{t('course.learnPoint3')}</li>
               </ul>
             </div>
             
@@ -139,10 +139,10 @@ const Course = () => {
               )}
             >
               {course.isFree 
-                ? t('button.startLearning') || 'Start Learning' 
+                ? t('button.startLearning')
                 : isAuthenticated && isPremium 
-                  ? t('button.startLearning') || 'Start Learning'
-                  : t('button.goToPremium') || 'Go Premium'}
+                  ? t('button.startLearning')
+                  : t('button.goToPremium')}
             </Button>
           </div>
           

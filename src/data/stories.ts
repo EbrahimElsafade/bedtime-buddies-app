@@ -56,6 +56,31 @@ export const stories: Story[] = [
             image: 'https://images.unsplash.com/photo-1503919545889-aef636e10ad4?q=80&w=1000'
           }
         ]
+      },
+      'ar-eg': {
+        text: 'لم تستطع لونا النوم. أضاء القمر الكامل من نافذتها، ملقياً ضوءاً لطيفاً عبر غرفتها...',
+        scenes: [
+          {
+            text: 'لم تستطع لونا النوم. أضاء القمر الكامل من نافذتها، ملقياً ضوءاً لطيفاً عبر غرفتها.',
+            image: 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000'
+          },
+          {
+            text: '"مرحباً أيها القمر،" همست لونا. وإلى دهشتها، همس القمر مرة أخرى! "مرحباً يا لونا. هل ترغبين في الانضمام إلي لمغامرة الليلة؟"',
+            image: 'https://images.unsplash.com/photo-1513735718075-2e2d37cb7cc1?q=80&w=1000'
+          },
+          {
+            text: 'طارت لونا من سريرها وصعدت نحو القمر. شعرت بخفة كريشة وهي تطفو عبر سماء الليل.',
+            image: 'https://images.unsplash.com/photo-1435224668334-0f82ec57b605?q=80&w=1000'
+          },
+          {
+            text: 'قدم القمر لونا إلى أصدقائه، النجوم المتلألئة. غنوا أغاني المهد معاً.',
+            image: 'https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?q=80&w=1000'
+          },
+          {
+            text: 'شعرت لونا بأن عينيها تصبح ثقيلة. وجه القمر بلطف عودتها إلى سريرها. "تصبحين على خير،" همس القمر. كانت لونا نائمة بعمق قبل أن تتمكن حتى من قول تصبح على خير.',
+            image: 'https://images.unsplash.com/photo-1503919545889-aef636e10ad4?q=80&w=1000'
+          }
+        ]
       }
     }
   },
@@ -132,6 +157,31 @@ export const stories: Story[] = [
             image: 'https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?q=80&w=1000'
           }
         ]
+      },
+      'ar-eg': {
+        text: 'أحبت ميا أن تعد النجوم قبل النوم. أخبرتها جدتها أن كل نجمة تحمل أمنية...',
+        scenes: [
+          {
+            text: 'أحبت ميا أن تعد النجوم قبل النوم. أخبرتها جدتها أن كل نجمة تحمل أمنية.',
+            image: 'https://images.unsplash.com/photo-1464802686167-b939a6910659?q=80&w=1000'
+          },
+          {
+            text: '"كيف تتحقق الأمنيات؟" سألت ميا جدتها. "بالصبر واللطف،" أجابت مع ابتسامة.',
+            image: 'https://images.unsplash.com/photo-1499415479124-43c32433a620?q=80&w=1000'
+          },
+          {
+            text: 'في اليوم التالي، ساعدت ميا جارتها في حمل البقالة. وإلى دهشتها، أعطتها جارتها كتابًا عن النجوم - شيء كانت تتمناه!',
+            image: 'https://images.unsplash.com/photo-1531747118685-ca8fa6e08806?q=80&w=1000'
+          },
+          {
+            text: '"أرأيت؟" قالت جدتها تلك الليلة. "لطفك ساعد في تحقيق أمنيتك." ابتسمت ميا للنجوم المتلألئة.',
+            image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1000'
+          },
+          {
+            text: 'بينما كانت ميا تنجرف إلى النوم، قامت بأمنية جديدة على أكثر النجوم سطوعا. مع الصبر واللطف، كانت تعلم أنها ستتحقق يومًا ما.',
+            image: 'https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?q=80&w=1000'
+          }
+        ]
       }
     }
   },
@@ -172,6 +222,69 @@ export const stories: Story[] = [
         ]
       }
     }
+  },
+  {
+    id: 'flying-dreams',
+    title: 'Flying Dreams',
+    description: 'Join Amir as he learns to fly in his dreams and discovers that courage can help us soar to new heights.',
+    category: 'sleeping',
+    isFree: true,
+    isFeatured: true,
+    duration: 8,
+    coverImage: 'https://images.unsplash.com/photo-1520808663317-647b476a81b9?q=80&w=1000',
+    languages: ['en', 'ar-eg'],
+    content: {
+      en: {
+        text: 'Every night, Amir had the same dream. He was standing on a cloud, preparing to fly...',
+        scenes: [
+          {
+            text: 'Every night, Amir had the same dream. He was standing on a cloud, preparing to fly.',
+            image: 'https://images.unsplash.com/photo-1520808663317-647b476a81b9?q=80&w=1000'
+          },
+          {
+            text: 'But each time, fear held him back. "What if I fall?" he wondered, looking down at the world far below.',
+            image: 'https://images.unsplash.com/photo-1534695382953-f743ab95ff7e?q=80&w=1000'
+          },
+          {
+            text: 'One night, a wise owl appeared in his dream. "The only way to know if you can fly," said the owl, "is to try."',
+            image: 'https://images.unsplash.com/photo-1543549790-8b5f4a028cfb?q=80&w=1000'
+          },
+          {
+            text: 'Amir took a deep breath, spread his arms, and stepped off the cloud. To his delight, he soared through the sky!',
+            image: 'https://images.unsplash.com/photo-1534330207526-d4ac467c0bba?q=80&w=1000'
+          },
+          {
+            text: 'When he woke up, Amir felt different. He carried the feeling of flying with him all day. That night, he couldn\'t wait to return to his dreams and fly again.',
+            image: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?q=80&w=1000'
+          }
+        ]
+      },
+      'ar-eg': {
+        text: 'كل ليلة، كان أمير يحلم نفس الحلم. كان يقف على سحابة، يستعد للطيران...',
+        scenes: [
+          {
+            text: 'كل ليلة، كان أمير يحلم نفس الحلم. كان يقف على سحابة، يستعد للطيران.',
+            image: 'https://images.unsplash.com/photo-1520808663317-647b476a81b9?q=80&w=1000'
+          },
+          {
+            text: 'ولكن في كل مرة، كان الخوف يمنعه. "ماذا لو سقطت؟" تساءل، وهو ينظر إلى العالم البعيد أسفله.',
+            image: 'https://images.unsplash.com/photo-1534695382953-f743ab95ff7e?q=80&w=1000'
+          },
+          {
+            text: 'في إحدى الليالي، ظهرت بومة حكيمة في حلمه. "الطريقة الوحيدة لمعرفة ما إذا كنت تستطيع الطيران،" قالت البومة، "هي أن تجرب."',
+            image: 'https://images.unsplash.com/photo-1543549790-8b5f4a028cfb?q=80&w=1000'
+          },
+          {
+            text: 'أخذ أمير نفساً عميقاً، وفرد ذراعيه، وخطا من السحابة. ولدهشته، حلّق عبر السماء!',
+            image: 'https://images.unsplash.com/photo-1534330207526-d4ac467c0bba?q=80&w=1000'
+          },
+          {
+            text: 'عندما استيقظ، شعر أمير بأنه مختلف. حمل معه شعور الطيران طوال اليوم. تلك الليلة، لم يستطع الانتظار للعودة إلى أحلامه والطيران مرة أخرى.',
+            image: 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?q=80&w=1000'
+          }
+        ]
+      }
+    }
   }
 ];
 
@@ -190,3 +303,4 @@ export const getFreeStories = (): Story[] => {
 export const getStoriesByCategory = (category: Story['category']): Story[] => {
   return stories.filter(story => story.category === category);
 };
+

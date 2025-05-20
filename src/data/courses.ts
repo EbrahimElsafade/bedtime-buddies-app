@@ -72,6 +72,66 @@ export const courses: Course[] = [
     coverImage: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=1000',
     isFeatured: false,
     isFree: true
+  },
+  {
+    id: 'musical-adventures',
+    title: 'Musical Adventures',
+    description: 'Explore the world of music through fun songs, instrument discovery, and rhythm games!',
+    category: 'arts',
+    ageRange: '3-6',
+    duration: 75,
+    lessons: 9,
+    coverImage: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1000',
+    isFeatured: false,
+    isFree: true
+  },
+  {
+    id: 'creative-storytelling',
+    title: 'Creative Storytelling',
+    description: 'Build imagination and language skills by creating your own stories with guided prompts and illustrations.',
+    category: 'language',
+    ageRange: '5-8',
+    duration: 110,
+    lessons: 12,
+    coverImage: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?q=80&w=1000',
+    isFeatured: false,
+    isFree: false
+  },
+  {
+    id: 'world-cultures',
+    title: 'World Cultures',
+    description: 'Travel the globe and learn about different cultures, traditions, foods, and celebrations!',
+    category: 'social',
+    ageRange: '5-9',
+    duration: 130,
+    lessons: 14,
+    coverImage: 'https://images.unsplash.com/photo-1526299977869-7ab2f06c2c8f?q=80&w=1000',
+    isFeatured: false,
+    isFree: false
+  },
+  {
+    id: 'nature-explorers',
+    title: 'Nature Explorers',
+    description: 'Discover the wonders of plants, insects, and outdoor environments through guided explorations.',
+    category: 'science',
+    ageRange: '4-7',
+    duration: 95,
+    lessons: 10,
+    coverImage: 'https://images.unsplash.com/photo-1591871937573-74dbba515c4c?q=80&w=1000',
+    isFeatured: false,
+    isFree: true
+  },
+  {
+    id: 'friendship-skills',
+    title: 'Friendship Skills',
+    description: 'Learn important social skills like sharing, taking turns, and resolving conflicts through stories and activities.',
+    category: 'social',
+    ageRange: '3-6',
+    duration: 80,
+    lessons: 8,
+    coverImage: 'https://images.unsplash.com/photo-1581578017093-cd30fce4ecd7?q=80&w=1000',
+    isFeatured: false,
+    isFree: true
   }
 ];
 
