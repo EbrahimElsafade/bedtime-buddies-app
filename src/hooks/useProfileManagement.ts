@@ -1,147 +1,113 @@
 
 import { useState, useEffect } from 'react';
-import { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { User } from '@supabase/supabase-js';
 import { Profile } from '@/types/auth';
 
 export const useProfileManagement = (user: User | null) => {
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [profileLoaded, setProfileLoaded] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
+  const [profileLoaded, setProfileLoaded] = useState<boolean>(false);
 
-  // Function to fetch user profile from Supabase
   const fetchUserProfile = async (userId: string) => {
-    setIsLoading(true);
-    setError(null);
+    if (!userId) {
+      console.error("Cannot fetch profile: User ID is undefined");
+      setIsLoading(false);
+      setProfileLoaded(true);
+      return;
+    }
+    
     try {
-      console.log("Fetching profile for user:", userId);
+      setIsLoading(true);
+      setError(null);
       
-      // Query the profiles table for the user's profile
-      const { data, error } = await supabase
+      console.log("Fetching profile for user:", userId);
+      const { data, error: profileError } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single();
       
-      if (error) {
-        console.error('Error fetching profile:', error);
-        setError(error);
-        
-        // If the profile doesn't exist, create a default one
-        if (error.code === 'PGRST116') {
-          console.log("No profile found, creating default profile");
-          await createDefaultProfile(userId);
-          return;
-        }
-        
-        toast.error('Failed to load profile data');
-        setProfileLoaded(true);
-        setIsLoading(false);
-        return;
+      if (profileError) {
+        console.error("Error fetching profile:", profileError);
+        throw profileError;
       }
       
       if (data) {
         console.log("Profile fetched successfully:", data);
         setProfile(data as Profile);
       } else {
-        console.warn("No profile found for user:", userId);
-        // Create default profile if none found
-        await createDefaultProfile(userId);
+        console.log("No profile found for user:", userId);
+        setProfile(null);
       }
-      
-      setProfileLoaded(true);
-      setIsLoading(false);
     } catch (error: any) {
-      console.error('Error fetching profile:', error);
+      console.error("Profile fetch error:", error.message);
       setError(error);
-      setProfileLoaded(true);
-      setIsLoading(false);
-    }
-  };
-
-  // Create a default profile for a user if one doesn't exist
-  const createDefaultProfile = async (userId: string) => {
-    try {
-      // Make sure preferred_language is one of the allowed values from the union type
-      const defaultProfile: Profile = {
-        id: userId,
-        parent_name: user?.email || 'User',
-        preferred_language: 'ar-eg', // Explicitly using a valid value from the union type
-        is_premium: false,
-        role: 'user'
-      };
-      
-      console.log("Creating default profile:", defaultProfile);
-      
-      const { error } = await supabase
-        .from('profiles')
-        .insert(defaultProfile);
-      
-      if (error) {
-        console.error('Error creating default profile:', error);
-        toast.error('Failed to create profile');
-        return;
-      }
-      
-      console.log("Default profile created successfully");
-      setProfile(defaultProfile);
-      toast.success('Profile created successfully');
-    } catch (error) {
-      console.error('Error creating default profile:', error);
-    }
-  };
-
-  // Load profile whenever user changes
-  useEffect(() => {
-    if (user) {
-      fetchUserProfile(user.id);
-    } else {
       setProfile(null);
-      setProfileLoaded(true);
+    } finally {
       setIsLoading(false);
+      setProfileLoaded(true);
     }
-  }, [user]);
+  };
 
-  // Update profile function
-  const updateProfile = async (data: Partial<Profile>) => {
-    if (!user) {
-      console.error("Cannot update profile: No user authenticated");
-      return;
+  const updateProfile = async (profileData: Partial<Profile>) => {
+    if (!user || !user.id) {
+      throw new Error('User not authenticated');
     }
     
     try {
-      console.log("Updating profile for user:", user.id, data);
-      const { error } = await supabase
-        .from('profiles')
-        .update(data)
-        .eq('id', user.id);
+      setIsLoading(true);
+      setError(null);
       
-      if (error) {
-        throw error;
+      const { data, error: updateError } = await supabase
+        .from('profiles')
+        .update(profileData)
+        .eq('id', user.id)
+        .select()
+        .single();
+      
+      if (updateError) {
+        throw updateError;
       }
       
-      // Update local profile state
-      setProfile(prev => prev ? { ...prev, ...data } : null);
-      toast.success('Profile updated successfully');
+      if (data) {
+        setProfile(data as Profile);
+      }
       
-      // Refresh profile data to ensure we have the latest
-      fetchUserProfile(user.id);
+      return data as Profile;
     } catch (error: any) {
-      console.error('Profile update error:', error.message);
-      toast.error(error.message || 'Failed to update profile');
+      console.error("Profile update error:", error.message);
+      setError(error);
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  // Effect to fetch profile whenever user changes
+  useEffect(() => {
+    console.log("useProfileManagement - User changed:", user?.id);
+    // Reset state when user changes
+    setProfileLoaded(false);
+    
+    // Only fetch profile if user exists
+    if (user?.id) {
+      fetchUserProfile(user.id);
+    } else {
+      setProfile(null);
+      setIsLoading(false);
+      setProfileLoaded(true);
+    }
+  }, [user?.id]);
+
   return {
     profile,
-    profileLoaded,
+    isLoading,
+    error,
     fetchUserProfile,
     updateProfile,
     setProfile,
-    isLoading,
-    error
+    profileLoaded
   };
 };
