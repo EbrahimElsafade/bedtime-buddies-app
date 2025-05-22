@@ -9,6 +9,89 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      course_lessons: {
+        Row: {
+          course_id: string
+          created_at: string | null
+          description: string
+          duration: number
+          id: string
+          lesson_order: number
+          title: string
+          updated_at: string | null
+          video_url: string | null
+        }
+        Insert: {
+          course_id: string
+          created_at?: string | null
+          description: string
+          duration: number
+          id?: string
+          lesson_order: number
+          title: string
+          updated_at?: string | null
+          video_url?: string | null
+        }
+        Update: {
+          course_id?: string
+          created_at?: string | null
+          description?: string
+          duration?: number
+          id?: string
+          lesson_order?: number
+          title?: string
+          updated_at?: string | null
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_lessons_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      courses: {
+        Row: {
+          category: string
+          cover_image: string | null
+          created_at: string | null
+          description: string
+          id: string
+          is_free: boolean
+          is_published: boolean
+          languages: string[]
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          cover_image?: string | null
+          created_at?: string | null
+          description: string
+          id?: string
+          is_free?: boolean
+          is_published?: boolean
+          languages?: string[]
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          cover_image?: string | null
+          created_at?: string | null
+          description?: string
+          id?: string
+          is_free?: boolean
+          is_published?: boolean
+          languages?: string[]
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           child_name: string | null
@@ -17,6 +100,7 @@ export type Database = {
           is_premium: boolean
           parent_name: string
           preferred_language: string
+          role: Database["public"]["Enums"]["user_role"]
           subscription_end: string | null
           subscription_tier: string | null
           updated_at: string
@@ -28,6 +112,7 @@ export type Database = {
           is_premium?: boolean
           parent_name: string
           preferred_language?: string
+          role?: Database["public"]["Enums"]["user_role"]
           subscription_end?: string | null
           subscription_tier?: string | null
           updated_at?: string
@@ -39,21 +124,140 @@ export type Database = {
           is_premium?: boolean
           parent_name?: string
           preferred_language?: string
+          role?: Database["public"]["Enums"]["user_role"]
           subscription_end?: string | null
           subscription_tier?: string | null
           updated_at?: string
         }
         Relationships: []
       }
+      scene_translations: {
+        Row: {
+          audio_url: string | null
+          created_at: string | null
+          id: string
+          language: string
+          scene_id: string
+          text: string
+          updated_at: string | null
+        }
+        Insert: {
+          audio_url?: string | null
+          created_at?: string | null
+          id?: string
+          language: string
+          scene_id: string
+          text: string
+          updated_at?: string | null
+        }
+        Update: {
+          audio_url?: string | null
+          created_at?: string | null
+          id?: string
+          language?: string
+          scene_id?: string
+          text?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scene_translations_scene_id_fkey"
+            columns: ["scene_id"]
+            isOneToOne: false
+            referencedRelation: "story_scenes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stories: {
+        Row: {
+          category: string
+          cover_image: string | null
+          created_at: string | null
+          description: string
+          duration: number
+          id: string
+          is_free: boolean
+          is_published: boolean
+          languages: string[]
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          cover_image?: string | null
+          created_at?: string | null
+          description: string
+          duration: number
+          id?: string
+          is_free?: boolean
+          is_published?: boolean
+          languages?: string[]
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          cover_image?: string | null
+          created_at?: string | null
+          description?: string
+          duration?: number
+          id?: string
+          is_free?: boolean
+          is_published?: boolean
+          languages?: string[]
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      story_scenes: {
+        Row: {
+          created_at: string | null
+          id: string
+          image: string | null
+          scene_order: number
+          story_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          image?: string | null
+          scene_order: number
+          story_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          image?: string | null
+          scene_order?: number
+          story_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "story_scenes_story_id_fkey"
+            columns: ["story_id"]
+            isOneToOne: false
+            referencedRelation: "stories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: {
+        Args: { uid: string }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      user_role: "user" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -168,6 +372,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["user", "admin"],
+    },
   },
 } as const

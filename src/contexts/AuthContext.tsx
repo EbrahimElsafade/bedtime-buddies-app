@@ -12,6 +12,7 @@ type Profile = {
   is_premium: boolean;
   subscription_tier?: string;
   subscription_end?: string;
+  role: 'user' | 'admin';
 };
 
 type AuthContextType = {

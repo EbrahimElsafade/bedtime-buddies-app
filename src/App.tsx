@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import Layout from "./components/Layout";
+import AdminLayout from "./components/AdminLayout";
+import AdminRoute from "./components/AdminRoute";
 import Index from "./pages/Index";
 import Stories from "./pages/Stories";
 import Story from "./pages/Story";
@@ -18,6 +20,15 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Subscription from "./pages/Subscription";
 import NotFound from "./pages/NotFound";
+
+// Admin pages
+import AdminDashboard from "./pages/admin/Dashboard";
+import AdminUsers from "./pages/admin/Users";
+import AdminStories from "./pages/admin/Stories";
+import AdminStoryEditor from "./pages/admin/StoryEditor";
+import AdminCourses from "./pages/admin/Courses";
+import AdminSettings from "./pages/admin/Settings";
+
 import { useEffect } from "react";
 
 // Ensure the default direction is RTL for Arabic
@@ -42,6 +53,7 @@ const App = () => {
             <Sonner />
             <BrowserRouter>
               <Routes>
+                {/* Public Routes */}
                 <Route path="/" element={<Layout />}>
                   <Route index element={<Index />} />
                   <Route path="/stories" element={<Stories />} />
@@ -54,6 +66,19 @@ const App = () => {
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="*" element={<NotFound />} />
+                </Route>
+                
+                {/* Admin Routes */}
+                <Route element={<AdminRoute />}>
+                  <Route path="/admin" element={<AdminLayout />}>
+                    <Route index element={<AdminDashboard />} />
+                    <Route path="users" element={<AdminUsers />} />
+                    <Route path="stories" element={<AdminStories />} />
+                    <Route path="stories/new" element={<AdminStoryEditor />} />
+                    <Route path="stories/edit/:id" element={<AdminStoryEditor />} />
+                    <Route path="courses" element={<AdminCourses />} />
+                    <Route path="settings" element={<AdminSettings />} />
+                  </Route>
                 </Route>
               </Routes>
             </BrowserRouter>
