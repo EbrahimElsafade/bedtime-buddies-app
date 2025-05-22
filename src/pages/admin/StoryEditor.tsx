@@ -40,7 +40,7 @@ import {
 const StoryEditor = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const isEditing = id !== "new";
+  const isEditing = id !== "new" && id !== undefined;
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
@@ -306,6 +306,7 @@ const StoryEditor = () => {
       // Create or update the story
       let storyId = id;
       if (!isEditing) {
+        // Create new story
         const { data: newStory, error: storyError } = await supabase
           .from("stories")
           .insert({
@@ -321,30 +322,15 @@ const StoryEditor = () => {
           .select('id')
           .single();
           
-        if (storyError) throw storyError;
+        if (storyError) {
+          console.error("Error creating story:", storyError);
+          throw storyError;
+        }
+        
+        console.log("New story created:", newStory);
         storyId = newStory.id;
-      } else {
-        const { error: storyError } = await supabase
-          .from("stories")
-          .update({
-            title: storyData.title,
-            description: storyData.description,
-            category: storyData.category,
-            cover_image: coverImageUrl,
-            duration: storyData.duration,
-            is_free: storyData.is_free,
-            is_published: storyData.is_published,
-            languages: storyData.languages
-          })
-          .eq("id", storyId);
-          
-        if (storyError) throw storyError;
-      }
-      
-      // Handle scenes (for this simplified version we'll just add new scenes)
-      // A more complete implementation would handle updating existing scenes
-      if (!isEditing) {
-        // Insert all scenes for a new story
+        
+        // Insert all scenes for the new story
         for (const scene of storyData.scenes) {
           const { data: newScene, error: sceneError } = await supabase
             .from("story_scenes")
@@ -356,7 +342,10 @@ const StoryEditor = () => {
             .select('id')
             .single();
             
-          if (sceneError) throw sceneError;
+          if (sceneError) {
+            console.error("Error creating scene:", sceneError);
+            throw sceneError;
+          }
           
           // Insert translations for this scene
           const translations = Object.entries(scene.translations).map(
@@ -372,8 +361,34 @@ const StoryEditor = () => {
             .from("scene_translations")
             .insert(translations);
             
-          if (translationsError) throw translationsError;
+          if (translationsError) {
+            console.error("Error creating translations:", translationsError);
+            throw translationsError;
+          }
         }
+      } else {
+        // Update existing story
+        const { error: storyError } = await supabase
+          .from("stories")
+          .update({
+            title: storyData.title,
+            description: storyData.description,
+            category: storyData.category,
+            cover_image: coverImageUrl,
+            duration: storyData.duration,
+            is_free: storyData.is_free,
+            is_published: storyData.is_published,
+            languages: storyData.languages
+          })
+          .eq("id", storyId);
+          
+        if (storyError) {
+          console.error("Error updating story:", storyError);
+          throw storyError;
+        }
+        
+        // For simplicity in this version, we'll handle scene updates in a future enhancement
+        console.log("Story updated successfully");
       }
       
       toast.success(`Story ${isEditing ? "updated" : "created"} successfully!`);
