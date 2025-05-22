@@ -64,12 +64,13 @@ export const useProfileManagement = (user: User | null) => {
   // Create a default profile for a user if one doesn't exist
   const createDefaultProfile = async (userId: string) => {
     try {
-      const defaultProfile = {
+      // Make sure preferred_language is one of the allowed values
+      const defaultProfile: Profile = {
         id: userId,
         parent_name: user?.email || 'User',
-        preferred_language: 'ar-eg',
+        preferred_language: 'ar-eg', // Explicitly using a valid value from the union type
         is_premium: false,
-        role: 'user' as const
+        role: 'user'
       };
       
       const { error } = await supabase
