@@ -18,6 +18,7 @@ interface StoryFormData {
     id?: string;
     scene_order: number;
     image: string | null;
+    image_file?: File | null;
     translations: Record<string, { text: string; audio_url: string | null }>;
   }>;
 }
@@ -228,6 +229,7 @@ export const useStoryForm = () => {
     const newScene = {
       scene_order: storyData.scenes.length + 1,
       image: null,
+      image_file: null,
       translations: storyData.languages.reduce((acc, lang) => {
         acc[lang] = { text: "", audio_url: null };
         return acc;
@@ -265,6 +267,25 @@ export const useStoryForm = () => {
   ) => {
     const updatedScenes = [...storyData.scenes];
     updatedScenes[sceneIndex].translations[language].text = text;
+    
+    setStoryData({
+      ...storyData,
+      scenes: updatedScenes
+    });
+  };
+
+  // Handle updating a scene image
+  const handleUpdateSceneImage = (
+    sceneIndex: number,
+    file: File | null
+  ) => {
+    const updatedScenes = [...storyData.scenes];
+    updatedScenes[sceneIndex].image_file = file;
+    
+    // If removing image, also clear the image URL
+    if (file === null) {
+      updatedScenes[sceneIndex].image = null;
+    }
     
     setStoryData({
       ...storyData,
@@ -326,12 +347,33 @@ export const useStoryForm = () => {
         
         // Insert all scenes for the new story
         for (const scene of storyData.scenes) {
+          // Upload scene image if present
+          let sceneImageUrl = scene.image;
+          if (scene.image_file) {
+            const filename = `scene-${Date.now()}-${scene.image_file.name}`;
+            const { data: uploadData, error: uploadError } = await supabase.storage
+              .from("admin-content")
+              .upload(`story-scenes/${filename}`, scene.image_file);
+              
+            if (uploadError) {
+              console.error("Error uploading scene image:", uploadError);
+              throw uploadError;
+            }
+            
+            // Get the public URL
+            const { data: urlData } = supabase.storage
+              .from("admin-content")
+              .getPublicUrl(`story-scenes/${filename}`);
+              
+            sceneImageUrl = urlData.publicUrl;
+          }
+          
           const { data: newScene, error: sceneError } = await supabase
             .from("story_scenes")
             .insert({
               story_id: storyId,
               scene_order: scene.scene_order,
-              image: scene.image
+              image: sceneImageUrl
             })
             .select('id')
             .single();
@@ -381,8 +423,157 @@ export const useStoryForm = () => {
           throw storyError;
         }
         
-        // For simplicity in this version, we'll handle scene updates in a future enhancement
-        console.log("Story updated successfully");
+        // Handle existing scenes (update, delete)
+        for (const scene of storyData.scenes) {
+          // Upload scene image if changed
+          let sceneImageUrl = scene.image;
+          if (scene.image_file) {
+            const filename = `scene-${Date.now()}-${scene.image_file.name}`;
+            const { data: uploadData, error: uploadError } = await supabase.storage
+              .from("admin-content")
+              .upload(`story-scenes/${filename}`, scene.image_file);
+              
+            if (uploadError) {
+              console.error("Error uploading scene image:", uploadError);
+              throw uploadError;
+            }
+            
+            // Get the public URL
+            const { data: urlData } = supabase.storage
+              .from("admin-content")
+              .getPublicUrl(`story-scenes/${filename}`);
+              
+            sceneImageUrl = urlData.publicUrl;
+          }
+          
+          if (scene.id) {
+            // Update existing scene
+            const { error: sceneError } = await supabase
+              .from("story_scenes")
+              .update({
+                scene_order: scene.scene_order,
+                image: sceneImageUrl
+              })
+              .eq("id", scene.id);
+              
+            if (sceneError) {
+              console.error("Error updating scene:", sceneError);
+              throw sceneError;
+            }
+            
+            // Update translations
+            for (const [language, content] of Object.entries(scene.translations)) {
+              const { data: existingTranslation, error: fetchError } = await supabase
+                .from("scene_translations")
+                .select("id")
+                .eq("scene_id", scene.id)
+                .eq("language", language)
+                .maybeSingle();
+                
+              if (fetchError) {
+                console.error("Error fetching translation:", fetchError);
+                throw fetchError;
+              }
+              
+              if (existingTranslation) {
+                // Update existing translation
+                const { error: updateError } = await supabase
+                  .from("scene_translations")
+                  .update({
+                    text: content.text,
+                    audio_url: content.audio_url
+                  })
+                  .eq("id", existingTranslation.id);
+                  
+                if (updateError) {
+                  console.error("Error updating translation:", updateError);
+                  throw updateError;
+                }
+              } else {
+                // Create new translation
+                const { error: insertError } = await supabase
+                  .from("scene_translations")
+                  .insert({
+                    scene_id: scene.id,
+                    language,
+                    text: content.text,
+                    audio_url: content.audio_url
+                  });
+                  
+                if (insertError) {
+                  console.error("Error creating translation:", insertError);
+                  throw insertError;
+                }
+              }
+            }
+          } else {
+            // Create new scene
+            const { data: newScene, error: sceneError } = await supabase
+              .from("story_scenes")
+              .insert({
+                story_id: storyId,
+                scene_order: scene.scene_order,
+                image: sceneImageUrl
+              })
+              .select('id')
+              .single();
+              
+            if (sceneError) {
+              console.error("Error creating scene:", sceneError);
+              throw sceneError;
+            }
+            
+            // Insert translations for this scene
+            const translations = Object.entries(scene.translations).map(
+              ([language, content]) => ({
+                scene_id: newScene.id,
+                language,
+                text: content.text,
+                audio_url: content.audio_url
+              })
+            );
+            
+            const { error: translationsError } = await supabase
+              .from("scene_translations")
+              .insert(translations);
+              
+            if (translationsError) {
+              console.error("Error creating translations:", translationsError);
+              throw translationsError;
+            }
+          }
+        }
+        
+        // Find and delete scenes that were removed
+        const { data: existingScenes, error: fetchError } = await supabase
+          .from("story_scenes")
+          .select("id")
+          .eq("story_id", storyId);
+          
+        if (fetchError) {
+          console.error("Error fetching existing scenes:", fetchError);
+          throw fetchError;
+        }
+        
+        const currentSceneIds = storyData.scenes
+          .filter(scene => scene.id)
+          .map(scene => scene.id);
+          
+        const scenesToDelete = existingScenes
+          .filter(scene => !currentSceneIds.includes(scene.id))
+          .map(scene => scene.id);
+          
+        if (scenesToDelete.length > 0) {
+          const { error: deleteError } = await supabase
+            .from("story_scenes")
+            .delete()
+            .in("id", scenesToDelete);
+            
+          if (deleteError) {
+            console.error("Error deleting scenes:", deleteError);
+            throw deleteError;
+          }
+        }
       }
       
       toast.success(`Story ${isEditing ? "updated" : "created"} successfully!`);
@@ -411,6 +602,7 @@ export const useStoryForm = () => {
     handleAddScene,
     handleDeleteScene,
     handleUpdateSceneTranslation,
+    handleUpdateSceneImage,
     handleSubmit,
   };
 };

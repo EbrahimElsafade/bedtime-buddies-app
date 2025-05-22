@@ -14,7 +14,9 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Trash2, Upload } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Trash2, Upload, Image } from "lucide-react";
+import { useState } from "react";
 
 interface StorySceneProps {
   scene: {
@@ -27,6 +29,7 @@ interface StorySceneProps {
   languageOptions: Array<{ value: string; label: string }>;
   onUpdateSceneTranslation: (language: string, text: string) => void;
   onDeleteScene: () => void;
+  onUpdateSceneImage: (file: File | null) => void;
 }
 
 const StoryScene = ({
@@ -35,7 +38,28 @@ const StoryScene = ({
   languageOptions,
   onUpdateSceneTranslation,
   onDeleteScene,
+  onUpdateSceneImage,
 }: StorySceneProps) => {
+  const [imagePreview, setImagePreview] = useState<string | null>(scene.image);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      
+      // Create a preview
+      const objectUrl = URL.createObjectURL(file);
+      setImagePreview(objectUrl);
+      
+      // Pass the file to parent component
+      onUpdateSceneImage(file);
+    }
+  };
+
+  const handleImageRemove = () => {
+    setImagePreview(null);
+    onUpdateSceneImage(null);
+  };
+
   return (
     <Card>
       <CardHeader className="pb-2">
@@ -53,9 +77,39 @@ const StoryScene = ({
       </CardHeader>
       <CardContent>
         <div className="mb-4">
-          <Label>Scene Image (coming soon)</Label>
-          <div className="flex items-center justify-center h-32 bg-muted rounded-md">
-            <Upload className="h-8 w-8 text-muted-foreground" />
+          <Label>Scene Image</Label>
+          <div className="mt-2">
+            {imagePreview ? (
+              <div className="relative">
+                <img 
+                  src={imagePreview} 
+                  alt={`Scene ${scene.scene_order}`} 
+                  className="h-48 w-full object-cover rounded-md"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  className="absolute top-2 right-2"
+                  onClick={handleImageRemove}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-48 bg-muted rounded-md border-2 border-dashed border-muted-foreground/25 p-4">
+                <Image className="h-8 w-8 text-muted-foreground mb-2" />
+                <p className="text-sm text-muted-foreground mb-2">
+                  Upload an image for this scene
+                </p>
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="max-w-60"
+                />
+              </div>
+            )}
           </div>
         </div>
         

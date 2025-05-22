@@ -29,6 +29,7 @@ const StoryEditor = () => {
     handleAddScene,
     handleDeleteScene,
     handleUpdateSceneTranslation,
+    handleUpdateSceneImage,
     handleSubmit,
   } = useStoryForm();
 
@@ -78,6 +79,7 @@ const StoryEditor = () => {
               onAddScene={handleAddScene}
               onDeleteScene={handleDeleteScene}
               onUpdateSceneTranslation={handleUpdateSceneTranslation}
+              onUpdateSceneImage={handleUpdateSceneImage}
             />
           </div>
           

@@ -22,6 +22,7 @@ interface StoryScenesProps {
   onAddScene: () => void;
   onDeleteScene: (index: number) => void;
   onUpdateSceneTranslation: (sceneIndex: number, language: string, text: string) => void;
+  onUpdateSceneImage: (sceneIndex: number, file: File | null) => void;
 }
 
 const StoryScenes = ({
@@ -31,6 +32,7 @@ const StoryScenes = ({
   onAddScene,
   onDeleteScene,
   onUpdateSceneTranslation,
+  onUpdateSceneImage,
 }: StoryScenesProps) => {
   return (
     <Card>
@@ -66,6 +68,7 @@ const StoryScenes = ({
                   onUpdateSceneTranslation(index, language, text)
                 }
                 onDeleteScene={() => onDeleteScene(index)}
+                onUpdateSceneImage={(file) => onUpdateSceneImage(index, file)}
               />
             ))}
           </div>
