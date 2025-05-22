@@ -24,10 +24,14 @@ export const useAuthOperations = () => {
         setUser(data.user);
         setSession(data.session);
       }
+      
+      toast.success('Logged in successfully');
     } catch (error: any) {
       console.error('Login error:', error.message);
       toast.error(error.message || 'Failed to sign in');
       throw error;
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -122,6 +126,7 @@ export const useAuthOperations = () => {
       // Clear user and session state
       setUser(null);
       setSession(null);
+      toast.success('Logged out successfully');
     } catch (error: any) {
       console.error('Logout error:', error.message);
       toast.error('Failed to sign out');

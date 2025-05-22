@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect } from "react";
 
 const AdminRoute = () => {
-  const { isAuthenticated, isLoading, profile, user } = useAuth();
+  const { isAuthenticated, isLoading, profile, user, isProfileLoaded } = useAuth();
   const location = useLocation();
   
   // Add debugging to help troubleshoot
@@ -13,16 +13,17 @@ const AdminRoute = () => {
     console.log("AdminRoute - Auth State:", { 
       isAuthenticated, 
       isLoading, 
+      isProfileLoaded,
       hasProfile: !!profile,
       profileExists: profile ? "yes" : "no", 
       userId: user?.id,
       profileRole: profile?.role,
       pathname: location.pathname
     });
-  }, [isAuthenticated, isLoading, profile, user, location]);
+  }, [isAuthenticated, isLoading, profile, user, location, isProfileLoaded]);
   
   // Show loading state while authentication is being checked
-  if (isLoading) {
+  if (isLoading || !isProfileLoaded) {
     console.log("AdminRoute - Still loading auth state");
     return (
       <div className="container mx-auto p-8">

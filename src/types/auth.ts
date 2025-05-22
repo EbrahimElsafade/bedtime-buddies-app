@@ -17,6 +17,7 @@ export type AuthContextType = {
   profile: Profile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isProfileLoaded: boolean;
   login: (email: string, password: string) => Promise<void>;
   loginWithGoogle: () => Promise<void>;
   loginWithApple: () => Promise<void>;

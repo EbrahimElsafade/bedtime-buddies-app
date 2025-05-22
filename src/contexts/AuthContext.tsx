@@ -30,11 +30,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     fetchUserProfile,
     updateProfile,
     setProfile,
-    isLoading: profileLoading
+    isLoading: profileLoading,
+    error: profileError
   } = useProfileManagement(user);
 
-  // Combined loading state
-  const isLoading = authLoading || (user != null && profileLoading);
+  // Combined loading state with a more accurate check
+  const isLoading = authLoading || (user != null && !profileLoaded);
 
   useEffect(() => {
     console.log("Setting up auth state listener");
@@ -42,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, currentSession) => {
+      async (event, currentSession) => {
         console.log('Auth state changed:', event, currentSession?.user?.email);
         
         if (!isMounted) return;
@@ -79,6 +80,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
+  // Debug the auth state
+  useEffect(() => {
+    console.log("Auth state updated:", { 
+      hasUser: !!user,
+      hasProfile: !!profile,
+      authLoading,
+      profileLoading,
+      profileLoaded,
+      profileError: profileError?.message
+    });
+  }, [user, profile, authLoading, profileLoading, profileLoaded, profileError]);
+
   return (
     <AuthContext.Provider
       value={{
@@ -86,6 +99,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         profile,
         isAuthenticated: !!user,
         isLoading,
+        isProfileLoaded: profileLoaded,
         login,
         loginWithGoogle,
         loginWithApple,

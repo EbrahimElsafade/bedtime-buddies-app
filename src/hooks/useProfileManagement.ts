@@ -9,12 +9,16 @@ export const useProfileManagement = (user: User | null) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [profileLoaded, setProfileLoaded] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
 
   // Function to fetch user profile from Supabase
   const fetchUserProfile = async (userId: string) => {
     setIsLoading(true);
+    setError(null);
     try {
       console.log("Fetching profile for user:", userId);
+      
+      // Direct SQL query approach to bypass potential RLS issues
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -23,6 +27,15 @@ export const useProfileManagement = (user: User | null) => {
       
       if (error) {
         console.error('Error fetching profile:', error);
+        setError(error);
+        
+        // If the profile doesn't exist, create a default one
+        if (error.code === 'PGRST116') {
+          console.log("No profile found, creating default profile");
+          await createDefaultProfile(userId);
+          return;
+        }
+        
         toast.error('Failed to load profile data');
         setProfileLoaded(true);
         setIsLoading(false);
@@ -34,14 +47,46 @@ export const useProfileManagement = (user: User | null) => {
         setProfile(data as Profile);
       } else {
         console.warn("No profile found for user:", userId);
-        toast.error('No profile data found for your account');
+        // Create default profile if none found
+        await createDefaultProfile(userId);
       }
+      
       setProfileLoaded(true);
       setIsLoading(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching profile:', error);
+      setError(error);
       setProfileLoaded(true);
       setIsLoading(false);
+    }
+  };
+
+  // Create a default profile for a user if one doesn't exist
+  const createDefaultProfile = async (userId: string) => {
+    try {
+      const defaultProfile = {
+        id: userId,
+        parent_name: user?.email || 'User',
+        preferred_language: 'ar-eg',
+        is_premium: false,
+        role: 'user' as const
+      };
+      
+      const { error } = await supabase
+        .from('profiles')
+        .insert(defaultProfile);
+      
+      if (error) {
+        console.error('Error creating default profile:', error);
+        toast.error('Failed to create profile');
+        return;
+      }
+      
+      console.log("Default profile created successfully");
+      setProfile(defaultProfile);
+      toast.success('Profile created successfully');
+    } catch (error) {
+      console.error('Error creating default profile:', error);
     }
   };
 
@@ -93,6 +138,7 @@ export const useProfileManagement = (user: User | null) => {
     fetchUserProfile,
     updateProfile,
     setProfile,
-    isLoading
+    isLoading,
+    error
   };
 };
