@@ -2,21 +2,11 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const AdminRoute = () => {
   const { isAuthenticated, isLoading, profile, user, isProfileLoaded } = useAuth();
   const location = useLocation();
-  const [loadingTimeout, setLoadingTimeout] = useState(false);
-  
-  // Add timeout to prevent infinite loading state
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoadingTimeout(true);
-    }, 5000);
-    
-    return () => clearTimeout(timer);
-  }, []);
   
   // Add debugging to help troubleshoot
   useEffect(() => {
@@ -32,38 +22,14 @@ const AdminRoute = () => {
     });
   }, [isAuthenticated, isLoading, profile, user, location, isProfileLoaded]);
   
-  // If we've been loading for more than 5 seconds, show a message
-  if ((isLoading || !isProfileLoaded) && !loadingTimeout) {
+  // Show loading state while authentication is being checked
+  if (isLoading || !isProfileLoaded) {
     console.log("AdminRoute - Still loading auth state");
     return (
       <div className="container mx-auto p-8">
         <h2 className="text-2xl mb-4">Loading Admin Dashboard...</h2>
         <Skeleton className="h-12 w-48 mb-6" />
         <Skeleton className="h-64 w-full" />
-      </div>
-    );
-  }
-  
-  // If loading timeout occurred but we're still loading, give user an option
-  if ((isLoading || !isProfileLoaded) && loadingTimeout) {
-    return (
-      <div className="container mx-auto p-8">
-        <h2 className="text-2xl mb-4">Taking longer than expected...</h2>
-        <p className="mb-4">We're having trouble loading the admin dashboard.</p>
-        <div className="flex gap-4">
-          <button 
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-md"
-            onClick={() => window.location.reload()}
-          >
-            Refresh Page
-          </button>
-          <button 
-            className="px-4 py-2 border border-input rounded-md"
-            onClick={() => window.location.href = "/"}
-          >
-            Return Home
-          </button>
-        </div>
       </div>
     );
   }

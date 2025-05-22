@@ -59,7 +59,7 @@ const Profile = () => {
     
     setIsSaving(true);
     try {
-      const updatedProfile = await updateProfile({
+      await updateProfile({
         parent_name: name,
         child_name: childName || undefined,
         preferred_language: language

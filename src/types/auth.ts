@@ -24,5 +24,5 @@ export type AuthContextType = {
   register: (email: string, password: string, parentName: string, childName?: string, preferredLanguage?: 'en' | 'ar-eg' | 'ar-fos7a') => Promise<void>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
-  updateProfile: (data: Partial<Profile>) => Promise<Profile>;
+  updateProfile: (data: Partial<Profile>) => Promise<void>;
 };
