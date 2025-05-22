@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import Layout from "./components/Layout";
@@ -37,7 +37,14 @@ const setInitialDirection = () => {
   document.documentElement.lang = 'ar'; // Set language to Arabic
 };
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      staleTime: 30000,
+    },
+  },
+});
 
 const App = () => {
   useEffect(() => {
@@ -71,9 +78,9 @@ const App = () => {
                   <Route path="*" element={<NotFound />} />
                 </Route>
                 
-                {/* Admin Routes */}
-                <Route element={<AdminRoute />}>
-                  <Route path="/admin" element={<AdminLayout />}>
+                {/* Admin Routes - wrapped in AdminRoute component for auth checks */}
+                <Route path="/admin" element={<AdminRoute />}>
+                  <Route element={<AdminLayout />}>
                     <Route index element={<AdminDashboard />} />
                     <Route path="users" element={<AdminUsers />} />
                     <Route path="stories" element={<AdminStories />} />

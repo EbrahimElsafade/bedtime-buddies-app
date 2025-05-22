@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, NavLink, useLocation, Outlet } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Users, Book, Presentation, Home, Settings, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,11 +18,19 @@ import {
 } from "@/components/ui/sidebar";
 
 const AdminLayout = () => {
-  const { logout } = useAuth();
+  const { logout, user, profile } = useAuth();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
+  
+  useEffect(() => {
+    console.log("AdminLayout - Rendered with:", { 
+      userId: user?.id,
+      profileRole: profile?.role,
+      pathname: location.pathname
+    });
+  }, [user, profile, location]);
 
   return (
     <SidebarProvider defaultOpen={!collapsed} onOpenChange={setCollapsed}>
@@ -119,7 +127,7 @@ const AdminLayout = () => {
         
         <main className="flex-1 p-6 overflow-auto">
           <div className="container mx-auto">
-            {/* Admin content will be rendered here */}
+            <Outlet />
           </div>
         </main>
       </div>

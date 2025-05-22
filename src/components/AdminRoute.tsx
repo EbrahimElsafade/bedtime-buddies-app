@@ -1,11 +1,12 @@
 
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect } from "react";
 
 const AdminRoute = () => {
   const { isAuthenticated, isLoading, profile, user } = useAuth();
+  const location = useLocation();
   
   // Add debugging to help troubleshoot
   useEffect(() => {
@@ -13,12 +14,15 @@ const AdminRoute = () => {
       isAuthenticated, 
       isLoading, 
       profile, 
-      userId: user?.id 
+      userId: user?.id,
+      profileRole: profile?.role,
+      pathname: location.pathname
     });
-  }, [isAuthenticated, isLoading, profile, user]);
+  }, [isAuthenticated, isLoading, profile, user, location]);
   
   // Show loading state while authentication is being checked
   if (isLoading) {
+    console.log("AdminRoute - Still loading auth state");
     return (
       <div className="container mx-auto p-8">
         <Skeleton className="h-12 w-48 mb-6" />
@@ -30,7 +34,7 @@ const AdminRoute = () => {
   // Redirect to login if not authenticated
   if (!isAuthenticated) {
     console.log("AdminRoute - Not authenticated, redirecting to login");
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" replace state={{ from: location }} />;
   }
   
   // Check if profile exists

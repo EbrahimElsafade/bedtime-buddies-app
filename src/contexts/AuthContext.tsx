@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -36,6 +35,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [profile, setProfile] = useState<Profile | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [profileLoaded, setProfileLoaded] = useState<boolean>(false);
 
   // Function to fetch user profile from Supabase
   const fetchUserProfile = async (userId: string) => {
@@ -49,6 +49,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (error) {
         console.error('Error fetching profile:', error);
+        setProfileLoaded(true);
         return;
       }
       
@@ -58,27 +59,37 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         console.warn("No profile found for user:", userId);
       }
+      setProfileLoaded(true);
     } catch (error) {
       console.error('Error fetching profile:', error);
+      setProfileLoaded(true);
     }
   };
 
   useEffect(() => {
     console.log("Setting up auth state listener");
-    // Set up auth state listener
+    let isMounted = true;
+    
+    // Set up auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, currentSession) => {
+      (event, currentSession) => {
         console.log('Auth state changed:', event, currentSession?.user?.email);
+        
+        if (!isMounted) return;
+        
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
         
         if (currentSession?.user) {
-          // Use setTimeout to prevent potential deadlocks
+          // Prevent deadlocks by using setTimeout
           setTimeout(() => {
-            fetchUserProfile(currentSession.user.id);
+            if (isMounted) {
+              fetchUserProfile(currentSession.user.id);
+            }
           }, 0);
         } else {
           setProfile(null);
+          setProfileLoaded(true);
         }
       }
     );
@@ -86,20 +97,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
       console.log("Checking existing session:", currentSession?.user?.email);
+      
+      if (!isMounted) return;
+      
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
       
       if (currentSession?.user) {
         fetchUserProfile(currentSession.user.id);
+      } else {
+        setProfileLoaded(true);
+        setIsLoading(false);
       }
-      
-      setIsLoading(false);
     });
 
     return () => {
+      isMounted = false;
       subscription.unsubscribe();
     };
   }, []);
+
+  // Update isLoading state whenever profileLoaded changes
+  useEffect(() => {
+    if (profileLoaded) {
+      setIsLoading(false);
+    }
+  }, [profileLoaded]);
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);

@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +13,7 @@ import { Loader2 } from "lucide-react";
 
 const Profile = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, profile, isAuthenticated, isLoading, updateProfile, logout } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -25,8 +26,17 @@ const Profile = () => {
   useEffect(() => {
     document.title = "Bedtime Stories - My Profile";
     
+    console.log("Profile page - Auth state:", { 
+      isAuthenticated, 
+      isLoading,
+      hasUser: !!user,
+      hasProfile: !!profile,
+      pathname: location.pathname
+    });
+    
     if (!isAuthenticated && !isLoading) {
-      navigate("/login");
+      console.log("Profile - Not authenticated, redirecting to login");
+      navigate("/login", { replace: true });
       return;
     }
     
@@ -37,7 +47,7 @@ const Profile = () => {
       setChildAge(""); // Child age is not stored in the profile currently
       setLanguage(profile.preferred_language || "ar-eg");
     }
-  }, [user, profile, isAuthenticated, isLoading, navigate]);
+  }, [user, profile, isAuthenticated, isLoading, navigate, location]);
   
   const handleSaveProfile = async () => {
     if (!user || !profile) return;
@@ -63,12 +73,25 @@ const Profile = () => {
     navigate("/");
   };
 
-  if (isLoading || !profile) {
+  if (isLoading) {
     return (
       <div className="py-12 px-4 flex items-center justify-center min-h-[80vh]">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
           <p>Loading your profile...</p>
+        </div>
+      </div>
+    );
+  }
+  
+  if (!profile && !isLoading) {
+    return (
+      <div className="py-12 px-4 flex items-center justify-center min-h-[80vh]">
+        <div className="text-center">
+          <p className="mb-4">Your profile could not be loaded. Please log in again.</p>
+          <Button onClick={() => navigate("/login")}>
+            Go to Login
+          </Button>
         </div>
       </div>
     );
