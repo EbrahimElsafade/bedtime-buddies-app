@@ -33,6 +33,8 @@ const StoryEditor = () => {
     handleSubmit,
   } = useStoryForm();
 
+  console.log("StoryEditor rendering, isEditing:", isEditing);
+
   return (
     <div>
       <header className="mb-8">

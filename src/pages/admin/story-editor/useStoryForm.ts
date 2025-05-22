@@ -26,6 +26,8 @@ interface StoryFormData {
 export const useStoryForm = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  
+  // Ensure id is defined and not "new" for edit mode
   const isEditing = id !== "new" && id !== undefined;
   
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,7 +65,9 @@ export const useStoryForm = () => {
 
   // Fetch story data if editing
   const fetchStory = async () => {
-    if (!isEditing) return null;
+    if (!isEditing || !id) return null;
+    
+    console.log("Fetching story with ID:", id);
     
     // Fetch story details
     const { data: story, error: storyError } = await supabase
@@ -322,6 +326,17 @@ export const useStoryForm = () => {
       let storyId = id;
       if (!isEditing) {
         // Create new story
+        console.log("Creating new story with data:", {
+          title: storyData.title,
+          description: storyData.description,
+          category: storyData.category,
+          cover_image: coverImageUrl,
+          duration: storyData.duration,
+          is_free: storyData.is_free,
+          is_published: storyData.is_published,
+          languages: storyData.languages
+        });
+
         const { data: newStory, error: storyError } = await supabase
           .from("stories")
           .insert({
@@ -368,6 +383,8 @@ export const useStoryForm = () => {
             sceneImageUrl = urlData.publicUrl;
           }
           
+          console.log("Creating new scene with story_id:", storyId);
+          
           const { data: newScene, error: sceneError } = await supabase
             .from("story_scenes")
             .insert({
@@ -404,6 +421,12 @@ export const useStoryForm = () => {
         }
       } else {
         // Update existing story
+        if (!storyId) {
+          throw new Error("Story ID is undefined");
+        }
+
+        console.log("Updating story with ID:", storyId);
+
         const { error: storyError } = await supabase
           .from("stories")
           .update({
@@ -508,6 +531,12 @@ export const useStoryForm = () => {
             }
           } else {
             // Create new scene
+            if (!storyId) {
+              throw new Error("Story ID is undefined");
+            }
+
+            console.log("Creating new scene for existing story with story_id:", storyId);
+
             const { data: newScene, error: sceneError } = await supabase
               .from("story_scenes")
               .insert({

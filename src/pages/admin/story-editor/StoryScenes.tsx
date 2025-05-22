@@ -34,6 +34,8 @@ const StoryScenes = ({
   onUpdateSceneTranslation,
   onUpdateSceneImage,
 }: StoryScenesProps) => {
+  console.log("StoryScenes rendering with scenes:", scenes.length);
+
   return (
     <Card>
       <CardHeader>
