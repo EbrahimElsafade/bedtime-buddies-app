@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 const Story = () => {
   const { storyId } = useParams<{ storyId: string }>();
   const navigate = useNavigate();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, profile } = useAuth();
   const story = storyId ? getStoryById(storyId) : undefined;
   
   const [currentLanguage, setCurrentLanguage] = useState<'en' | 'ar-eg' | 'ar-fos7a'>('en');
@@ -25,15 +25,15 @@ const Story = () => {
       document.title = `${story.title} - Bedtime Stories`;
       
       // Set preferred language if available
-      if (user?.preferredLanguage && story.languages.includes(user.preferredLanguage)) {
-        setCurrentLanguage(user.preferredLanguage);
+      if (profile?.preferred_language && story.languages.includes(profile.preferred_language as 'en' | 'ar-eg' | 'ar-fos7a')) {
+        setCurrentLanguage(profile.preferred_language as 'en' | 'ar-eg' | 'ar-fos7a');
       } else if (story.languages.length > 0) {
         setCurrentLanguage(story.languages[0]);
       }
     } else {
       navigate("/stories", { replace: true });
     }
-  }, [story, user, navigate]);
+  }, [story, profile, navigate]);
   
   if (!story) {
     return null;
@@ -67,8 +67,8 @@ const Story = () => {
     setIsAudioPlaying(!isAudioPlaying);
   };
 
-  const canAccessStory = story.isFree || (isAuthenticated && user?.isPremium);
-  const showPremiumMessage = !story.isFree && (!isAuthenticated || !user?.isPremium);
+  const canAccessStory = story.isFree || (isAuthenticated && profile?.is_premium);
+  const showPremiumMessage = !story.isFree && (!isAuthenticated || !profile?.is_premium);
   
   return (
     <div className="py-8 px-4">

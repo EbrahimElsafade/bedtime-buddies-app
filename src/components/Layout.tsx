@@ -9,7 +9,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { cn } from "@/lib/utils";
 
 const Layout = () => {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user, profile, logout } = useAuth();
   const { t } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -105,7 +105,7 @@ const Layout = () => {
               <div className="hidden md:flex items-center space-x-2">
                 <Link to="/profile">
                   <Button variant="ghost" size="sm" className="text-dream-DEFAULT hover:text-dream-dark dark:text-white">
-                    {user?.name || 'Profile'}
+                    {profile?.parent_name || 'Profile'}
                   </Button>
                 </Link>
                 <Button variant="ghost" size="sm" onClick={logout} className="text-dream-DEFAULT hover:text-dream-dark dark:text-white">

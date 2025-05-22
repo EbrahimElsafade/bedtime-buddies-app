@@ -14,14 +14,14 @@ import { cn } from "@/lib/utils";
 
 const Course = () => {
   const { courseId } = useParams<{ courseId: string }>();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, profile } = useAuth();
   const { t } = useLanguage();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null);
   
   const course = courseId ? getCourseById(courseId) : undefined;
-  const isPremium = user?.isPremium || false;
+  const isPremium = profile?.is_premium || false;
   
   useEffect(() => {
     if (course) {
