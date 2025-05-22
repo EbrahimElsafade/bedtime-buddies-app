@@ -18,7 +18,7 @@ export const useProfileManagement = (user: User | null) => {
     try {
       console.log("Fetching profile for user:", userId);
       
-      // Direct SQL query approach to bypass potential RLS issues
+      // Query the profiles table for the user's profile
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -64,7 +64,7 @@ export const useProfileManagement = (user: User | null) => {
   // Create a default profile for a user if one doesn't exist
   const createDefaultProfile = async (userId: string) => {
     try {
-      // Make sure preferred_language is one of the allowed values
+      // Make sure preferred_language is one of the allowed values from the union type
       const defaultProfile: Profile = {
         id: userId,
         parent_name: user?.email || 'User',
@@ -72,6 +72,8 @@ export const useProfileManagement = (user: User | null) => {
         is_premium: false,
         role: 'user'
       };
+      
+      console.log("Creating default profile:", defaultProfile);
       
       const { error } = await supabase
         .from('profiles')

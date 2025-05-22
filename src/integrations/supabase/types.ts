@@ -252,7 +252,7 @@ export type Database = {
     }
     Functions: {
       is_admin: {
-        Args: { uid: string }
+        Args: Record<PropertyKey, never> | { uid: string }
         Returns: boolean
       }
     }
