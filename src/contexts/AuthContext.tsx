@@ -40,6 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Function to fetch user profile from Supabase
   const fetchUserProfile = async (userId: string) => {
     try {
+      console.log("Fetching profile for user:", userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -52,7 +53,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       if (data) {
+        console.log("Profile fetched successfully:", data);
         setProfile(data as Profile);
+      } else {
+        console.warn("No profile found for user:", userId);
       }
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -60,9 +64,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
+    console.log("Setting up auth state listener");
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, currentSession) => {
+      async (event, currentSession) => {
+        console.log('Auth state changed:', event, currentSession?.user?.email);
         setSession(currentSession);
         setUser(currentSession?.user ?? null);
         
@@ -74,14 +80,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } else {
           setProfile(null);
         }
-
-        // For debugging
-        console.log('Auth state changed:', event, currentSession?.user?.email);
       }
     );
 
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      console.log("Checking existing session:", currentSession?.user?.email);
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
       
@@ -227,9 +231,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const updateProfile = async (data: Partial<Profile>) => {
-    if (!user || !profile) return;
+    if (!user) {
+      console.error("Cannot update profile: No user authenticated");
+      return;
+    }
     
     try {
+      console.log("Updating profile for user:", user.id, data);
       const { error } = await supabase
         .from('profiles')
         .update(data)
@@ -240,8 +248,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       // Update local profile state
-      setProfile({ ...profile, ...data });
+      setProfile(prev => prev ? { ...prev, ...data } : null);
       toast.success('Profile updated successfully');
+      
+      // Refresh profile data to ensure we have the latest
+      fetchUserProfile(user.id);
     } catch (error: any) {
       console.error('Profile update error:', error.message);
       toast.error(error.message || 'Failed to update profile');

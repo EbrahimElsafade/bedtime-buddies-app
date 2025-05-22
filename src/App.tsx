@@ -42,6 +42,9 @@ const queryClient = new QueryClient();
 const App = () => {
   useEffect(() => {
     setInitialDirection();
+    
+    // Add logging to help with debugging
+    console.log("App initialized");
   }, []);
 
   return (
