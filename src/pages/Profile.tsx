@@ -9,54 +9,70 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, updateProfile, logout } = useAuth();
+  const { user, profile, isAuthenticated, isLoading, updateProfile, logout } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [childName, setChildName] = useState("");
   const [childAge, setChildAge] = useState("");
-  const [language, setLanguage] = useState<"en" | "ar-eg" | "ar-fos7a">("en");
+  const [language, setLanguage] = useState<"en" | "ar-eg" | "ar-fos7a">("ar-eg");
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   
   useEffect(() => {
     document.title = "Bedtime Stories - My Profile";
     
-    if (!isAuthenticated) {
+    if (!isAuthenticated && !isLoading) {
       navigate("/login");
       return;
     }
     
-    if (user) {
-      setName(user.name || "");
+    if (user && profile) {
+      setName(profile.parent_name || "");
       setEmail(user.email || "");
-      setChildName(user.childName || "");
-      setChildAge(user.childAge?.toString() || "");
-      setLanguage(user.preferredLanguage || "en");
+      setChildName(profile.child_name || "");
+      setChildAge(""); // Child age is not stored in the profile currently
+      setLanguage(profile.preferred_language || "ar-eg");
     }
-  }, [user, isAuthenticated, navigate]);
+  }, [user, profile, isAuthenticated, isLoading, navigate]);
   
-  const handleSaveProfile = () => {
-    if (!user) return;
+  const handleSaveProfile = async () => {
+    if (!user || !profile) return;
     
-    updateProfile({
-      name,
-      childName: childName || undefined,
-      childAge: childAge ? parseInt(childAge) : undefined,
-      preferredLanguage: language
-    });
-    
-    setIsEditing(false);
-    toast.success("Profile updated successfully");
+    setIsSaving(true);
+    try {
+      await updateProfile({
+        parent_name: name,
+        child_name: childName || null,
+        preferred_language: language
+      });
+      
+      setIsEditing(false);
+    } catch (error) {
+      // Error handled by updateProfile
+    } finally {
+      setIsSaving(false);
+    }
   };
   
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate("/");
   };
 
-  if (!user) return null;
+  if (isLoading || !profile) {
+    return (
+      <div className="py-12 px-4 flex items-center justify-center min-h-[80vh]">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p>Loading your profile...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="py-12 px-4">
@@ -118,20 +134,6 @@ const Profile = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="childAge">Child's Age</Label>
-                    <Input
-                      id="childAge"
-                      type="number"
-                      min="1"
-                      max="12"
-                      value={childAge}
-                      onChange={(e) => setChildAge(e.target.value)}
-                      disabled={!isEditing}
-                      placeholder={isEditing ? "Enter child's age" : "Not provided"}
-                    />
-                  </div>
-                  
-                  <div className="space-y-2">
                     <Label htmlFor="language">Preferred Language</Label>
                     {isEditing ? (
                       <Select 
@@ -163,11 +165,25 @@ const Profile = () => {
               <CardFooter className="flex justify-between">
                 {isEditing ? (
                   <>
-                    <Button variant="outline" onClick={() => setIsEditing(false)}>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setIsEditing(false)}
+                      disabled={isSaving}
+                    >
                       Cancel
                     </Button>
-                    <Button onClick={handleSaveProfile}>
-                      Save Changes
+                    <Button 
+                      onClick={handleSaveProfile}
+                      disabled={isSaving}
+                    >
+                      {isSaving ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        "Save Changes"
+                      )}
                     </Button>
                   </>
                 ) : (
@@ -217,11 +233,11 @@ const Profile = () => {
                 <div className="text-center py-6">
                   <div className="inline-block bg-secondary/50 rounded-full px-4 py-2 mb-4">
                     <span className="text-sm font-medium">
-                      {user.isPremium ? "Premium Plan" : "Free Plan"}
+                      {profile.is_premium ? "Premium Plan" : "Free Plan"}
                     </span>
                   </div>
                   
-                  {user.isPremium ? (
+                  {profile.is_premium ? (
                     <p className="text-muted-foreground mb-6">
                       You are currently on the Premium plan. Enjoy unlimited access to all stories and features.
                     </p>
@@ -231,7 +247,7 @@ const Profile = () => {
                     </p>
                   )}
                   
-                  {!user.isPremium && (
+                  {!profile.is_premium && (
                     <Button 
                       onClick={() => navigate("/subscription")} 
                       className="bg-moon-DEFAULT hover:bg-moon-dark"

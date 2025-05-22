@@ -1,106 +1,250 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { Session, User } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
-type User = {
+type Profile = {
   id: string;
-  name: string;
-  email: string;
-  childName?: string;
-  childAge?: number;
-  preferredLanguage: 'en' | 'ar-eg' | 'ar-fos7a';
-  isPremium: boolean;
+  parent_name: string;
+  child_name?: string;
+  preferred_language: 'en' | 'ar-eg' | 'ar-fos7a';
+  is_premium: boolean;
+  subscription_tier?: string;
+  subscription_end?: string;
 };
 
 type AuthContextType = {
   user: User | null;
+  profile: Profile | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name: string) => Promise<void>;
-  logout: () => void;
-  updateProfile: (data: Partial<User>) => void;
+  loginWithGoogle: () => Promise<void>;
+  loginWithApple: () => Promise<void>;
+  register: (email: string, password: string, parentName: string, childName?: string, preferredLanguage?: 'en' | 'ar-eg' | 'ar-fos7a') => Promise<void>;
+  logout: () => Promise<void>;
+  resetPassword: (email: string) => Promise<void>;
+  updateProfile: (data: Partial<Profile>) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  useEffect(() => {
-    // Check for stored user in localStorage
-    const storedUser = localStorage.getItem('bedtime-stories-user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+  // Function to fetch user profile from Supabase
+  const fetchUserProfile = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single();
+      
+      if (error) {
+        console.error('Error fetching profile:', error);
+        return;
+      }
+      
+      if (data) {
+        setProfile(data as Profile);
+      }
+    } catch (error) {
+      console.error('Error fetching profile:', error);
     }
-    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, currentSession) => {
+        setSession(currentSession);
+        setUser(currentSession?.user ?? null);
+        
+        if (currentSession?.user) {
+          // Use setTimeout to prevent potential deadlocks
+          setTimeout(() => {
+            fetchUserProfile(currentSession.user.id);
+          }, 0);
+        } else {
+          setProfile(null);
+        }
+
+        // For debugging
+        console.log('Auth state changed:', event, currentSession?.user?.email);
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      setSession(currentSession);
+      setUser(currentSession?.user ?? null);
+      
+      if (currentSession?.user) {
+        fetchUserProfile(currentSession.user.id);
+      }
+      
+      setIsLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const login = async (email: string, password: string) => {
-    // Mock login for now - in a real app, this would call an API
     setIsLoading(true);
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 800));
-
-      // For demo, hardcode a successful login
-      const mockUser: User = {
-        id: 'user-123',
-        name: 'Demo User',
+      const { error } = await supabase.auth.signInWithPassword({
         email,
-        preferredLanguage: 'en',
-        isPremium: false
-      };
+        password,
+      });
 
-      setUser(mockUser);
-      localStorage.setItem('bedtime-stories-user', JSON.stringify(mockUser));
-
-      console.log('User logged in:', email);
-    } catch (error) {
-      console.error('Login error:', error);
-      throw new Error('Login failed');
+      if (error) {
+        throw error;
+      }
+      
+      // Auth state listener will handle setting the user
+    } catch (error: any) {
+      console.error('Login error:', error.message);
+      toast.error(error.message || 'Failed to sign in');
+      throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const register = async (email: string, password: string, name: string) => {
+  const loginWithGoogle = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/login`
+        }
+      });
+      
+      if (error) {
+        throw error;
+      }
+    } catch (error: any) {
+      console.error('Google login error:', error.message);
+      toast.error(error.message || 'Failed to sign in with Google');
+      throw error;
+    }
+  };
+
+  const loginWithApple = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'apple',
+        options: {
+          redirectTo: `${window.location.origin}/login`
+        }
+      });
+      
+      if (error) {
+        throw error;
+      }
+    } catch (error: any) {
+      console.error('Apple login error:', error.message);
+      toast.error(error.message || 'Failed to sign in with Apple');
+      throw error;
+    }
+  };
+
+  const register = async (
+    email: string, 
+    password: string, 
+    parentName: string, 
+    childName?: string, 
+    preferredLanguage: 'en' | 'ar-eg' | 'ar-fos7a' = 'ar-eg'
+  ) => {
     setIsLoading(true);
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // Create mock user
-      const mockUser: User = {
-        id: `user-${Date.now()}`,
-        name,
+      // Sign up the user
+      const { error } = await supabase.auth.signUp({
         email,
-        preferredLanguage: 'en',
-        isPremium: false
-      };
-
-      setUser(mockUser);
-      localStorage.setItem('bedtime-stories-user', JSON.stringify(mockUser));
-
-      console.log('User registered:', email);
-    } catch (error) {
-      console.error('Registration error:', error);
-      throw new Error('Registration failed');
+        password,
+        options: {
+          data: {
+            parent_name: parentName,
+            child_name: childName,
+            preferred_language: preferredLanguage,
+          },
+          emailRedirectTo: `${window.location.origin}/login`
+        }
+      });
+      
+      if (error) {
+        throw error;
+      }
+      
+      toast.success('Registration successful! Please check your email to verify your account.');
+    } catch (error: any) {
+      console.error('Registration error:', error.message);
+      toast.error(error.message || 'Failed to register');
+      throw error;
     } finally {
       setIsLoading(false);
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('bedtime-stories-user');
-    setUser(null);
+  const logout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        throw error;
+      }
+      
+      // Auth state change will handle clearing the user
+    } catch (error: any) {
+      console.error('Logout error:', error.message);
+      toast.error('Failed to sign out');
+    }
   };
 
-  const updateProfile = (data: Partial<User>) => {
-    if (user) {
-      const updatedUser = { ...user, ...data };
-      setUser(updatedUser);
-      localStorage.setItem('bedtime-stories-user', JSON.stringify(updatedUser));
+  const resetPassword = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      
+      if (error) {
+        throw error;
+      }
+      
+      toast.success('Password reset instructions sent to your email');
+    } catch (error: any) {
+      console.error('Password reset error:', error.message);
+      toast.error(error.message || 'Failed to send reset password instructions');
+      throw error;
+    }
+  };
+
+  const updateProfile = async (data: Partial<Profile>) => {
+    if (!user || !profile) return;
+    
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update(data)
+        .eq('id', user.id);
+      
+      if (error) {
+        throw error;
+      }
+      
+      // Update local profile state
+      setProfile({ ...profile, ...data });
+      toast.success('Profile updated successfully');
+    } catch (error: any) {
+      console.error('Profile update error:', error.message);
+      toast.error(error.message || 'Failed to update profile');
+      throw error;
     }
   };
 
@@ -108,11 +252,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <AuthContext.Provider
       value={{
         user,
+        profile,
         isAuthenticated: !!user,
         isLoading,
         login,
+        loginWithGoogle,
+        loginWithApple,
         register,
         logout,
+        resetPassword,
         updateProfile
       }}
     >

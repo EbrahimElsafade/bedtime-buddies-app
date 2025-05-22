@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,18 +7,26 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const Register = () => {
   const navigate = useNavigate();
-  const { register: signUp, isLoading, updateProfile } = useAuth();
+  const { register: signUp, loginWithGoogle, loginWithApple, isAuthenticated, isLoading } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [childName, setChildName] = useState("");
   const [childAge, setChildAge] = useState("");
-  const [language, setLanguage] = useState<"en" | "ar-eg" | "ar-fos7a">("en");
+  const [language, setLanguage] = useState<"en" | "ar-eg" | "ar-fos7a">("ar-eg");
   const [error, setError] = useState("");
   const [currentStep, setCurrentStep] = useState(1);
+  
+  useEffect(() => {
+    // Redirect to home if already authenticated
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
   
   const handleNextStep = () => {
     if (!name || !email || !password) {
@@ -41,20 +48,29 @@ const Register = () => {
     setError("");
     
     try {
-      await signUp(email, password, name);
-      
-      // Update profile with child info
-      updateProfile({
-        childName: childName || undefined,
-        childAge: childAge ? parseInt(childAge) : undefined,
-        preferredLanguage: language
-      });
-      
-      toast.success("Welcome to Bedtime Stories!");
-      navigate("/");
+      await signUp(email, password, name, childName || undefined, language);
+      // Redirect will happen through the useEffect if authentication is successful
+      // Otherwise, user will stay on the page to verify their email
+    } catch (err: any) {
+      setError(err.message || "Failed to create account");
+    }
+  };
+
+  const handleGoogleSignUp = async () => {
+    try {
+      await loginWithGoogle();
+      // OAuth will redirect the user
     } catch (err) {
-      setError("Failed to create account");
-      console.error("Registration error:", err);
+      // Error is handled by the loginWithGoogle function
+    }
+  };
+
+  const handleAppleSignUp = async () => {
+    try {
+      await loginWithApple();
+      // OAuth will redirect the user
+    } catch (err) {
+      // Error is handled by the loginWithApple function
     }
   };
 
@@ -108,6 +124,9 @@ const Register = () => {
                       placeholder="••••••••"
                       required
                     />
+                    <p className="text-xs text-muted-foreground">
+                      Password must be at least 6 characters
+                    </p>
                   </div>
                   
                   {error && (
@@ -121,6 +140,36 @@ const Register = () => {
                   >
                     Next
                   </Button>
+                  
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t border-gray-300" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-white dark:bg-nightsky-light px-2 text-muted-foreground">
+                        Or continue with
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <Button 
+                      variant="outline" 
+                      type="button" 
+                      onClick={handleGoogleSignUp}
+                      disabled={isLoading}
+                    >
+                      Google
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      type="button" 
+                      onClick={handleAppleSignUp}
+                      disabled={isLoading}
+                    >
+                      Apple
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -174,6 +223,7 @@ const Register = () => {
                       variant="outline"
                       className="flex-1"
                       onClick={() => setCurrentStep(1)}
+                      disabled={isLoading}
                     >
                       Back
                     </Button>
@@ -182,34 +232,19 @@ const Register = () => {
                       className="flex-1 bg-dream-DEFAULT hover:bg-dream-dark"
                       disabled={isLoading}
                     >
-                      {isLoading ? "Creating..." : "Create Account"}
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Creating...
+                        </>
+                      ) : (
+                        "Create Account"
+                      )}
                     </Button>
                   </div>
                 </div>
               )}
             </form>
-            
-            {currentStep === 1 && (
-              <>
-                <div className="mt-6">
-                  <div className="relative">
-                    <div className="absolute inset-0 flex items-center">
-                      <span className="w-full border-t border-gray-300" />
-                    </div>
-                    <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-white dark:bg-nightsky-light px-2 text-muted-foreground">
-                        Or continue with
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-4 grid grid-cols-2 gap-4">
-                    <Button variant="outline">Google</Button>
-                    <Button variant="outline">Apple</Button>
-                  </div>
-                </div>
-              </>
-            )}
           </CardContent>
           <CardFooter className="text-center">
             <p className="text-sm text-muted-foreground">
