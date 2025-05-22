@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -8,9 +8,11 @@ import { Profile } from '@/types/auth';
 export const useProfileManagement = (user: User | null) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [profileLoaded, setProfileLoaded] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Function to fetch user profile from Supabase
   const fetchUserProfile = async (userId: string) => {
+    setIsLoading(true);
     try {
       console.log("Fetching profile for user:", userId);
       const { data, error } = await supabase
@@ -21,7 +23,9 @@ export const useProfileManagement = (user: User | null) => {
       
       if (error) {
         console.error('Error fetching profile:', error);
+        toast.error('Failed to load profile data');
         setProfileLoaded(true);
+        setIsLoading(false);
         return;
       }
       
@@ -30,13 +34,27 @@ export const useProfileManagement = (user: User | null) => {
         setProfile(data as Profile);
       } else {
         console.warn("No profile found for user:", userId);
+        toast.error('No profile data found for your account');
       }
       setProfileLoaded(true);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching profile:', error);
       setProfileLoaded(true);
+      setIsLoading(false);
     }
   };
+
+  // Load profile whenever user changes
+  useEffect(() => {
+    if (user) {
+      fetchUserProfile(user.id);
+    } else {
+      setProfile(null);
+      setProfileLoaded(true);
+      setIsLoading(false);
+    }
+  }, [user]);
 
   // Update profile function
   const updateProfile = async (data: Partial<Profile>) => {
@@ -74,6 +92,7 @@ export const useProfileManagement = (user: User | null) => {
     profileLoaded,
     fetchUserProfile,
     updateProfile,
-    setProfile
+    setProfile,
+    isLoading
   };
 };

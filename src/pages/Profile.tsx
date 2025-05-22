@@ -1,6 +1,5 @@
-
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,41 +12,47 @@ import { Loader2 } from "lucide-react";
 
 const Profile = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const { user, profile, isAuthenticated, isLoading, updateProfile, logout } = useAuth();
+  
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [childName, setChildName] = useState("");
-  const [childAge, setChildAge] = useState("");
   const [language, setLanguage] = useState<"en" | "ar-eg" | "ar-fos7a">("ar-eg");
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   
+  // Debug logging
   useEffect(() => {
-    document.title = "Bedtime Stories - My Profile";
-    
     console.log("Profile page - Auth state:", { 
       isAuthenticated, 
       isLoading,
       hasUser: !!user,
-      hasProfile: !!profile,
-      pathname: location.pathname
+      hasProfile: !!profile
     });
-    
-    if (!isAuthenticated && !isLoading) {
+  }, [user, profile, isAuthenticated, isLoading]);
+  
+  // Set page title
+  useEffect(() => {
+    document.title = "Bedtime Stories - My Profile";
+  }, []);
+  
+  // Check authentication and redirect if needed
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
       console.log("Profile - Not authenticated, redirecting to login");
       navigate("/login", { replace: true });
-      return;
     }
-    
+  }, [isAuthenticated, isLoading, navigate]);
+  
+  // Update form data when profile is loaded
+  useEffect(() => {
     if (user && profile) {
       setName(profile.parent_name || "");
       setEmail(user.email || "");
       setChildName(profile.child_name || "");
-      setChildAge(""); // Child age is not stored in the profile currently
       setLanguage(profile.preferred_language || "ar-eg");
     }
-  }, [user, profile, isAuthenticated, isLoading, navigate, location]);
+  }, [user, profile]);
   
   const handleSaveProfile = async () => {
     if (!user || !profile) return;
@@ -56,11 +61,12 @@ const Profile = () => {
     try {
       await updateProfile({
         parent_name: name,
-        child_name: childName || null,
+        child_name: childName || undefined,
         preferred_language: language
       });
       
       setIsEditing(false);
+      toast.success("Profile updated successfully");
     } catch (error) {
       // Error handled by updateProfile
     } finally {
@@ -70,7 +76,7 @@ const Profile = () => {
   
   const handleLogout = async () => {
     await logout();
-    navigate("/");
+    navigate("/login");
   };
 
   if (isLoading) {
@@ -84,13 +90,29 @@ const Profile = () => {
     );
   }
   
-  if (!profile && !isLoading) {
+  if (!isAuthenticated) {
+    return (
+      <div className="py-12 px-4 flex items-center justify-center min-h-[80vh]">
+        <div className="text-center">
+          <p className="mb-4">You need to be logged in to view this page.</p>
+          <Button onClick={() => navigate("/login")}>
+            Go to Login
+          </Button>
+        </div>
+      </div>
+    );
+  }
+  
+  if (!profile) {
     return (
       <div className="py-12 px-4 flex items-center justify-center min-h-[80vh]">
         <div className="text-center">
           <p className="mb-4">Your profile could not be loaded. Please log in again.</p>
-          <Button onClick={() => navigate("/login")}>
-            Go to Login
+          <Button onClick={() => {
+            logout();
+            navigate("/login");
+          }}>
+            Log out and try again
           </Button>
         </div>
       </div>

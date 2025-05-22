@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuthOperations } from '@/hooks/useAuth';
 import { useProfileManagement } from '@/hooks/useProfileManagement';
@@ -13,8 +13,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser,
     session,
     setSession,
-    isLoading,
-    setIsLoading,
+    isLoading: authLoading,
+    setIsLoading: setAuthLoading,
     login,
     loginWithGoogle,
     loginWithApple,
@@ -28,8 +28,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     profileLoaded,
     fetchUserProfile,
     updateProfile,
-    setProfile
+    setProfile,
+    isLoading: profileLoading
   } = useProfileManagement(user);
+
+  // Combined loading state
+  const isLoading = authLoading || (user != null && profileLoading);
 
   useEffect(() => {
     console.log("Setting up auth state listener");
@@ -42,19 +46,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         if (!isMounted) return;
         
-        setSession(currentSession);
-        setUser(currentSession?.user ?? null);
-        
-        if (currentSession?.user) {
-          // Prevent deadlocks by using setTimeout
-          setTimeout(() => {
-            if (isMounted) {
-              fetchUserProfile(currentSession.user.id);
-            }
-          }, 0);
+        if (currentSession) {
+          setSession(currentSession);
+          setUser(currentSession.user);
         } else {
+          setSession(null);
+          setUser(null);
           setProfile(null);
-          setIsLoading(false);
+          setAuthLoading(false);
         }
       }
     );
@@ -65,13 +64,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       if (!isMounted) return;
       
-      setSession(currentSession);
-      setUser(currentSession?.user ?? null);
-      
-      if (currentSession?.user) {
-        fetchUserProfile(currentSession.user.id);
+      if (currentSession) {
+        setSession(currentSession);
+        setUser(currentSession.user);
       } else {
-        setIsLoading(false);
+        setAuthLoading(false);
       }
     });
 
@@ -80,13 +77,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       subscription.unsubscribe();
     };
   }, []);
-
-  // Update isLoading state whenever profileLoaded changes
-  useEffect(() => {
-    if (profileLoaded) {
-      setIsLoading(false);
-    }
-  }, [profileLoaded, setIsLoading]);
 
   return (
     <AuthContext.Provider

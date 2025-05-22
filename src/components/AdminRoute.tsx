@@ -13,7 +13,8 @@ const AdminRoute = () => {
     console.log("AdminRoute - Auth State:", { 
       isAuthenticated, 
       isLoading, 
-      profile, 
+      hasProfile: !!profile,
+      profileExists: profile ? "yes" : "no", 
       userId: user?.id,
       profileRole: profile?.role,
       pathname: location.pathname
@@ -25,6 +26,7 @@ const AdminRoute = () => {
     console.log("AdminRoute - Still loading auth state");
     return (
       <div className="container mx-auto p-8">
+        <h2 className="text-2xl mb-4">Loading Admin Dashboard...</h2>
         <Skeleton className="h-12 w-48 mb-6" />
         <Skeleton className="h-64 w-full" />
       </div>
@@ -32,7 +34,7 @@ const AdminRoute = () => {
   }
   
   // Redirect to login if not authenticated
-  if (!isAuthenticated) {
+  if (!isAuthenticated || !user) {
     console.log("AdminRoute - Not authenticated, redirecting to login");
     return <Navigate to="/login" replace state={{ from: location }} />;
   }

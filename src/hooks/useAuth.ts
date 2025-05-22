@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -12,7 +11,7 @@ export const useAuthOperations = () => {
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -20,14 +19,15 @@ export const useAuthOperations = () => {
       if (error) {
         throw error;
       }
-      
-      // Auth state listener will handle setting the user
+
+      if (data && data.user) {
+        setUser(data.user);
+        setSession(data.session);
+      }
     } catch (error: any) {
       console.error('Login error:', error.message);
       toast.error(error.message || 'Failed to sign in');
       throw error;
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -79,7 +79,7 @@ export const useAuthOperations = () => {
     setIsLoading(true);
     try {
       // Sign up the user
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -96,6 +96,11 @@ export const useAuthOperations = () => {
         throw error;
       }
       
+      if (data && data.user) {
+        setUser(data.user);
+        setSession(data.session);
+      }
+      
       toast.success('Registration successful! Please check your email to verify your account.');
     } catch (error: any) {
       console.error('Registration error:', error.message);
@@ -108,15 +113,20 @@ export const useAuthOperations = () => {
 
   const logout = async () => {
     try {
+      setIsLoading(true);
       const { error } = await supabase.auth.signOut();
       if (error) {
         throw error;
       }
       
-      // Auth state change will handle clearing the user
+      // Clear user and session state
+      setUser(null);
+      setSession(null);
     } catch (error: any) {
       console.error('Logout error:', error.message);
       toast.error('Failed to sign out');
+    } finally {
+      setIsLoading(false);
     }
   };
 
