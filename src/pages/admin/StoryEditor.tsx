@@ -79,6 +79,25 @@ const StoryEditor = () => {
     { value: "fantasy", label: "Fantasy" }
   ];
 
+  // Helper function to get proper image URL for preview
+  const getImageUrl = (coverImage: string | null) => {
+    if (!coverImage) {
+      return null;
+    }
+    
+    // If it's already a full URL (like Unsplash or uploaded file), return as is
+    if (coverImage.startsWith('http') || coverImage.startsWith('blob:')) {
+      return coverImage;
+    }
+    
+    // If it's a relative path, construct the Supabase storage URL
+    const { data: urlData } = supabase.storage
+      .from('story-images')
+      .getPublicUrl(coverImage);
+    
+    return urlData.publicUrl;
+  };
+
   // Fetch story data if editing
   const fetchStory = async () => {
     if (!isEditing || !id) return null;
@@ -141,7 +160,8 @@ const StoryEditor = () => {
     );
     
     if (story.cover_image) {
-      setCoverImagePreview(story.cover_image);
+      const imageUrl = getImageUrl(story.cover_image);
+      setCoverImagePreview(imageUrl);
     }
     
     return {
@@ -294,19 +314,26 @@ const StoryEditor = () => {
       
       // Upload cover image if changed
       if (coverImageFile) {
+        console.log('Uploading image file:', coverImageFile.name);
         const filename = `cover-${Date.now()}-${coverImageFile.name}`;
         const { data: uploadData, error: uploadError } = await supabase.storage
-          .from("admin-content")
-          .upload(`story-covers/${filename}`, coverImageFile);
+          .from("story-images")
+          .upload(filename, coverImageFile);
           
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          console.error('Upload error:', uploadError);
+          throw uploadError;
+        }
+        
+        console.log('Upload successful:', uploadData);
         
         // Get the public URL
         const { data: urlData } = supabase.storage
-          .from("admin-content")
-          .getPublicUrl(`story-covers/${filename}`);
+          .from("story-images")
+          .getPublicUrl(filename);
           
         coverImageUrl = urlData.publicUrl;
+        console.log('Image URL:', coverImageUrl);
       }
       
       // Create or update the story
