@@ -31,6 +31,7 @@ const FeaturedStories = () => {
 
   // Helper function to get proper image URL
   const getImageUrl = (coverImage: string | null) => {
+    // If no cover image, return default
     if (!coverImage) {
       return 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
     }
@@ -83,6 +84,7 @@ const FeaturedStories = () => {
                   alt={story.title} 
                   className="w-full h-full object-cover"
                   onError={(e) => {
+                    console.log('Image failed to load:', story.cover_image);
                     e.currentTarget.src = 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
                   }}
                 />
