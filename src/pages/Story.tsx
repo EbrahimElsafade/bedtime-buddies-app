@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Heart, Share, ChevronLeft, ChevronRight, VolumeX, Volume2 } from "lucide-react";
@@ -41,6 +40,25 @@ const Story = () => {
     },
     enabled: !!storyId
   });
+
+  // Helper function to get proper image URL
+  const getImageUrl = (coverImage: string | null) => {
+    if (!coverImage) {
+      return 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
+    }
+    
+    // If it's already a full URL (like Unsplash), return as is
+    if (coverImage.startsWith('http')) {
+      return coverImage;
+    }
+    
+    // If it's a relative path, construct the Supabase storage URL
+    const { data: urlData } = supabase.storage
+      .from('story-images')
+      .getPublicUrl(coverImage);
+    
+    return urlData.publicUrl;
+  };
 
   useEffect(() => {
     if (story) {
@@ -90,7 +108,7 @@ const Story = () => {
   const scenes = [
     { 
       text: story.description || "Story content coming soon...", 
-      image: story.cover_image || 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000' 
+      image: getImageUrl(story.cover_image)
     }
   ];
   const currentScene = scenes[currentSceneIndex];
@@ -204,9 +222,12 @@ const Story = () => {
                 {/* Story Scene Image */}
                 <div className="md:w-1/2">
                   <img 
-                    src={currentScene?.image || story.cover_image || 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000'} 
+                    src={currentScene?.image || getImageUrl(story.cover_image)} 
                     alt={story.title} 
                     className="w-full h-full object-cover aspect-square md:aspect-auto"
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
+                    }}
                   />
                 </div>
                 

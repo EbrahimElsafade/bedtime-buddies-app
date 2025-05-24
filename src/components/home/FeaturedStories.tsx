@@ -29,6 +29,25 @@ const FeaturedStories = () => {
     }
   });
 
+  // Helper function to get proper image URL
+  const getImageUrl = (coverImage: string | null) => {
+    if (!coverImage) {
+      return 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
+    }
+    
+    // If it's already a full URL (like Unsplash), return as is
+    if (coverImage.startsWith('http')) {
+      return coverImage;
+    }
+    
+    // If it's a relative path, construct the Supabase storage URL
+    const { data: urlData } = supabase.storage
+      .from('story-images')
+      .getPublicUrl(coverImage);
+    
+    return urlData.publicUrl;
+  };
+
   if (isLoading) {
     return (
       <section className="py-12 px-4">
@@ -60,9 +79,12 @@ const FeaturedStories = () => {
             <Card key={story.id} className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
               <div className="aspect-[3/2] relative">
                 <img 
-                  src={story.cover_image || 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000'} 
+                  src={getImageUrl(story.cover_image)} 
                   alt={story.title} 
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
+                  }}
                 />
                 {story.is_free && (
                   <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white dark:text-white text-xs font-medium px-2 py-1 rounded-full">
