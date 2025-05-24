@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { getImageUrl } from "@/utils/imageUtils";
 
 type Story = {
   id: string;
@@ -44,29 +45,10 @@ const Stories = () => {
         throw error;
       }
       
+      console.log("Fetched stories:", data);
       return data || [];
     }
   });
-
-  // Helper function to get proper image URL
-  const getImageUrl = (coverImage: string | null) => {
-    // If no cover image, return default
-    if (!coverImage) {
-      return 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
-    }
-    
-    // If it's already a full URL (like Unsplash), return as is
-    if (coverImage.startsWith('http')) {
-      return coverImage;
-    }
-    
-    // If it's a relative path, construct the Supabase storage URL
-    const { data: urlData } = supabase.storage
-      .from('story-images')
-      .getPublicUrl(coverImage);
-    
-    return urlData.publicUrl;
-  };
 
   const filteredStories = allStories.filter((story: Story) => {
     const matchesSearch = story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -147,66 +129,77 @@ const Stories = () => {
         
         {/* Story Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredStories.map((story: Story) => (
-            <Card key={story.id} className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-              <div className="aspect-[3/2] relative">
-                <img 
-                  src={getImageUrl(story.cover_image)} 
-                  alt={story.title} 
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    console.log('Image failed to load:', story.cover_image);
-                    e.currentTarget.src = 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
-                  }}
-                />
-                <div className="absolute top-2 right-2 text-xs font-medium px-2 py-1 rounded-full bg-white/80 dark:bg-nightsky-light/80">
-                  {story.duration} mins
-                </div>
-                {story.is_free ? (
-                  <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                    FREE
+          {filteredStories.map((story: Story) => {
+            const imageUrl = getImageUrl(story.cover_image);
+            console.log(`Story ${story.title} - cover_image:`, story.cover_image, 'final URL:', imageUrl);
+            
+            return (
+              <Card key={story.id} className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+                <div className="aspect-[3/2] relative">
+                  <img 
+                    src={imageUrl}
+                    alt={story.title} 
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.log('Image failed to load for story:', story.title, 'URL:', imageUrl);
+                      const fallbackUrl = 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
+                      if (e.currentTarget.src !== fallbackUrl) {
+                        e.currentTarget.src = fallbackUrl;
+                      }
+                    }}
+                    onLoad={() => {
+                      console.log('Image loaded successfully for story:', story.title);
+                    }}
+                  />
+                  <div className="absolute top-2 right-2 text-xs font-medium px-2 py-1 rounded-full bg-white/80 dark:bg-nightsky-light/80">
+                    {story.duration} mins
                   </div>
-                ) : (
-                  <div className="absolute top-2 left-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                    PREMIUM
-                  </div>
-                )}
-              </div>
-              <CardHeader className="pb-2">
-                <div className="flex justify-between items-start">
-                  <CardTitle className="text-xl">{story.title}</CardTitle>
-                  <span className="text-xs px-2 py-1 bg-secondary rounded-full">
-                    {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
-                  </span>
+                  {story.is_free ? (
+                    <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                      FREE
+                    </div>
+                  ) : (
+                    <div className="absolute top-2 left-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                      PREMIUM
+                    </div>
+                  )}
                 </div>
-                <CardDescription className="line-clamp-2">{story.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="pb-2">
-                <div className="flex flex-wrap gap-1">
-                  {story.languages.map(lang => (
-                    <span 
-                      key={lang} 
-                      className="text-xs px-2 py-1 bg-secondary/50 rounded-full"
-                    >
-                      {lang === 'en' ? 'English' : lang === 'ar-eg' ? 'Arabic (Egyptian)' : 'Arabic (Fos7a)'}
+                <CardHeader className="pb-2">
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="text-xl">{story.title}</CardTitle>
+                    <span className="text-xs px-2 py-1 bg-secondary rounded-full">
+                      {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
                     </span>
-                  ))}
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Link to={`/stories/${story.id}`} className="w-full">
-                  <Button 
-                    className={cn(
-                      "w-full", 
-                      story.is_free ? "bg-dream-DEFAULT hover:bg-dream-dark" : "bg-moon-DEFAULT hover:bg-moon-dark"
-                    )}
-                  >
-                    {story.is_free ? "Read Now" : "Premium Story"}
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
-          ))}
+                  </div>
+                  <CardDescription className="line-clamp-2">{story.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="pb-2">
+                  <div className="flex flex-wrap gap-1">
+                    {story.languages.map(lang => (
+                      <span 
+                        key={lang} 
+                        className="text-xs px-2 py-1 bg-secondary/50 rounded-full"
+                      >
+                        {lang === 'en' ? 'English' : lang === 'ar-eg' ? 'Arabic (Egyptian)' : 'Arabic (Fos7a)'}
+                      </span>
+                    ))}
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Link to={`/stories/${story.id}`} className="w-full">
+                    <Button 
+                      className={cn(
+                        "w-full", 
+                        story.is_free ? "bg-dream-DEFAULT hover:bg-dream-dark" : "bg-moon-DEFAULT hover:bg-moon-dark"
+                      )}
+                    >
+                      {story.is_free ? "Read Now" : "Premium Story"}
+                    </Button>
+                  </Link>
+                </CardFooter>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </div>

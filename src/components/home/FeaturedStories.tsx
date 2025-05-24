@@ -6,6 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { getImageUrl } from "@/utils/imageUtils";
 
 const FeaturedStories = () => {
   const { t } = useLanguage();
@@ -28,26 +29,6 @@ const FeaturedStories = () => {
       return data || [];
     }
   });
-
-  // Helper function to get proper image URL
-  const getImageUrl = (coverImage: string | null) => {
-    // If no cover image, return default
-    if (!coverImage) {
-      return 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
-    }
-    
-    // If it's already a full URL (like Unsplash), return as is
-    if (coverImage.startsWith('http')) {
-      return coverImage;
-    }
-    
-    // If it's a relative path, construct the Supabase storage URL
-    const { data: urlData } = supabase.storage
-      .from('story-images')
-      .getPublicUrl(coverImage);
-    
-    return urlData.publicUrl;
-  };
 
   if (isLoading) {
     return (
@@ -80,12 +61,15 @@ const FeaturedStories = () => {
             <Card key={story.id} className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
               <div className="aspect-[3/2] relative">
                 <img 
-                  src={getImageUrl(story.cover_image)} 
+                  src={getImageUrl(story.cover_image)}
                   alt={story.title} 
                   className="w-full h-full object-cover"
                   onError={(e) => {
-                    console.log('Image failed to load:', story.cover_image);
-                    e.currentTarget.src = 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
+                    console.log('Featured story image failed to load:', story.cover_image);
+                    const fallbackUrl = 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
+                    if (e.currentTarget.src !== fallbackUrl) {
+                      e.currentTarget.src = fallbackUrl;
+                    }
                   }}
                 />
                 {story.is_free && (

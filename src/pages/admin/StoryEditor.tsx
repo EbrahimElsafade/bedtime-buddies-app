@@ -35,6 +35,7 @@ import {
   Loader2,
   X
 } from "lucide-react";
+import { getImageUrl } from "@/utils/imageUtils";
 
 const StoryEditor = () => {
   const navigate = useNavigate();
@@ -78,25 +79,6 @@ const StoryEditor = () => {
     { value: "animals", label: "Animals" },
     { value: "fantasy", label: "Fantasy" }
   ];
-
-  // Helper function to get proper image URL for preview
-  const getImageUrl = (coverImage: string | null) => {
-    if (!coverImage) {
-      return null;
-    }
-    
-    // If it's already a full URL (like Unsplash or uploaded file), return as is
-    if (coverImage.startsWith('http') || coverImage.startsWith('blob:')) {
-      return coverImage;
-    }
-    
-    // If it's a relative path, construct the Supabase storage URL
-    const { data: urlData } = supabase.storage
-      .from('story-images')
-      .getPublicUrl(coverImage);
-    
-    return urlData.publicUrl;
-  };
 
   // Fetch story data if editing
   const fetchStory = async () => {
@@ -159,8 +141,10 @@ const StoryEditor = () => {
       })
     );
     
+    console.log('Story cover_image from DB:', story.cover_image);
     if (story.cover_image) {
       const imageUrl = getImageUrl(story.cover_image);
+      console.log('Setting preview image URL:', imageUrl);
       setCoverImagePreview(imageUrl);
     }
     
@@ -199,10 +183,12 @@ const StoryEditor = () => {
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      console.log('New image file selected:', file.name, file.size);
       setCoverImageFile(file);
       
       // Create a preview
       const objectUrl = URL.createObjectURL(file);
+      console.log('Created preview URL:', objectUrl);
       setCoverImagePreview(objectUrl);
     }
   };
@@ -314,11 +300,15 @@ const StoryEditor = () => {
       
       // Upload cover image if changed
       if (coverImageFile) {
-        console.log('Uploading image file:', coverImageFile.name);
+        console.log('Uploading image file:', coverImageFile.name, 'Size:', coverImageFile.size);
         const filename = `cover-${Date.now()}-${coverImageFile.name}`;
+        
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from("story-images")
-          .upload(filename, coverImageFile);
+          .upload(filename, coverImageFile, {
+            cacheControl: '3600',
+            upsert: false
+          });
           
         if (uploadError) {
           console.error('Upload error:', uploadError);
@@ -327,13 +317,9 @@ const StoryEditor = () => {
         
         console.log('Upload successful:', uploadData);
         
-        // Get the public URL
-        const { data: urlData } = supabase.storage
-          .from("story-images")
-          .getPublicUrl(filename);
-          
-        coverImageUrl = urlData.publicUrl;
-        console.log('Image URL:', coverImageUrl);
+        // Store just the filename, not the full URL
+        coverImageUrl = filename;
+        console.log('Storing filename in DB:', coverImageUrl);
       }
       
       // Create or update the story
@@ -506,6 +492,11 @@ const StoryEditor = () => {
                             src={coverImagePreview} 
                             alt="Cover preview" 
                             className="w-full h-full object-cover"
+                            onLoad={() => console.log('Preview image loaded successfully')}
+                            onError={(e) => {
+                              console.log('Preview image failed to load:', coverImagePreview);
+                              // Don't set fallback for preview images as they might be blob URLs
+                            }}
                           />
                           <Button
                             type="button"
@@ -513,6 +504,7 @@ const StoryEditor = () => {
                             variant="destructive"
                             className="absolute top-2 right-2 h-6 w-6"
                             onClick={() => {
+                              console.log('Clearing image preview');
                               setCoverImagePreview(null);
                               setCoverImageFile(null);
                               setStoryData({ ...storyData, cover_image: null });
