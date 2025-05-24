@@ -5,21 +5,43 @@ import { Heart, Share, ChevronLeft, ChevronRight, VolumeX, Volume2 } from "lucid
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getStoryById } from "@/data/stories";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const Story = () => {
   const { storyId } = useParams<{ storyId: string }>();
   const navigate = useNavigate();
   const { isAuthenticated, profile } = useAuth();
-  const story = storyId ? getStoryById(storyId) : undefined;
   
   const [currentLanguage, setCurrentLanguage] = useState<'en' | 'ar-eg' | 'ar-fos7a'>('en');
   const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  
+
+  const { data: story, isLoading, error } = useQuery({
+    queryKey: ["story", storyId],
+    queryFn: async () => {
+      if (!storyId) throw new Error("Story ID is required");
+      
+      const { data, error } = await supabase
+        .from("stories")
+        .select("*")
+        .eq("id", storyId)
+        .eq("is_published", true)
+        .single();
+      
+      if (error) {
+        console.error("Error fetching story:", error);
+        throw error;
+      }
+      
+      return data;
+    },
+    enabled: !!storyId
+  });
+
   useEffect(() => {
     if (story) {
       document.title = `${story.title} - Bedtime Stories`;
@@ -30,16 +52,40 @@ const Story = () => {
       } else if (story.languages.length > 0) {
         setCurrentLanguage(story.languages[0]);
       }
-    } else {
+    }
+  }, [story, profile]);
+
+  useEffect(() => {
+    if (error || (!isLoading && !story)) {
       navigate("/stories", { replace: true });
     }
-  }, [story, profile, navigate]);
+  }, [error, story, isLoading, navigate]);
   
+  if (isLoading) {
+    return (
+      <div className="py-8 px-4">
+        <div className="container mx-auto max-w-4xl">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded mb-4"></div>
+            <div className="h-6 bg-gray-200 rounded mb-6 w-2/3"></div>
+            <div className="aspect-[3/2] bg-gray-200 rounded mb-6"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!story) {
     return null;
   }
-  
-  const scenes = story.content[currentLanguage]?.scenes || [];
+
+  // For now, we'll create placeholder scenes since we don't have the scene data structure set up yet
+  const scenes = [
+    { 
+      text: story.description || "Story content coming soon...", 
+      image: story.cover_image || 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000' 
+    }
+  ];
   const currentScene = scenes[currentSceneIndex];
   
   const handleNextScene = () => {
@@ -67,8 +113,8 @@ const Story = () => {
     setIsAudioPlaying(!isAudioPlaying);
   };
 
-  const canAccessStory = story.isFree || (isAuthenticated && profile?.is_premium);
-  const showPremiumMessage = !story.isFree && (!isAuthenticated || !profile?.is_premium);
+  const canAccessStory = story.is_free || (isAuthenticated && profile?.is_premium);
+  const showPremiumMessage = !story.is_free && (!isAuthenticated || !profile?.is_premium);
   
   return (
     <div className="py-8 px-4">
@@ -112,7 +158,7 @@ const Story = () => {
             <span className="px-2 py-1 bg-secondary/50 rounded-full">
               {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
             </span>
-            {story.isFree ? (
+            {story.is_free ? (
               <span className="px-2 py-1 bg-dream-DEFAULT/20 text-dream-DEFAULT rounded-full font-medium">
                 Free
               </span>
@@ -151,7 +197,7 @@ const Story = () => {
                 {/* Story Scene Image */}
                 <div className="md:w-1/2">
                   <img 
-                    src={currentScene?.image || story.coverImage} 
+                    src={currentScene?.image || story.cover_image || 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000'} 
                     alt={story.title} 
                     className="w-full h-full object-cover aspect-square md:aspect-auto"
                   />
@@ -161,7 +207,7 @@ const Story = () => {
                 <div className="md:w-1/2 p-6 flex flex-col">
                   <div className="flex-grow">
                     <p className="text-lg leading-relaxed">
-                      {currentScene?.text || story.content[currentLanguage]?.text || "Story text not available in this language."}
+                      {currentScene?.text || "Story content coming soon..."}
                     </p>
                   </div>
                   
