@@ -3,12 +3,52 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { getFeaturedStories } from "@/data/stories";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const FeaturedStories = () => {
   const { t } = useLanguage();
-  const featuredStories = getFeaturedStories().slice(0, 3);
+
+  const { data: featuredStories = [], isLoading } = useQuery({
+    queryKey: ["featured-stories"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("stories")
+        .select("*")
+        .eq("is_published", true)
+        .limit(3)
+        .order("created_at", { ascending: false });
+      
+      if (error) {
+        console.error("Error fetching featured stories:", error);
+        throw error;
+      }
+      
+      return data || [];
+    }
+  });
+
+  if (isLoading) {
+    return (
+      <section className="py-12 px-4">
+        <div className="container mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bubbly mb-6 text-dream-DEFAULT">{t('featured.title')}</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map((i) => (
+              <Card key={i} className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm animate-pulse">
+                <div className="aspect-[3/2] bg-gray-200"></div>
+                <CardHeader className="pb-2">
+                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded"></div>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-12 px-4">
@@ -20,11 +60,11 @@ const FeaturedStories = () => {
             <Card key={story.id} className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
               <div className="aspect-[3/2] relative">
                 <img 
-                  src={story.coverImage} 
+                  src={story.cover_image || 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000'} 
                   alt={story.title} 
                   className="w-full h-full object-cover"
                 />
-                {story.isFree && (
+                {story.is_free && (
                   <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white dark:text-white text-xs font-medium px-2 py-1 rounded-full">
                     FREE
                   </div>
@@ -45,12 +85,12 @@ const FeaturedStories = () => {
                   <Button 
                     className={cn(
                       "w-full", 
-                      story.isFree 
+                      story.is_free 
                         ? "bg-dream-DEFAULT hover:bg-dream-dark text-white dark:text-white" 
                         : "bg-moon-DEFAULT hover:bg-moon-dark text-dream-DEFAULT dark:text-white"
                     )}
                   >
-                    {story.isFree ? t('button.readNow') : t('button.premium')}
+                    {story.is_free ? t('button.readNow') : t('button.premium')}
                   </Button>
                 </Link>
               </CardFooter>

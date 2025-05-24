@@ -6,38 +6,77 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { stories, Story } from "@/data/stories";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+
+type Story = {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  is_free: boolean;
+  duration: number;
+  cover_image: string | null;
+  languages: string[];
+  is_published: boolean;
+};
 
 const Stories = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredStories, setFilteredStories] = useState<Story[]>(stories);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   
   useEffect(() => {
     document.title = "Bedtime Stories - Browse Stories";
-    
-    const filtered = stories.filter(story => 
-      story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      story.description.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    
-    setFilteredStories(filtered);
-  }, [searchQuery]);
+  }, []);
 
-  const filterByCategory = (category: Story['category'] | 'all') => {
-    if (category === 'all') {
-      return stories.filter(story => 
-        story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        story.description.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+  const { data: allStories = [], isLoading } = useQuery({
+    queryKey: ["published-stories"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("stories")
+        .select("*")
+        .eq("is_published", true)
+        .order("created_at", { ascending: false });
+      
+      if (error) {
+        console.error("Error fetching stories:", error);
+        throw error;
+      }
+      
+      return data || [];
     }
+  });
+
+  const filteredStories = allStories.filter((story: Story) => {
+    const matchesSearch = story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         story.description.toLowerCase().includes(searchQuery.toLowerCase());
     
-    return stories.filter(story => 
-      story.category === category &&
-      (story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      story.description.toLowerCase().includes(searchQuery.toLowerCase()))
+    const matchesCategory = selectedCategory === "all" || story.category === selectedCategory;
+    
+    return matchesSearch && matchesCategory;
+  });
+
+  if (isLoading) {
+    return (
+      <div className="py-12 px-4">
+        <div className="container mx-auto">
+          <h1 className="text-3xl md:text-4xl font-bubbly mb-6">Discover Stories</h1>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <Card key={i} className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm animate-pulse">
+                <div className="aspect-[3/2] bg-gray-200"></div>
+                <CardHeader className="pb-2">
+                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded"></div>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </div>
     );
-  };
+  }
 
   return (
     <div className="py-12 px-4">
@@ -57,27 +96,27 @@ const Stories = () => {
             />
           </div>
           
-          <Tabs defaultValue="all" className="w-full">
+          <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
             <TabsList className="mb-4 w-full max-w-2xl grid grid-cols-5 h-auto">
-              <TabsTrigger value="all" onClick={() => setFilteredStories(filterByCategory('all'))}>
+              <TabsTrigger value="all">
                 All Stories
               </TabsTrigger>
-              <TabsTrigger value="sleeping" onClick={() => setFilteredStories(filterByCategory('sleeping'))}>
+              <TabsTrigger value="sleeping">
                 Sleeping
               </TabsTrigger>
-              <TabsTrigger value="religious" onClick={() => setFilteredStories(filterByCategory('religious'))}>
+              <TabsTrigger value="religious">
                 Religious
               </TabsTrigger>
-              <TabsTrigger value="developmental" onClick={() => setFilteredStories(filterByCategory('developmental'))}>
+              <TabsTrigger value="developmental">
                 Developmental
               </TabsTrigger>
-              <TabsTrigger value="entertainment" onClick={() => setFilteredStories(filterByCategory('entertainment'))}>
+              <TabsTrigger value="entertainment">
                 Entertainment
               </TabsTrigger>
             </TabsList>
             
-            <TabsContent value="all">
-              {filteredStories.length === 0 && (
+            <TabsContent value={selectedCategory}>
+              {filteredStories.length === 0 && !isLoading && (
                 <div className="text-center py-12">
                   <p className="text-lg text-muted-foreground">No stories found matching your search.</p>
                 </div>
@@ -88,18 +127,18 @@ const Stories = () => {
         
         {/* Story Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredStories.map((story) => (
+          {filteredStories.map((story: Story) => (
             <Card key={story.id} className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
               <div className="aspect-[3/2] relative">
                 <img 
-                  src={story.coverImage} 
+                  src={story.cover_image || 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000'} 
                   alt={story.title} 
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute top-2 right-2 text-xs font-medium px-2 py-1 rounded-full bg-white/80 dark:bg-nightsky-light/80">
                   {story.duration} mins
                 </div>
-                {story.isFree ? (
+                {story.is_free ? (
                   <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
                     FREE
                   </div>
@@ -135,10 +174,10 @@ const Stories = () => {
                   <Button 
                     className={cn(
                       "w-full", 
-                      story.isFree ? "bg-dream-DEFAULT hover:bg-dream-dark" : "bg-moon-DEFAULT hover:bg-moon-dark"
+                      story.is_free ? "bg-dream-DEFAULT hover:bg-dream-dark" : "bg-moon-DEFAULT hover:bg-moon-dark"
                     )}
                   >
-                    {story.isFree ? "Read Now" : "Premium Story"}
+                    {story.is_free ? "Read Now" : "Premium Story"}
                   </Button>
                 </Link>
               </CardFooter>
