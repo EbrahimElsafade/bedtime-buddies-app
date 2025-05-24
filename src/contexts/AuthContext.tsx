@@ -34,8 +34,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     error: profileError
   } = useProfileManagement(user);
 
-  // Combined loading state with a more accurate check
-  const isLoading = authLoading || (user != null && !profileLoaded);
+  // More accurate loading state calculation
+  const isLoading = authLoading || (!!user && !profileLoaded);
 
   useEffect(() => {
     console.log("Setting up auth state listener");
@@ -55,8 +55,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setSession(null);
           setUser(null);
           setProfile(null);
-          setAuthLoading(false);
         }
+        
+        // Always set auth loading to false after handling auth state change
+        setAuthLoading(false);
       }
     );
 
@@ -69,9 +71,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (currentSession) {
         setSession(currentSession);
         setUser(currentSession.user);
-      } else {
-        setAuthLoading(false);
       }
+      
+      // Always set auth loading to false after initial session check
+      setAuthLoading(false);
     });
 
     return () => {
@@ -84,13 +87,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     console.log("Auth state updated:", { 
       hasUser: !!user,
+      userEmail: user?.email,
       hasProfile: !!profile,
       authLoading,
       profileLoading,
       profileLoaded,
+      isLoading,
       profileError: profileError?.message
     });
-  }, [user, profile, authLoading, profileLoading, profileLoaded, profileError]);
+  }, [user, profile, authLoading, profileLoading, profileLoaded, profileError, isLoading]);
 
   return (
     <AuthContext.Provider
