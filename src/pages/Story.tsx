@@ -46,11 +46,18 @@ const Story = () => {
     if (story) {
       document.title = `${story.title} - Bedtime Stories`;
       
-      // Set preferred language if available
-      if (profile?.preferred_language && story.languages.includes(profile.preferred_language as 'en' | 'ar-eg' | 'ar-fos7a')) {
-        setCurrentLanguage(profile.preferred_language as 'en' | 'ar-eg' | 'ar-fos7a');
+      // Set preferred language if available - with proper type checking
+      const preferredLang = profile?.preferred_language;
+      if (preferredLang && 
+          (preferredLang === 'en' || preferredLang === 'ar-eg' || preferredLang === 'ar-fos7a') &&
+          story.languages.includes(preferredLang)) {
+        setCurrentLanguage(preferredLang);
       } else if (story.languages.length > 0) {
-        setCurrentLanguage(story.languages[0]);
+        // Ensure the first language is one of our supported types
+        const firstLang = story.languages[0];
+        if (firstLang === 'en' || firstLang === 'ar-eg' || firstLang === 'ar-fos7a') {
+          setCurrentLanguage(firstLang);
+        }
       }
     }
   }, [story, profile]);
