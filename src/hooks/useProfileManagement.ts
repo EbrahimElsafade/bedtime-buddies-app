@@ -104,12 +104,13 @@ export const useProfileManagement = (user: User | null) => {
     console.log("useProfileManagement effect triggered, user:", user?.id);
     
     if (user) {
-      setProfileLoaded(false); // Reset loading state
+      setProfileLoaded(false); // Reset loading state when starting fresh
+      setProfile(null); // Clear any existing profile data
       fetchUserProfile(user.id);
     } else {
       console.log("No user, clearing profile state");
       setProfile(null);
-      setProfileLoaded(true);
+      setProfileLoaded(false); // Important: Don't mark as loaded when no user
       setIsLoading(false);
       setError(null);
     }
