@@ -304,8 +304,8 @@ const StoryEditor = () => {
         const filename = `cover-${Date.now()}-${coverImageFile.name}`;
         
         const { data: uploadData, error: uploadError } = await supabase.storage
-          .from("story-images")
-          .upload(filename, coverImageFile, {
+          .from("admin-content")
+          .upload(`story-covers/${filename}`, coverImageFile, {
             cacheControl: '3600',
             upsert: false
           });

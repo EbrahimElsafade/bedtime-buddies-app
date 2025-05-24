@@ -10,7 +10,7 @@ export const getImageUrl = (coverImage: string | null): string => {
     return 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
   }
   
-  // If it's already a full URL (like Unsplash), return as is
+  // If it's already a full URL (like Unsplash or existing Supabase URLs), return as is
   if (coverImage.startsWith('http')) {
     console.log('Full URL detected, returning as is:', coverImage);
     return coverImage;
@@ -22,11 +22,11 @@ export const getImageUrl = (coverImage: string | null): string => {
     return coverImage;
   }
   
-  // If it's a relative path, construct the Supabase storage URL
+  // If it's a relative path, construct the Supabase storage URL using the admin-content bucket
   console.log('Constructing Supabase URL for:', coverImage);
   const { data: urlData } = supabase.storage
-    .from('story-images')
-    .getPublicUrl(coverImage);
+    .from('admin-content')
+    .getPublicUrl(`story-covers/${coverImage}`);
   
   console.log('Generated Supabase URL:', urlData.publicUrl);
   return urlData.publicUrl;
