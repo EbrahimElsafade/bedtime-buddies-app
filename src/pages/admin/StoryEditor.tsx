@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -82,7 +81,9 @@ const StoryEditor = () => {
 
   // Fetch story data if editing
   const fetchStory = async () => {
-    if (!isEditing) return null;
+    if (!isEditing || !id) return null;
+    
+    console.log("Fetching story for ID:", id);
     
     // Fetch story details
     const { data: story, error: storyError } = await supabase
@@ -92,6 +93,7 @@ const StoryEditor = () => {
       .single();
       
     if (storyError) {
+      console.error("Story fetch error:", storyError);
       toast.error("Failed to fetch story details");
       throw storyError;
     }
@@ -104,6 +106,7 @@ const StoryEditor = () => {
       .order("scene_order", { ascending: true });
       
     if (scenesError) {
+      console.error("Scenes fetch error:", scenesError);
       toast.error("Failed to fetch story scenes");
       throw scenesError;
     }
@@ -117,6 +120,7 @@ const StoryEditor = () => {
           .eq("scene_id", scene.id);
           
         if (translationsError) {
+          console.error("Translations fetch error:", translationsError);
           toast.error(`Failed to fetch translations for scene ${scene.scene_order}`);
           throw translationsError;
         }
@@ -149,11 +153,13 @@ const StoryEditor = () => {
   const { data: storyDetails, isLoading } = useQuery({
     queryKey: ["admin-story", id],
     queryFn: fetchStory,
-    enabled: isEditing,
+    enabled: isEditing && !!id && id !== "new", // Only enable when editing and have valid ID
     staleTime: Infinity
   });
   
   useEffect(() => {
+    console.log("StoryEditor - isEditing:", isEditing, "id:", id, "storyDetails:", storyDetails);
+    
     if (storyDetails) {
       setStoryData({
         title: storyDetails.title || "",
@@ -167,7 +173,7 @@ const StoryEditor = () => {
         scenes: storyDetails.scenes || []
       });
     }
-  }, [storyDetails]);
+  }, [storyDetails, isEditing, id]);
   
   // Handle file input change for cover image
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
