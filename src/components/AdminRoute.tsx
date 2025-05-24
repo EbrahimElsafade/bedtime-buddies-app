@@ -8,7 +8,7 @@ const AdminRoute = () => {
   const { isAuthenticated, isLoading, profile, user, isProfileLoaded } = useAuth();
   const location = useLocation();
   
-  // Add debugging to help troubleshoot
+  // Add comprehensive debugging to help troubleshoot
   useEffect(() => {
     console.log("AdminRoute - Auth State:", { 
       isAuthenticated, 
@@ -18,9 +18,20 @@ const AdminRoute = () => {
       profileExists: profile ? "yes" : "no", 
       userId: user?.id,
       profileRole: profile?.role,
-      pathname: location.pathname
+      pathname: location.pathname,
+      redirectReason: getRedirectReason()
     });
   }, [isAuthenticated, isLoading, profile, user, location, isProfileLoaded]);
+  
+  // Helper function to determine why a user might be redirected
+  const getRedirectReason = () => {
+    if (isLoading) return "Still loading";
+    if (!isProfileLoaded) return "Profile not loaded yet";
+    if (!isAuthenticated || !user) return "Not authenticated";
+    if (!profile) return "No profile found";
+    if (profile.role !== 'admin') return `Not admin role (${profile.role})`;
+    return "Should be granted access";
+  };
   
   // Show loading state while authentication is being checked
   if (isLoading || !isProfileLoaded) {

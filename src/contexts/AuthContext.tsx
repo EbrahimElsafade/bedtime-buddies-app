@@ -83,12 +83,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
   }, []);
 
-  // Debug the auth state
+  // Enhanced debug logging for auth state
   useEffect(() => {
     console.log("Auth state updated:", { 
       hasUser: !!user,
       userEmail: user?.email,
       hasProfile: !!profile,
+      profileRole: profile?.role,
       authLoading,
       profileLoading,
       profileLoaded,
