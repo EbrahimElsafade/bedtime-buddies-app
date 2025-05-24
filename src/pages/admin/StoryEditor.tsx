@@ -39,7 +39,7 @@ import {
 const StoryEditor = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const isEditing = id !== "new";
+  const isEditing = id !== "new" && !!id; // Fix: Only editing if id exists and is not "new"
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
