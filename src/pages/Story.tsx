@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { getImageUrl } from "@/utils/imageUtils";
 
 const Story = () => {
   const { storyId } = useParams<{ storyId: string }>();
@@ -41,26 +42,6 @@ const Story = () => {
     },
     enabled: !!storyId
   });
-
-  // Helper function to get proper image URL
-  const getImageUrl = (coverImage: string | null) => {
-    // If no cover image, return default
-    if (!coverImage) {
-      return 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
-    }
-    
-    // If it's already a full URL (like Unsplash), return as is
-    if (coverImage.startsWith('http')) {
-      return coverImage;
-    }
-    
-    // If it's a relative path, construct the Supabase storage URL
-    const { data: urlData } = supabase.storage
-      .from('story-images')
-      .getPublicUrl(coverImage);
-    
-    return urlData.publicUrl;
-  };
 
   useEffect(() => {
     if (story) {
@@ -223,15 +204,21 @@ const Story = () => {
               <div className="md:flex">
                 {/* Story Scene Image */}
                 <div className="md:w-1/2">
-                  <img 
-                    src={currentScene?.image || getImageUrl(story.cover_image)} 
-                    alt={story.title} 
-                    className="w-full h-full object-cover aspect-square md:aspect-auto"
-                    onError={(e) => {
-                      console.log('Image failed to load:', story.cover_image);
-                      e.currentTarget.src = 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
-                    }}
-                  />
+                  {currentScene?.image ? (
+                    <img 
+                      src={currentScene.image} 
+                      alt={story.title} 
+                      className="w-full h-full object-cover aspect-square md:aspect-auto"
+                      onError={(e) => {
+                        console.log('Image failed to load:', currentScene.image);
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center aspect-square md:aspect-auto">
+                      <span className="text-gray-500">No Image</span>
+                    </div>
+                  )}
                 </div>
                 
                 {/* Story Scene Text */}

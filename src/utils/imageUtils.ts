@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const getImageUrl = (coverImage: string | null): string => {
   console.log('getImageUrl called with:', coverImage);
   
-  // If no cover image, return empty string or a placeholder
+  // If no cover image, return empty string
   if (!coverImage) {
     console.log('No cover image provided');
     return '';
