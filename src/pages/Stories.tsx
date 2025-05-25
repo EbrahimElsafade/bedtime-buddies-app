@@ -136,21 +136,24 @@ const Stories = () => {
             return (
               <Card key={story.id} className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
                 <div className="aspect-[3/2] relative">
-                  <img 
-                    src={imageUrl}
-                    alt={story.title} 
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      console.log('Image failed to load for story:', story.title, 'URL:', imageUrl);
-                      const fallbackUrl = 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
-                      if (e.currentTarget.src !== fallbackUrl) {
-                        e.currentTarget.src = fallbackUrl;
-                      }
-                    }}
-                    onLoad={() => {
-                      console.log('Image loaded successfully for story:', story.title);
-                    }}
-                  />
+                  {imageUrl ? (
+                    <img 
+                      src={imageUrl}
+                      alt={story.title} 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        console.log('Image failed to load for story:', story.title, 'URL:', imageUrl);
+                        e.currentTarget.style.display = 'none';
+                      }}
+                      onLoad={() => {
+                        console.log('Image loaded successfully for story:', story.title);
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500">No Image</span>
+                    </div>
+                  )}
                   <div className="absolute top-2 right-2 text-xs font-medium px-2 py-1 rounded-full bg-white/80 dark:bg-nightsky-light/80">
                     {story.duration} mins
                   </div>

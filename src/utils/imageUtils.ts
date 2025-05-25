@@ -4,13 +4,13 @@ import { supabase } from "@/integrations/supabase/client";
 export const getImageUrl = (coverImage: string | null): string => {
   console.log('getImageUrl called with:', coverImage);
   
-  // If no cover image, return default
+  // If no cover image, return empty string or a placeholder
   if (!coverImage) {
-    console.log('No cover image, returning default');
-    return 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
+    console.log('No cover image provided');
+    return '';
   }
   
-  // If it's already a full URL (like Unsplash or existing Supabase URLs), return as is
+  // If it's already a full URL (existing Supabase URLs), return as is
   if (coverImage.startsWith('http')) {
     console.log('Full URL detected, returning as is:', coverImage);
     return coverImage;

@@ -57,53 +57,60 @@ const FeaturedStories = () => {
         <h2 className="text-2xl md:text-3xl font-bubbly mb-6 text-dream-DEFAULT">{t('featured.title')}</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featuredStories.map((story) => (
-            <Card key={story.id} className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-              <div className="aspect-[3/2] relative">
-                <img 
-                  src={getImageUrl(story.cover_image)}
-                  alt={story.title} 
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    console.log('Featured story image failed to load:', story.cover_image);
-                    const fallbackUrl = 'https://images.unsplash.com/photo-1532251632967-86af52cbab08?q=80&w=1000';
-                    if (e.currentTarget.src !== fallbackUrl) {
-                      e.currentTarget.src = fallbackUrl;
-                    }
-                  }}
-                />
-                {story.is_free && (
-                  <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white dark:text-white text-xs font-medium px-2 py-1 rounded-full">
-                    FREE
-                  </div>
-                )}
-              </div>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xl text-dream-DEFAULT">{story.title}</CardTitle>
-                <CardDescription className="line-clamp-2 text-dream-DEFAULT dark:text-foreground">{story.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="pb-2">
-                <div className="flex items-center text-sm text-dream-DEFAULT dark:text-foreground">
-                  <span className="mr-4">{story.duration} {t('duration')}</span>
-                  <span>{story.category.charAt(0).toUpperCase() + story.category.slice(1)}</span>
+          {featuredStories.map((story) => {
+            const imageUrl = getImageUrl(story.cover_image);
+            
+            return (
+              <Card key={story.id} className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+                <div className="aspect-[3/2] relative">
+                  {imageUrl ? (
+                    <img 
+                      src={imageUrl}
+                      alt={story.title} 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        console.log('Featured story image failed to load:', story.cover_image);
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                      <span className="text-gray-500">No Image</span>
+                    </div>
+                  )}
+                  {story.is_free && (
+                    <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white dark:text-white text-xs font-medium px-2 py-1 rounded-full">
+                      FREE
+                    </div>
+                  )}
                 </div>
-              </CardContent>
-              <CardFooter>
-                <Link to={`/stories/${story.id}`} className="w-full">
-                  <Button 
-                    className={cn(
-                      "w-full", 
-                      story.is_free 
-                        ? "bg-dream-DEFAULT hover:bg-dream-dark text-white dark:text-white" 
-                        : "bg-moon-DEFAULT hover:bg-moon-dark text-dream-DEFAULT dark:text-white"
-                    )}
-                  >
-                    {story.is_free ? t('button.readNow') : t('button.premium')}
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
-          ))}
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xl text-dream-DEFAULT">{story.title}</CardTitle>
+                  <CardDescription className="line-clamp-2 text-dream-DEFAULT dark:text-foreground">{story.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="pb-2">
+                  <div className="flex items-center text-sm text-dream-DEFAULT dark:text-foreground">
+                    <span className="mr-4">{story.duration} {t('duration')}</span>
+                    <span>{story.category.charAt(0).toUpperCase() + story.category.slice(1)}</span>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Link to={`/stories/${story.id}`} className="w-full">
+                    <Button 
+                      className={cn(
+                        "w-full", 
+                        story.is_free 
+                          ? "bg-dream-DEFAULT hover:bg-dream-dark text-white dark:text-white" 
+                          : "bg-moon-DEFAULT hover:bg-moon-dark text-dream-DEFAULT dark:text-white"
+                      )}
+                    >
+                      {story.is_free ? t('button.readNow') : t('button.premium')}
+                    </Button>
+                  </Link>
+                </CardFooter>
+              </Card>
+            );
+          })}
         </div>
       </div>
     </section>
