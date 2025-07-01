@@ -130,7 +130,7 @@ const Story = () => {
         {/* Story Header */}
         <div className="mb-6 flex flex-wrap justify-between items-center">
           <Button variant="ghost" onClick={() => navigate("/stories")} className="mb-4 px-2">
-            <ChevronLeft className="mr-1 h-4 w-4" /> Back to Stories
+            <ChevronLeft className="rtl:rotate-180 me-1 h-4 w-4" /> Back to Stories
           </Button>
           
           <div className="flex items-center space-x-2">

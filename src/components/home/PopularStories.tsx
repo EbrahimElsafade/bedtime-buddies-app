@@ -17,7 +17,7 @@ const PopularStories = () => {
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl md:text-3xl font-bubbly text-dream-DEFAULT">{t('popular.title') || 'Popular Bedtime Stories'}</h2>
           <Link to="/stories" className="text-dream-DEFAULT hover:text-dream-dark text-sm font-medium flex items-center">
-            {t('free.viewAll') || 'View All'} <ArrowRight className="ml-1 h-4 w-4" />
+            {t('free.viewAll') || 'View All'} <ArrowRight className="rtl:rotate-180 ms-1 h-4 w-4" />
           </Link>
         </div>
         

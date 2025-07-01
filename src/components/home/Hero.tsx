@@ -22,7 +22,7 @@ const Hero = () => {
           <div className="flex flex-wrap gap-4 justify-center">
             <Link to="/stories">
               <Button size="lg" className="rounded-full bg-dream-DEFAULT hover:bg-dream-dark text-white dark:text-white">
-                {t('hero.exploreButton')} <ArrowRight className="ml-2 h-4 w-4" />
+                {t('hero.exploreButton')} <ArrowRight className="rtl:rotate-180 ms-2 h-4 w-4" />
               </Button>
             </Link>
             {!isAuthenticated && (

@@ -22,7 +22,7 @@ const FeaturedCourses = () => {
             {t('courses.title') || 'Fun Learning Courses'}
           </h2>
           <Link to="/courses" className="text-dream-DEFAULT hover:text-dream-dark text-sm font-medium flex items-center">
-            {t('free.viewAll') || 'View All'} <ArrowRight className="ml-1 h-4 w-4" />
+            {t('free.viewAll') || 'View All'} <ArrowRight className="rtl:rotate-180 ms-1 h-4 w-4" />
           </Link>
         </div>
         
