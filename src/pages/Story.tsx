@@ -37,7 +37,7 @@ const Story = () => {
         console.error("Error fetching story:", error);
         throw error;
       }
-      
+      console.log(data)
       return data;
     },
     enabled: !!storyId
