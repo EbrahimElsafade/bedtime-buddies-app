@@ -1,17 +1,59 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
+  ArrowLeft,
+  Plus,
+  Trash2,
+  Upload,
+  Loader2,
+  X,
+  Image,
+  Volume2,
+  Play,
+  Pause
+} from "lucide-react";
 import { getImageUrl } from "@/utils/imageUtils";
-import { StoryDetailsForm } from "./story-editor/StoryDetailsForm";
-import { LanguageManager } from "./story-editor/LanguageManager";
-import { StorySectionsManager } from "./story-editor/StorySectionsManager";
-import { LegacyScenesManager } from "./story-editor/LegacyScenesManager";
-import { StoryData, StorySection } from "./story-editor/types";
+
+interface StorySection {
+  id?: string;
+  section_order: number;
+  image?: File | string | null;
+  imagePreview?: string | null;
+  translations: Record<string, { text: string; audio_url?: string | null; audioFile?: File | null; audioPreview?: string | null }>;
+}
 
 const StoryEditor = () => {
   const navigate = useNavigate();
@@ -21,9 +63,10 @@ const StoryEditor = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(null);
+  const [playingAudio, setPlayingAudio] = useState<{ sectionIndex: number; language: string } | null>(null);
   
   // Story form data
-  const [storyData, setStoryData] = useState<StoryData>({
+  const [storyData, setStoryData] = useState({
     title: "",
     description: "",
     category: "bedtime",
@@ -31,12 +74,33 @@ const StoryEditor = () => {
     is_free: true,
     is_published: false,
     languages: ["en"],
-    cover_image: null,
-    scenes: []
+    cover_image: null as string | null,
+    scenes: [] as Array<{
+      id?: string;
+      scene_order: number;
+      image: string | null;
+      translations: Record<string, { text: string; audio_url: string | null }>;
+    }>
   });
 
   // Story sections
   const [storySections, setStorySections] = useState<StorySection[]>([]);
+  
+  // Available language options
+  const languageOptions = [
+    { value: "en", label: "English" },
+    { value: "ar-eg", label: "Arabic (Egyptian)" },
+    { value: "ar-fos7a", label: "Arabic (Fos7a)" }
+  ];
+  
+  // Category options
+  const categoryOptions = [
+    { value: "bedtime", label: "Bedtime" },
+    { value: "adventure", label: "Adventure" },
+    { value: "educational", label: "Educational" },
+    { value: "animals", label: "Animals" },
+    { value: "fantasy", label: "Fantasy" }
+  ];
 
   // Fetch story data if editing
   const fetchStory = async () => {
@@ -182,18 +246,244 @@ const StoryEditor = () => {
   // Initialize sections when languages change
   useEffect(() => {
     if (storySections.length === 0 && storyData.languages.length > 0 && !isEditing) {
-      const newSection: StorySection = {
-        section_order: 1,
-        image: null,
-        imagePreview: null,
-        translations: storyData.languages.reduce((acc, lang) => {
-          acc[lang] = { text: "", audio_url: null };
-          return acc;
-        }, {} as Record<string, { text: string; audio_url?: string | null }>)
-      };
-      setStorySections([newSection]);
+      addNewSection();
     }
   }, [storyData.languages, isEditing]);
+  
+  // Handle file input change for cover image
+  const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      console.log('New image file selected:', file.name, file.size);
+      setCoverImageFile(file);
+      
+      // Create a preview
+      const objectUrl = URL.createObjectURL(file);
+      console.log('Created preview URL:', objectUrl);
+      setCoverImagePreview(objectUrl);
+    }
+  };
+  
+  // Handle adding a new language
+  const handleAddLanguage = (language: string) => {
+    if (!storyData.languages.includes(language)) {
+      const updatedLanguages = [...storyData.languages, language];
+      setStoryData({
+        ...storyData, 
+        languages: updatedLanguages
+      });
+      
+      // Add language fields to all sections
+      const updatedSections = storySections.map(section => ({
+        ...section,
+        translations: {
+          ...section.translations,
+          [language]: { text: "", audio_url: null }
+        }
+      }));
+      setStorySections(updatedSections);
+      
+      // Add empty translations for all scenes for the new language
+      const updatedScenes = storyData.scenes.map(scene => ({
+        ...scene,
+        translations: {
+          ...scene.translations,
+          [language]: { text: "", audio_url: null }
+        }
+      }));
+      
+      setStoryData(prev => ({
+        ...prev,
+        scenes: updatedScenes
+      }));
+    }
+  };
+  
+  // Handle removing a language
+  const handleRemoveLanguage = (language: string) => {
+    const updatedLanguages = storyData.languages.filter(lang => lang !== language);
+    setStoryData({
+      ...storyData,
+      languages: updatedLanguages
+    });
+    
+    // Remove language fields from all sections
+    const updatedSections = storySections.map(section => {
+      const newTranslations = { ...section.translations };
+      delete newTranslations[language];
+      
+      return {
+        ...section,
+        translations: newTranslations
+      };
+    });
+    setStorySections(updatedSections);
+    
+    // Remove translations for this language from all scenes
+    const updatedScenes = storyData.scenes.map(scene => {
+      const newTranslations = { ...scene.translations };
+      delete newTranslations[language];
+      
+      return {
+        ...scene,
+        translations: newTranslations
+      };
+    });
+    
+    setStoryData(prev => ({
+      ...prev,
+      scenes: updatedScenes
+    }));
+  };
+
+  // Section management functions
+  const addNewSection = () => {
+    const newSection: StorySection = {
+      section_order: storySections.length + 1,
+      image: null,
+      imagePreview: null,
+      translations: storyData.languages.reduce((acc, lang) => {
+        acc[lang] = { text: "", audio_url: null };
+        return acc;
+      }, {} as Record<string, { text: string; audio_url?: string | null }>)
+    };
+    
+    setStorySections([...storySections, newSection]);
+  };
+
+  const deleteSection = (index: number) => {
+    const updatedSections = storySections.filter((_, i) => i !== index);
+    // Reorder sections
+    const reorderedSections = updatedSections.map((section, idx) => ({
+      ...section,
+      section_order: idx + 1
+    }));
+    setStorySections(reorderedSections);
+  };
+
+  const updateSectionText = (sectionIndex: number, language: string, text: string) => {
+    const updatedSections = [...storySections];
+    updatedSections[sectionIndex].translations[language] = {
+      ...updatedSections[sectionIndex].translations[language],
+      text
+    };
+    setStorySections(updatedSections);
+  };
+
+  const updateSectionOrder = (sectionIndex: number, newOrder: number) => {
+    if (newOrder < 1 || newOrder > storySections.length) return;
+    
+    const updatedSections = [...storySections];
+    const section = updatedSections[sectionIndex];
+    const oldOrder = section.section_order;
+    
+    // Update the target section's order
+    section.section_order = newOrder;
+    
+    // Adjust other sections' orders
+    updatedSections.forEach((s, idx) => {
+      if (idx !== sectionIndex) {
+        if (newOrder > oldOrder) {
+          // Moving down - shift others up
+          if (s.section_order > oldOrder && s.section_order <= newOrder) {
+            s.section_order -= 1;
+          }
+        } else {
+          // Moving up - shift others down
+          if (s.section_order >= newOrder && s.section_order < oldOrder) {
+            s.section_order += 1;
+          }
+        }
+      }
+    });
+    
+    // Sort by order
+    updatedSections.sort((a, b) => a.section_order - b.section_order);
+    setStorySections(updatedSections);
+  };
+
+  const handleSectionImageChange = (sectionIndex: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const updatedSections = [...storySections];
+      updatedSections[sectionIndex].image = file;
+      updatedSections[sectionIndex].imagePreview = URL.createObjectURL(file);
+      setStorySections(updatedSections);
+    }
+  };
+
+  const handleSectionAudioChange = (sectionIndex: number, language: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const updatedSections = [...storySections];
+      if (!updatedSections[sectionIndex].translations[language]) {
+        updatedSections[sectionIndex].translations[language] = { text: "" };
+      }
+      updatedSections[sectionIndex].translations[language].audioFile = file;
+      updatedSections[sectionIndex].translations[language].audioPreview = URL.createObjectURL(file);
+      setStorySections(updatedSections);
+    }
+  };
+
+  const playAudio = (sectionIndex: number, language: string) => {
+    const translation = storySections[sectionIndex].translations[language];
+    const audioUrl = translation?.audioPreview || translation?.audio_url;
+    if (audioUrl) {
+      const audio = new Audio(audioUrl);
+      setPlayingAudio({ sectionIndex, language });
+      audio.play();
+      audio.onended = () => setPlayingAudio(null);
+    }
+  };
+
+  // Handle adding a new scene
+  const handleAddScene = () => {
+    const newScene = {
+      scene_order: storyData.scenes.length + 1,
+      image: null,
+      translations: storyData.languages.reduce((acc, lang) => {
+        acc[lang] = { text: "", audio_url: null };
+        return acc;
+      }, {} as Record<string, { text: string; audio_url: string | null }>)
+    };
+    
+    setStoryData({
+      ...storyData,
+      scenes: [...storyData.scenes, newScene]
+    });
+  };
+  
+  // Handle deleting a scene
+  const handleDeleteScene = (index: number) => {
+    const updatedScenes = [...storyData.scenes];
+    updatedScenes.splice(index, 1);
+    
+    // Reorder scenes
+    const reorderedScenes = updatedScenes.map((scene, idx) => ({
+      ...scene,
+      scene_order: idx + 1
+    }));
+    
+    setStoryData({
+      ...storyData,
+      scenes: reorderedScenes
+    });
+  };
+  
+  // Handle updating a scene translation
+  const handleUpdateSceneTranslation = (
+    sceneIndex: number,
+    language: string,
+    text: string
+  ) => {
+    const updatedScenes = [...storyData.scenes];
+    updatedScenes[sceneIndex].translations[language].text = text;
+    
+    setStoryData({
+      ...storyData,
+      scenes: updatedScenes
+    });
+  };
   
   // Handle save/submit
   const handleSubmit = async (e: React.FormEvent) => {
@@ -409,31 +699,450 @@ const StoryEditor = () => {
       ) : (
         <form onSubmit={handleSubmit}>
           <div className="grid gap-6 mb-8">
-            <StoryDetailsForm
-              storyData={storyData}
-              setStoryData={setStoryData}
-              coverImagePreview={coverImagePreview}
-              setCoverImagePreview={setCoverImagePreview}
-              setCoverImageFile={setCoverImageFile}
-            />
+            <Card>
+              <CardHeader>
+                <CardTitle>Story Details</CardTitle>
+                <CardDescription>
+                  Basic information about the story
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="title">Title</Label>
+                    <Input
+                      id="title"
+                      placeholder="Enter story title"
+                      value={storyData.title}
+                      onChange={(e) => setStoryData({ ...storyData, title: e.target.value })}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="category">Category</Label>
+                    <Select
+                      value={storyData.category}
+                      onValueChange={(value) => setStoryData({ ...storyData, category: value })}
+                    >
+                      <SelectTrigger id="category">
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Categories</SelectLabel>
+                          {categoryOptions.map(category => (
+                            <SelectItem key={category.value} value={category.value}>
+                              {category.label}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    placeholder="Enter story description"
+                    value={storyData.description}
+                    onChange={(e) => setStoryData({ ...storyData, description: e.target.value })}
+                    className="min-h-[100px]"
+                    required
+                  />
+                </div>
+                
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="cover-image">Cover Image</Label>
+                    <div className="flex flex-col items-center gap-4">
+                      {coverImagePreview ? (
+                        <div className="relative w-full max-w-[200px] aspect-square rounded-md overflow-hidden border">
+                          <img 
+                            src={coverImagePreview} 
+                            alt="Cover preview" 
+                            className="w-full h-full object-cover"
+                            onLoad={() => console.log('Preview image loaded successfully')}
+                            onError={(e) => {
+                              console.log('Preview image failed to load:', coverImagePreview);
+                            }}
+                          />
+                          <Button
+                            type="button"
+                            size="icon"
+                            variant="destructive"
+                            className="absolute top-2 right-2 h-6 w-6"
+                            onClick={() => {
+                              console.log('Clearing image preview');
+                              setCoverImagePreview(null);
+                              setCoverImageFile(null);
+                              setStoryData({ ...storyData, cover_image: null });
+                            }}
+                          >
+                            <X className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center w-full max-w-[200px] aspect-square rounded-md bg-muted border border-dashed border-muted-foreground/50">
+                          <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                          <p className="text-sm text-muted-foreground text-center">
+                            Click to upload or<br />drag and drop
+                          </p>
+                        </div>
+                      )}
+                      <Input 
+                        id="cover-image"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleCoverImageChange}
+                        className={coverImagePreview ? "hidden" : ""}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="duration">Duration (minutes)</Label>
+                      <Input
+                        id="duration"
+                        type="number"
+                        min="1"
+                        value={storyData.duration}
+                        onChange={(e) => setStoryData({ ...storyData, duration: parseInt(e.target.value) || 5 })}
+                        required
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="is-free">Free Story</Label>
+                      <Switch
+                        id="is-free"
+                        checked={storyData.is_free}
+                        onCheckedChange={(checked) => setStoryData({ ...storyData, is_free: checked })}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="is-published">Published</Label>
+                      <Switch
+                        id="is-published"
+                        checked={storyData.is_published}
+                        onCheckedChange={(checked) => setStoryData({ ...storyData, is_published: checked })}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
             
-            <LanguageManager
-              storyData={storyData}
-              setStoryData={setStoryData}
-              storySections={storySections}
-              setStorySections={setStorySections}
-            />
+            <Card>
+              <CardHeader>
+                <CardTitle>Languages</CardTitle>
+                <CardDescription>
+                  Manage available languages for this story
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex flex-wrap gap-2">
+                  {storyData.languages.map(language => {
+                    const langOption = languageOptions.find(opt => opt.value === language);
+                    return (
+                      <Badge key={language} variant="outline" className="py-2 text-sm">
+                        {langOption?.label || language}
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-4 w-4 ml-1"
+                          onClick={() => handleRemoveLanguage(language)}
+                          disabled={storyData.languages.length === 1}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </Badge>
+                    );
+                  })}
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <Select onValueChange={handleAddLanguage}>
+                    <SelectTrigger className="w-[200px]">
+                      <SelectValue placeholder="Add language" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Languages</SelectLabel>
+                        {languageOptions.map(language => (
+                          <SelectItem
+                            key={language.value}
+                            value={language.value}
+                            disabled={storyData.languages.includes(language.value)}
+                          >
+                            {language.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  <Button type="button" variant="outline" size="sm">
+                    <Plus className="h-4 w-4 mr-1" /> Add Language
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
 
-            <StorySectionsManager
-              storyData={storyData}
-              storySections={storySections}
-              setStorySections={setStorySections}
-            />
+            {/* Story Sections Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Story Sections</CardTitle>
+                <CardDescription>
+                  Create and manage sections with text, audio, and images for each language
+                </CardDescription>
+                <Button 
+                  type="button" 
+                  onClick={addNewSection}
+                  className="mt-2"
+                >
+                  <Plus className="h-4 w-4 mr-1" /> Add Section
+                </Button>
+              </CardHeader>
+              <CardContent>
+                {storySections.length === 0 ? (
+                  <div className="text-center py-8 border rounded-md">
+                    <p className="text-muted-foreground">
+                      No sections added yet. Click "Add Section" to get started.
+                    </p>
+                  </div>
+                ) : (
+                  <Accordion type="multiple" className="space-y-4">
+                    {storySections.map((section, sectionIndex) => (
+                      <AccordionItem key={sectionIndex} value={`section-${sectionIndex}`}>
+                        <AccordionTrigger className="hover:no-underline">
+                          <div className="flex items-center justify-between w-full mr-4">
+                            <span className="font-medium">Section {section.section_order}</span>
+                            <div className="flex items-center gap-2">
+                              <Select
+                                value={section.section_order.toString()}
+                                onValueChange={(value) => updateSectionOrder(sectionIndex, parseInt(value))}
+                              >
+                                <SelectTrigger className="w-20 h-8">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {Array.from({ length: storySections.length }, (_, i) => i + 1).map(num => (
+                                    <SelectItem key={num} value={num.toString()}>
+                                      {num}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  deleteSection(sectionIndex);
+                                }}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </AccordionTrigger>
+                        <AccordionContent className="pt-4">
+                          <div className="space-y-6">
+                            {/* Section Image */}
+                            <div className="space-y-2">
+                              <Label>Section Image</Label>
+                              <div className="flex items-center gap-4">
+                                {section.imagePreview ? (
+                                  <div className="relative w-32 h-32 rounded-md overflow-hidden border">
+                                    <img 
+                                      src={section.imagePreview} 
+                                      alt="Section preview" 
+                                      className="w-full h-full object-cover"
+                                    />
+                                    <Button
+                                      type="button"
+                                      size="icon"
+                                      variant="destructive"
+                                      className="absolute top-1 right-1 h-6 w-6"
+                                      onClick={() => {
+                                        const updatedSections = [...storySections];
+                                        updatedSections[sectionIndex].image = null;
+                                        updatedSections[sectionIndex].imagePreview = null;
+                                        setStorySections(updatedSections);
+                                      }}
+                                    >
+                                      <X className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                ) : (
+                                  <div className="flex flex-col items-center justify-center w-32 h-32 rounded-md bg-muted border border-dashed border-muted-foreground/50">
+                                    <Image className="h-6 w-6 text-muted-foreground mb-1" />
+                                    <p className="text-xs text-muted-foreground text-center">Upload Image</p>
+                                  </div>
+                                )}
+                                <Input 
+                                  type="file"
+                                  accept="image/*"
+                                  onChange={(e) => handleSectionImageChange(sectionIndex, e)}
+                                  className="flex-1"
+                                />
+                              </div>
+                            </div>
+
+                            {/* Language-specific content */}
+                            <Tabs defaultValue={storyData.languages[0]} className="w-full">
+                              <TabsList>
+                                {storyData.languages.map(lang => {
+                                  const langOption = languageOptions.find(opt => opt.value === lang);
+                                  return (
+                                    <TabsTrigger key={lang} value={lang}>
+                                      {langOption?.label || lang}
+                                    </TabsTrigger>
+                                  );
+                                })}
+                              </TabsList>
+                              {storyData.languages.map(lang => (
+                                <TabsContent key={lang} value={lang} className="space-y-4">
+                                  {/* Text content */}
+                                  <div className="space-y-2">
+                                    <Label>Text Content ({languageOptions.find(opt => opt.value === lang)?.label})</Label>
+                                    <Textarea
+                                      placeholder={`Enter section text in ${lang}`}
+                                      value={section.translations[lang]?.text || ""}
+                                      onChange={(e) => updateSectionText(sectionIndex, lang, e.target.value)}
+                                      className="min-h-[120px]"
+                                    />
+                                  </div>
+
+                                  {/* Audio upload */}
+                                  <div className="space-y-2">
+                                    <Label>Voice Audio ({languageOptions.find(opt => opt.value === lang)?.label})</Label>
+                                    <div className="flex items-center gap-2">
+                                      <Input 
+                                        type="file"
+                                        accept="audio/*"
+                                        onChange={(e) => handleSectionAudioChange(sectionIndex, lang, e)}
+                                        className="flex-1"
+                                      />
+                                      {(section.translations[lang]?.audioPreview || section.translations[lang]?.audio_url) && (
+                                        <Button
+                                          type="button"
+                                          variant="outline"
+                                          size="sm"
+                                          onClick={() => playAudio(sectionIndex, lang)}
+                                          disabled={playingAudio?.sectionIndex === sectionIndex && playingAudio?.language === lang}
+                                        >
+                                          {playingAudio?.sectionIndex === sectionIndex && playingAudio?.language === lang ? (
+                                            <Pause className="h-4 w-4" />
+                                          ) : (
+                                            <Play className="h-4 w-4" />
+                                          )}
+                                          <Volume2 className="h-4 w-4 ml-1" />
+                                        </Button>
+                                      )}
+                                    </div>
+                                  </div>
+                                </TabsContent>
+                              ))}
+                            </Tabs>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                  </Accordion>
+                )}
+              </CardContent>
+            </Card>
             
-            <LegacyScenesManager
-              storyData={storyData}
-              setStoryData={setStoryData}
-            />
+            <Card>
+              <CardHeader>
+                <CardTitle>Story Scenes (Legacy)</CardTitle>
+                <CardDescription>
+                  Legacy scene management - consider using Sections above for new stories
+                </CardDescription>
+                <Button 
+                  type="button" 
+                  onClick={handleAddScene}
+                  className="mt-2"
+                >
+                  <Plus className="h-4 w-4 mr-1" /> Add Scene
+                </Button>
+              </CardHeader>
+              <CardContent>
+                {storyData.scenes.length === 0 ? (
+                  <div className="text-center py-8 border rounded-md">
+                    <p className="text-muted-foreground">
+                      No scenes added yet. Click "Add Scene" to get started.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-8">
+                    {storyData.scenes.map((scene, index) => (
+                      <Card key={index}>
+                        <CardHeader className="pb-2">
+                          <div className="flex justify-between items-center">
+                            <CardTitle className="text-lg">Scene {scene.scene_order}</CardTitle>
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => handleDeleteScene(index)}
+                            >
+                              <Trash2 className="h-4 w-4 mr-1" /> Delete
+                            </Button>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="mb-4">
+                            <Label>Scene Image (coming soon)</Label>
+                            <div className="flex items-center justify-center h-32 bg-muted rounded-md">
+                              <Upload className="h-8 w-8 text-muted-foreground" />
+                            </div>
+                          </div>
+                          
+                          <Tabs defaultValue={storyData.languages[0]}>
+                            <TabsList>
+                              {storyData.languages.map(lang => {
+                                const langOption = languageOptions.find(opt => opt.value === lang);
+                                return (
+                                  <TabsTrigger key={lang} value={lang}>
+                                    {langOption?.label || lang}
+                                  </TabsTrigger>
+                                );
+                              })}
+                            </TabsList>
+                            {storyData.languages.map(lang => (
+                              <TabsContent key={lang} value={lang}>
+                                <div className="space-y-4">
+                                  <div className="space-y-2">
+                                    <Label>Text Content</Label>
+                                    <Textarea
+                                      placeholder={`Enter scene text in ${lang}`}
+                                      value={scene.translations[lang]?.text || ""}
+                                      onChange={(e) => handleUpdateSceneTranslation(
+                                        index, 
+                                        lang, 
+                                        e.target.value
+                                      )}
+                                      className="min-h-[120px]"
+                                    />
+                                  </div>
+                                </div>
+                              </TabsContent>
+                            ))}
+                          </Tabs>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
           
           <div className="flex justify-end gap-4">
