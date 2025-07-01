@@ -49,12 +49,10 @@ import { getImageUrl } from "@/utils/imageUtils";
 
 interface StorySection {
   id?: string;
-  order: number;
+  section_order: number;
   image?: File | string | null;
   imagePreview?: string | null;
-  texts: Record<string, string>;
-  audioFiles: Record<string, File | null>;
-  audioPreviews: Record<string, string | null>;
+  translations: Record<string, { text: string; audio_url?: string | null; audioFile?: File | null; audioPreview?: string | null }>;
 }
 
 const StoryEditor = () => {
@@ -123,7 +121,23 @@ const StoryEditor = () => {
       throw storyError;
     }
     
-    // Fetch scenes
+    // Fetch story sections
+    const { data: sections, error: sectionsError } = await supabase
+      .from("story_sections")
+      .select(`
+        *,
+        story_section_translations (*)
+      `)
+      .eq("story_id", id)
+      .order("section_order", { ascending: true });
+      
+    if (sectionsError) {
+      console.error("Sections fetch error:", sectionsError);
+      toast.error("Failed to fetch story sections");
+      throw sectionsError;
+    }
+    
+    // Fetch scenes (legacy)
     const { data: scenes, error: scenesError } = await supabase
       .from("story_scenes")
       .select("*")
@@ -172,9 +186,31 @@ const StoryEditor = () => {
       setCoverImagePreview(imageUrl);
     }
     
+    // Format sections for the UI
+    const formattedSections: StorySection[] = sections.map(section => {
+      const translations = section.story_section_translations.reduce((acc, trans) => {
+        acc[trans.language] = {
+          text: trans.text,
+          audio_url: trans.audio_url
+        };
+        return acc;
+      }, {} as Record<string, { text: string; audio_url?: string | null }>);
+      
+      const imagePreview = section.image ? getImageUrl(section.image) : null;
+      
+      return {
+        id: section.id,
+        section_order: section.section_order,
+        image: section.image,
+        imagePreview,
+        translations
+      };
+    });
+    
     return {
       ...story,
-      scenes: scenesWithTranslations
+      scenes: scenesWithTranslations,
+      sections: formattedSections
     };
   };
   
@@ -200,15 +236,19 @@ const StoryEditor = () => {
         cover_image: storyDetails.cover_image,
         scenes: storyDetails.scenes || []
       });
+      
+      if (storyDetails.sections) {
+        setStorySections(storyDetails.sections);
+      }
     }
   }, [storyDetails, isEditing, id]);
 
   // Initialize sections when languages change
   useEffect(() => {
-    if (storySections.length === 0 && storyData.languages.length > 0) {
+    if (storySections.length === 0 && storyData.languages.length > 0 && !isEditing) {
       addNewSection();
     }
-  }, [storyData.languages]);
+  }, [storyData.languages, isEditing]);
   
   // Handle file input change for cover image
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -236,9 +276,10 @@ const StoryEditor = () => {
       // Add language fields to all sections
       const updatedSections = storySections.map(section => ({
         ...section,
-        texts: { ...section.texts, [language]: "" },
-        audioFiles: { ...section.audioFiles, [language]: null },
-        audioPreviews: { ...section.audioPreviews, [language]: null }
+        translations: {
+          ...section.translations,
+          [language]: { text: "", audio_url: null }
+        }
       }));
       setStorySections(updatedSections);
       
@@ -268,18 +309,12 @@ const StoryEditor = () => {
     
     // Remove language fields from all sections
     const updatedSections = storySections.map(section => {
-      const newTexts = { ...section.texts };
-      const newAudioFiles = { ...section.audioFiles };
-      const newAudioPreviews = { ...section.audioPreviews };
-      delete newTexts[language];
-      delete newAudioFiles[language];
-      delete newAudioPreviews[language];
+      const newTranslations = { ...section.translations };
+      delete newTranslations[language];
       
       return {
         ...section,
-        texts: newTexts,
-        audioFiles: newAudioFiles,
-        audioPreviews: newAudioPreviews
+        translations: newTranslations
       };
     });
     setStorySections(updatedSections);
@@ -304,21 +339,13 @@ const StoryEditor = () => {
   // Section management functions
   const addNewSection = () => {
     const newSection: StorySection = {
-      order: storySections.length + 1,
+      section_order: storySections.length + 1,
       image: null,
       imagePreview: null,
-      texts: storyData.languages.reduce((acc, lang) => {
-        acc[lang] = "";
+      translations: storyData.languages.reduce((acc, lang) => {
+        acc[lang] = { text: "", audio_url: null };
         return acc;
-      }, {} as Record<string, string>),
-      audioFiles: storyData.languages.reduce((acc, lang) => {
-        acc[lang] = null;
-        return acc;
-      }, {} as Record<string, File | null>),
-      audioPreviews: storyData.languages.reduce((acc, lang) => {
-        acc[lang] = null;
-        return acc;
-      }, {} as Record<string, string | null>)
+      }, {} as Record<string, { text: string; audio_url?: string | null }>)
     };
     
     setStorySections([...storySections, newSection]);
@@ -329,14 +356,17 @@ const StoryEditor = () => {
     // Reorder sections
     const reorderedSections = updatedSections.map((section, idx) => ({
       ...section,
-      order: idx + 1
+      section_order: idx + 1
     }));
     setStorySections(reorderedSections);
   };
 
   const updateSectionText = (sectionIndex: number, language: string, text: string) => {
     const updatedSections = [...storySections];
-    updatedSections[sectionIndex].texts[language] = text;
+    updatedSections[sectionIndex].translations[language] = {
+      ...updatedSections[sectionIndex].translations[language],
+      text
+    };
     setStorySections(updatedSections);
   };
 
@@ -345,30 +375,30 @@ const StoryEditor = () => {
     
     const updatedSections = [...storySections];
     const section = updatedSections[sectionIndex];
-    const oldOrder = section.order;
+    const oldOrder = section.section_order;
     
     // Update the target section's order
-    section.order = newOrder;
+    section.section_order = newOrder;
     
     // Adjust other sections' orders
     updatedSections.forEach((s, idx) => {
       if (idx !== sectionIndex) {
         if (newOrder > oldOrder) {
           // Moving down - shift others up
-          if (s.order > oldOrder && s.order <= newOrder) {
-            s.order -= 1;
+          if (s.section_order > oldOrder && s.section_order <= newOrder) {
+            s.section_order -= 1;
           }
         } else {
           // Moving up - shift others down
-          if (s.order >= newOrder && s.order < oldOrder) {
-            s.order += 1;
+          if (s.section_order >= newOrder && s.section_order < oldOrder) {
+            s.section_order += 1;
           }
         }
       }
     });
     
     // Sort by order
-    updatedSections.sort((a, b) => a.order - b.order);
+    updatedSections.sort((a, b) => a.section_order - b.section_order);
     setStorySections(updatedSections);
   };
 
@@ -386,14 +416,18 @@ const StoryEditor = () => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const updatedSections = [...storySections];
-      updatedSections[sectionIndex].audioFiles[language] = file;
-      updatedSections[sectionIndex].audioPreviews[language] = URL.createObjectURL(file);
+      if (!updatedSections[sectionIndex].translations[language]) {
+        updatedSections[sectionIndex].translations[language] = { text: "" };
+      }
+      updatedSections[sectionIndex].translations[language].audioFile = file;
+      updatedSections[sectionIndex].translations[language].audioPreview = URL.createObjectURL(file);
       setStorySections(updatedSections);
     }
   };
 
   const playAudio = (sectionIndex: number, language: string) => {
-    const audioUrl = storySections[sectionIndex].audioPreviews[language];
+    const translation = storySections[sectionIndex].translations[language];
+    const audioUrl = translation?.audioPreview || translation?.audio_url;
     if (audioUrl) {
       const audio = new Audio(audioUrl);
       setPlayingAudio({ sectionIndex, language });
@@ -521,8 +555,84 @@ const StoryEditor = () => {
         if (storyError) throw storyError;
       }
       
-      // Handle scenes (for this simplified version we'll just add new scenes)
-      // A more complete implementation would handle updating existing scenes
+      // Handle story sections
+      if (isEditing) {
+        // Delete existing sections for this story
+        const { error: deleteSectionsError } = await supabase
+          .from("story_sections")
+          .delete()
+          .eq("story_id", storyId);
+          
+        if (deleteSectionsError) throw deleteSectionsError;
+      }
+      
+      // Insert all sections
+      for (const section of storySections) {
+        // Upload section image if it's a file
+        let sectionImageUrl = null;
+        if (section.image && typeof section.image !== "string") {
+          const filename = `section-${storyId}-${section.section_order}-${Date.now()}-${section.image.name}`;
+          
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from("admin-content")
+            .upload(`story-sections/${filename}`, section.image, {
+              cacheControl: '3600',
+              upsert: false
+            });
+            
+          if (uploadError) throw uploadError;
+          sectionImageUrl = filename;
+        } else if (typeof section.image === "string") {
+          sectionImageUrl = section.image;
+        }
+        
+        // Insert section
+        const { data: newSection, error: sectionError } = await supabase
+          .from("story_sections")
+          .insert({
+            story_id: storyId,
+            section_order: section.section_order,
+            image: sectionImageUrl
+          })
+          .select('id')
+          .single();
+          
+        if (sectionError) throw sectionError;
+        
+        // Insert translations for this section
+        for (const [language, translation] of Object.entries(section.translations)) {
+          if (translation.text) {
+            // Upload audio if it's a file
+            let audioUrl = translation.audio_url;
+            if (translation.audioFile) {
+              const filename = `audio-${storyId}-${section.section_order}-${language}-${Date.now()}-${translation.audioFile.name}`;
+              
+              const { data: uploadData, error: uploadError } = await supabase.storage
+                .from("admin-content")
+                .upload(`story-audio/${filename}`, translation.audioFile, {
+                  cacheControl: '3600',
+                  upsert: false
+                });
+                
+              if (uploadError) throw uploadError;
+              audioUrl = filename;
+            }
+            
+            const { error: translationError } = await supabase
+              .from("story_section_translations")
+              .insert({
+                section_id: newSection.id,
+                language,
+                text: translation.text,
+                audio_url: audioUrl
+              });
+              
+            if (translationError) throw translationError;
+          }
+        }
+      }
+      
+      // Handle legacy scenes (for existing stories)
       if (!isEditing) {
         // Insert all scenes for a new story
         for (const scene of storyData.scenes) {
@@ -782,7 +892,7 @@ const StoryEditor = () => {
               </CardContent>
             </Card>
 
-            {/* New Story Sections Card */}
+            {/* Story Sections Card */}
             <Card>
               <CardHeader>
                 <CardTitle>Story Sections</CardTitle>
@@ -810,10 +920,10 @@ const StoryEditor = () => {
                       <AccordionItem key={sectionIndex} value={`section-${sectionIndex}`}>
                         <AccordionTrigger className="hover:no-underline">
                           <div className="flex items-center justify-between w-full mr-4">
-                            <span className="font-medium">Section {section.order}</span>
+                            <span className="font-medium">Section {section.section_order}</span>
                             <div className="flex items-center gap-2">
                               <Select
-                                value={section.order.toString()}
+                                value={section.section_order.toString()}
                                 onValueChange={(value) => updateSectionOrder(sectionIndex, parseInt(value))}
                               >
                                 <SelectTrigger className="w-20 h-8">
@@ -903,7 +1013,7 @@ const StoryEditor = () => {
                                     <Label>Text Content ({languageOptions.find(opt => opt.value === lang)?.label})</Label>
                                     <Textarea
                                       placeholder={`Enter section text in ${lang}`}
-                                      value={section.texts[lang] || ""}
+                                      value={section.translations[lang]?.text || ""}
                                       onChange={(e) => updateSectionText(sectionIndex, lang, e.target.value)}
                                       className="min-h-[120px]"
                                     />
@@ -919,7 +1029,7 @@ const StoryEditor = () => {
                                         onChange={(e) => handleSectionAudioChange(sectionIndex, lang, e)}
                                         className="flex-1"
                                       />
-                                      {section.audioPreviews[lang] && (
+                                      {(section.translations[lang]?.audioPreview || section.translations[lang]?.audio_url) && (
                                         <Button
                                           type="button"
                                           variant="outline"
