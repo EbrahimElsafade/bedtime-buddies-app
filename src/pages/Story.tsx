@@ -252,7 +252,7 @@ const Story = () => {
                       disabled={currentSceneIndex === scenes.length - 1}
                       aria-label="Next scene"
                     >
-                      <ChevronRight className="h-5 w-5" />
+                      <ChevronRight className="rtl:rotate-180 h-5 w-5" />
                     </Button>
                   </div>
                 </div>
