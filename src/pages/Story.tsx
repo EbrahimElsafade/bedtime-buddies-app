@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { getImageUrl } from "@/utils/imageUtils";
+import { Story as StoryType, StorySection } from "@/types/story";
 
 const Story = () => {
   const { storyId } = useParams<{ storyId: string }>();
@@ -17,28 +18,53 @@ const Story = () => {
   const { isAuthenticated, profile } = useAuth();
   
   const [currentLanguage, setCurrentLanguage] = useState<'en' | 'ar-eg' | 'ar-fos7a'>('en');
-  const [currentSceneIndex, setCurrentSceneIndex] = useState(0);
+  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
   const { data: story, isLoading, error } = useQuery({
     queryKey: ["story", storyId],
-    queryFn: async () => {
+    queryFn: async (): Promise<StoryType> => {
       if (!storyId) throw new Error("Story ID is required");
       
-      const { data, error } = await supabase
+      // Fetch story details
+      const { data: storyData, error: storyError } = await supabase
         .from("stories")
         .select("*")
         .eq("id", storyId)
         .eq("is_published", true)
         .single();
       
-      if (error) {
-        console.error("Error fetching story:", error);
-        throw error;
+      if (storyError) {
+        console.error("Error fetching story:", storyError);
+        throw storyError;
       }
-      console.log("data",data)
-      return data;
+
+      // Fetch story sections
+      const { data: sectionsData, error: sectionsError } = await supabase
+        .from("story_sections")
+        .select("*")
+        .eq("story_id", storyId)
+        .order("order", { ascending: true });
+      
+      if (sectionsError) {
+        console.error("Error fetching sections:", sectionsError);
+        throw sectionsError;
+      }
+
+      // Transform sections to match our interface
+      const sections: StorySection[] = sectionsData?.map(section => ({
+        id: section.id,
+        order: section.order,
+        texts: section.texts as Record<string, string>,
+        voices: section.voices as Record<string, string> | undefined,
+        image: section.image || undefined
+      })) || [];
+
+      return {
+        ...storyData,
+        sections
+      };
     },
     enabled: !!storyId
   });
@@ -87,24 +113,19 @@ const Story = () => {
     return null;
   }
 
-  // For now, we'll create placeholder scenes since we don't have the scene data structure set up yet
-  const scenes = [
-    { 
-      text: story.description || "Story content coming soon...", 
-      image: getImageUrl(story.cover_image)
-    }
-  ];
-  const currentScene = scenes[currentSceneIndex];
+  const currentSection = story.sections[currentSectionIndex];
+  const currentText = currentSection?.texts[currentLanguage] || "Content not available in selected language";
+  const currentImage = currentSection?.image ? getImageUrl(currentSection.image) : getImageUrl(story.cover_image);
   
-  const handleNextScene = () => {
-    if (currentSceneIndex < scenes.length - 1) {
-      setCurrentSceneIndex(currentSceneIndex + 1);
+  const handleNextSection = () => {
+    if (currentSectionIndex < story.sections.length - 1) {
+      setCurrentSectionIndex(currentSectionIndex + 1);
     }
   };
   
-  const handlePrevScene = () => {
-    if (currentSceneIndex > 0) {
-      setCurrentSceneIndex(currentSceneIndex - 1);
+  const handlePrevSection = () => {
+    if (currentSectionIndex > 0) {
+      setCurrentSectionIndex(currentSectionIndex - 1);
     }
   };
   
@@ -117,8 +138,10 @@ const Story = () => {
   };
   
   const toggleAudio = () => {
-    // In a real app, this would control audio playback
-    setIsAudioPlaying(!isAudioPlaying);
+    if (currentSection?.voices?.[currentLanguage]) {
+      // In a real app, this would control audio playback
+      setIsAudioPlaying(!isAudioPlaying);
+    }
   };
 
   const canAccessStory = story.is_free || (isAuthenticated && profile?.is_premium);
@@ -202,15 +225,15 @@ const Story = () => {
           <>
             <Card className="overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm mb-6">
               <div className="md:flex">
-                {/* Story Scene Image */}
+                {/* Story Section Image */}
                 <div className="md:w-1/2">
-                  {currentScene?.image ? (
+                  {currentImage ? (
                     <img 
-                      src={currentScene.image} 
+                      src={currentImage} 
                       alt={story.title} 
                       className="w-full h-full object-cover aspect-square md:aspect-auto"
                       onError={(e) => {
-                        console.log('Image failed to load:', currentScene.image);
+                        console.log('Image failed to load:', currentImage);
                         e.currentTarget.style.display = 'none';
                       }}
                     />
@@ -221,36 +244,36 @@ const Story = () => {
                   )}
                 </div>
                 
-                {/* Story Scene Text */}
+                {/* Story Section Text */}
                 <div className="md:w-1/2 p-6 flex flex-col">
                   <div className="flex-grow">
                     <p className="text-lg leading-relaxed">
-                      {currentScene?.text || "Story content coming soon..."}
+                      {currentText}
                     </p>
                   </div>
                   
-                  {/* Scene Navigation */}
+                  {/* Section Navigation */}
                   <div className="flex justify-between items-center pt-4 mt-auto">
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      onClick={handlePrevScene} 
-                      disabled={currentSceneIndex === 0}
-                      aria-label="Previous scene"
+                      onClick={handlePrevSection} 
+                      disabled={currentSectionIndex === 0}
+                      aria-label="Previous section"
                     >
                       <ChevronLeft className="rtl:rotate-180 h-5 w-5" />
                     </Button>
                     
                     <span className="text-sm text-muted-foreground">
-                      {currentSceneIndex + 1} / {scenes.length}
+                      {currentSectionIndex + 1} / {story.sections.length || 1}
                     </span>
                     
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      onClick={handleNextScene} 
-                      disabled={currentSceneIndex === scenes.length - 1}
-                      aria-label="Next scene"
+                      onClick={handleNextSection} 
+                      disabled={currentSectionIndex === story.sections.length - 1}
+                      aria-label="Next section"
                     >
                       <ChevronRight className="rtl:rotate-180 h-5 w-5" />
                     </Button>
@@ -260,23 +283,25 @@ const Story = () => {
             </Card>
             
             {/* Audio Controls */}
-            <div className="flex justify-center mb-8">
-              <Button 
-                onClick={toggleAudio} 
-                variant="outline" 
-                className="rounded-full"
-              >
-                {isAudioPlaying ? (
-                  <>
-                    <VolumeX className="mr-2 h-4 w-4" /> Mute Narration
-                  </>
-                ) : (
-                  <>
-                    <Volume2 className="mr-2 h-4 w-4" /> Play Narration
-                  </>
-                )}
-              </Button>
-            </div>
+            {currentSection?.voices?.[currentLanguage] && (
+              <div className="flex justify-center mb-8">
+                <Button 
+                  onClick={toggleAudio} 
+                  variant="outline" 
+                  className="rounded-full"
+                >
+                  {isAudioPlaying ? (
+                    <>
+                      <VolumeX className="mr-2 h-4 w-4" /> Mute Narration
+                    </>
+                  ) : (
+                    <>
+                      <Volume2 className="mr-2 h-4 w-4" /> Play Narration
+                    </>
+                  )}
+                </Button>
+              </div>
+            )}
           </>
         ) : (
           <Card className="p-8 text-center border-moon-DEFAULT/30 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm">

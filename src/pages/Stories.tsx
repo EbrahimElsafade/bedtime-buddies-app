@@ -11,7 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { getImageUrl } from "@/utils/imageUtils";
 
-type Story = {
+type StoryListItem = {
   id: string;
   title: string;
   description: string;
@@ -50,7 +50,7 @@ const Stories = () => {
     }
   });
 
-  const filteredStories = allStories.filter((story: Story) => {
+  const filteredStories = allStories.filter((story: StoryListItem) => {
     const matchesSearch = story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          story.description.toLowerCase().includes(searchQuery.toLowerCase());
     
@@ -129,7 +129,7 @@ const Stories = () => {
         
         {/* Story Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredStories.map((story: Story) => {
+          {filteredStories.map((story: StoryListItem) => {
             const imageUrl = getImageUrl(story.cover_image);
             console.log(`Story ${story.title} - cover_image:`, story.cover_image, 'final URL:', imageUrl);
             
