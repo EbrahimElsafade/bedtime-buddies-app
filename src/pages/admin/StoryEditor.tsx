@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -135,14 +136,13 @@ const StoryEditor = () => {
       setCoverImagePreview(imageUrl);
     }
     
-    // Format sections for the UI
-    const formattedSections: StorySectionForm[] = sections.map(section => ({
+    // Format sections for the UI - ensure all sections have proper structure
+    const formattedSections: StorySection[] = sections.map(section => ({
       id: section.id,
       order: section.order,
       texts: section.texts as Record<string, string>,
       voices: section.voices as Record<string, string> | undefined,
       image: section.image || undefined,
-      imagePreview: section.image ? getImageUrl(section.image) : null
     }));
     
     return {
@@ -174,7 +174,12 @@ const StoryEditor = () => {
       });
       
       if (storyDetails.sections) {
-        setStorySections(storyDetails.sections as StorySectionForm[]);
+        // Convert StorySection[] to StorySectionForm[] for editing
+        const sectionsForForm: StorySectionForm[] = storyDetails.sections.map(section => ({
+          ...section,
+          imagePreview: section.image ? getImageUrl(section.image) : null
+        }));
+        setStorySections(sectionsForForm);
       }
     }
   }, [storyDetails, isEditing, id]);
