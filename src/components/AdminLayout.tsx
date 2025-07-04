@@ -35,7 +35,7 @@ const AdminLayout = () => {
   return (
     <SidebarProvider defaultOpen={!collapsed} onOpenChange={setCollapsed}>
       <div className="flex w-full min-h-screen bg-gray-50 dark:bg-gray-900">
- {collapsed ? (
+        {collapsed ? (
           <div className="m-8">
             <SidebarTrigger
               className="ms-auto"
