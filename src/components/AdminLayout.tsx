@@ -33,7 +33,7 @@ const AdminLayout = () => {
   }, [user, profile, location]);
 
   return (
-    <SidebarProvider defaultOpen={!collapsed} onOpenChange={setCollapsed}>
+    <SidebarProvider defaultOpen={!collapsed} >
       <div className="flex w-full min-h-screen bg-gray-50 dark:bg-gray-900">
         {collapsed ? (
           <div className="m-8">
