@@ -40,7 +40,7 @@ const AdminLayout = () => {
             <div className="flex items-center justify-between p-4">
               <Link to="/admin" className="flex items-center text-xl font-bold text-dream-DEFAULT">
                 {!collapsed && <span>Admin Dashboard</span>}
-                <SidebarTrigger className="ml-auto" />
+                <SidebarTrigger className="ml -auto" />
               </Link>
             </div>
           </SidebarHeader>
