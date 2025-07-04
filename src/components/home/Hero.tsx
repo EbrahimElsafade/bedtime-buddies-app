@@ -27,7 +27,7 @@ const Hero = () => {
             </Link>
             {!isAuthenticated && (
               <Link to="/register">
-                <Button size="lg" variant="outline" className="rounded-full border-dream-light text-dream-DEFAULT">
+                <Button size="lg" variant="outline" className="rounded-full border-dream-light dark:text-dream-DEFAULT">
                   {t('hero.signUpButton')}
                 </Button>
               </Link>
