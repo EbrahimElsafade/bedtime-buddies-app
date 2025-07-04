@@ -1,8 +1,8 @@
 
 import { supabase } from "@/integrations/supabase/client";
 
-export const getImageUrl = (imagePath: string | null, from?: string): string => {
-  console.log('getImageUrl called with:', imagePath, 'from:', from);
+export const getImageUrl = (imagePath: string | null): string => {
+  console.log('getImageUrl called with:', imagePath);
   
   // If no image path, return empty string
   if (!imagePath) {
@@ -22,14 +22,34 @@ export const getImageUrl = (imagePath: string | null, from?: string): string => 
     return imagePath;
   }
   
-  // Use the provided 'from' parameter or default to 'story-covers'
-  const folderPath = from || 'story-covers';
-  console.log(`Constructing Supabase URL for ${folderPath}:`, imagePath);
+  // For story cover images
+  if (imagePath.includes('cover-') || !imagePath.includes('/')) {
+    console.log('Constructing Supabase URL for story cover:', imagePath);
+    const { data: urlData } = supabase.storage
+      .from('admin-content')
+      .getPublicUrl(`story-sections/${imagePath}`);
+    
+    console.log('Generated Supabase URL for cover:', urlData.publicUrl);
+    return urlData.publicUrl;
+  }
   
+  // For story section images
+  if (imagePath.includes('section-')) {
+    console.log('Constructing Supabase URL for story section:', imagePath);
+    const { data: urlData } = supabase.storage
+      .from('admin-content')
+      .getPublicUrl(`story-sections/${imagePath}`);
+    
+    console.log('Generated Supabase URL for section:', urlData.publicUrl);
+    return urlData.publicUrl;
+  }
+  
+  // Default fallback - assume it's a relative path and try story-covers
+  console.log('Fallback: Constructing Supabase URL for:', imagePath);
   const { data: urlData } = supabase.storage
     .from('admin-content')
-    .getPublicUrl(`${folderPath}/${imagePath}`);
+    .getPublicUrl(`story-covers/${imagePath}`);
   
-  console.log(`Generated Supabase URL for ${folderPath}:`, urlData.publicUrl);
+  console.log('Generated fallback Supabase URL:', urlData.publicUrl);
   return urlData.publicUrl;
 };
