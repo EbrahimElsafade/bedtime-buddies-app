@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -136,16 +137,13 @@ const StoryEditor = () => {
     }
     
     // Format sections for the UI - ensure all sections have proper structure
-    const formattedSections: StorySection[] = sections.map(section => {
-      console.log('Processing section:', section.id, 'with image:', section.image);
-      return {
-        id: section.id,
-        order: section.order,
-        texts: section.texts as Record<string, string>,
-        voices: section.voices as Record<string, string> | undefined,
-        image: section.image || undefined,
-      };
-    });
+    const formattedSections: StorySection[] = sections.map(section => ({
+      id: section.id,
+      order: section.order,
+      texts: section.texts as Record<string, string>,
+      voices: section.voices as Record<string, string> | undefined,
+      image: section.image || undefined,
+    }));
     
     return {
       ...story,
@@ -177,14 +175,10 @@ const StoryEditor = () => {
       
       if (storyDetails.sections) {
         // Convert StorySection[] to StorySectionForm[] for editing
-        const sectionsForForm: StorySectionForm[] = storyDetails.sections.map(section => {
-          const imagePreview = section.image ? getImageUrl(section.image) : null;
-          console.log('Section', section.id, 'image:', section.image, 'preview URL:', imagePreview);
-          return {
-            ...section,
-            imagePreview
-          };
-        });
+        const sectionsForForm: StorySectionForm[] = storyDetails.sections.map(section => ({
+          ...section,
+          imagePreview: section.image ? getImageUrl(section.image) : null
+        }));
         setStorySections(sectionsForForm);
       }
     }
@@ -723,11 +717,6 @@ const StoryEditor = () => {
                                       src={section.imagePreview} 
                                       alt="Section preview" 
                                       className="w-full h-full object-cover"
-                                      onLoad={() => console.log('Section image loaded:', section.imagePreview)}
-                                      onError={(e) => {
-                                        console.error('Section image failed to load:', section.imagePreview);
-                                        console.error('Image error event:', e);
-                                      }}
                                     />
                                     <Button
                                       type="button"
@@ -738,7 +727,6 @@ const StoryEditor = () => {
                                         const updatedSections = [...storySections];
                                         updatedSections[sectionIndex].imageFile = null;
                                         updatedSections[sectionIndex].imagePreview = null;
-                                        updatedSections[sectionIndex].image = undefined;
                                         setStorySections(updatedSections);
                                       }}
                                     >

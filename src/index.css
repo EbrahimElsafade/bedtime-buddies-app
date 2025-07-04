@@ -75,17 +75,12 @@
   }
 
   body {
-    @apply bg-background font-rounded;
-    color: black;
+    @apply bg-background text-foreground font-rounded;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
-  }
-
-  body.dark {
-    color: white;
   }
 
   h1, h2, h3 {
