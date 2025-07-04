@@ -6,7 +6,7 @@ import { GlobeIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const LanguageSwitcher = () => {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   const changeLanguage = (language: string) => {
@@ -19,7 +19,7 @@ const LanguageSwitcher = () => {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full">
           <GlobeIcon className="h-5 w-5" />
-          <span className="sr-only">Language Selection</span>
+          <span className="sr-only">{t('accessibility.languageSelection')}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="bg-white/90 dark:bg-nightsky-light/90 backdrop-blur-md">
@@ -27,19 +27,19 @@ const LanguageSwitcher = () => {
           className={i18n.language === 'en' ? 'font-bold' : ''} 
           onClick={() => changeLanguage('en')}
         >
-          English
+          {t('languages.english')}
         </DropdownMenuItem>
         <DropdownMenuItem 
           className={i18n.language === 'ar' ? 'font-bold' : ''} 
           onClick={() => changeLanguage('ar')}
         >
-          العربية
+          {t('languages.arabic')}
         </DropdownMenuItem>
         <DropdownMenuItem 
           className={i18n.language === 'fr' ? 'font-bold' : ''} 
           onClick={() => changeLanguage('fr')}
         >
-          Français
+          {t('languages.french')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

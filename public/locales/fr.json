@@ -42,7 +42,19 @@
     "home": "Accueil",
     "stories": "Histoires",
     "games": "Jeux",
+    "courses": "Cours",
     "profile": "Profil"
+  },
+  "auth": {
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "signUp": "S'inscrire",
+    "profile": "Profil"
+  },
+  "layout": {
+    "appName": "Histoires pour dormir",
+    "subscribe": "S'abonner",
+    "copyright": "Tous droits réservés."
   },
   "duration": "mins",
   "button": {
@@ -84,6 +96,43 @@
     "notFound": "Cours non trouvé",
     "notFoundDesc": "Le cours que vous recherchez n'existe pas."
   },
+  "games": {
+    "title": "Jouer ensemble",
+    "subtitle": "Profitez de ces activités amusantes avec votre enfant avant le coucher. Ces jeux et outils simples sont conçus pour créer des moments spéciaux ensemble.",
+    "ticTacToe": {
+      "title": "Tic-Tac-Toe",
+      "description": "Jouer ensemble avant le coucher",
+      "nextPlayer": "Joueur suivant:",
+      "winner": "Gagnant:",
+      "draw": "C'est un match nul!",
+      "newGame": "Nouvelle partie",
+      "won": "a gagné la partie!"
+    },
+    "coloringBook": {
+      "title": "Livre de coloriage",
+      "description": "Télécharger et imprimer des feuilles de coloriage",
+      "comingSoon": "Fonctionnalité premium bientôt disponible! Abonnez-vous pour accéder aux feuilles de coloriage.",
+      "seePlans": "Voir les plans d'abonnement"
+    }
+  },
+  "notFound": {
+    "title": "Oops!",
+    "message": "Il semble que cette page soit partie au pays des rêves. Retournons à vos histoires.",
+    "returnHome": "Retour à l'accueil",
+    "browseStories": "Parcourir les histoires"
+  },
+  "popup": {
+    "special": "Offre spéciale",
+    "limitedTime": "Offre limitée pour les nouveaux utilisateurs",
+    "unlock": "Débloquez les fonctionnalités premium",
+    "feature1": "Accès illimité à toutes les histoires",
+    "feature2": "Contenu premium exclusif",
+    "feature3": "Expérience sans publicité",
+    "month": "mois",
+    "off": "DE RÉDUCTION",
+    "subscribe": "S'abonner maintenant",
+    "later": "Peut-être plus tard"
+  },
   "toast": {
     "loginRequired": "Connexion requise",
     "pleaseLoginToStart": "Veuillez vous connecter pour commencer ce cours.",
@@ -91,5 +140,15 @@
     "upgradeToPremium": "Veuillez passer à l'abonnement premium pour accéder à ce cours.",
     "courseStarted": "Cours commencé",
     "enjoyLearning": "Profitez de l'apprentissage"
+  },
+  "languages": {
+    "english": "Anglais",
+    "arabic": "Arabe",
+    "french": "Français"
+  },
+  "accessibility": {
+    "languageSelection": "Sélection de langue",
+    "toggleTheme": "Changer de thème",
+    "menu": "Menu"
   }
 }

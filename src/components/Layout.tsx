@@ -4,13 +4,13 @@ import { Outlet, Link, useLocation } from "react-router-dom";
 import { Moon, Sun, Menu, X, Home, Book, BookOpen, User, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { cn } from "@/lib/utils";
 
 const Layout = () => {
   const { isAuthenticated, user, profile, logout } = useAuth();
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const location = useLocation();
@@ -66,7 +66,7 @@ const Layout = () => {
             <div className="w-10 h-10 rounded-full bg-dream-DEFAULT flex items-center justify-center mr-2">
               <Moon className="h-6 w-6 text-black dark:text-white animate-float" />
             </div>
-            <h1 className="text-xl font-bubbly text-dream-DEFAULT">Bedtime Stories</h1>
+            <h1 className="text-xl font-bubbly text-dream-DEFAULT">{t('layout.appName')}</h1>
           </Link>
           
           {/* Desktop Navigation */}
@@ -96,7 +96,7 @@ const Layout = () => {
               size="icon"
               onClick={toggleDarkMode}
               className="rounded-full"
-              aria-label="Toggle theme"
+              aria-label={t('accessibility.toggleTheme')}
             >
               {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
@@ -105,23 +105,23 @@ const Layout = () => {
               <div className="hidden md:flex items-center space-x-2">
                 <Link to="/profile">
                   <Button variant="ghost" size="sm" className="text-dream-DEFAULT  dark:text-white">
-                    {profile?.parent_name || 'Profile'}
+                    {profile?.parent_name || t('auth.profile')}
                   </Button>
                 </Link>
                 <Button variant="ghost" size="sm" onClick={logout} className="text-dream-DEFAULT  dark:text-white">
-                  Logout
+                  {t('auth.logout')}
                 </Button>
               </div>
             ) : (
               <div className="hidden md:flex items-center space-x-2">
                 <Link to="/login">
                   <Button variant="ghost" size="sm" className="text-dream-DEFAULT  dark:text-white">
-                    Login
+                    {t('auth.login')}
                   </Button>
                 </Link>
                 <Link to="/register">
                   <Button variant="default" size="sm">
-                    Sign Up
+                    {t('auth.signUp')}
                   </Button>
                 </Link>
               </div>
@@ -133,7 +133,7 @@ const Layout = () => {
               size="icon"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden rounded-full"
-              aria-label="Menu"
+              aria-label={t('accessibility.menu')}
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
@@ -167,7 +167,7 @@ const Layout = () => {
                     className="px-4 py-3 rounded-md text-lg font-medium text-center text-dream-DEFAULT hover:bg-secondary dark:text-white"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Profile
+                    {t('auth.profile')}
                   </Link>
                   <button
                     className="px-4 py-3 rounded-md text-lg font-medium text-center text-dream-DEFAULT hover:bg-secondary dark:text-white w-full"
@@ -176,7 +176,7 @@ const Layout = () => {
                       setIsMenuOpen(false);
                     }}
                   >
-                    Logout
+                    {t('auth.logout')}
                   </button>
                 </>
               ) : (
@@ -186,14 +186,14 @@ const Layout = () => {
                     className="px-4 py-3 rounded-md text-lg font-medium text-center text-dream-DEFAULT hover:bg-secondary dark:text-white"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Login
+                    {t('auth.login')}
                   </Link>
                   <Link
                     to="/register"
                     className="px-4 py-3 rounded-md text-center text-lg font-medium bg-dream-DEFAULT text-white"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    Sign Up
+                    {t('auth.signUp')}
                   </Link>
                 </>
               )}
@@ -203,7 +203,7 @@ const Layout = () => {
                 className="px-4 py-3 rounded-md text-center text-lg font-medium text-moon-DEFAULT font-bold hover:bg-secondary/50"
                 onClick={() => setIsMenuOpen(false)}
               >
-                ✨ Subscribe
+                ✨ {t('layout.subscribe')}
               </Link>
             </nav>
           </div>
@@ -232,11 +232,11 @@ const Layout = () => {
               to="/subscription"
               className="text-sm text-moon-DEFAULT hover:text-moon-dark"
             >
-              Subscribe
+              {t('layout.subscribe')}
             </Link>
           </div>
           <p className="text-xs text-dream-DEFAULT dark:text-muted-foreground">
-            © {new Date().getFullYear()} Bedtime Stories. All rights reserved.
+            © {new Date().getFullYear()} {t('layout.appName')}. {t('layout.copyright')}
           </p>
         </div>
       </footer>
