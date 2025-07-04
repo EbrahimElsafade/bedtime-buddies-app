@@ -223,19 +223,19 @@ const Layout = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className="text-sm text-black hover:text-dream-dark dark:text-muted-foreground dark:hover:text-primary"
+                className="text-sm text-dream-DEFAULT hover:text-dream-dark dark:text-muted-foreground dark:hover:text-primary"
               >
                 {item.name}
               </Link>
             ))}
             <Link
               to="/subscription"
-              className="text-sm text-black hover:text-moon-dark"
+              className="text-sm text-moon-DEFAULT hover:text-moon-dark"
             >
               Subscribe
             </Link>
           </div>
-          <p className="text-xs text-black dark:text-muted-foreground">
+          <p className="text-xs text-dream-DEFAULT dark:text-muted-foreground">
             © {new Date().getFullYear()} Bedtime Stories. All rights reserved.
           </p>
         </div>
