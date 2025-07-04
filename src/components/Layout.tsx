@@ -64,7 +64,7 @@ const Layout = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center">
             <div className="w-10 h-10 rounded-full bg-dream-DEFAULT flex items-center justify-center mr-2">
-              <Moon className="h-6 w-6 text-white animate-float" />
+              <Moon className="h-6 w-6 text-black dark:text-white animate-float" />
             </div>
             <h1 className="text-xl font-bubbly text-dream-DEFAULT">Bedtime Stories</h1>
           </Link>
