@@ -3,11 +3,16 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { GlobeIcon } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const LanguageSwitcher = () => {
-  const { language, setLanguage } = useLanguage();
+  const { i18n } = useTranslation();
   const [open, setOpen] = useState(false);
+
+  const changeLanguage = (language: string) => {
+    i18n.changeLanguage(language);
+    setOpen(false);
+  };
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -19,20 +24,20 @@ const LanguageSwitcher = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="bg-white/90 dark:bg-nightsky-light/90 backdrop-blur-md">
         <DropdownMenuItem 
-          className={language === 'en' ? 'font-bold' : ''} 
-          onClick={() => { setLanguage('en'); setOpen(false); }}
+          className={i18n.language === 'en' ? 'font-bold' : ''} 
+          onClick={() => changeLanguage('en')}
         >
           English
         </DropdownMenuItem>
         <DropdownMenuItem 
-          className={language === 'ar' ? 'font-bold' : ''} 
-          onClick={() => { setLanguage('ar'); setOpen(false); }}
+          className={i18n.language === 'ar' ? 'font-bold' : ''} 
+          onClick={() => changeLanguage('ar')}
         >
           العربية
         </DropdownMenuItem>
         <DropdownMenuItem 
-          className={language === 'fr' ? 'font-bold' : ''} 
-          onClick={() => { setLanguage('fr'); setOpen(false); }}
+          className={i18n.language === 'fr' ? 'font-bold' : ''} 
+          onClick={() => changeLanguage('fr')}
         >
           Français
         </DropdownMenuItem>

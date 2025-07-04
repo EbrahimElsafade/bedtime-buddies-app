@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle, CardDescription } from "@/components/ui/card";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 import { getFreeStories } from "@/data/stories";
 
 const FreeStory = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const freeStory = getFreeStories()[0];
 
   if (!freeStory) return null;

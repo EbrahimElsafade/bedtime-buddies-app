@@ -3,21 +3,21 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 import { getStoriesByCategory } from "@/data/stories";
 import { cn } from "@/lib/utils";
 
 const PopularStories = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const popularStories = getStoriesByCategory('sleeping').slice(0, 3);
 
   return (
     <section className="py-12 px-4 relative overflow-hidden">
       <div className="container mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl md:text-3xl font-bubbly text-dream-DEFAULT">{t('popular.title') || 'Popular Bedtime Stories'}</h2>
+          <h2 className="text-2xl md:text-3xl font-bubbly text-dream-DEFAULT">{t('popular.title')}</h2>
           <Link to="/stories" className="text-dream-DEFAULT hover:text-dream-dark text-sm font-medium flex items-center">
-            {t('free.viewAll') || 'View All'} <ArrowRight className="rtl:rotate-180 ms-1 h-4 w-4" />
+            {t('free.viewAll')} <ArrowRight className="rtl:rotate-180 ms-1 h-4 w-4" />
           </Link>
         </div>
         
@@ -31,15 +31,15 @@ const PopularStories = () => {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute top-2 right-2 bg-white/80 dark:bg-nightsky-light/80 text-xs px-2 py-1 rounded-full">
-                  {story.duration} {t('duration') || 'mins'}
+                  {story.duration} {t('duration')}
                 </div>
                 {story.isFree ? (
                   <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                    {t('free.tag') || 'FREE'}
+                    {t('free.tag')}
                   </div>
                 ) : (
                   <div className="absolute top-2 left-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                    {t('premium.tag') || 'PREMIUM'}
+                    {t('premium.tag')}
                   </div>
                 )}
               </div>
@@ -57,7 +57,7 @@ const PopularStories = () => {
                         : "bg-moon-DEFAULT hover:bg-moon-dark text-dream-DEFAULT dark:text-white"
                     )}
                   >
-                    {story.isFree ? t('button.readNow') || 'Read Now' : t('button.premium') || 'Premium'}
+                    {story.isFree ? t('button.readNow') : t('button.premium')}
                   </Button>
                 </Link>
               </CardFooter>

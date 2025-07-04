@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const Hero = () => {
   const { isAuthenticated } = useAuth();
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   
   return (
     <section className="py-12 md:py-20 px-4 relative overflow-hidden">

@@ -1,8 +1,8 @@
 
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const Features = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
 
   return (
     <section className="py-12 px-4 bg-secondary/50">

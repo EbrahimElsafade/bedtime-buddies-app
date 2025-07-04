@@ -1,0 +1,95 @@
+
+{
+  "hero": {
+    "title": "Les beaux rêves commencent par des histoires magiques",
+    "subtitle": "Découvrez des histoires apaisantes pour le coucher en plusieurs langues qui emmèneront votre enfant dans des aventures magiques tout en le préparant à un sommeil paisible.",
+    "exploreButton": "Explorer les histoires",
+    "signUpButton": "Inscription gratuite"
+  },
+  "free": {
+    "story": "Histoire gratuite du jour",
+    "viewAll": "Voir tout",
+    "tag": "GRATUIT"
+  },
+  "premium": {
+    "tag": "PREMIUM"
+  },
+  "featured": {
+    "title": "Histoires en vedette"
+  },
+  "features": {
+    "title": "Pourquoi les parents et les enfants nous adorent",
+    "subtitle": "Nos histoires sont conçues pour rassembler les familles avec des récits apaisants, des thèmes éducatifs et une touche de magie.",
+    "soothing": {
+      "title": "Histoires apaisantes",
+      "desc": "Récits apaisants spécialement conçus pour aider les enfants à se détendre et à se préparer au sommeil."
+    },
+    "languages": {
+      "title": "Langues multiples",
+      "desc": "Histoires disponibles en anglais, arabe et français pour soutenir le développement du langage."
+    },
+    "games": {
+      "title": "Jeux familiaux",
+      "desc": "Activités interactives amusantes que les parents et les enfants peuvent apprécier ensemble avant le coucher."
+    }
+  },
+  "subscribe": {
+    "title": "Débloquez des histoires et des fonctionnalités premium",
+    "subtitle": "Accédez sans limite à notre bibliothèque complète d'histoires, à du contenu exclusif et à des fonctionnalités spéciales avec notre abonnement premium.",
+    "button": "Voir les plans"
+  },
+  "nav": {
+    "home": "Accueil",
+    "stories": "Histoires",
+    "games": "Jeux",
+    "profile": "Profil"
+  },
+  "duration": "mins",
+  "button": {
+    "readStory": "Lire l'histoire",
+    "readNow": "Lire maintenant",
+    "premium": "Histoire premium",
+    "startLearning": "Commencer à apprendre",
+    "goToPremium": "Passer au premium",
+    "backToCourses": "Retour aux cours"
+  },
+  "popular": {
+    "title": "Histoires populaires pour le coucher"
+  },
+  "entertainment": {
+    "title": "Histoires amusantes"
+  },
+  "courses": {
+    "title": "Cours d'apprentissage amusants",
+    "exploreTitle": "Apprendre avec des cours amusants",
+    "lessons": "leçons",
+    "years": "ans",
+    "searchPlaceholder": "Rechercher des cours...",
+    "allCourses": "Tous les cours",
+    "categories": {
+      "language": "Langue",
+      "math": "Mathématiques",
+      "science": "Science",
+      "arts": "Arts",
+      "social": "Social"
+    },
+    "noResults": "Aucun cours correspondant à votre recherche."
+  },
+  "course": {
+    "about": "À propos de ce cours",
+    "whatYouLearn": "Ce que vous apprendrez",
+    "learnPoint1": "Leçons amusantes et interactives adaptées aux enfants",
+    "learnPoint2": "Activités engageantes pour renforcer l'apprentissage",
+    "learnPoint3": "Suivi des progrès pour célébrer les réussites",
+    "notFound": "Cours non trouvé",
+    "notFoundDesc": "Le cours que vous recherchez n'existe pas."
+  },
+  "toast": {
+    "loginRequired": "Connexion requise",
+    "pleaseLoginToStart": "Veuillez vous connecter pour commencer ce cours.",
+    "premiumRequired": "Abonnement premium requis",
+    "upgradeToPremium": "Veuillez passer à l'abonnement premium pour accéder à ce cours.",
+    "courseStarted": "Cours commencé",
+    "enjoyLearning": "Profitez de l'apprentissage"
+  }
+}

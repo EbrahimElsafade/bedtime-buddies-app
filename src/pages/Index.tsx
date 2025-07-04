@@ -1,7 +1,7 @@
 
 import { useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 import PricingPopup from "@/components/PricingPopup";
 import Hero from "@/components/home/Hero";
 import FreeStory from "@/components/home/FreeStory";
@@ -15,7 +15,7 @@ import FunElements from "@/components/home/FunElements";
 
 const Index = () => {
   const { isAuthenticated } = useAuth();
-  const { language } = useLanguage();
+  const { i18n } = useTranslation();
   
   useEffect(() => {
     document.title = "Bedtime Stories - Soothing Stories for Kids";
@@ -23,14 +23,14 @@ const Index = () => {
 
   // Handle RTL layout for Arabic
   useEffect(() => {
-    if (language === 'ar') {
+    if (i18n.language === 'ar') {
       document.documentElement.dir = 'rtl';
       document.documentElement.lang = 'ar';
     } else {
       document.documentElement.dir = 'ltr';
-      document.documentElement.lang = language;
+      document.documentElement.lang = i18n.language;
     }
-  }, [language]);
+  }, [i18n.language]);
 
   return (
     <div className="flex flex-col relative">

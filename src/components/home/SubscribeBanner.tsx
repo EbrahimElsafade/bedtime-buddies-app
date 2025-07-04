@@ -1,10 +1,10 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useTranslation } from "react-i18next";
 
 const SubscribeBanner = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
 
   return (
     <section className="py-12 px-4 bg-gradient-to-r from-dream-DEFAULT to-dream-dark text-black dark:text-white">
