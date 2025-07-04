@@ -43,7 +43,7 @@ const AdminLayout = () => {
             />
           </div>
         ) : (
-          <Sidebar className="border-r border-border">
+          <Sidebar side="right" className="border-r border-border">
             <SidebarHeader className="flex flex-col">
               <div className="flex items-center justify-between p-4">
                 <Link
