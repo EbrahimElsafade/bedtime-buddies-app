@@ -22,17 +22,6 @@ export const getImageUrl = (imagePath: string | null): string => {
     return imagePath;
   }
   
-  // For story cover images
-  if (imagePath.includes('cover-') || !imagePath.includes('/')) {
-    console.log('Constructing Supabase URL for story cover:', imagePath);
-    const { data: urlData } = supabase.storage
-      .from('admin-content')
-      .getPublicUrl(`story-sections/${imagePath}`);
-    
-    console.log('Generated Supabase URL for cover:', urlData.publicUrl);
-    return urlData.publicUrl;
-  }
-  
   // For story section images
   if (imagePath.includes('section-')) {
     console.log('Constructing Supabase URL for story section:', imagePath);
