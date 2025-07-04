@@ -104,18 +104,18 @@ const Layout = () => {
             {isAuthenticated ? (
               <div className="hidden md:flex items-center space-x-2">
                 <Link to="/profile">
-                  <Button variant="ghost" size="sm" className="text-dream-DEFAULT hover:text-dream-dark dark:text-white">
+                  <Button variant="ghost" size="sm" className="text-dream-DEFAULT  dark:text-white">
                     {profile?.parent_name || 'Profile'}
                   </Button>
                 </Link>
-                <Button variant="ghost" size="sm" onClick={logout} className="text-dream-DEFAULT hover:text-dream-dark dark:text-white">
+                <Button variant="ghost" size="sm" onClick={logout} className="text-dream-DEFAULT  dark:text-white">
                   Logout
                 </Button>
               </div>
             ) : (
               <div className="hidden md:flex items-center space-x-2">
                 <Link to="/login">
-                  <Button variant="ghost" size="sm" className="text-dream-DEFAULT hover:text-dream-dark dark:text-white">
+                  <Button variant="ghost" size="sm" className="text-dream-DEFAULT  dark:text-white">
                     Login
                   </Button>
                 </Link>
