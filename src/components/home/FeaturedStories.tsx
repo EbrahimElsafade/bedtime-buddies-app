@@ -56,7 +56,7 @@ const FeaturedStories = () => {
         </div>
         
         {/* Fun decorative elements for stories section */}
-        <div className="absolute top-0 left-0 w-full overflow-hidden">
+        <div className="absolute top-0 start-0 w-full overflow-hidden">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="opacity-10">
             <path fill="#8B5CF6" fillOpacity="1" d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,106.7C672,117,768,171,864,186.7C960,203,1056,181,1152,154.7C1248,128,1344,96,1392,80L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>
           </svg>
@@ -100,11 +100,11 @@ const FeaturedStories = () => {
                     </div>
                   )}
                   {story.is_free ? (
-                    <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                    <div className="absolute top-2 start-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
                       {t('free.tag') || 'FREE'}
                     </div>
                   ) : (
-                    <div className="absolute top-2 left-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                    <div className="absolute top-2 start-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
                       {t('premium.tag') || 'PREMIUM'}
                     </div>
                   )}
@@ -134,8 +134,8 @@ const FeaturedStories = () => {
                       className={cn(
                         "w-full", 
                         story.is_free 
-                          ? "bg-dream-DEFAULT hover:bg-dream-dark text-white dark:text-white" 
-                          : "bg-moon-DEFAULT hover:bg-moon-dark text-dream-DEFAULT dark:text-white"
+                          ? "bg-dream-DEFAULT hover:bg-dream-dark text-black dark:text-white" 
+                          : "bg-moon-DEFAULT hover:bg-moon-dark text-black dark:text-white"
                       )}
                     >
                       {story.is_free ? t('button.readNow') || 'Read Now' : t('button.premium') || 'Premium'}

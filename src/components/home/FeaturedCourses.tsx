@@ -77,8 +77,8 @@ const FeaturedCourses = () => {
                     className={cn(
                       "w-full", 
                       course.isFree 
-                        ? "bg-dream-DEFAULT hover:bg-dream-dark text-white dark:text-white" 
-                        : "bg-moon-DEFAULT hover:bg-moon-dark text-dream-DEFAULT dark:text-white"
+                        ? "bg-dream-DEFAULT hover:bg-dream-dark text-black dark:text-white" 
+                        : "bg-moon-DEFAULT hover:bg-moon-dark text-black dark:text-white"
                     )}
                   >
                     {course.isFree ? t('button.startLearning') || 'Start Learning' : t('button.premium') || 'Premium'}
