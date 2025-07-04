@@ -28,7 +28,8 @@ const FeaturedStories = () => {
         throw error;
       }
 
-      conslo.log(data)
+      console.log('data:', data)
+      
       return data || [];
     }
   });
