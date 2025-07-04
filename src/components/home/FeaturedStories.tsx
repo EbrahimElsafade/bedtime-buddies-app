@@ -134,8 +134,8 @@ const FeaturedStories = () => {
                       className={cn(
                         "w-full", 
                         story.is_free 
-                          ? "bg-dream-DEFAULT hover:bg-dream-dark text-black dark:text-white" 
-                          : "bg-moon-DEFAULT hover:bg-moon-dark text-black dark:text-white"
+                          ? "bg-dream-DEFAULT hover:bg-dream-dark hover:text-white text-black dark:text-white" 
+                          : "bg-moon-DEFAULT hover:bg-moon-dark hover:text-white text-black dark:text-white"
                       )}
                     >
                       {story.is_free ? t('button.readNow') || 'Read Now' : t('button.premium') || 'Premium'}
