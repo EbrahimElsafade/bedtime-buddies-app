@@ -7,7 +7,7 @@ const SubscribeBanner = () => {
   const { t } = useLanguage();
 
   return (
-    <section className="py-12 px-4 bg-gradient-to-r from-dream-DEFAULT to-dream-dark text-white">
+    <section className="py-12 px-4 bg-gradient-to-r from-dream-DEFAULT to-dream-dark text-black dark:text-white">
       <div className="container mx-auto">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-2xl md:text-3xl font-bubbly mb-4">{t('subscribe.title')}</h2>
@@ -15,7 +15,7 @@ const SubscribeBanner = () => {
             {t('subscribe.subtitle')}
           </p>
           <Link to="/subscription">
-            <Button size="lg" variant="outline" className="rounded-full border-white text-white bg-transparent hover:bg-white hover:text-dream-DEFAULT">
+            <Button size="lg" variant="outline" className="rounded-full border-white text-black dark:text-white bg-transparent hover:bg-white hover:text-dream-DEFAULT">
               {t('subscribe.button')}
             </Button>
           </Link>
