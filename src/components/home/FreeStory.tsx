@@ -47,7 +47,7 @@ const FreeStory = () => {
                 }).join(', ')}</span>
               </div>
               <Link to={`/stories/${freeStory.id}`}>
-                <Button className="bg-dream-DEFAULT hover:bg-dream-dark text-white dark:text-white">{t('button.readStory')}</Button>
+                <Button className="bg-dream-DEFAULT hover:bg-dream-dark text-black dark:text-white dark:text-white">{t('button.readStory')}</Button>
               </Link>
             </div>
           </div>
