@@ -23,6 +23,11 @@ type StoryListItem = {
   is_published: boolean;
 };
 
+type StoryCategory = {
+  id: string;
+  name: string;
+};
+
 const Stories = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -30,6 +35,24 @@ const Stories = () => {
   useEffect(() => {
     document.title = "Bedtime Stories - Browse Stories";
   }, []);
+
+  // Fetch categories from database
+  const { data: categories = [] } = useQuery({
+    queryKey: ['story-categories'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('story_categories')
+        .select('*')
+        .order('name');
+      
+      if (error) {
+        console.error("Error fetching categories:", error);
+        return [];
+      }
+      
+      return data as StoryCategory[];
+    }
+  });
 
   const { data: allStories = [], isLoading } = useQuery({
     queryKey: ["published-stories"],
@@ -99,22 +122,15 @@ const Stories = () => {
           </div>
           
           <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
-            <TabsList className="mb-4 w-full max-w-2xl grid grid-cols-5 h-auto">
+            <TabsList className="mb-4 w-full max-w-2xl h-auto" style={{ gridTemplateColumns: `repeat(${categories.length + 1}, 1fr)` }}>
               <TabsTrigger value="all">
                 All Stories
               </TabsTrigger>
-              <TabsTrigger value="sleeping">
-                Sleeping
-              </TabsTrigger>
-              <TabsTrigger value="religious">
-                Religious
-              </TabsTrigger>
-              <TabsTrigger value="developmental">
-                Developmental
-              </TabsTrigger>
-              <TabsTrigger value="entertainment">
-                Entertainment
-              </TabsTrigger>
+              {categories.map((category) => (
+                <TabsTrigger key={category.id} value={category.name}>
+                  {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
+                </TabsTrigger>
+              ))}
             </TabsList>
             
             <TabsContent value={selectedCategory}>

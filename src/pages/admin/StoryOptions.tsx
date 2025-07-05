@@ -1,92 +1,174 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+
+type StoryCategory = {
+  id: string;
+  name: string;
+  created_at: string;
+  updated_at: string;
+};
+
+type StoryLanguage = {
+  id: string;
+  code: string;
+  name: string;
+  created_at: string;
+  updated_at: string;
+};
 
 const StoryOptions = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
-  
-  const [categories, setCategories] = useState<string[]>([
-    "sleeping",
-    "religious", 
-    "developmental",
-    "entertainment"
-  ]);
-  
-  const [languages, setLanguages] = useState<string[]>([
-    "en",
-    "ar",
-    "fr"
-  ]);
+  const queryClient = useQueryClient();
   
   const [newCategory, setNewCategory] = useState("");
-  const [newLanguage, setNewLanguage] = useState("");
+  const [newLanguageCode, setNewLanguageCode] = useState("");
+  const [newLanguageName, setNewLanguageName] = useState("");
 
-  // Load from localStorage on component mount
-  useEffect(() => {
-    const savedCategories = localStorage.getItem('storyCategories');
-    const savedLanguages = localStorage.getItem('storyLanguages');
-    
-    if (savedCategories) {
-      setCategories(JSON.parse(savedCategories));
+  // Fetch categories
+  const { data: categories = [], isLoading: categoriesLoading } = useQuery({
+    queryKey: ['story-categories'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('story_categories')
+        .select('*')
+        .order('name');
+      
+      if (error) throw error;
+      return data as StoryCategory[];
     }
-    
-    if (savedLanguages) {
-      setLanguages(JSON.parse(savedLanguages));
+  });
+
+  // Fetch languages
+  const { data: languages = [], isLoading: languagesLoading } = useQuery({
+    queryKey: ['story-languages'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('story_languages')
+        .select('*')
+        .order('name');
+      
+      if (error) throw error;
+      return data as StoryLanguage[];
     }
-  }, []);
+  });
 
-  // Save to localStorage whenever categories or languages change
-  useEffect(() => {
-    localStorage.setItem('storyCategories', JSON.stringify(categories));
-  }, [categories]);
-
-  useEffect(() => {
-    localStorage.setItem('storyLanguages', JSON.stringify(languages));
-  }, [languages]);
-
-  const addCategory = () => {
-    if (newCategory.trim() && !categories.includes(newCategory.trim())) {
-      setCategories([...categories, newCategory.trim()]);
+  // Add category mutation
+  const addCategoryMutation = useMutation({
+    mutationFn: async (name: string) => {
+      const { data, error } = await supabase
+        .from('story_categories')
+        .insert({ name })
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['story-categories'] });
       setNewCategory("");
       toast({
         title: t('admin.storyOptions.categoryAdded'),
-        description: t('admin.storyOptions.categoryAddedDesc', { category: newCategory.trim() }),
+        description: t('admin.storyOptions.categoryAddedDesc', { category: data.name }),
       });
+    }
+  });
+
+  // Remove category mutation
+  const removeCategoryMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('story_categories')
+        .delete()
+        .eq('id', id);
+      
+      if (error) throw error;
+    },
+    onSuccess: (_, id) => {
+      const category = categories.find(cat => cat.id === id);
+      queryClient.invalidateQueries({ queryKey: ['story-categories'] });
+      toast({
+        title: t('admin.storyOptions.categoryRemoved'),
+        description: t('admin.storyOptions.categoryRemovedDesc', { category: category?.name }),
+      });
+    }
+  });
+
+  // Add language mutation
+  const addLanguageMutation = useMutation({
+    mutationFn: async ({ code, name }: { code: string; name: string }) => {
+      const { data, error } = await supabase
+        .from('story_languages')
+        .insert({ code, name })
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['story-languages'] });
+      setNewLanguageCode("");
+      setNewLanguageName("");
+      toast({
+        title: t('admin.storyOptions.languageAdded'),
+        description: t('admin.storyOptions.languageAddedDesc', { language: data.name }),
+      });
+    }
+  });
+
+  // Remove language mutation
+  const removeLanguageMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('story_languages')
+        .delete()
+        .eq('id', id);
+      
+      if (error) throw error;
+    },
+    onSuccess: (_, id) => {
+      const language = languages.find(lang => lang.id === id);
+      queryClient.invalidateQueries({ queryKey: ['story-languages'] });
+      toast({
+        title: t('admin.storyOptions.languageRemoved'),
+        description: t('admin.storyOptions.languageRemovedDesc', { language: language?.name }),
+      });
+    }
+  });
+
+  const addCategory = () => {
+    if (newCategory.trim() && !categories.some(cat => cat.name === newCategory.trim())) {
+      addCategoryMutation.mutate(newCategory.trim());
     }
   };
 
-  const removeCategory = (categoryToRemove: string) => {
-    setCategories(categories.filter(cat => cat !== categoryToRemove));
-    toast({
-      title: t('admin.storyOptions.categoryRemoved'),
-      description: t('admin.storyOptions.categoryRemovedDesc', { category: categoryToRemove }),
-    });
+  const removeCategory = (id: string) => {
+    removeCategoryMutation.mutate(id);
   };
 
   const addLanguage = () => {
-    if (newLanguage.trim() && !languages.includes(newLanguage.trim())) {
-      setLanguages([...languages, newLanguage.trim()]);
-      setNewLanguage("");
-      toast({
-        title: t('admin.storyOptions.languageAdded'),
-        description: t('admin.storyOptions.languageAddedDesc', { language: newLanguage.trim() }),
+    if (newLanguageCode.trim() && newLanguageName.trim() && 
+        !languages.some(lang => lang.code === newLanguageCode.trim())) {
+      addLanguageMutation.mutate({ 
+        code: newLanguageCode.trim(), 
+        name: newLanguageName.trim() 
       });
     }
   };
 
-  const removeLanguage = (languageToRemove: string) => {
-    setLanguages(languages.filter(lang => lang !== languageToRemove));
-    toast({
-      title: t('admin.storyOptions.languageRemoved'),
-      description: t('admin.storyOptions.languageRemovedDesc', { language: languageToRemove }),
-    });
+  const removeLanguage = (id: string) => {
+    removeLanguageMutation.mutate(id);
   };
 
   return (
@@ -117,26 +199,35 @@ const StoryOptions = () => {
                 onChange={(e) => setNewCategory(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && addCategory()}
               />
-              <Button onClick={addCategory} size="sm">
+              <Button 
+                onClick={addCategory} 
+                size="sm"
+                disabled={addCategoryMutation.isPending}
+              >
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
             
-            <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
-                <Badge key={category} variant="secondary" className="flex items-center gap-1">
-                  {category}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-4 w-4 p-0 hover:bg-destructive hover:text-destructive-foreground"
-                    onClick={() => removeCategory(category)}
-                  >
-                    <Trash2 className="h-3 w-3" />
-                  </Button>
-                </Badge>
-              ))}
-            </div>
+            {categoriesLoading ? (
+              <div className="text-center py-4">Loading categories...</div>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => (
+                  <Badge key={category.id} variant="secondary" className="flex items-center gap-1">
+                    {category.name}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-4 w-4 p-0 hover:bg-destructive hover:text-destructive-foreground"
+                      onClick={() => removeCategory(category.id)}
+                      disabled={removeCategoryMutation.isPending}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </Badge>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -151,33 +242,49 @@ const StoryOptions = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex gap-2">
-              <Input
-                placeholder={t('admin.storyOptions.addLanguagePlaceholder')}
-                value={newLanguage}
-                onChange={(e) => setNewLanguage(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && addLanguage()}
-              />
-              <Button onClick={addLanguage} size="sm">
-                <Plus className="h-4 w-4" />
-              </Button>
+            <div className="space-y-2">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Language code (e.g., en, ar, fr)"
+                  value={newLanguageCode}
+                  onChange={(e) => setNewLanguageCode(e.target.value)}
+                />
+                <Input
+                  placeholder="Language name (e.g., English)"
+                  value={newLanguageName}
+                  onChange={(e) => setNewLanguageName(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && addLanguage()}
+                />
+                <Button 
+                  onClick={addLanguage} 
+                  size="sm"
+                  disabled={addLanguageMutation.isPending}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
             
-            <div className="flex flex-wrap gap-2">
-              {languages.map((language) => (
-                <Badge key={language} variant="secondary" className="flex items-center gap-1">
-                  {language}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-4 w-4 p-0 hover:bg-destructive hover:text-destructive-foreground"
-                    onClick={() => removeLanguage(language)}
-                  >
-                    <Trash2 className="h-3 w-3" />
-                  </Button>
-                </Badge>
-              ))}
-            </div>
+            {languagesLoading ? (
+              <div className="text-center py-4">Loading languages...</div>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {languages.map((language) => (
+                  <Badge key={language.id} variant="secondary" className="flex items-center gap-1">
+                    {language.name} ({language.code})
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-4 w-4 p-0 hover:bg-destructive hover:text-destructive-foreground"
+                      onClick={() => removeLanguage(language.id)}
+                      disabled={removeLanguageMutation.isPending}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </Badge>
+                ))}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
