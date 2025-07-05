@@ -1,154 +1,177 @@
 
 {
-  "hero": {
-    "title": "Sweet Dreams Begin with Magical Stories",
-    "subtitle": "Discover soothing bedtime stories in multiple languages that will take your child on magical adventures while preparing them for peaceful sleep.",
-    "exploreButton": "Explore Stories",
-    "signUpButton": "Sign Up Free"
-  },
-  "free": {
-    "story": "Free Story of the Day",
-    "viewAll": "View All",
-    "tag": "FREE"
-  },
-  "premium": {
-    "tag": "PREMIUM"
-  },
-  "featured": {
-    "title": "Featured Stories"
-  },
-  "features": {
-    "title": "Why Parents & Kids Love Us",
-    "subtitle": "Our stories are crafted to bring families together with calming narratives, educational themes, and a touch of magic.",
-    "soothing": {
-      "title": "Soothing Stories",
-      "desc": "Calming narratives specially crafted to help children relax and prepare for sleep."
-    },
-    "languages": {
-      "title": "Multiple Languages",
-      "desc": "Stories available in English, Arabic, and French to support language development."
-    },
-    "games": {
-      "title": "Family Games",
-      "desc": "Fun interactive activities that parents and children can enjoy together before bedtime."
-    }
-  },
-  "subscribe": {
-    "title": "Unlock Premium Stories & Features",
-    "subtitle": "Get unlimited access to our full library of stories, exclusive content, and special features with our premium subscription.",
-    "button": "See Plans"
-  },
   "nav": {
     "home": "Home",
     "stories": "Stories",
     "games": "Games",
     "courses": "Courses",
-    "profile": "Profile"
+    "profile": "Profile",
+    "login": "Login",
+    "register": "Register",
+    "subscription": "Subscription"
+  },
+  "hero": {
+    "title": "Magical Stories for Sweet Dreams",
+    "subtitle": "Interactive bedtime stories that spark imagination and create peaceful sleep for your little ones",
+    "cta": "Start Free Trial",
+    "watchDemo": "Watch Demo"
+  },
+  "features": {
+    "title": "Why Choose Our Stories?",
+    "interactive": {
+      "title": "Interactive Stories",
+      "description": "Engaging narratives that respond to your child's choices"
+    },
+    "multilingual": {
+      "title": "Multiple Languages",
+      "description": "Stories available in Arabic, English, and French"
+    },
+    "educational": {
+      "title": "Educational Content",
+      "description": "Learn while having fun with age-appropriate lessons"
+    },
+    "peaceful": {
+      "title": "Peaceful Sleep",
+      "description": "Specially designed to help children relax and fall asleep"
+    }
+  },
+  "stories": {
+    "featured": "Featured Stories",
+    "popular": "Popular Stories",
+    "free": "Free Story of the Day",
+    "entertainment": "Entertainment Stories",
+    "viewAll": "View All Stories",
+    "readNow": "Read Now",
+    "duration": "{{duration}} min",
+    "category": {
+      "sleeping": "Bedtime",
+      "religious": "Religious",
+      "developmental": "Educational",
+      "entertainment": "Entertainment"
+    }
+  },
+  "courses": {
+    "featured": "Featured Courses",
+    "viewAll": "View All Courses",
+    "startCourse": "Start Course",
+    "lessons": "{{count}} lessons"
+  },
+  "subscription": {
+    "title": "Subscribe for Premium Content",
+    "description": "Unlock all stories and features with our premium subscription",
+    "cta": "Subscribe Now"
+  },
+  "footer": {
+    "description": "Creating magical bedtime experiences for children worldwide",
+    "company": "Company",
+    "about": "About Us",
+    "contact": "Contact",
+    "support": "Support",
+    "resources": "Resources",
+    "blog": "Blog",
+    "help": "Help Center",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "rights": "All rights reserved"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try Again",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "next": "Next",
+    "previous": "Previous",
+    "yes": "Yes",
+    "no": "No"
   },
   "auth": {
     "login": "Login",
+    "register": "Register",
     "logout": "Logout",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
     "signUp": "Sign Up",
-    "profile": "Profile"
+    "signIn": "Sign In"
   },
-  "layout": {
-    "appName": "Bedtime Stories",
-    "subscribe": "Subscribe",
-    "copyright": "All rights reserved."
-  },
-  "duration": "mins",
-  "button": {
-    "readStory": "Read Story",
-    "readNow": "Read Now",
-    "premium": "Premium Story",
-    "startLearning": "Start Learning",
-    "goToPremium": "Go Premium",
-    "backToCourses": "Back to Courses"
-  },
-  "popular": {
-    "title": "Popular Bedtime Stories"
-  },
-  "entertainment": {
-    "title": "Fun Stories"
-  },
-  "courses": {
-    "title": "Fun Learning Courses",
-    "exploreTitle": "Learn with Fun Courses",
-    "lessons": "lessons",
-    "years": "years",
-    "searchPlaceholder": "Search for courses...",
-    "allCourses": "All Courses",
-    "categories": {
-      "language": "Language",
-      "math": "Math",
-      "science": "Science",
-      "arts": "Arts",
-      "social": "Social"
-    },
-    "noResults": "No courses found matching your search."
-  },
-  "course": {
-    "about": "About this Course",
-    "whatYouLearn": "What You Will Learn",
-    "learnPoint1": "Fun and interactive lessons suitable for kids",
-    "learnPoint2": "Engaging activities to reinforce learning",
-    "learnPoint3": "Progress tracking to celebrate achievements",
-    "notFound": "Course Not Found",
-    "notFoundDesc": "The course you are looking for does not exist."
+  "profile": {
+    "title": "Profile",
+    "settings": "Settings",
+    "preferences": "Preferences"
   },
   "games": {
-    "title": "Play Together",
-    "subtitle": "Enjoy these fun activities with your child before bedtime. These simple games and tools are designed to create special moments together.",
-    "ticTacToe": {
-      "title": "Tic-Tac-Toe",
-      "description": "Play together before bedtime",
-      "nextPlayer": "Next player:",
-      "winner": "Winner:",
-      "draw": "It's a draw!",
-      "newGame": "Start New Game",
-      "won": "won the game!"
-    },
-    "coloringBook": {
-      "title": "Coloring Book",
-      "description": "Download and print coloring sheets",
-      "comingSoon": "Premium feature coming soon! Subscribe to access coloring sheets.",
-      "seePlans": "See Subscription Plans"
-    }
+    "title": "Interactive Games",
+    "description": "Coming soon! Fun and educational games for children.",
+    "comingSoon": "Coming Soon"
   },
   "notFound": {
-    "title": "Oops!",
-    "message": "It seems like this page has drifted off to dreamland. Let's get you back to your stories.",
-    "returnHome": "Return Home",
-    "browseStories": "Browse Stories"
+    "title": "Page Not Found",
+    "description": "The page you are looking for doesn't exist.",
+    "backHome": "Back to Home"
   },
-  "popup": {
-    "special": "Special Offer",
-    "limitedTime": "Limited time offer for new users",
-    "unlock": "Unlock Premium Features",
-    "feature1": "Unlimited access to all stories",
-    "feature2": "Exclusive premium content",
-    "feature3": "Ad-free experience",
-    "month": "month",
-    "off": "OFF",
-    "subscribe": "Subscribe Now",
-    "later": "Maybe Later"
-  },
-  "toast": {
-    "loginRequired": "Login Required",
-    "pleaseLoginToStart": "Please log in to start this course.",
-    "premiumRequired": "Premium Required",
-    "upgradeToPremium": "Please upgrade to premium to access this course.",
-    "courseStarted": "Course Started",
-    "enjoyLearning": "Enjoy learning"
+  "pricing": {
+    "title": "Choose Your Plan",
+    "monthly": "Monthly",
+    "yearly": "Yearly (Save 20%)",
+    "free": {
+      "title": "Free",
+      "price": "$0",
+      "features": [
+        "Limited stories access",
+        "Basic features",
+        "Community support"
+      ]
+    },
+    "premium": {
+      "title": "Premium",
+      "price": "$9.99",
+      "features": [
+        "Unlimited stories access",
+        "All premium features",
+        "Priority support",
+        "Offline downloads"
+      ]
+    },
+    "selectPlan": "Select Plan",
+    "currentPlan": "Current Plan"
   },
   "languages": {
     "english": "English",
-    "arabic": "Arabic",
-    "french": "French"
+    "arabic": "العربية",
+    "french": "Français"
   },
   "accessibility": {
-    "languageSelection": "Language Selection",
-    "toggleTheme": "Toggle theme",
-    "menu": "Menu"
+    "languageSelection": "Select language"
+  },
+  "admin": {
+    "storyOptions": {
+      "title": "Story Options",
+      "description": "Manage categories and languages available for stories",
+      "categories": "Categories",
+      "categoriesDesc": "Manage story categories that can be selected when creating or editing stories",
+      "languages": "Languages", 
+      "languagesDesc": "Manage languages available for story content",
+      "addCategoryPlaceholder": "Enter new category",
+      "addLanguagePlaceholder": "Enter new language code (e.g., en, ar, fr)",
+      "categoryAdded": "Category Added",
+      "categoryAddedDesc": "Category '{{category}}' has been added successfully",
+      "categoryRemoved": "Category Removed", 
+      "categoryRemovedDesc": "Category '{{category}}' has been removed successfully",
+      "languageAdded": "Language Added",
+      "languageAddedDesc": "Language '{{language}}' has been added successfully", 
+      "languageRemoved": "Language Removed",
+      "languageRemovedDesc": "Language '{{language}}' has been removed successfully"
+    }
   }
 }

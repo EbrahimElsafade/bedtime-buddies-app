@@ -1,154 +1,177 @@
 
 {
-  "hero": {
-    "title": "Les beaux rêves commencent par des histoires magiques",
-    "subtitle": "Découvrez des histoires apaisantes pour le coucher en plusieurs langues qui emmèneront votre enfant dans des aventures magiques tout en le préparant à un sommeil paisible.",
-    "exploreButton": "Explorer les histoires",
-    "signUpButton": "Inscription gratuite"
-  },
-  "free": {
-    "story": "Histoire gratuite du jour",
-    "viewAll": "Voir tout",
-    "tag": "GRATUIT"
-  },
-  "premium": {
-    "tag": "PREMIUM"
-  },
-  "featured": {
-    "title": "Histoires en vedette"
-  },
-  "features": {
-    "title": "Pourquoi les parents et les enfants nous adorent",
-    "subtitle": "Nos histoires sont conçues pour rassembler les familles avec des récits apaisants, des thèmes éducatifs et une touche de magie.",
-    "soothing": {
-      "title": "Histoires apaisantes",
-      "desc": "Récits apaisants spécialement conçus pour aider les enfants à se détendre et à se préparer au sommeil."
-    },
-    "languages": {
-      "title": "Langues multiples",
-      "desc": "Histoires disponibles en anglais, arabe et français pour soutenir le développement du langage."
-    },
-    "games": {
-      "title": "Jeux familiaux",
-      "desc": "Activités interactives amusantes que les parents et les enfants peuvent apprécier ensemble avant le coucher."
-    }
-  },
-  "subscribe": {
-    "title": "Débloquez des histoires et des fonctionnalités premium",
-    "subtitle": "Accédez sans limite à notre bibliothèque complète d'histoires, à du contenu exclusif et à des fonctionnalités spéciales avec notre abonnement premium.",
-    "button": "Voir les plans"
-  },
   "nav": {
     "home": "Accueil",
     "stories": "Histoires",
     "games": "Jeux",
     "courses": "Cours",
-    "profile": "Profil"
+    "profile": "Profil",
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "subscription": "Abonnement"
+  },
+  "hero": {
+    "title": "Histoires Magiques pour des Rêves Paisibles",
+    "subtitle": "Histoires interactives du coucher qui éveillent l'imagination et créent un sommeil paisible pour vos petits",
+    "cta": "Commencer l'Essai Gratuit",
+    "watchDemo": "Voir la Démo"
+  },
+  "features": {
+    "title": "Pourquoi Choisir Nos Histoires ?",
+    "interactive": {
+      "title": "Histoires Interactives",
+      "description": "Récits captivants qui répondent aux choix de votre enfant"
+    },
+    "multilingual": {
+      "title": "Plusieurs Langues",
+      "description": "Histoires disponibles en arabe, anglais et français"
+    },
+    "educational": {
+      "title": "Contenu Éducatif",
+      "description": "Apprendre en s'amusant avec des leçons adaptées à l'âge"
+    },
+    "peaceful": {
+      "title": "Sommeil Paisible",
+      "description": "Spécialement conçues pour aider les enfants à se détendre et s'endormir"
+    }
+  },
+  "stories": {
+    "featured": "Histoires en Vedette",
+    "popular": "Histoires Populaires",
+    "free": "Histoire Gratuite du Jour",
+    "entertainment": "Histoires de Divertissement",
+    "viewAll": "Voir Toutes les Histoires",
+    "readNow": "Lire Maintenant",
+    "duration": "{{duration}} min",
+    "category": {
+      "sleeping": "Coucher",
+      "religious": "Religieuses",
+      "developmental": "Éducatives",
+      "entertainment": "Divertissement"
+    }
+  },
+  "courses": {
+    "featured": "Cours en Vedette",
+    "viewAll": "Voir Tous les Cours",
+    "startCourse": "Commencer le Cours",
+    "lessons": "{{count}} leçons"
+  },
+  "subscription": {
+    "title": "S'abonner pour le Contenu Premium",
+    "description": "Débloquez toutes les histoires et fonctionnalités avec notre abonnement premium",
+    "cta": "S'abonner Maintenant"
+  },
+  "footer": {
+    "description": "Créer des expériences magiques du coucher pour les enfants du monde entier",
+    "company": "Entreprise",
+    "about": "À Propos",
+    "contact": "Contact",
+    "support": "Support",
+    "resources": "Ressources",
+    "blog": "Blog",
+    "help": "Centre d'Aide",
+    "legal": "Légal",
+    "privacy": "Politique de Confidentialité",
+    "terms": "Conditions d'Utilisation",
+    "rights": "Tous droits réservés"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "retry": "Réessayer",
+    "close": "Fermer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "yes": "Oui",
+    "no": "Non"
   },
   "auth": {
     "login": "Connexion",
+    "register": "S'inscrire",
     "logout": "Déconnexion",
+    "email": "Email",
+    "password": "Mot de Passe",
+    "confirmPassword": "Confirmer le Mot de Passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "hasAccount": "Vous avez déjà un compte ?",
     "signUp": "S'inscrire",
-    "profile": "Profil"
+    "signIn": "Se connecter"
   },
-  "layout": {
-    "appName": "Histoires pour dormir",
-    "subscribe": "S'abonner",
-    "copyright": "Tous droits réservés."
-  },
-  "duration": "mins",
-  "button": {
-    "readStory": "Lire l'histoire",
-    "readNow": "Lire maintenant",
-    "premium": "Histoire premium",
-    "startLearning": "Commencer à apprendre",
-    "goToPremium": "Passer au premium",
-    "backToCourses": "Retour aux cours"
-  },
-  "popular": {
-    "title": "Histoires populaires pour le coucher"
-  },
-  "entertainment": {
-    "title": "Histoires amusantes"
-  },
-  "courses": {
-    "title": "Cours d'apprentissage amusants",
-    "exploreTitle": "Apprendre avec des cours amusants",
-    "lessons": "leçons",
-    "years": "ans",
-    "searchPlaceholder": "Rechercher des cours...",
-    "allCourses": "Tous les cours",
-    "categories": {
-      "language": "Langue",
-      "math": "Mathématiques",
-      "science": "Science",
-      "arts": "Arts",
-      "social": "Social"
-    },
-    "noResults": "Aucun cours correspondant à votre recherche."
-  },
-  "course": {
-    "about": "À propos de ce cours",
-    "whatYouLearn": "Ce que vous apprendrez",
-    "learnPoint1": "Leçons amusantes et interactives adaptées aux enfants",
-    "learnPoint2": "Activités engageantes pour renforcer l'apprentissage",
-    "learnPoint3": "Suivi des progrès pour célébrer les réussites",
-    "notFound": "Cours non trouvé",
-    "notFoundDesc": "Le cours que vous recherchez n'existe pas."
+  "profile": {
+    "title": "Profil",
+    "settings": "Paramètres",
+    "preferences": "Préférences"
   },
   "games": {
-    "title": "Jouer ensemble",
-    "subtitle": "Profitez de ces activités amusantes avec votre enfant avant le coucher. Ces jeux et outils simples sont conçus pour créer des moments spéciaux ensemble.",
-    "ticTacToe": {
-      "title": "Tic-Tac-Toe",
-      "description": "Jouer ensemble avant le coucher",
-      "nextPlayer": "Joueur suivant:",
-      "winner": "Gagnant:",
-      "draw": "C'est un match nul!",
-      "newGame": "Nouvelle partie",
-      "won": "a gagné la partie!"
-    },
-    "coloringBook": {
-      "title": "Livre de coloriage",
-      "description": "Télécharger et imprimer des feuilles de coloriage",
-      "comingSoon": "Fonctionnalité premium bientôt disponible! Abonnez-vous pour accéder aux feuilles de coloriage.",
-      "seePlans": "Voir les plans d'abonnement"
-    }
+    "title": "Jeux Interactifs",
+    "description": "Bientôt disponible ! Jeux amusants et éducatifs pour les enfants.",
+    "comingSoon": "Bientôt Disponible"
   },
   "notFound": {
-    "title": "Oops!",
-    "message": "Il semble que cette page soit partie au pays des rêves. Retournons à vos histoires.",
-    "returnHome": "Retour à l'accueil",
-    "browseStories": "Parcourir les histoires"
+    "title": "Page Non Trouvée",
+    "description": "La page que vous recherchez n'existe pas.",
+    "backHome": "Retour à l'Accueil"
   },
-  "popup": {
-    "special": "Offre spéciale",
-    "limitedTime": "Offre limitée pour les nouveaux utilisateurs",
-    "unlock": "Débloquez les fonctionnalités premium",
-    "feature1": "Accès illimité à toutes les histoires",
-    "feature2": "Contenu premium exclusif",
-    "feature3": "Expérience sans publicité",
-    "month": "mois",
-    "off": "DE RÉDUCTION",
-    "subscribe": "S'abonner maintenant",
-    "later": "Peut-être plus tard"
-  },
-  "toast": {
-    "loginRequired": "Connexion requise",
-    "pleaseLoginToStart": "Veuillez vous connecter pour commencer ce cours.",
-    "premiumRequired": "Abonnement premium requis",
-    "upgradeToPremium": "Veuillez passer à l'abonnement premium pour accéder à ce cours.",
-    "courseStarted": "Cours commencé",
-    "enjoyLearning": "Profitez de l'apprentissage"
+  "pricing": {
+    "title": "Choisissez Votre Plan",
+    "monthly": "Mensuel",
+    "yearly": "Annuel (Économisez 20%)",
+    "free": {
+      "title": "Gratuit",
+      "price": "0€",
+      "features": [
+        "Accès limité aux histoires",
+        "Fonctionnalités de base",
+        "Support communautaire"
+      ]
+    },
+    "premium": {
+      "title": "Premium",
+      "price": "9,99€",
+      "features": [
+        "Accès illimité aux histoires",
+        "Toutes les fonctionnalités premium",
+        "Support prioritaire",
+        "Téléchargements hors ligne"
+      ]
+    },
+    "selectPlan": "Choisir le Plan",
+    "currentPlan": "Plan Actuel"
   },
   "languages": {
-    "english": "Anglais",
-    "arabic": "Arabe",
+    "english": "English",
+    "arabic": "العربية",
     "french": "Français"
   },
   "accessibility": {
-    "languageSelection": "Sélection de langue",
-    "toggleTheme": "Changer de thème",
-    "menu": "Menu"
+    "languageSelection": "Sélectionner la langue"
+  },
+  "admin": {
+    "storyOptions": {
+      "title": "Options des Histoires",
+      "description": "Gérer les catégories et langues disponibles pour les histoires",
+      "categories": "Catégories",
+      "categoriesDesc": "Gérer les catégories d'histoires qui peuvent être sélectionnées lors de la création ou modification d'histoires",
+      "languages": "Langues",
+      "languagesDesc": "Gérer les langues disponibles pour le contenu des histoires",
+      "addCategoryPlaceholder": "Entrer une nouvelle catégorie",
+      "addLanguagePlaceholder": "Entrer un nouveau code de langue (ex: en, ar, fr)",
+      "categoryAdded": "Catégorie Ajoutée",
+      "categoryAddedDesc": "La catégorie '{{category}}' a été ajoutée avec succès",
+      "categoryRemoved": "Catégorie Supprimée",
+      "categoryRemovedDesc": "La catégorie '{{category}}' a été supprimée avec succès",
+      "languageAdded": "Langue Ajoutée",
+      "languageAddedDesc": "La langue '{{language}}' a été ajoutée avec succès",
+      "languageRemoved": "Langue Supprimée",
+      "languageRemovedDesc": "La langue '{{language}}' a été supprimée avec succès"
+    }
   }
 }

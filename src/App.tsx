@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -25,6 +24,7 @@ import AdminDashboard from "./pages/admin/Dashboard";
 import AdminUsers from "./pages/admin/Users";
 import AdminStories from "./pages/admin/Stories";
 import AdminStoryEditor from "./pages/admin/StoryEditor";
+import AdminStoryOptions from "./pages/admin/StoryOptions";
 import AdminCourses from "./pages/admin/Courses";
 import AdminSettings from "./pages/admin/Settings";
 
@@ -110,6 +110,7 @@ const App = () => {
                   <Route path="stories" element={<AdminStories />} />
                   <Route path="stories/new" element={<AdminStoryEditor />} />
                   <Route path="stories/edit/:id" element={<AdminStoryEditor />} />
+                  <Route path="stories/options" element={<AdminStoryOptions />} />
                   <Route path="courses" element={<AdminCourses />} />
                   <Route path="settings" element={<AdminSettings />} />
                 </Route>

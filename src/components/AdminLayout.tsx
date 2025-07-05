@@ -100,6 +100,19 @@ const AdminLayout = () => {
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
+                {/* Add Story Options submenu */}
+                <SidebarMenuItem className="ml-4">
+                  <SidebarMenuButton
+                    asChild
+                    isActive={isActive("/admin/stories/options")}
+                    tooltip="Story Options"
+                  >
+                    <NavLink to="/admin/stories/options" className="flex items-center">
+                      <Settings className="h-5 w-5 mr-3" />
+                      {!collapsed && <span>Story Options</span>}
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
                 <SidebarMenuItem>
                   <SidebarMenuButton
                     asChild
