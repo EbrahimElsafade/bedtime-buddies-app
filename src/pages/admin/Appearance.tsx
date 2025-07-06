@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,6 +25,7 @@ import {
 
 interface HomePageSettings {
   freeStory: string;
+  freeStoryEnabled: boolean;
   storiesSection: boolean;
   topRated: boolean;
   courses: boolean;
@@ -36,6 +38,7 @@ const Appearance = () => {
   // State for home page sections
   const [homePageSections, setHomePageSections] = useState<HomePageSettings>({
     freeStory: "",
+    freeStoryEnabled: false,
     storiesSection: true,
     topRated: true,
     courses: true,
@@ -104,6 +107,17 @@ const Appearance = () => {
     }
   });
 
+  const handleFreeStoryEnabledChange = (checked: boolean) => {
+    const updatedSections = {
+      ...homePageSections,
+      freeStoryEnabled: checked,
+      freeStory: checked ? homePageSections.freeStory : ""
+    };
+    setHomePageSections(updatedSections);
+    // Auto-save when checkbox is toggled
+    saveSettingsMutation.mutate(updatedSections);
+  };
+
   const handleFreeStoryChange = (storyId: string) => {
     const updatedSections = {
       ...homePageSections,
@@ -115,7 +129,7 @@ const Appearance = () => {
   };
 
   const handleHomePageSectionChange = (section: keyof HomePageSettings, checked: boolean) => {
-    if (section === 'freeStory') return; // Handle free story separately
+    if (section === 'freeStory' || section === 'freeStoryEnabled') return; // Handle free story separately
     
     setHomePageSections(prev => ({
       ...prev,
@@ -188,29 +202,43 @@ const Appearance = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="freeStory">Free Story Section</Label>
-                <Select
-                  value={homePageSections.freeStory}
-                  onValueChange={handleFreeStoryChange}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a story to feature as free" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {storiesLoading ? (
-                      <SelectItem value="" disabled>Loading stories...</SelectItem>
-                    ) : stories?.length === 0 ? (
-                      <SelectItem value="" disabled>No published stories available</SelectItem>
-                    ) : (
-                      stories?.map(story => (
-                        <SelectItem key={story.id} value={story.id}>
-                          {story.title}
-                        </SelectItem>
-                      ))
-                    )}
-                  </SelectContent>
-                </Select>
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="freeStoryEnabled"
+                    checked={homePageSections.freeStoryEnabled}
+                    onCheckedChange={handleFreeStoryEnabledChange}
+                  />
+                  <Label htmlFor="freeStoryEnabled" className="text-base font-medium">
+                    Enable Free Story Section
+                  </Label>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="freeStory">Free Story Selection</Label>
+                  <Select
+                    value={homePageSections.freeStoryEnabled ? homePageSections.freeStory : ""}
+                    onValueChange={handleFreeStoryChange}
+                    disabled={!homePageSections.freeStoryEnabled}
+                  >
+                    <SelectTrigger className={!homePageSections.freeStoryEnabled ? "opacity-50" : ""}>
+                      <SelectValue placeholder="Select a story to feature as free" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {storiesLoading ? (
+                        <SelectItem value="" disabled>Loading stories...</SelectItem>
+                      ) : stories?.length === 0 ? (
+                        <SelectItem value="" disabled>No published stories available</SelectItem>
+                      ) : (
+                        stories?.map(story => (
+                          <SelectItem key={story.id} value={story.id}>
+                            {story.title}
+                          </SelectItem>
+                        ))
+                      )}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <div className="flex items-center space-x-2">

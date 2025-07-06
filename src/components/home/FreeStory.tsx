@@ -10,6 +10,7 @@ import { getImageUrl } from "@/utils/imageUtils";
 
 interface HomePageSettings {
   freeStory: string;
+  freeStoryEnabled: boolean;
   storiesSection: boolean;
   topRated: boolean;
   courses: boolean;
@@ -50,11 +51,11 @@ const FreeStory = () => {
       if (error) throw error;
       return data;
     },
-    enabled: !!settings?.freeStory
+    enabled: !!settings?.freeStory && !!settings?.freeStoryEnabled
   });
 
-  // Don't render if loading or no story selected
-  if (isLoading || !settings?.freeStory || !freeStory) return null;
+  // Don't render if the free story section is disabled, loading, or no story selected
+  if (!settings?.freeStoryEnabled || isLoading || !settings?.freeStory || !freeStory) return null;
 
   const coverImage = freeStory.cover_image ? getImageUrl(freeStory.cover_image) : '/placeholder.svg';
 
