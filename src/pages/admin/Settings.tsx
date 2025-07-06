@@ -15,8 +15,11 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useTranslation } from "react-i18next";
 
 const Settings = () => {
+  const { t } = useTranslation('admin');
+  
   // Example settings state
   const [settings, setSettings] = useState({
     enableStoriesFeature: true,
@@ -34,13 +37,13 @@ const Settings = () => {
 
   const handleSaveSettings = () => {
     // In a real app, this would save to the database
-    toast.success("Settings saved successfully!");
+    toast.success(t('forms.saved'));
   };
 
   return (
     <div>
       <header className="mb-8">
-        <h1 className="text-3xl font-bold">Admin Settings</h1>
+        <h1 className="text-3xl font-bold">{t('settings.title')}</h1>
         <p className="text-muted-foreground">
           Configure system-wide settings and preferences
         </p>
@@ -48,7 +51,7 @@ const Settings = () => {
 
       <Tabs defaultValue="general">
         <TabsList className="mb-6">
-          <TabsTrigger value="general">General</TabsTrigger>
+          <TabsTrigger value="general">{t('settings.general')}</TabsTrigger>
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="advanced">Advanced</TabsTrigger>
@@ -57,14 +60,14 @@ const Settings = () => {
         <TabsContent value="general">
           <Card>
             <CardHeader>
-              <CardTitle>General Settings</CardTitle>
+              <CardTitle>{t('settings.general')}</CardTitle>
               <CardDescription>
                 Configure basic functionality for the application
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="siteTitle">Site Title</Label>
+                <Label htmlFor="siteTitle">{t('settings.siteTitle')}</Label>
                 <Input
                   id="siteTitle"
                   value={settings.siteTitle}
@@ -91,7 +94,7 @@ const Settings = () => {
               <div className="flex justify-between items-center">
                 <div>
                   <Label htmlFor="enableStoriesFeature" className="text-base">
-                    Enable Stories Feature
+                    {t('settings.enableRegistration')}
                   </Label>
                   <p className="text-sm text-muted-foreground">
                     Allow users to access the stories section
@@ -143,7 +146,7 @@ const Settings = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={handleSaveSettings}>Save Settings</Button>
+              <Button onClick={handleSaveSettings}>{t('forms.saved')}</Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -192,7 +195,7 @@ const Settings = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={handleSaveSettings}>Save Settings</Button>
+              <Button onClick={handleSaveSettings}>{t('forms.saved')}</Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -225,7 +228,7 @@ const Settings = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={handleSaveSettings}>Save Settings</Button>
+              <Button onClick={handleSaveSettings}>{t('forms.saved')}</Button>
             </CardFooter>
           </Card>
         </TabsContent>

@@ -20,7 +20,7 @@ import {
 
 const AdminLayout = () => {
   const { logout, user, profile } = useAuth();
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('admin');
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const isRTL = i18n.language === 'ar';
@@ -47,7 +47,7 @@ const AdminLayout = () => {
                 to="/admin"
                 className="flex items-center text-xl font-bold text-dream-DEFAULT"
               >
-                <span>{t('admin.dashboard.title')}</span>
+                <span>{t('dashboard.title')}</span>
               </Link>
               <SidebarTrigger />
             </div>
@@ -59,11 +59,11 @@ const AdminLayout = () => {
                 <SidebarMenuButton
                   asChild
                   isActive={isActive("/admin")}
-                  tooltip={t('admin.navigation.dashboard')}
+                  tooltip={t('navigation.dashboard')}
                 >
                   <NavLink to="/admin" className="flex items-center">
                     <Home className={`h-5 w-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
-                    <span>{t('admin.navigation.dashboard')}</span>
+                    <span>{t('navigation.dashboard')}</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -71,11 +71,11 @@ const AdminLayout = () => {
                 <SidebarMenuButton
                   asChild
                   isActive={isActive("/admin/users")}
-                  tooltip={t('admin.navigation.users')}
+                  tooltip={t('navigation.users')}
                 >
                   <NavLink to="/admin/users" className="flex items-center">
                     <Users className={`h-5 w-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
-                    <span>{t('admin.navigation.users')}</span>
+                    <span>{t('navigation.users')}</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -86,11 +86,11 @@ const AdminLayout = () => {
                     isActive("/admin/stories") ||
                     location.pathname.startsWith("/admin/stories/")
                   }
-                  tooltip={t('admin.navigation.stories')}
+                  tooltip={t('navigation.stories')}
                 >
                   <NavLink to="/admin/stories" className="flex items-center">
                     <Book className={`h-5 w-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
-                    <span>{t('admin.navigation.stories')}</span>
+                    <span>{t('navigation.stories')}</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -99,11 +99,11 @@ const AdminLayout = () => {
                 <SidebarMenuButton
                   asChild
                   isActive={isActive("/admin/stories/options")}
-                  tooltip={t('admin.storyOptions.title')}
+                  tooltip={t('storyOptions.title')}
                 >
                   <NavLink to="/admin/stories/options" className="flex items-center">
                     <Settings className={`h-5 w-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
-                    <span>{t('admin.storyOptions.title')}</span>
+                    <span>{t('storyOptions.title')}</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -114,11 +114,11 @@ const AdminLayout = () => {
                     isActive("/admin/courses") ||
                     location.pathname.startsWith("/admin/courses/")
                   }
-                  tooltip={t('admin.navigation.courses')}
+                  tooltip={t('navigation.courses')}
                 >
                   <NavLink to="/admin/courses" className="flex items-center">
                     <Presentation className={`h-5 w-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
-                    <span>{t('admin.navigation.courses')}</span>
+                    <span>{t('navigation.courses')}</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -132,11 +132,11 @@ const AdminLayout = () => {
                 <SidebarMenuButton
                   asChild
                   isActive={isActive("/admin/settings")}
-                  tooltip={t('admin.navigation.settings')}
+                  tooltip={t('navigation.settings')}
                 >
                   <NavLink to="/admin/settings" className="flex items-center">
                     <Settings className={`h-5 w-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
-                    <span>{t('admin.navigation.settings')}</span>
+                    <span>{t('navigation.settings')}</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -146,7 +146,7 @@ const AdminLayout = () => {
                 className="w-full justify-start"
               >
                 <LogOut className={`h-5 w-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
-                <span>{t('admin.navigation.logout')}</span>
+                <span>{t('navigation.logout')}</span>
               </Button>
             </div>
           </SidebarFooter>

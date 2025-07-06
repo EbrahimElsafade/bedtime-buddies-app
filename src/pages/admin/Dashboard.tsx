@@ -4,8 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { User, CircleUser, BookOpen, Presentation, CalendarClock } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Dashboard = () => {
+  const { t } = useTranslation('admin');
   const [stats, setStats] = useState({
     totalUsers: 0,
     premiumUsers: 0,
@@ -63,14 +65,14 @@ const Dashboard = () => {
   return (
     <div>
       <header className="mb-8">
-        <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-        <p className="text-muted-foreground">Manage your application content and users</p>
+        <h1 className="text-3xl font-bold">{t('dashboard.title')}</h1>
+        <p className="text-muted-foreground">{t('dashboard.welcome')}</p>
       </header>
       
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('dashboard.totalUsers')}</CardTitle>
             <User className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -82,7 +84,7 @@ const Dashboard = () => {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Stories</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('dashboard.totalStories')}</CardTitle>
             <BookOpen className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -94,7 +96,7 @@ const Dashboard = () => {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Courses</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('dashboard.totalCourses')}</CardTitle>
             <Presentation className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -108,13 +110,13 @@ const Dashboard = () => {
       
       <Tabs defaultValue="recent">
         <TabsList>
-          <TabsTrigger value="recent">Recent Activity</TabsTrigger>
-          <TabsTrigger value="overview">System Overview</TabsTrigger>
+          <TabsTrigger value="recent">{t('dashboard.recentActivity')}</TabsTrigger>
+          <TabsTrigger value="overview">{t('dashboard.overview')}</TabsTrigger>
         </TabsList>
         <TabsContent value="recent" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
+              <CardTitle>{t('dashboard.recentActivity')}</CardTitle>
               <CardDescription>Latest actions performed in the admin panel</CardDescription>
             </CardHeader>
             <CardContent>
