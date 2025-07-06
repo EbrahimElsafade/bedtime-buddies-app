@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -236,6 +235,406 @@ const MemoryCardGame = () => {
   );
 };
 
+const RockPaperScissors = () => {
+  const [playerChoice, setPlayerChoice] = useState<string | null>(null);
+  const [computerChoice, setComputerChoice] = useState<string | null>(null);
+  const [playerScore, setPlayerScore] = useState(0);
+  const [computerScore, setComputerScore] = useState(0);
+  const [result, setResult] = useState<string>('');
+
+  const choices = [
+    { name: 'Rock', emoji: '🪨', beats: 'Scissors' },
+    { name: 'Paper', emoji: '📄', beats: 'Rock' },
+    { name: 'Scissors', emoji: '✂️', beats: 'Paper' }
+  ];
+
+  const playGame = (playerChoice: string) => {
+    const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+    
+    setPlayerChoice(playerChoice);
+    setComputerChoice(computerChoice.name);
+
+    if (playerChoice === computerChoice.name) {
+      setResult("It's a tie!");
+    } else if (
+      (playerChoice === 'Rock' && computerChoice.name === 'Scissors') ||
+      (playerChoice === 'Paper' && computerChoice.name === 'Rock') ||
+      (playerChoice === 'Scissors' && computerChoice.name === 'Paper')
+    ) {
+      setResult('You win!');
+      setPlayerScore(prev => prev + 1);
+      toast.success('You won this round!');
+    } else {
+      setResult('Computer wins!');
+      setComputerScore(prev => prev + 1);
+      toast.error('Computer won this round!');
+    }
+  };
+
+  const resetGame = () => {
+    setPlayerChoice(null);
+    setComputerChoice(null);
+    setPlayerScore(0);
+    setComputerScore(0);
+    setResult('');
+  };
+
+  return (
+    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+      <CardHeader>
+        <CardTitle className="text-xl">Rock Paper Scissors</CardTitle>
+        <CardDescription>Choose your weapon and beat the computer!</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col items-center space-y-4">
+          <div className="flex justify-between w-full text-lg font-medium">
+            <span>You: {playerScore}</span>
+            <span>Computer: {computerScore}</span>
+          </div>
+          
+          {result && (
+            <div className="text-xl font-bold text-center">
+              {result}
+            </div>
+          )}
+          
+          {playerChoice && computerChoice && (
+            <div className="flex justify-between w-full items-center">
+              <div className="text-center">
+                <div className="text-4xl mb-2">
+                  {choices.find(c => c.name === playerChoice)?.emoji}
+                </div>
+                <div className="text-sm">You</div>
+              </div>
+              <div className="text-2xl">VS</div>
+              <div className="text-center">
+                <div className="text-4xl mb-2">
+                  {choices.find(c => c.name === computerChoice)?.emoji}
+                </div>
+                <div className="text-sm">Computer</div>
+              </div>
+            </div>
+          )}
+          
+          <div className="flex gap-4">
+            {choices.map((choice) => (
+              <button
+                key={choice.name}
+                onClick={() => playGame(choice.name)}
+                className="flex flex-col items-center p-4 bg-white/70 dark:bg-nightsky-light/70 hover:bg-white/90 dark:hover:bg-nightsky/90 border border-dream-light/30 rounded-lg transition-colors"
+              >
+                <span className="text-3xl mb-2">{choice.emoji}</span>
+                <span className="text-sm">{choice.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Button onClick={resetGame} className="w-full bg-dream-DEFAULT hover:bg-dream-dark">
+          Reset Score
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+};
+
+const SnakeGame = () => {
+  const [snake, setSnake] = useState([{ x: 10, y: 10 }]);
+  const [food, setFood] = useState({ x: 5, y: 5 });
+  const [direction, setDirection] = useState({ x: 0, y: 0 });
+  const [gameOver, setGameOver] = useState(false);
+  const [score, setScore] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
+
+  const boardSize = 20;
+
+  const generateFood = useCallback(() => {
+    const newFood = {
+      x: Math.floor(Math.random() * boardSize),
+      y: Math.floor(Math.random() * boardSize)
+    };
+    setFood(newFood);
+  }, []);
+
+  const resetGame = () => {
+    setSnake([{ x: 10, y: 10 }]);
+    setDirection({ x: 0, y: 0 });
+    setGameOver(false);
+    setScore(0);
+    setGameStarted(false);
+    generateFood();
+  };
+
+  const startGame = () => {
+    setGameStarted(true);
+    setDirection({ x: 1, y: 0 });
+  };
+
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (!gameStarted || gameOver) return;
+      
+      switch (e.key) {
+        case 'ArrowUp':
+          if (direction.y === 0) setDirection({ x: 0, y: -1 });
+          break;
+        case 'ArrowDown':
+          if (direction.y === 0) setDirection({ x: 0, y: 1 });
+          break;
+        case 'ArrowLeft':
+          if (direction.x === 0) setDirection({ x: -1, y: 0 });
+          break;
+        case 'ArrowRight':
+          if (direction.x === 0) setDirection({ x: 1, y: 0 });
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [direction, gameStarted, gameOver]);
+
+  useEffect(() => {
+    if (!gameStarted || gameOver) return;
+
+    const gameInterval = setInterval(() => {
+      setSnake(prevSnake => {
+        const newSnake = [...prevSnake];
+        const head = { ...newSnake[0] };
+        
+        head.x += direction.x;
+        head.y += direction.y;
+
+        // Check wall collision
+        if (head.x < 0 || head.x >= boardSize || head.y < 0 || head.y >= boardSize) {
+          setGameOver(true);
+          toast.error(`Game Over! Final Score: ${score}`);
+          return prevSnake;
+        }
+
+        // Check self collision
+        if (newSnake.some(segment => segment.x === head.x && segment.y === head.y)) {
+          setGameOver(true);
+          toast.error(`Game Over! Final Score: ${score}`);
+          return prevSnake;
+        }
+
+        newSnake.unshift(head);
+
+        // Check food collision
+        if (head.x === food.x && head.y === food.y) {
+          setScore(prev => prev + 10);
+          generateFood();
+        } else {
+          newSnake.pop();
+        }
+
+        return newSnake;
+      });
+    }, 150);
+
+    return () => clearInterval(gameInterval);
+  }, [direction, food, gameStarted, gameOver, score, generateFood]);
+
+  return (
+    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+      <CardHeader>
+        <CardTitle className="text-xl">Snake Game</CardTitle>
+        <CardDescription>Use arrow keys to control the snake</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col items-center space-y-4">
+          <div className="text-lg font-medium">Score: {score}</div>
+          
+          <div 
+            className="grid bg-nightsky-light/30 border-2 border-dream-light/30 rounded-lg p-2"
+            style={{ 
+              gridTemplateColumns: `repeat(${boardSize}, 1fr)`,
+              width: '300px',
+              height: '300px'
+            }}
+          >
+            {Array.from({ length: boardSize * boardSize }).map((_, index) => {
+              const x = index % boardSize;
+              const y = Math.floor(index / boardSize);
+              const isSnake = snake.some(segment => segment.x === x && segment.y === y);
+              const isFood = food.x === x && food.y === y;
+              const isHead = snake[0]?.x === x && snake[0]?.y === y;
+              
+              return (
+                <div
+                  key={index}
+                  className={`border border-dream-light/10 ${
+                    isSnake 
+                      ? isHead 
+                        ? 'bg-dream-dark' 
+                        : 'bg-dream-DEFAULT'
+                      : isFood 
+                        ? 'bg-moon-DEFAULT' 
+                        : 'bg-transparent'
+                  }`}
+                />
+              );
+            })}
+          </div>
+          
+          {gameOver && (
+            <div className="text-xl font-bold text-center text-red-500">
+              Game Over!
+            </div>
+          )}
+          
+          {!gameStarted && !gameOver && (
+            <div className="text-center">
+              <p className="mb-2">Click Start to begin!</p>
+            </div>
+          )}
+        </div>
+      </CardContent>
+      <CardFooter>
+        {!gameStarted && !gameOver ? (
+          <Button onClick={startGame} className="w-full bg-dream-DEFAULT hover:bg-dream-dark">
+            Start Game
+          </Button>
+        ) : (
+          <Button onClick={resetGame} className="w-full bg-dream-DEFAULT hover:bg-dream-dark">
+            New Game
+          </Button>
+        )}
+      </CardFooter>
+    </Card>
+  );
+};
+
+const HangmanGame = () => {
+  const words = ['JAVASCRIPT', 'PYTHON', 'REACT', 'COMPUTER', 'PROGRAMMING', 'DEVELOPER', 'WEBSITE', 'FUNCTION'];
+  const [word, setWord] = useState('');
+  const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
+  const [wrongGuesses, setWrongGuesses] = useState(0);
+  const [gameOver, setGameOver] = useState(false);
+  const [gameWon, setGameWon] = useState(false);
+  
+  const maxWrongGuesses = 6;
+
+  const initializeGame = () => {
+    const randomWord = words[Math.floor(Math.random() * words.length)];
+    setWord(randomWord);
+    setGuessedLetters([]);
+    setWrongGuesses(0);
+    setGameOver(false);
+    setGameWon(false);
+  };
+
+  useEffect(() => {
+    initializeGame();
+  }, []);
+
+  useEffect(() => {
+    if (word && guessedLetters.length > 0) {
+      const wordLetters = word.split('');
+      const hasWon = wordLetters.every(letter => guessedLetters.includes(letter));
+      
+      if (hasWon) {
+        setGameWon(true);
+        setGameOver(true);
+        toast.success('Congratulations! You won!');
+      } else if (wrongGuesses >= maxWrongGuesses) {
+        setGameOver(true);
+        toast.error(`Game Over! The word was: ${word}`);
+      }
+    }
+  }, [guessedLetters, wrongGuesses, word]);
+
+  const guessLetter = (letter: string) => {
+    if (guessedLetters.includes(letter) || gameOver) return;
+    
+    const newGuessedLetters = [...guessedLetters, letter];
+    setGuessedLetters(newGuessedLetters);
+    
+    if (!word.includes(letter)) {
+      setWrongGuesses(prev => prev + 1);
+    }
+  };
+
+  const getDisplayWord = () => {
+    return word.split('').map(letter => 
+      guessedLetters.includes(letter) ? letter : '_'
+    ).join(' ');
+  };
+
+  const getHangmanDrawing = () => {
+    const drawings = [
+      '',
+      '  |\n  |',
+      '  +---+\n  |   |\n      |',
+      '  +---+\n  |   |\n  O   |',
+      '  +---+\n  |   |\n  O   |\n  |   |',
+      '  +---+\n  |   |\n  O   |\n /|   |',
+      '  +---+\n  |   |\n  O   |\n /|\\  |\n /    |'
+    ];
+    return drawings[wrongGuesses] || drawings[6];
+  };
+
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+  return (
+    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+      <CardHeader>
+        <CardTitle className="text-xl">Hangman Game</CardTitle>
+        <CardDescription>Guess the word letter by letter</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col items-center space-y-4">
+          <div className="text-center">
+            <pre className="font-mono text-sm bg-nightsky-light/20 p-4 rounded-lg border">
+              {getHangmanDrawing()}
+            </pre>
+          </div>
+          
+          <div className="text-2xl font-bold tracking-wider">
+            {getDisplayWord()}
+          </div>
+          
+          <div className="text-lg">
+            Wrong guesses: {wrongGuesses}/{maxWrongGuesses}
+          </div>
+          
+          {gameOver && (
+            <div className={`text-xl font-bold text-center ${gameWon ? 'text-green-500' : 'text-red-500'}`}>
+              {gameWon ? 'You Won!' : `Game Over! Word: ${word}`}
+            </div>
+          )}
+          
+          <div className="grid grid-cols-6 gap-2 max-w-md">
+            {alphabet.map(letter => (
+              <button
+                key={letter}
+                onClick={() => guessLetter(letter)}
+                disabled={guessedLetters.includes(letter) || gameOver}
+                className={`p-2 text-sm font-bold rounded border transition-colors ${
+                  guessedLetters.includes(letter)
+                    ? word.includes(letter)
+                      ? 'bg-green-500 text-white'
+                      : 'bg-red-500 text-white'
+                    : 'bg-white/70 dark:bg-nightsky-light/70 hover:bg-white/90 dark:hover:bg-nightsky/90 border-dream-light/30'
+                } disabled:opacity-50 disabled:cursor-not-allowed`}
+              >
+                {letter}
+              </button>
+            ))}
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Button onClick={initializeGame} className="w-full bg-dream-DEFAULT hover:bg-dream-dark">
+          New Game
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+};
+
 const ColoringBook = () => {
   const { t } = useTranslation();
   
@@ -274,6 +673,9 @@ const Games = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <TicTacToe />
           <MemoryCardGame />
+          <RockPaperScissors />
+          <SnakeGame />
+          <HangmanGame />
           <ColoringBook />
         </div>
       </div>
