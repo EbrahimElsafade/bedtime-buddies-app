@@ -1,11 +1,9 @@
 
 import { Link } from "react-router-dom";
 import { ArrowRight, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
-import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { getImageUrl } from "@/utils/imageUtils";
@@ -84,67 +82,55 @@ const FeaturedStories = () => {
             const imageUrl = getImageUrl(story.cover_image);
             
             return (
-              <Card key={story.id} className="story-card overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm">
-                <div className="aspect-[3/2] relative">
-                  {imageUrl ? (
-                    <img 
-                      src={imageUrl}
-                      alt={story.title} 
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        console.log('Featured story image failed to load:', story.cover_image);
-                        e.currentTarget.style.display = 'none';
-                      }}
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-500">No Image</span>
-                    </div>
-                  )}
-                  {story.is_free ? (
-                    <div className="absolute top-2 start-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                      {t('misc:free.tag')}
-                    </div>
-                  ) : (
-                    <div className="absolute top-2 start-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                      {t('misc:premium.tag')}
-                    </div>
-                  )}
-                </div>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-xl text-dream-DEFAULT">{story.title}</CardTitle>
-                  <CardDescription className="line-clamp-2 text-dream-DEFAULT dark:text-foreground">
-                    {story.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pb-2">
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    <Badge variant="secondary" className="bg-dream-light/30 text-dream-DEFAULT">
-                      {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
-                    </Badge>
+              <Link key={story.id} to={`/stories/${story.id}`}>
+                <Card className="story-card overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow">
+                  <div className="aspect-[3/2] relative">
+                    {imageUrl ? (
+                      <img 
+                        src={imageUrl}
+                        alt={story.title} 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          console.log('Featured story image failed to load:', story.cover_image);
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-500">No Image</span>
+                      </div>
+                    )}
+                    {story.is_free ? (
+                      <div className="absolute top-2 start-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                        {t('misc:free.tag')}
+                      </div>
+                    ) : (
+                      <div className="absolute top-2 start-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                        {t('misc:premium.tag')}
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center text-sm text-dream-DEFAULT">
-                    <div className="flex items-center">
-                      <Clock className="h-4 w-4 mr-1" />
-                      <span>{story.duration} {t('misc:duration')}</span>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-xl text-dream-DEFAULT">{story.title}</CardTitle>
+                    <CardDescription className="line-clamp-2 text-dream-DEFAULT dark:text-foreground">
+                      {story.description}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="pb-2">
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      <Badge variant="secondary" className="bg-dream-light/30 text-dream-DEFAULT">
+                        {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
+                      </Badge>
                     </div>
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Link to={`/stories/${story.id}`} className="w-full">
-                    <Button 
-                      className={cn(
-                        "w-full", 
-                        story.is_free 
-                          ? "bg-dream-DEFAULT hover:bg-dream-dark text-black dark:text-white" 
-                          : "bg-moon-DEFAULT hover:bg-moon-dark text-black dark:text-white"
-                      )}
-                    >
-                      {story.is_free ? t('misc:button.readNow') : t('misc:button.premium')}
-                    </Button>
-                  </Link>
-                </CardFooter>
-              </Card>
+                    <div className="flex items-center text-sm text-dream-DEFAULT">
+                      <div className="flex items-center">
+                        <Clock className="h-4 w-4 mr-1" />
+                        <span>{story.duration} {t('misc:duration')}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             );
           })}
         </div>

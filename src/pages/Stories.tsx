@@ -3,10 +3,8 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { getImageUrl } from "@/utils/imageUtils";
@@ -150,73 +148,63 @@ const Stories = () => {
             console.log(`Story ${story.title} - cover_image:`, story.cover_image, 'final URL:', imageUrl);
             
             return (
-              <Card key={story.id} className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-                <div className="aspect-[3/2] relative">
-                  {imageUrl ? (
-                    <img 
-                      src={imageUrl}
-                      alt={story.title} 
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        console.log('Image failed to load for story:', story.title, 'URL:', imageUrl);
-                        e.currentTarget.style.display = 'none';
-                      }}
-                      onLoad={() => {
-                        console.log('Image loaded successfully for story:', story.title);
-                      }}
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-gray-500">No Image</span>
+              <Link key={story.id} to={`/stories/${story.id}`}>
+                <Card className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow">
+                  <div className="aspect-[3/2] relative">
+                    {imageUrl ? (
+                      <img 
+                        src={imageUrl}
+                        alt={story.title} 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          console.log('Image failed to load for story:', story.title, 'URL:', imageUrl);
+                          e.currentTarget.style.display = 'none';
+                        }}
+                        onLoad={() => {
+                          console.log('Image loaded successfully for story:', story.title);
+                        }}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-500">No Image</span>
+                      </div>
+                    )}
+                    <div className="absolute top-2 right-2 text-xs font-medium px-2 py-1 rounded-full bg-white/80 dark:bg-nightsky-light/80">
+                      {story.duration} mins
                     </div>
-                  )}
-                  <div className="absolute top-2 right-2 text-xs font-medium px-2 py-1 rounded-full bg-white/80 dark:bg-nightsky-light/80">
-                    {story.duration} mins
+                    {story.is_free ? (
+                      <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                        FREE
+                      </div>
+                    ) : (
+                      <div className="absolute top-2 left-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                        PREMIUM
+                      </div>
+                    )}
                   </div>
-                  {story.is_free ? (
-                    <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                      FREE
-                    </div>
-                  ) : (
-                    <div className="absolute top-2 left-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                      PREMIUM
-                    </div>
-                  )}
-                </div>
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-start">
-                    <CardTitle className="text-xl">{story.title}</CardTitle>
-                    <span className="text-xs px-2 py-1 bg-secondary rounded-full">
-                      {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
-                    </span>
-                  </div>
-                  <CardDescription className="line-clamp-2">{story.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="pb-2">
-                  <div className="flex flex-wrap gap-1">
-                    {story.languages.map(lang => (
-                      <span 
-                        key={lang} 
-                        className="text-xs px-2 py-1 bg-secondary/50 rounded-full"
-                      >
-                        {lang === 'en' ? 'English' : lang === 'ar-eg' ? 'Arabic (Egyptian)' : 'Arabic (Fos7a)'}
+                  <CardHeader className="pb-2">
+                    <div className="flex justify-between items-start">
+                      <CardTitle className="text-xl">{story.title}</CardTitle>
+                      <span className="text-xs px-2 py-1 bg-secondary rounded-full">
+                        {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
                       </span>
-                    ))}
-                  </div>
-                </CardContent>
-                <CardFooter>
-                  <Link to={`/stories/${story.id}`} className="w-full">
-                    <Button 
-                      className={cn(
-                        "w-full", 
-                        story.is_free ? "bg-dream-DEFAULT hover:bg-dream-dark" : "bg-moon-DEFAULT hover:bg-moon-dark"
-                      )}
-                    >
-                      {story.is_free ? "Read Now" : "Premium Story"}
-                    </Button>
-                  </Link>
-                </CardFooter>
-              </Card>
+                    </div>
+                    <CardDescription className="line-clamp-2">{story.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="pb-2">
+                    <div className="flex flex-wrap gap-1">
+                      {story.languages.map(lang => (
+                        <span 
+                          key={lang} 
+                          className="text-xs px-2 py-1 bg-secondary/50 rounded-full"
+                        >
+                          {lang === 'en' ? 'English' : lang === 'ar-eg' ? 'Arabic (Egyptian)' : 'Arabic (Fos7a)'}
+                        </span>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             );
           })}
         </div>

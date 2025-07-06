@@ -1,11 +1,9 @@
 
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardTitle, CardDescription } from "@/components/ui/card";
 import { useTranslation } from "react-i18next";
 import { getStoriesByCategory } from "@/data/stories";
-import { cn } from "@/lib/utils";
 
 const EntertainmentStories = () => {
   const { t } = useTranslation(['misc', 'stories']);
@@ -30,44 +28,35 @@ const EntertainmentStories = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {stories.map((story) => (
-            <Card key={story.id} className="story-card overflow-hidden border-moon-light/50 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-              <div className="md:flex">
-                <div className="md:w-1/3 aspect-[3/2] md:aspect-auto relative">
-                  <img 
-                    src={story.coverImage} 
-                    alt={story.title} 
-                    className="w-full h-full object-cover"
-                  />
-                  {story.isFree ? (
-                    <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                      {t('misc:free.tag')}
-                    </div>
-                  ) : (
-                    <div className="absolute top-2 left-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                      {t('misc:premium.tag')}
-                    </div>
-                  )}
-                </div>
-                <div className="md:w-2/3 p-6">
-                  <CardTitle className="text-xl mb-2 text-dream-DEFAULT">{story.title}</CardTitle>
-                  <CardDescription className="mb-4 text-dream-DEFAULT dark:text-foreground">{story.description}</CardDescription>
-                  <div className="flex items-center text-sm text-dream-DEFAULT dark:text-foreground mb-6">
-                    <span className="mr-4">{story.duration} {t('misc:duration')}</span>
+            <Link key={story.id} to={`/stories/${story.id}`}>
+              <Card className="story-card overflow-hidden border-moon-light/50 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow">
+                <div className="md:flex">
+                  <div className="md:w-1/3 aspect-[3/2] md:aspect-auto relative">
+                    <img 
+                      src={story.coverImage} 
+                      alt={story.title} 
+                      className="w-full h-full object-cover"
+                    />
+                    {story.isFree ? (
+                      <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                        {t('misc:free.tag')}
+                      </div>
+                    ) : (
+                      <div className="absolute top-2 left-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                        {t('misc:premium.tag')}
+                      </div>
+                    )}
                   </div>
-                  <Link to={`/stories/${story.id}`}>
-                    <Button 
-                      className={cn(
-                        story.isFree 
-                          ? "bg-dream-DEFAULT hover:bg-dream-dark text-white dark:text-white" 
-                          : "bg-moon-DEFAULT hover:bg-moon-dark text-dream-DEFAULT dark:text-white"
-                      )}
-                    >
-                      {story.isFree ? t('misc:button.readNow') : t('misc:button.premium')}
-                    </Button>
-                  </Link>
+                  <div className="md:w-2/3 p-6">
+                    <CardTitle className="text-xl mb-2 text-dream-DEFAULT">{story.title}</CardTitle>
+                    <CardDescription className="mb-4 text-dream-DEFAULT dark:text-foreground">{story.description}</CardDescription>
+                    <div className="flex items-center text-sm text-dream-DEFAULT dark:text-foreground">
+                      <span className="mr-4">{story.duration} {t('misc:duration')}</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </Card>
+              </Card>
+            </Link>
           ))}
         </div>
       </div>

@@ -1,11 +1,9 @@
 
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useTranslation } from "react-i18next";
 import { getStoriesByCategory } from "@/data/stories";
-import { cn } from "@/lib/utils";
 
 const PopularStories = () => {
   const { t } = useTranslation(['misc', 'stories']);
@@ -23,45 +21,33 @@ const PopularStories = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {popularStories.map((story) => (
-            <Card key={story.id} className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-              <div className="aspect-[3/2] relative">
-                <img 
-                  src={story.coverImage} 
-                  alt={story.title} 
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-2 right-2 bg-white/80 dark:bg-nightsky-light/80 text-xs px-2 py-1 rounded-full">
-                  {story.duration} {t('misc:duration')}
+            <Link key={story.id} to={`/stories/${story.id}`}>
+              <Card className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow">
+                <div className="aspect-[3/2] relative">
+                  <img 
+                    src={story.coverImage} 
+                    alt={story.title} 
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-2 right-2 bg-white/80 dark:bg-nightsky-light/80 text-xs px-2 py-1 rounded-full">
+                    {story.duration} {t('misc:duration')}
+                  </div>
+                  {story.isFree ? (
+                    <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                      {t('misc:free.tag')}
+                    </div>
+                  ) : (
+                    <div className="absolute top-2 left-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                      {t('misc:premium.tag')}
+                    </div>
+                  )}
                 </div>
-                {story.isFree ? (
-                  <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                    {t('misc:free.tag')}
-                  </div>
-                ) : (
-                  <div className="absolute top-2 left-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                    {t('misc:premium.tag')}
-                  </div>
-                )}
-              </div>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xl text-dream-DEFAULT">{story.title}</CardTitle>
-                <CardDescription className="line-clamp-2 text-dream-DEFAULT dark:text-foreground">{story.description}</CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <Link to={`/stories/${story.id}`} className="w-full">
-                  <Button 
-                    className={cn(
-                      "w-full", 
-                      story.isFree 
-                        ? "bg-dream-DEFAULT hover:bg-dream-dark text-white dark:text-white" 
-                        : "bg-moon-DEFAULT hover:bg-moon-dark text-dream-DEFAULT dark:text-white"
-                    )}
-                  >
-                    {story.isFree ? t('misc:button.readNow') : t('misc:button.premium')}
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xl text-dream-DEFAULT">{story.title}</CardTitle>
+                  <CardDescription className="line-clamp-2 text-dream-DEFAULT dark:text-foreground">{story.description}</CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
           ))}
         </div>
       </div>
