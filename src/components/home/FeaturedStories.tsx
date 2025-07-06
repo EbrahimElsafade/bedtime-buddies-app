@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { ArrowRight, Clock } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -31,6 +30,11 @@ const FeaturedStories = () => {
       return data || [];
     }
   });
+
+  const handleViewAllClick = (e) => {
+    console.log("View All Stories button clicked in FeaturedStories");
+    // Don't prevent default - let Link handle navigation
+  };
 
   if (isLoading) {
     return (
@@ -73,7 +77,11 @@ const FeaturedStories = () => {
           <h2 className="text-2xl md:text-3xl font-bubbly text-dream-DEFAULT">
             {t('stories:featured.title')}
           </h2>
-          <Link to="/stories" className="text-dream-DEFAULT hover:text-dream-dark text-sm font-medium flex items-center">
+          <Link 
+            to="/stories" 
+            className="text-dream-DEFAULT hover:text-dream-dark text-sm font-medium flex items-center"
+            onClick={handleViewAllClick}
+          >
             {t('misc:free.viewAll')} <ArrowRight className="rtl:rotate-180 ms-1 h-4 w-4" />
           </Link>
         </div>
