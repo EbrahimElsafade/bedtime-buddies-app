@@ -16,14 +16,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarProvider,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 
 const AdminLayout = () => {
   const { logout, user, profile } = useAuth();
   const { t, i18n } = useTranslation('admin');
   const location = useLocation();
-  const [collapsed, setCollapsed] = useState(false);
   const isRTL = i18n.language === 'ar';
 
   const isActive = (path: string) => location.pathname === path;
@@ -39,9 +37,9 @@ const AdminLayout = () => {
   }, [user, profile, location, i18n.language, isRTL]);
 
   return (
-    <SidebarProvider defaultOpen={!collapsed}>
+    <SidebarProvider defaultOpen={true}>
       <div className="flex w-full min-h-screen bg-gray-50 dark:bg-gray-900">
-        <Sidebar side={isRTL ? "right" : "left"} className="border-r border-border">
+        <Sidebar side={isRTL ? "right" : "left"} className="border-r border-border" collapsible="none">
           <SidebarHeader className="flex flex-col">
             <div className="flex items-center justify-between p-4">
               <Link
@@ -50,7 +48,7 @@ const AdminLayout = () => {
               >
                 <span>{t('dashboard.title')}</span>
               </Link>
-              <SidebarTrigger />
+              <LanguageSwitcher />
             </div>
           </SidebarHeader>
 
@@ -129,9 +127,6 @@ const AdminLayout = () => {
           <SidebarFooter className="p-2">
             <Separator className="my-2" />
             <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-center py-2">
-                <LanguageSwitcher />
-              </div>
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
