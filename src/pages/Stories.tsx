@@ -185,7 +185,7 @@ const Stories = () => {
                     <CardHeader className="pb-2 flex-1">
                       <div className="flex justify-between items-start mb-2">
                         <CardTitle className="text-xl line-clamp-2 flex-1">{story.title}</CardTitle>
-                        <div className="flex flex-col items-end gap-1 ml-2">
+                        <div className="flex items-center gap-2 ml-2">
                           <Badge variant="secondary" className="text-xs">
                             {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
                           </Badge>
