@@ -27,7 +27,7 @@ const FreeStory = () => {
         .from("appearance_settings")
         .select("setting_value")
         .eq("setting_key", "home_page")
-        .single();
+        .maybeSingle();
       
       if (error) throw error;
       return data?.setting_value as unknown as HomePageSettings;
@@ -45,7 +45,7 @@ const FreeStory = () => {
         .select("*")
         .eq("id", settings.freeStory)
         .eq("is_published", true)
-        .single();
+        .maybeSingle();
       
       if (error) throw error;
       return data;
@@ -53,7 +53,8 @@ const FreeStory = () => {
     enabled: !!settings?.freeStory
   });
 
-  if (isLoading || !freeStory) return null;
+  // Don't render if loading or no story selected
+  if (isLoading || !settings?.freeStory || !freeStory) return null;
 
   const coverImage = freeStory.cover_image ? getImageUrl(freeStory.cover_image) : '/placeholder.svg';
 

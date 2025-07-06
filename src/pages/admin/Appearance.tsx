@@ -50,7 +50,7 @@ const Appearance = () => {
         .from("appearance_settings")
         .select("setting_value")
         .eq("setting_key", "home_page")
-        .single();
+        .maybeSingle();
       
       if (error) throw error;
       return data?.setting_value as unknown as HomePageSettings;
@@ -84,11 +84,13 @@ const Appearance = () => {
     mutationFn: async (settings: HomePageSettings) => {
       const { error } = await supabase
         .from("appearance_settings")
-        .update({ 
+        .upsert({ 
+          setting_key: "home_page",
           setting_value: settings as any,
           updated_at: new Date().toISOString()
-        })
-        .eq("setting_key", "home_page");
+        }, {
+          onConflict: "setting_key"
+        });
       
       if (error) throw error;
     },
@@ -103,10 +105,13 @@ const Appearance = () => {
   });
 
   const handleFreeStoryChange = (storyId: string) => {
-    setHomePageSections(prev => ({
-      ...prev,
+    const updatedSections = {
+      ...homePageSections,
       freeStory: storyId
-    }));
+    };
+    setHomePageSections(updatedSections);
+    // Auto-save when free story is selected
+    saveSettingsMutation.mutate(updatedSections);
   };
 
   const handleHomePageSectionChange = (section: keyof HomePageSettings, checked: boolean) => {
