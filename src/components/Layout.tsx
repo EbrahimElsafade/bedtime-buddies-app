@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { Moon, Sun, Menu, X, Home, Book, BookOpen, User } from "lucide-react";
+import { Moon, Sun, Menu, X, Home, Book, BookOpen, User, Presentation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
@@ -39,6 +39,7 @@ const Layout = () => {
   const navItems = [
     { name: t('navigation:home'), path: '/', icon: Home },
     { name: t('navigation:stories'), path: '/stories', icon: Book },
+    { name: t('navigation:courses'), path: '/courses', icon: Presentation },
     { name: t('navigation:games'), path: '/games', icon: BookOpen },
     { name: t('navigation:profile'), path: isAuthenticated ? '/profile' : '/login', icon: User }
   ];
@@ -218,7 +219,7 @@ const Layout = () => {
       <footer className="py-6 border-t border-purple-900/20 bg-white/10 dark:bg-nightsky/50 hidden md:block">
         <div className="container mx-auto px-4 text-center">
           <div className="flex justify-center space-x-6 mb-4">
-            {navItems.slice(0, 3).map((item) => (
+            {navItems.slice(0, 4).map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
@@ -249,7 +250,7 @@ const Layout = () => {
               key={item.path}
               to={item.path}
               className={cn(
-                "flex flex-col items-center justify-center w-1/4 py-1 px-2 rounded-lg",
+                "flex flex-col items-center justify-center w-1/5 py-1 px-2 rounded-lg",
                 isActive(item.path)
                   ? "text-dream-DEFAULT bg-dream-default/10"
                   : "text-dream-DEFAULT/70 dark:text-white/70"
