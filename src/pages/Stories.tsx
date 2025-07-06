@@ -88,7 +88,7 @@ const Stories = () => {
           <h1 className="text-3xl md:text-4xl font-bubbly mb-6">Discover Stories</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Card key={i} className="story-card h-[500px] overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm animate-pulse">
+              <Card key={i} className="story-card h-[400px] overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm animate-pulse">
                 <div className="aspect-[3/2] bg-gray-200"></div>
                 <CardHeader className="pb-2">
                   <div className="h-6 bg-gray-200 rounded mb-2"></div>
@@ -151,7 +151,7 @@ const Stories = () => {
             
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card h-[500px] overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow flex flex-col">
+                <Card className="story-card h-[400px] overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow flex flex-col">
                   <div className="aspect-[3/2] relative">
                     {imageUrl ? (
                       <img 
@@ -184,7 +184,7 @@ const Stories = () => {
                   <div className="flex flex-col flex-1">
                     <CardHeader className="pb-2 flex-1">
                       <div className="flex justify-between items-start mb-2">
-                        <CardTitle className="text-xl line-clamp-2 flex-1">{story.title}</CardTitle>
+                        <CardTitle className="text-lg line-clamp-2 flex-1">{story.title}</CardTitle>
                         <div className="flex items-center gap-2 ml-2">
                           <Badge variant="secondary" className="text-xs">
                             {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
@@ -194,7 +194,7 @@ const Stories = () => {
                           </div>
                         </div>
                       </div>
-                      <CardDescription className="line-clamp-3 text-sm leading-relaxed">{story.description}</CardDescription>
+                      <CardDescription className="line-clamp-2 text-sm leading-relaxed">{story.description}</CardDescription>
                     </CardHeader>
                     <CardContent className="pb-4 mt-auto">
                       <div className="flex flex-wrap gap-1">
