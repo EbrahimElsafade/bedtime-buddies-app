@@ -1,0 +1,24 @@
+
+{
+  "loading": "Loading...",
+  "error": "Something went wrong",
+  "retry": "Try Again",
+  "close": "Close",
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "add": "Add",
+  "search": "Search",
+  "filter": "Filter",
+  "next": "Next",
+  "previous": "Previous",
+  "yes": "Yes",
+  "no": "No",
+  "back": "Back",
+  "continue": "Continue",
+  "submit": "Submit",
+  "update": "Update",
+  "create": "Create",
+  "confirm": "Confirm"
+}

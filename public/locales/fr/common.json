@@ -1,0 +1,24 @@
+
+{
+  "loading": "Chargement...",
+  "error": "Une erreur s'est produite",
+  "retry": "Réessayer",
+  "close": "Fermer",
+  "save": "Enregistrer",
+  "cancel": "Annuler",
+  "delete": "Supprimer",
+  "edit": "Modifier",
+  "add": "Ajouter",
+  "search": "Rechercher",
+  "filter": "Filtrer",
+  "next": "Suivant",
+  "previous": "Précédent",
+  "yes": "Oui",
+  "no": "Non",
+  "back": "Retour",
+  "continue": "Continuer",
+  "submit": "Soumettre",
+  "update": "Mettre à jour",
+  "create": "Créer",
+  "confirm": "Confirmer"
+}

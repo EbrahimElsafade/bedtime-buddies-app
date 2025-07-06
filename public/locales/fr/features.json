@@ -1,0 +1,33 @@
+
+{
+  "title": "Pourquoi Choisir Nos Histoires ?",
+  "subtitle": "Découvrez la magie de nos histoires du coucher soigneusement créées",
+  "interactive": {
+    "title": "Histoires Interactives",
+    "description": "Récits captivants qui répondent aux choix de votre enfant"
+  },
+  "multilingual": {
+    "title": "Plusieurs Langues",
+    "description": "Histoires disponibles en arabe, anglais et français"
+  },
+  "educational": {
+    "title": "Contenu Éducatif",
+    "description": "Apprendre en s'amusant avec des leçons adaptées à l'âge"
+  },
+  "peaceful": {
+    "title": "Sommeil Paisible",
+    "description": "Spécialement conçues pour aider les enfants à se détendre et s'endormir"
+  },
+  "soothing": {
+    "title": "Histoires Apaisantes",
+    "desc": "Soigneusement conçues pour aider votre enfant à se détendre et s'endormir paisiblement"
+  },
+  "languages": {
+    "title": "Plusieurs Langues",
+    "desc": "Disponibles en arabe, anglais et français pour répondre aux besoins de votre famille"
+  },
+  "games": {
+    "title": "Jeux Interactifs",
+    "desc": "Jeux éducatifs amusants qui complètent nos histoires"
+  }
+}

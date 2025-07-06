@@ -19,8 +19,10 @@ i18n
       caches: ['localStorage']
     },
     backend: {
-      loadPath: '/locales/{{lng}}.json',
-    }
+      loadPath: '/locales/{{lng}}/{{ns}}.json',
+    },
+    defaultNS: 'common',
+    ns: ['common', 'navigation', 'auth', 'hero', 'stories', 'features', 'admin', 'misc'],
   });
 
 export default i18n;

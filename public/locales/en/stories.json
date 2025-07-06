@@ -1,0 +1,16 @@
+
+{
+  "featured": "Featured Stories",
+  "popular": "Popular Stories",
+  "free": "Free Story of the Day",
+  "entertainment": "Entertainment Stories",
+  "viewAll": "View All Stories",
+  "readNow": "Read Now",
+  "duration": "{{duration}} min",
+  "category": {
+    "sleeping": "Bedtime",
+    "religious": "Religious",
+    "developmental": "Educational",
+    "entertainment": "Entertainment"
+  }
+}

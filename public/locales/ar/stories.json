@@ -1,0 +1,16 @@
+
+{
+  "featured": "القصص المميزة",
+  "popular": "القصص الشائعة",
+  "free": "القصة المجانية لليوم",
+  "entertainment": "قصص الترفيه",
+  "viewAll": "عرض جميع القصص",
+  "readNow": "اقرأ الآن",
+  "duration": "{{duration}} دقيقة",
+  "category": {
+    "sleeping": "وقت النوم",
+    "religious": "دينية",
+    "developmental": "تعليمية",
+    "entertainment": "ترفيهية"
+  }
+}

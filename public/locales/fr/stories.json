@@ -1,0 +1,16 @@
+
+{
+  "featured": "Histoires en Vedette",
+  "popular": "Histoires Populaires",
+  "free": "Histoire Gratuite du Jour",
+  "entertainment": "Histoires de Divertissement",
+  "viewAll": "Voir Toutes les Histoires",
+  "readNow": "Lire Maintenant",
+  "duration": "{{duration}} min",
+  "category": {
+    "sleeping": "Coucher",
+    "religious": "Religieuses",
+    "developmental": "Éducatives",
+    "entertainment": "Divertissement"
+  }
+}

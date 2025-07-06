@@ -1,0 +1,132 @@
+
+{
+  "courses": {
+    "featured": "Cours en Vedette",
+    "viewAll": "Voir Tous les Cours",
+    "startCourse": "Commencer le Cours",
+    "lessons": "{{count}} leçons",
+    "title": "Cours en Vedette",
+    "years": "ans"
+  },
+  "subscription": {
+    "title": "S'abonner pour le Contenu Premium",
+    "description": "Débloquez toutes les histoires et fonctionnalités avec notre abonnement premium",
+    "cta": "S'abonner Maintenant"
+  },
+  "footer": {
+    "description": "Créer des expériences magiques du coucher pour les enfants du monde entier",
+    "company": "Entreprise",
+    "about": "À Propos",
+    "contact": "Contact",
+    "support": "Support",
+    "resources": "Ressources",
+    "blog": "Blog",
+    "help": "Centre d'Aide",
+    "legal": "Légal",
+    "privacy": "Politique de Confidentialité",
+    "terms": "Conditions d'Utilisation",
+    "rights": "Tous droits réservés"
+  },
+  "layout": {
+    "appName": "HistoiresDeRêve",
+    "subscribe": "S'abonner",
+    "copyright": "Tous droits réservés"
+  },
+  "profile": {
+    "title": "Profil",
+    "settings": "Paramètres",
+    "preferences": "Préférences"
+  },
+  "games": {
+    "title": "Jeux Interactifs",
+    "description": "Bientôt disponible ! Jeux amusants et éducatifs pour les enfants.",
+    "comingSoon": "Bientôt Disponible"
+  },
+  "notFound": {
+    "title": "Page Non Trouvée",
+    "description": "La page que vous recherchez n'existe pas.",
+    "backHome": "Retour à l'Accueil"
+  },
+  "pricing": {
+    "title": "Choisissez Votre Plan",
+    "monthly": "Mensuel",
+    "yearly": "Annuel (Économisez 20%)",
+    "free": {
+      "title": "Gratuit",
+      "price": "0€",
+      "features": [
+        "Accès limité aux histoires",
+        "Fonctionnalités de base",
+        "Support communautaire"
+      ]
+    },
+    "premium": {
+      "title": "Premium",
+      "price": "9,99€",
+      "features": [
+        "Accès illimité aux histoires",
+        "Toutes les fonctionnalités premium",
+        "Support prioritaire",
+        "Téléchargements hors ligne"
+      ]
+    },
+    "selectPlan": "Choisir le Plan",
+    "currentPlan": "Plan Actuel"
+  },
+  "languages": {
+    "english": "English",
+    "arabic": "العربية",
+    "french": "Français"
+  },
+  "accessibility": {
+    "languageSelection": "Sélectionner la langue",
+    "toggleTheme": "Basculer le thème",
+    "menu": "Menu"
+  },
+  "popup": {
+    "special": "Offre Spéciale !",
+    "limitedTime": "Offre Limitée",
+    "unlock": "Débloquez les Fonctionnalités Premium",
+    "feature1": "Accès illimité à toutes les histoires",
+    "feature2": "Expérience sans publicité",
+    "feature3": "Téléchargements hors ligne",
+    "month": "mois",
+    "off": "RÉDUCTION",
+    "subscribe": "S'abonner Maintenant",
+    "later": "Plus Tard"
+  },
+  "free": {
+    "story": "Histoire Gratuite du Jour",
+    "viewAll": "Voir Toutes les Histoires",
+    "tag": "GRATUIT"
+  },
+  "popular": {
+    "title": "Histoires Populaires"
+  },
+  "entertainment": {
+    "title": "Histoires de Divertissement"
+  },
+  "premium": {
+    "tag": "PREMIUM"
+  },
+  "button": {
+    "readStory": "Lire l'Histoire",
+    "readNow": "Lire Maintenant",
+    "premium": "Premium",
+    "startLearning": "Commencer l'Apprentissage",
+    "viewAll": "Voir Tout",
+    "exploreStories": "Explorer les Histoires",
+    "startFreeTrial": "Commencer l'Essai Gratuit",
+    "watchDemo": "Voir la Démo",
+    "subscribeNow": "S'abonner Maintenant",
+    "maybeLater": "Plus Tard",
+    "goBack": "Retourner",
+    "tryAgain": "Réessayer"
+  },
+  "duration": "min",
+  "subscribe": {
+    "title": "S'abonner pour le Contenu Premium",
+    "subtitle": "Débloquez toutes les histoires et fonctionnalités avec notre abonnement premium",
+    "button": "S'abonner Maintenant"
+  }
+}

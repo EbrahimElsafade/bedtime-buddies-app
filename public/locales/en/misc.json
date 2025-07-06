@@ -1,0 +1,132 @@
+
+{
+  "courses": {
+    "featured": "Featured Courses",
+    "viewAll": "View All Courses",
+    "startCourse": "Start Course",
+    "lessons": "{{count}} lessons",
+    "title": "Featured Courses",
+    "years": "years"
+  },
+  "subscription": {
+    "title": "Subscribe for Premium Content",
+    "description": "Unlock all stories and features with our premium subscription",
+    "cta": "Subscribe Now"
+  },
+  "footer": {
+    "description": "Creating magical bedtime experiences for children worldwide",
+    "company": "Company",
+    "about": "About Us",
+    "contact": "Contact",
+    "support": "Support",
+    "resources": "Resources",
+    "blog": "Blog",
+    "help": "Help Center",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "rights": "All rights reserved"
+  },
+  "layout": {
+    "appName": "DreamStories",
+    "subscribe": "Subscribe",
+    "copyright": "All rights reserved"
+  },
+  "profile": {
+    "title": "Profile",
+    "settings": "Settings",
+    "preferences": "Preferences"
+  },
+  "games": {
+    "title": "Interactive Games",
+    "description": "Coming soon! Fun and educational games for children.",
+    "comingSoon": "Coming Soon"
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "The page you are looking for doesn't exist.",
+    "backHome": "Back to Home"
+  },
+  "pricing": {
+    "title": "Choose Your Plan",
+    "monthly": "Monthly",
+    "yearly": "Yearly (Save 20%)",
+    "free": {
+      "title": "Free",
+      "price": "$0",
+      "features": [
+        "Limited stories access",
+        "Basic features",
+        "Community support"
+      ]
+    },
+    "premium": {
+      "title": "Premium",
+      "price": "$9.99",
+      "features": [
+        "Unlimited stories access",
+        "All premium features",
+        "Priority support",
+        "Offline downloads"
+      ]
+    },
+    "selectPlan": "Select Plan",
+    "currentPlan": "Current Plan"
+  },
+  "languages": {
+    "english": "English",
+    "arabic": "العربية",
+    "french": "Français"
+  },
+  "accessibility": {
+    "languageSelection": "Select language",
+    "toggleTheme": "Toggle theme",
+    "menu": "Menu"
+  },
+  "popup": {
+    "special": "Special Offer!",
+    "limitedTime": "Limited Time Only",
+    "unlock": "Unlock Premium Features",
+    "feature1": "Unlimited access to all stories",
+    "feature2": "Ad-free experience",
+    "feature3": "Offline downloads",
+    "month": "month",
+    "off": "OFF",
+    "subscribe": "Subscribe Now",
+    "later": "Maybe Later"
+  },
+  "free": {
+    "story": "Free Story of the Day",
+    "viewAll": "View All Stories",
+    "tag": "FREE"
+  },
+  "popular": {
+    "title": "Popular Stories"
+  },
+  "entertainment": {
+    "title": "Entertainment Stories"
+  },
+  "premium": {
+    "tag": "PREMIUM"
+  },
+  "button": {
+    "readStory": "Read Story",
+    "readNow": "Read Now",
+    "premium": "Premium",
+    "startLearning": "Start Learning",
+    "viewAll": "View All",
+    "exploreStories": "Explore Stories",
+    "startFreeTrial": "Start Free Trial",
+    "watchDemo": "Watch Demo",
+    "subscribeNow": "Subscribe Now",
+    "maybelater": "Maybe Later",
+    "goBack": "Go Back",
+    "tryAgain": "Try Again"
+  },
+  "duration": "min",
+  "subscribe": {
+    "title": "Subscribe for Premium Content", 
+    "subtitle": "Unlock all stories and features with our premium subscription",
+    "button": "Subscribe Now"
+  }
+}

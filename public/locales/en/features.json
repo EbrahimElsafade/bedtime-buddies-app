@@ -1,0 +1,33 @@
+
+{
+  "title": "Why Choose Our Stories?",
+  "subtitle": "Discover the magic of our carefully crafted bedtime stories",
+  "interactive": {
+    "title": "Interactive Stories",
+    "description": "Engaging narratives that respond to your child's choices"
+  },
+  "multilingual": {
+    "title": "Multiple Languages",
+    "description": "Stories available in Arabic, English, and French"
+  },
+  "educational": {
+    "title": "Educational Content",
+    "description": "Learn while having fun with age-appropriate lessons"
+  },
+  "peaceful": {
+    "title": "Peaceful Sleep",
+    "description": "Specially designed to help children relax and fall asleep"
+  },
+  "soothing": {
+    "title": "Soothing Stories",
+    "desc": "Carefully designed to help your child relax and drift into peaceful sleep"
+  },
+  "languages": {
+    "title": "Multiple Languages",
+    "desc": "Available in Arabic, English, and French to suit your family's needs"
+  },
+  "games": {
+    "title": "Interactive Games",
+    "desc": "Fun educational games that complement our stories"
+  }
+}
