@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { getImageUrl } from "@/utils/imageUtils";
+import { Badge } from "@/components/ui/badge";
 
 type StoryListItem = {
   id: string;
@@ -170,9 +171,6 @@ const Stories = () => {
                         <span className="text-gray-500">No Image</span>
                       </div>
                     )}
-                    <div className="absolute top-2 right-2 text-xs font-medium px-2 py-1 rounded-full bg-white/80 dark:bg-nightsky-light/80">
-                      {story.duration} mins
-                    </div>
                     {story.is_free ? (
                       <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
                         FREE
@@ -186,10 +184,15 @@ const Stories = () => {
                   <div className="flex flex-col flex-1">
                     <CardHeader className="pb-2 flex-1">
                       <div className="flex justify-between items-start mb-2">
-                        <CardTitle className="text-xl line-clamp-2">{story.title}</CardTitle>
-                        <span className="text-xs px-2 py-1 bg-secondary rounded-full">
-                          {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
-                        </span>
+                        <CardTitle className="text-xl line-clamp-2 flex-1">{story.title}</CardTitle>
+                        <div className="flex flex-col items-end gap-1 ml-2">
+                          <Badge variant="secondary" className="text-xs">
+                            {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
+                          </Badge>
+                          <div className="text-xs px-2 py-1 bg-secondary rounded-full">
+                            {story.duration} mins
+                          </div>
+                        </div>
                       </div>
                       <CardDescription className="line-clamp-3 text-sm leading-relaxed">{story.description}</CardDescription>
                     </CardHeader>

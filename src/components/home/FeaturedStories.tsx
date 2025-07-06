@@ -113,24 +113,22 @@ const FeaturedStories = () => {
                   </div>
                   <div className="flex flex-col flex-1">
                     <CardHeader className="pb-2 flex-1">
-                      <CardTitle className="text-xl text-dream-DEFAULT line-clamp-2 mb-2">{story.title}</CardTitle>
+                      <div className="flex justify-between items-start mb-2">
+                        <CardTitle className="text-xl text-dream-DEFAULT line-clamp-2 flex-1">{story.title}</CardTitle>
+                        <div className="flex flex-col items-end gap-1 ml-2">
+                          <Badge variant="secondary" className="bg-dream-light/30 text-dream-DEFAULT text-xs">
+                            {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
+                          </Badge>
+                          <div className="flex items-center text-xs text-dream-DEFAULT">
+                            <Clock className="h-3 w-3 mr-1" />
+                            <span>{story.duration} {t('misc:duration')}</span>
+                          </div>
+                        </div>
+                      </div>
                       <CardDescription className="line-clamp-3 text-dream-DEFAULT dark:text-foreground text-sm leading-relaxed">
                         {story.description}
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="pb-4 mt-auto">
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        <Badge variant="secondary" className="bg-dream-light/30 text-dream-DEFAULT">
-                          {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
-                        </Badge>
-                      </div>
-                      <div className="flex items-center text-sm text-dream-DEFAULT">
-                        <div className="flex items-center">
-                          <Clock className="h-4 w-4 mr-1" />
-                          <span>{story.duration} {t('misc:duration')}</span>
-                        </div>
-                      </div>
-                    </CardContent>
                   </div>
                 </Card>
               </Link>
