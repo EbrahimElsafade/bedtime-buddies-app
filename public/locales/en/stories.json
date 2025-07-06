@@ -1,6 +1,8 @@
 
 {
-  "featured": "Featured Stories",
+  "featured": {
+    "title": "Featured Stories"
+  },
   "popular": "Popular Stories",
   "free": "Free Story of the Day",
   "entertainment": "Entertainment Stories",
