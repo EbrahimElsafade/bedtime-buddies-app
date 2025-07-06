@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
-import { Grid3X3, Brain, Scissors, Snake, TreePine, Palette } from "lucide-react";
+import { Grid3X3, Brain, Scissors, Zap, TreePine, Palette } from "lucide-react";
 
 const TicTacToe = () => {
   const { t } = useTranslation();
@@ -438,7 +438,7 @@ const SnakeGame = () => {
     <Card className="overflow-hidden border-dream-light/20 bg-gradient-to-br from-white/80 to-green-light/20 dark:from-nightsky-light/80 dark:to-nightsky/80 backdrop-blur-sm shadow-2xl">
       <CardHeader className="text-center bg-gradient-to-r from-green-500 to-emerald-600 text-white">
         <div className="flex items-center justify-center gap-2">
-          <Snake className="w-6 h-6" />
+          <Zap className="w-6 h-6" />
           <CardTitle className="text-2xl font-bold">Snake Game</CardTitle>
         </div>
         <CardDescription className="text-green-100">Use arrow keys to control the snake</CardDescription>
@@ -511,129 +511,198 @@ const SnakeGame = () => {
 };
 
 const HangmanGame = () => {
-  const words = ['JAVASCRIPT', 'PYTHON', 'REACT', 'COMPUTER', 'PROGRAMMING', 'DEVELOPER', 'WEBSITE', 'FUNCTION'];
-  const [word, setWord] = useState('');
+  const words = [
+    'javascript', 'python', 'react', 'computer', 'programming', 
+    'developer', 'website', 'function', 'variable', 'algorithm'
+  ];
+  const [currentWord, setCurrentWord] = useState('');
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
-  const [wrongGuesses, setWrongGuesses] = useState(0);
+  const [wrongGuessCount, setWrongGuessCount] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [gameWon, setGameWon] = useState(false);
+  const [hint, setHint] = useState('');
   
-  const maxWrongGuesses = 6;
+  const maxGuesses = 6;
 
-  const initializeGame = () => {
+  const hints: { [key: string]: string } = {
+    'javascript': 'Popular programming language for web development',
+    'python': 'Snake-named programming language',
+    'react': 'JavaScript library for building user interfaces',
+    'computer': 'Electronic device for processing data',
+    'programming': 'The process of creating computer software',
+    'developer': 'Person who writes code',
+    'website': 'Collection of web pages',
+    'function': 'Block of reusable code',
+    'variable': 'Storage location with a name',
+    'algorithm': 'Step-by-step procedure for solving a problem'
+  };
+
+  const initGame = () => {
     const randomWord = words[Math.floor(Math.random() * words.length)];
-    setWord(randomWord);
+    setCurrentWord(randomWord);
+    setHint(hints[randomWord] || 'No hint available');
     setGuessedLetters([]);
-    setWrongGuesses(0);
+    setWrongGuessCount(0);
     setGameOver(false);
     setGameWon(false);
   };
 
   useEffect(() => {
-    initializeGame();
+    initGame();
   }, []);
 
   useEffect(() => {
-    if (word && guessedLetters.length > 0) {
-      const wordLetters = word.split('');
-      const hasWon = wordLetters.every(letter => guessedLetters.includes(letter));
+    if (currentWord && guessedLetters.length > 0) {
+      const wordLetters = [...new Set(currentWord.toLowerCase().split(''))];
+      const correctGuesses = wordLetters.filter(letter => guessedLetters.includes(letter));
       
-      if (hasWon) {
+      if (correctGuesses.length === wordLetters.length) {
         setGameWon(true);
         setGameOver(true);
-        toast.success('🎉 Congratulations! You won!');
-      } else if (wrongGuesses >= maxWrongGuesses) {
+        toast.success('🎉 Congratulations! You guessed the word!');
+      } else if (wrongGuessCount >= maxGuesses) {
         setGameOver(true);
-        toast.error(`💀 Game Over! The word was: ${word}`);
+        toast.error(`💀 Game Over! The word was: ${currentWord.toUpperCase()}`);
       }
     }
-  }, [guessedLetters, wrongGuesses, word]);
+  }, [guessedLetters, wrongGuessCount, currentWord]);
 
-  const guessLetter = (letter: string) => {
+  const handleLetterClick = (letter: string) => {
     if (guessedLetters.includes(letter) || gameOver) return;
     
     const newGuessedLetters = [...guessedLetters, letter];
     setGuessedLetters(newGuessedLetters);
     
-    if (!word.includes(letter)) {
-      setWrongGuesses(prev => prev + 1);
+    if (!currentWord.toLowerCase().includes(letter)) {
+      setWrongGuessCount(prev => prev + 1);
     }
   };
 
   const getDisplayWord = () => {
-    return word.split('').map(letter => 
-      guessedLetters.includes(letter) ? letter : '_'
-    ).join(' ');
+    return currentWord
+      .split('')
+      .map(letter => guessedLetters.includes(letter.toLowerCase()) ? letter.toUpperCase() : '_')
+      .join(' ');
   };
 
-  const getHangmanDrawing = () => {
-    const drawings = [
-      '   ┌─────┐\n   │     │\n   │      \n   │      \n   │      \n   │      \n ──┴──    ',
-      '   ┌─────┐\n   │     │\n   │     😵\n   │      \n   │      \n   │      \n ──┴──    ',
-      '   ┌─────┐\n   │     │\n   │     😵\n   │     │\n   │      \n   │      \n ──┴──    ',
-      '   ┌─────┐\n   │     │\n   │     😵\n   │    ╱│\n   │      \n   │      \n ──┴──    ',
-      '   ┌─────┐\n   │     │\n   │     😵\n   │    ╱│╲\n   │      \n   │      \n ──┴──    ',
-      '   ┌─────┐\n   │     │\n   │     😵\n   │    ╱│╲\n   │    ╱ \n   │      \n ──┴──    ',
-      '   ┌─────┐\n   │     │\n   │     😵\n   │    ╱│╲\n   │    ╱ ╲\n   │      \n ──┴──    '
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+
+  const getHangmanSvg = () => {
+    const parts = [
+      // Head
+      wrongGuessCount > 0 ? <circle key="head" cx="50" cy="25" r="10" stroke="#ef4444" strokeWidth="3" fill="none" /> : null,
+      // Body
+      wrongGuessCount > 1 ? <line key="body" x1="50" y1="35" x2="50" y2="70" stroke="#ef4444" strokeWidth="3" /> : null,
+      // Left arm
+      wrongGuessCount > 2 ? <line key="leftarm" x1="50" y1="45" x2="35" y2="55" stroke="#ef4444" strokeWidth="3" /> : null,
+      // Right arm
+      wrongGuessCount > 3 ? <line key="rightarm" x1="50" y1="45" x2="65" y2="55" stroke="#ef4444" strokeWidth="3" /> : null,
+      // Left leg
+      wrongGuessCount > 4 ? <line key="leftleg" x1="50" y1="70" x2="35" y2="85" stroke="#ef4444" strokeWidth="3" /> : null,
+      // Right leg
+      wrongGuessCount > 5 ? <line key="rightleg" x1="50" y1="70" x2="65" y2="85" stroke="#ef4444" strokeWidth="3" /> : null,
     ];
-    return drawings[wrongGuesses] || drawings[6];
-  };
 
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    return (
+      <svg width="120" height="120" className="mx-auto">
+        {/* Gallows */}
+        <line x1="10" y1="110" x2="70" y2="110" stroke="#8b5a3c" strokeWidth="4" />
+        <line x1="30" y1="110" x2="30" y2="10" stroke="#8b5a3c" strokeWidth="4" />
+        <line x1="30" y1="10" x2="50" y2="10" stroke="#8b5a3c" strokeWidth="4" />
+        <line x1="50" y1="10" x2="50" y2="15" stroke="#8b5a3c" strokeWidth="3" />
+        
+        {/* Hangman parts */}
+        {parts}
+      </svg>
+    );
+  };
 
   return (
-    <Card className="overflow-hidden border-dream-light/20 bg-gradient-to-br from-white/80 to-purple-light/20 dark:from-nightsky-light/80 dark:to-nightsky/80 backdrop-blur-sm shadow-2xl">
-      <CardHeader className="text-center bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
-        <div className="flex items-center justify-center gap-2">
+    <Card className="w-full max-w-2xl mx-auto bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-purple-200 shadow-2xl">
+      <CardHeader className="text-center bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
+        <div className="flex items-center justify-center gap-2 mb-2">
           <TreePine className="w-6 h-6" />
           <CardTitle className="text-2xl font-bold">Hangman Game</CardTitle>
         </div>
-        <CardDescription className="text-purple-100">Guess the word letter by letter</CardDescription>
+        <CardDescription className="text-purple-100 text-lg">
+          Guess the word before the drawing completes!
+        </CardDescription>
       </CardHeader>
+      
       <CardContent className="p-8">
-        <div className="flex flex-col items-center space-y-6">
-          <div className="text-center">
-            <pre className="font-mono text-lg bg-gradient-to-br from-gray-100 to-gray-200 dark:from-nightsky-light/40 dark:to-nightsky/40 p-6 rounded-2xl border-2 border-purple-300 shadow-inner text-purple-800 dark:text-purple-200">
-              {getHangmanDrawing()}
-            </pre>
+        <div className="text-center space-y-6">
+          {/* Hangman Drawing */}
+          <div className="bg-white rounded-xl p-6 shadow-inner border-2 border-gray-200">
+            {getHangmanSvg()}
           </div>
           
-          <div className="text-3xl font-bold tracking-wider p-4 bg-gradient-to-r from-moon-light to-moon-DEFAULT rounded-lg shadow-lg">
-            {getDisplayWord()}
+          {/* Game Info */}
+          <div className="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-lg p-4 border-2 border-yellow-300">
+            <div className="text-lg font-semibold text-gray-700 mb-2">
+              Incorrect Guesses: {wrongGuessCount} / {maxGuesses}
+            </div>
+            <div className="text-sm text-gray-600">
+              <strong>Hint:</strong> {hint}
+            </div>
           </div>
           
-          <div className="text-xl font-semibold p-3 bg-gradient-to-r from-red-100 to-pink-100 dark:from-red-900/30 dark:to-pink-900/30 rounded-lg shadow-lg">
-            Wrong guesses: {wrongGuesses}/{maxWrongGuesses}
+          {/* Word Display */}
+          <div className="bg-white rounded-lg p-6 shadow-lg border-2 border-blue-200">
+            <div className="text-4xl font-bold tracking-wider text-gray-800 font-mono">
+              {getDisplayWord()}
+            </div>
           </div>
           
+          {/* Game Status */}
           {gameOver && (
-            <div className={`text-2xl font-bold text-center p-4 rounded-lg shadow-lg ${gameWon ? 'bg-green-100 text-green-600 dark:bg-green-900/30' : 'bg-red-100 text-red-600 dark:bg-red-900/30'}`}>
-              {gameWon ? '🎉 You Won!' : `💀 Game Over! Word: ${word}`}
+            <div className={`text-2xl font-bold p-4 rounded-lg shadow-lg ${
+              gameWon 
+                ? 'bg-green-100 text-green-700 border-2 border-green-300' 
+                : 'bg-red-100 text-red-700 border-2 border-red-300'
+            }`}>
+              {gameWon ? '🎉 You Won! Great Job!' : `💀 Game Over! Word: ${currentWord.toUpperCase()}`}
             </div>
           )}
           
-          <div className="grid grid-cols-6 gap-2 max-w-md">
-            {alphabet.map(letter => (
-              <button
-                key={letter}
-                onClick={() => guessLetter(letter)}
-                disabled={guessedLetters.includes(letter) || gameOver}
-                className={`p-3 text-sm font-bold rounded-xl border-2 transition-all duration-300 transform hover:scale-105 shadow-md ${
-                  guessedLetters.includes(letter)
-                    ? word.includes(letter)
-                      ? 'bg-gradient-to-br from-green-400 to-green-600 text-white border-green-500 shadow-lg'
-                      : 'bg-gradient-to-br from-red-400 to-red-600 text-white border-red-500 shadow-lg'
-                    : 'bg-gradient-to-br from-white to-gray-100 hover:from-purple-100 hover:to-purple-200 dark:from-nightsky-light dark:to-nightsky hover:shadow-xl border-purple-300'
-                } disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
-              >
-                {letter}
-              </button>
-            ))}
+          {/* Alphabet Buttons */}
+          <div className="bg-gray-50 rounded-xl p-6 border-2 border-gray-200">
+            <h3 className="text-lg font-semibold mb-4 text-gray-700">Choose a Letter:</h3>
+            <div className="grid grid-cols-6 gap-2">
+              {alphabet.split('').map(letter => {
+                const isGuessed = guessedLetters.includes(letter);
+                const isCorrect = isGuessed && currentWord.toLowerCase().includes(letter);
+                const isWrong = isGuessed && !currentWord.toLowerCase().includes(letter);
+                
+                return (
+                  <button
+                    key={letter}
+                    onClick={() => handleLetterClick(letter)}
+                    disabled={isGuessed || gameOver}
+                    className={`
+                      p-3 text-lg font-bold rounded-lg transition-all duration-200 transform hover:scale-105 shadow-md
+                      ${isCorrect 
+                        ? 'bg-green-500 text-white border-2 border-green-600' 
+                        : isWrong 
+                          ? 'bg-red-500 text-white border-2 border-red-600'
+                          : 'bg-white hover:bg-blue-100 text-gray-700 border-2 border-blue-300 hover:border-blue-500'
+                      }
+                      ${(isGuessed || gameOver) ? 'cursor-not-allowed opacity-60 transform-none' : 'cursor-pointer'}
+                    `}
+                  >
+                    {letter.toUpperCase()}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </CardContent>
-      <CardFooter className="bg-gradient-to-r from-purple-400 to-indigo-500">
-        <Button onClick={initializeGame} className="w-full bg-white text-purple-600 hover:bg-gray-100 font-bold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+      
+      <CardFooter className="bg-gradient-to-r from-purple-500 to-blue-500 rounded-b-lg">
+        <Button 
+          onClick={initGame} 
+          className="w-full bg-white text-purple-600 hover:bg-gray-100 font-bold py-3 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+        >
           🎮 New Game
         </Button>
       </CardFooter>
@@ -703,7 +772,7 @@ const Games = () => {
               <span className="hidden sm:inline">RPS</span>
             </TabsTrigger>
             <TabsTrigger value="snake" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-emerald-600 data-[state=active]:text-white rounded-xl transition-all duration-300">
-              <Snake className="w-4 h-4" />
+              <Zap className="w-4 h-4" />
               <span className="hidden sm:inline">Snake</span>
             </TabsTrigger>
             <TabsTrigger value="hangman" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white rounded-xl transition-all duration-300">
