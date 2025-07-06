@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
+import { Grid3X3, Brain, Scissors, Snake, TreePine, Palette } from "lucide-react";
 
 const TicTacToe = () => {
   const { t } = useTranslation();
@@ -59,7 +60,7 @@ const TicTacToe = () => {
   const renderSquare = (i: number) => {
     return (
       <button
-        className="w-20 h-20 flex items-center justify-center text-2xl bg-white/70 dark:bg-nightsky-light/70 hover:bg-white/90 dark:hover:bg-nightsky/90 border border-dream-light/30 rounded-md transition-colors"
+        className="w-20 h-20 flex items-center justify-center text-3xl bg-gradient-to-br from-white to-gray-100 dark:from-nightsky-light dark:to-nightsky hover:from-dream-light hover:to-dream-DEFAULT dark:hover:from-dream-dark dark:hover:to-dream-DEFAULT border-2 border-dream-light/40 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
         onClick={() => handleClick(i)}
       >
         {board[i]}
@@ -68,36 +69,31 @@ const TicTacToe = () => {
   };
 
   return (
-    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="text-xl">{t('games.ticTacToe.title')}</CardTitle>
-        <CardDescription>{t('games.ticTacToe.description')}</CardDescription>
+    <Card className="overflow-hidden border-dream-light/20 bg-gradient-to-br from-white/80 to-dream-light/20 dark:from-nightsky-light/80 dark:to-nightsky/80 backdrop-blur-sm shadow-2xl">
+      <CardHeader className="text-center bg-gradient-to-r from-dream-DEFAULT to-dream-dark text-white">
+        <div className="flex items-center justify-center gap-2">
+          <Grid3X3 className="w-6 h-6" />
+          <CardTitle className="text-2xl font-bold">{t('games.ticTacToe.title')}</CardTitle>
+        </div>
+        <CardDescription className="text-dream-light">{t('games.ticTacToe.description')}</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-8">
         <div className="flex flex-col items-center">
-          <div className="mb-4 text-lg font-medium">
+          <div className="mb-6 text-xl font-bold text-center p-4 bg-gradient-to-r from-moon-light to-moon-DEFAULT rounded-lg shadow-inner">
             {winner 
               ? winner === 'draw' 
                 ? t('games.ticTacToe.draw')
-                : `${t('games.ticTacToe.winner')} ${winner}` 
+                : `🎉 ${t('games.ticTacToe.winner')} ${winner}` 
               : `${t('games.ticTacToe.nextPlayer')} ${isXNext ? '✖️' : '⭕'}`}
           </div>
           
-          <div className="grid grid-cols-3 gap-2 mb-4">
-            {renderSquare(0)}
-            {renderSquare(1)}
-            {renderSquare(2)}
-            {renderSquare(3)}
-            {renderSquare(4)}
-            {renderSquare(5)}
-            {renderSquare(6)}
-            {renderSquare(7)}
-            {renderSquare(8)}
+          <div className="grid grid-cols-3 gap-3 mb-6 p-4 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-nightsky-light/20 dark:to-nightsky/20 rounded-2xl shadow-inner">
+            {Array.from({ length: 9 }, (_, i) => renderSquare(i))}
           </div>
         </div>
       </CardContent>
-      <CardFooter>
-        <Button onClick={resetGame} className="w-full bg-dream-DEFAULT hover:bg-dream-dark">
+      <CardFooter className="bg-gradient-to-r from-dream-light to-dream-DEFAULT">
+        <Button onClick={resetGame} className="w-full bg-white text-dream-dark hover:bg-gray-100 font-bold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
           {t('games.ticTacToe.newGame')}
         </Button>
       </CardFooter>
@@ -112,7 +108,7 @@ const MemoryCardGame = () => {
   const [moves, setMoves] = useState(0);
   const [isWon, setIsWon] = useState(false);
 
-  const symbols = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
+  const symbols = ['🎮', '🎯', '🎲', '🎪', '🎨', '🎭', '🎪', '🎵'];
 
   const initializeGame = () => {
     const shuffledCards = [...symbols, ...symbols]
@@ -141,7 +137,6 @@ const MemoryCardGame = () => {
       const secondCard = cards[second];
 
       if (firstCard.symbol === secondCard.symbol) {
-        // Match found
         setTimeout(() => {
           setCards(prevCards => 
             prevCards.map(card => 
@@ -152,7 +147,6 @@ const MemoryCardGame = () => {
           );
           setFlippedCards([]);
           
-          // Check if game is won
           const updatedCards = cards.map(card => 
             card.id === first || card.id === second 
               ? { ...card, isMatched: true }
@@ -161,11 +155,10 @@ const MemoryCardGame = () => {
           
           if (updatedCards.every(card => card.isMatched)) {
             setIsWon(true);
-            toast.success(`Congratulations! You won in ${moves + 1} moves!`);
+            toast.success(`🎉 Congratulations! You won in ${moves + 1} moves!`);
           }
         }, 1000);
       } else {
-        // No match
         setTimeout(() => {
           setCards(prevCards => 
             prevCards.map(card => 
@@ -198,26 +191,29 @@ const MemoryCardGame = () => {
   };
 
   return (
-    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="text-xl">Memory Card Game</CardTitle>
-        <CardDescription>Flip cards to find matching pairs</CardDescription>
+    <Card className="overflow-hidden border-dream-light/20 bg-gradient-to-br from-white/80 to-brain-light/20 dark:from-nightsky-light/80 dark:to-nightsky/80 backdrop-blur-sm shadow-2xl">
+      <CardHeader className="text-center bg-gradient-to-r from-brain-DEFAULT to-brain-dark text-white">
+        <div className="flex items-center justify-center gap-2">
+          <Brain className="w-6 h-6" />
+          <CardTitle className="text-2xl font-bold">Memory Challenge</CardTitle>
+        </div>
+        <CardDescription className="text-brain-light">Test your memory skills!</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-8">
         <div className="flex flex-col items-center">
-          <div className="mb-4 text-lg font-medium">
+          <div className="mb-6 text-xl font-bold text-center p-4 bg-gradient-to-r from-moon-light to-moon-DEFAULT rounded-lg shadow-inner">
             {isWon ? `🎉 You Won in ${moves} moves!` : `Moves: ${moves}`}
           </div>
           
-          <div className="grid grid-cols-4 gap-2 mb-4">
+          <div className="grid grid-cols-4 gap-3 mb-6 p-4 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-nightsky-light/20 dark:to-nightsky/20 rounded-2xl shadow-inner">
             {cards.map((card) => (
               <button
                 key={card.id}
-                className={`w-16 h-16 flex items-center justify-center text-2xl rounded-md transition-all duration-300 transform ${
+                className={`w-16 h-16 flex items-center justify-center text-2xl rounded-xl transition-all duration-500 transform border-2 ${
                   card.isFlipped || card.isMatched
-                    ? 'bg-white/90 dark:bg-nightsky/90 scale-105'
-                    : 'bg-dream-DEFAULT hover:bg-dream-dark hover:scale-105'
-                } border border-dream-light/30`}
+                    ? 'bg-gradient-to-br from-white to-moon-light shadow-lg scale-105 border-moon-DEFAULT'
+                    : 'bg-gradient-to-br from-dream-DEFAULT to-dream-dark hover:from-dream-light hover:to-dream-DEFAULT hover:scale-105 border-dream-light shadow-md'
+                } text-white font-bold`}
                 onClick={() => handleCardClick(card.id)}
                 disabled={card.isFlipped || card.isMatched}
               >
@@ -227,8 +223,8 @@ const MemoryCardGame = () => {
           </div>
         </div>
       </CardContent>
-      <CardFooter>
-        <Button onClick={initializeGame} className="w-full bg-dream-DEFAULT hover:bg-dream-dark">
+      <CardFooter className="bg-gradient-to-r from-brain-light to-brain-DEFAULT">
+        <Button onClick={initializeGame} className="w-full bg-white text-brain-dark hover:bg-gray-100 font-bold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
           New Game
         </Button>
       </CardFooter>
@@ -256,17 +252,17 @@ const RockPaperScissors = () => {
     setComputerChoice(computerChoice.name);
 
     if (playerChoice === computerChoice.name) {
-      setResult("It's a tie!");
+      setResult("It's a tie! 🤝");
     } else if (
       (playerChoice === 'Rock' && computerChoice.name === 'Scissors') ||
       (playerChoice === 'Paper' && computerChoice.name === 'Rock') ||
       (playerChoice === 'Scissors' && computerChoice.name === 'Paper')
     ) {
-      setResult('You win!');
+      setResult('You win! 🎉');
       setPlayerScore(prev => prev + 1);
       toast.success('You won this round!');
     } else {
-      setResult('Computer wins!');
+      setResult('Computer wins! 🤖');
       setComputerScore(prev => prev + 1);
       toast.error('Computer won this round!');
     }
@@ -281,38 +277,41 @@ const RockPaperScissors = () => {
   };
 
   return (
-    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="text-xl">Rock Paper Scissors</CardTitle>
-        <CardDescription>Choose your weapon and beat the computer!</CardDescription>
+    <Card className="overflow-hidden border-dream-light/20 bg-gradient-to-br from-white/80 to-orange-light/20 dark:from-nightsky-light/80 dark:to-nightsky/80 backdrop-blur-sm shadow-2xl">
+      <CardHeader className="text-center bg-gradient-to-r from-orange-500 to-red-500 text-white">
+        <div className="flex items-center justify-center gap-2">
+          <Scissors className="w-6 h-6" />
+          <CardTitle className="text-2xl font-bold">Rock Paper Scissors</CardTitle>
+        </div>
+        <CardDescription className="text-orange-100">Choose your weapon!</CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="flex flex-col items-center space-y-4">
-          <div className="flex justify-between w-full text-lg font-medium">
-            <span>You: {playerScore}</span>
-            <span>Computer: {computerScore}</span>
+      <CardContent className="p-8">
+        <div className="flex flex-col items-center space-y-6">
+          <div className="flex justify-between w-full text-xl font-bold p-4 bg-gradient-to-r from-gray-100 to-gray-200 dark:from-nightsky-light/40 dark:to-nightsky/40 rounded-lg shadow-inner">
+            <span className="text-blue-600">You: {playerScore}</span>
+            <span className="text-red-600">Computer: {computerScore}</span>
           </div>
           
           {result && (
-            <div className="text-xl font-bold text-center">
+            <div className="text-2xl font-bold text-center p-4 bg-gradient-to-r from-moon-light to-moon-DEFAULT rounded-lg shadow-lg">
               {result}
             </div>
           )}
           
           {playerChoice && computerChoice && (
-            <div className="flex justify-between w-full items-center">
+            <div className="flex justify-between w-full items-center p-6 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-nightsky-light/20 dark:to-nightsky/20 rounded-2xl shadow-inner">
               <div className="text-center">
-                <div className="text-4xl mb-2">
+                <div className="text-6xl mb-3 animate-bounce">
                   {choices.find(c => c.name === playerChoice)?.emoji}
                 </div>
-                <div className="text-sm">You</div>
+                <div className="text-lg font-semibold text-blue-600">You</div>
               </div>
-              <div className="text-2xl">VS</div>
+              <div className="text-3xl font-bold text-gray-500">VS</div>
               <div className="text-center">
-                <div className="text-4xl mb-2">
+                <div className="text-6xl mb-3 animate-bounce">
                   {choices.find(c => c.name === computerChoice)?.emoji}
                 </div>
-                <div className="text-sm">Computer</div>
+                <div className="text-lg font-semibold text-red-600">Computer</div>
               </div>
             </div>
           )}
@@ -322,17 +321,17 @@ const RockPaperScissors = () => {
               <button
                 key={choice.name}
                 onClick={() => playGame(choice.name)}
-                className="flex flex-col items-center p-4 bg-white/70 dark:bg-nightsky-light/70 hover:bg-white/90 dark:hover:bg-nightsky/90 border border-dream-light/30 rounded-lg transition-colors"
+                className="flex flex-col items-center p-6 bg-gradient-to-br from-white to-gray-100 hover:from-dream-light hover:to-dream-DEFAULT dark:from-nightsky-light dark:to-nightsky hover:shadow-2xl border-2 border-dream-light/40 rounded-2xl transition-all duration-300 transform hover:scale-110 shadow-lg"
               >
-                <span className="text-3xl mb-2">{choice.emoji}</span>
-                <span className="text-sm">{choice.name}</span>
+                <span className="text-4xl mb-3">{choice.emoji}</span>
+                <span className="text-lg font-semibold">{choice.name}</span>
               </button>
             ))}
           </div>
         </div>
       </CardContent>
-      <CardFooter>
-        <Button onClick={resetGame} className="w-full bg-dream-DEFAULT hover:bg-dream-dark">
+      <CardFooter className="bg-gradient-to-r from-orange-400 to-red-400">
+        <Button onClick={resetGame} className="w-full bg-white text-orange-600 hover:bg-gray-100 font-bold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
           Reset Score
         </Button>
       </CardFooter>
@@ -407,14 +406,12 @@ const SnakeGame = () => {
         head.x += direction.x;
         head.y += direction.y;
 
-        // Check wall collision
         if (head.x < 0 || head.x >= boardSize || head.y < 0 || head.y >= boardSize) {
           setGameOver(true);
           toast.error(`Game Over! Final Score: ${score}`);
           return prevSnake;
         }
 
-        // Check self collision
         if (newSnake.some(segment => segment.x === head.x && segment.y === head.y)) {
           setGameOver(true);
           toast.error(`Game Over! Final Score: ${score}`);
@@ -423,7 +420,6 @@ const SnakeGame = () => {
 
         newSnake.unshift(head);
 
-        // Check food collision
         if (head.x === food.x && head.y === food.y) {
           setScore(prev => prev + 10);
           generateFood();
@@ -439,21 +435,26 @@ const SnakeGame = () => {
   }, [direction, food, gameStarted, gameOver, score, generateFood]);
 
   return (
-    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="text-xl">Snake Game</CardTitle>
-        <CardDescription>Use arrow keys to control the snake</CardDescription>
+    <Card className="overflow-hidden border-dream-light/20 bg-gradient-to-br from-white/80 to-green-light/20 dark:from-nightsky-light/80 dark:to-nightsky/80 backdrop-blur-sm shadow-2xl">
+      <CardHeader className="text-center bg-gradient-to-r from-green-500 to-emerald-600 text-white">
+        <div className="flex items-center justify-center gap-2">
+          <Snake className="w-6 h-6" />
+          <CardTitle className="text-2xl font-bold">Snake Game</CardTitle>
+        </div>
+        <CardDescription className="text-green-100">Use arrow keys to control the snake</CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="flex flex-col items-center space-y-4">
-          <div className="text-lg font-medium">Score: {score}</div>
+      <CardContent className="p-8">
+        <div className="flex flex-col items-center space-y-6">
+          <div className="text-2xl font-bold p-4 bg-gradient-to-r from-moon-light to-moon-DEFAULT rounded-lg shadow-inner">
+            Score: {score}
+          </div>
           
           <div 
-            className="grid bg-nightsky-light/30 border-2 border-dream-light/30 rounded-lg p-2"
+            className="grid bg-gradient-to-br from-green-100 to-emerald-100 dark:from-nightsky-light/30 dark:to-nightsky/30 border-4 border-green-400 rounded-2xl p-4 shadow-2xl"
             style={{ 
               gridTemplateColumns: `repeat(${boardSize}, 1fr)`,
-              width: '300px',
-              height: '300px'
+              width: '320px',
+              height: '320px'
             }}
           >
             {Array.from({ length: boardSize * boardSize }).map((_, index) => {
@@ -466,13 +467,13 @@ const SnakeGame = () => {
               return (
                 <div
                   key={index}
-                  className={`border border-dream-light/10 ${
+                  className={`border border-green-200/30 rounded-sm ${
                     isSnake 
                       ? isHead 
-                        ? 'bg-dream-dark' 
-                        : 'bg-dream-DEFAULT'
+                        ? 'bg-gradient-to-br from-green-600 to-green-800 shadow-md' 
+                        : 'bg-gradient-to-br from-green-400 to-green-600'
                       : isFood 
-                        ? 'bg-moon-DEFAULT' 
+                        ? 'bg-gradient-to-br from-red-400 to-red-600 rounded-full shadow-lg animate-pulse' 
                         : 'bg-transparent'
                   }`}
                 />
@@ -481,26 +482,27 @@ const SnakeGame = () => {
           </div>
           
           {gameOver && (
-            <div className="text-xl font-bold text-center text-red-500">
-              Game Over!
+            <div className="text-2xl font-bold text-center text-red-500 p-4 bg-red-100 dark:bg-red-900/30 rounded-lg shadow-lg">
+              🐍 Game Over! 💀
             </div>
           )}
           
           {!gameStarted && !gameOver && (
-            <div className="text-center">
-              <p className="mb-2">Click Start to begin!</p>
+            <div className="text-center p-4 bg-gradient-to-r from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 rounded-lg shadow-lg">
+              <p className="mb-2 text-lg font-semibold">🎮 Ready to play?</p>
+              <p className="text-sm text-gray-600 dark:text-gray-300">Use arrow keys to move!</p>
             </div>
           )}
         </div>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="bg-gradient-to-r from-green-400 to-emerald-500">
         {!gameStarted && !gameOver ? (
-          <Button onClick={startGame} className="w-full bg-dream-DEFAULT hover:bg-dream-dark">
-            Start Game
+          <Button onClick={startGame} className="w-full bg-white text-green-600 hover:bg-gray-100 font-bold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+            🎮 Start Game
           </Button>
         ) : (
-          <Button onClick={resetGame} className="w-full bg-dream-DEFAULT hover:bg-dream-dark">
-            New Game
+          <Button onClick={resetGame} className="w-full bg-white text-green-600 hover:bg-gray-100 font-bold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+            🔄 New Game
           </Button>
         )}
       </CardFooter>
@@ -539,10 +541,10 @@ const HangmanGame = () => {
       if (hasWon) {
         setGameWon(true);
         setGameOver(true);
-        toast.success('Congratulations! You won!');
+        toast.success('🎉 Congratulations! You won!');
       } else if (wrongGuesses >= maxWrongGuesses) {
         setGameOver(true);
-        toast.error(`Game Over! The word was: ${word}`);
+        toast.error(`💀 Game Over! The word was: ${word}`);
       }
     }
   }, [guessedLetters, wrongGuesses, word]);
@@ -566,13 +568,13 @@ const HangmanGame = () => {
 
   const getHangmanDrawing = () => {
     const drawings = [
-      '',
-      '  |\n  |',
-      '  +---+\n  |   |\n      |',
-      '  +---+\n  |   |\n  O   |',
-      '  +---+\n  |   |\n  O   |\n  |   |',
-      '  +---+\n  |   |\n  O   |\n /|   |',
-      '  +---+\n  |   |\n  O   |\n /|\\  |\n /    |'
+      '   ┌─────┐\n   │     │\n   │      \n   │      \n   │      \n   │      \n ──┴──    ',
+      '   ┌─────┐\n   │     │\n   │     😵\n   │      \n   │      \n   │      \n ──┴──    ',
+      '   ┌─────┐\n   │     │\n   │     😵\n   │     │\n   │      \n   │      \n ──┴──    ',
+      '   ┌─────┐\n   │     │\n   │     😵\n   │    ╱│\n   │      \n   │      \n ──┴──    ',
+      '   ┌─────┐\n   │     │\n   │     😵\n   │    ╱│╲\n   │      \n   │      \n ──┴──    ',
+      '   ┌─────┐\n   │     │\n   │     😵\n   │    ╱│╲\n   │    ╱ \n   │      \n ──┴──    ',
+      '   ┌─────┐\n   │     │\n   │     😵\n   │    ╱│╲\n   │    ╱ ╲\n   │      \n ──┴──    '
     ];
     return drawings[wrongGuesses] || drawings[6];
   };
@@ -580,30 +582,33 @@ const HangmanGame = () => {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
   return (
-    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="text-xl">Hangman Game</CardTitle>
-        <CardDescription>Guess the word letter by letter</CardDescription>
+    <Card className="overflow-hidden border-dream-light/20 bg-gradient-to-br from-white/80 to-purple-light/20 dark:from-nightsky-light/80 dark:to-nightsky/80 backdrop-blur-sm shadow-2xl">
+      <CardHeader className="text-center bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+        <div className="flex items-center justify-center gap-2">
+          <TreePine className="w-6 h-6" />
+          <CardTitle className="text-2xl font-bold">Hangman Game</CardTitle>
+        </div>
+        <CardDescription className="text-purple-100">Guess the word letter by letter</CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="flex flex-col items-center space-y-4">
+      <CardContent className="p-8">
+        <div className="flex flex-col items-center space-y-6">
           <div className="text-center">
-            <pre className="font-mono text-sm bg-nightsky-light/20 p-4 rounded-lg border">
+            <pre className="font-mono text-lg bg-gradient-to-br from-gray-100 to-gray-200 dark:from-nightsky-light/40 dark:to-nightsky/40 p-6 rounded-2xl border-2 border-purple-300 shadow-inner text-purple-800 dark:text-purple-200">
               {getHangmanDrawing()}
             </pre>
           </div>
           
-          <div className="text-2xl font-bold tracking-wider">
+          <div className="text-3xl font-bold tracking-wider p-4 bg-gradient-to-r from-moon-light to-moon-DEFAULT rounded-lg shadow-lg">
             {getDisplayWord()}
           </div>
           
-          <div className="text-lg">
+          <div className="text-xl font-semibold p-3 bg-gradient-to-r from-red-100 to-pink-100 dark:from-red-900/30 dark:to-pink-900/30 rounded-lg shadow-lg">
             Wrong guesses: {wrongGuesses}/{maxWrongGuesses}
           </div>
           
           {gameOver && (
-            <div className={`text-xl font-bold text-center ${gameWon ? 'text-green-500' : 'text-red-500'}`}>
-              {gameWon ? 'You Won!' : `Game Over! Word: ${word}`}
+            <div className={`text-2xl font-bold text-center p-4 rounded-lg shadow-lg ${gameWon ? 'bg-green-100 text-green-600 dark:bg-green-900/30' : 'bg-red-100 text-red-600 dark:bg-red-900/30'}`}>
+              {gameWon ? '🎉 You Won!' : `💀 Game Over! Word: ${word}`}
             </div>
           )}
           
@@ -613,13 +618,13 @@ const HangmanGame = () => {
                 key={letter}
                 onClick={() => guessLetter(letter)}
                 disabled={guessedLetters.includes(letter) || gameOver}
-                className={`p-2 text-sm font-bold rounded border transition-colors ${
+                className={`p-3 text-sm font-bold rounded-xl border-2 transition-all duration-300 transform hover:scale-105 shadow-md ${
                   guessedLetters.includes(letter)
                     ? word.includes(letter)
-                      ? 'bg-green-500 text-white'
-                      : 'bg-red-500 text-white'
-                    : 'bg-white/70 dark:bg-nightsky-light/70 hover:bg-white/90 dark:hover:bg-nightsky/90 border-dream-light/30'
-                } disabled:opacity-50 disabled:cursor-not-allowed`}
+                      ? 'bg-gradient-to-br from-green-400 to-green-600 text-white border-green-500 shadow-lg'
+                      : 'bg-gradient-to-br from-red-400 to-red-600 text-white border-red-500 shadow-lg'
+                    : 'bg-gradient-to-br from-white to-gray-100 hover:from-purple-100 hover:to-purple-200 dark:from-nightsky-light dark:to-nightsky hover:shadow-xl border-purple-300'
+                } disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
               >
                 {letter}
               </button>
@@ -627,9 +632,9 @@ const HangmanGame = () => {
           </div>
         </div>
       </CardContent>
-      <CardFooter>
-        <Button onClick={initializeGame} className="w-full bg-dream-DEFAULT hover:bg-dream-dark">
-          New Game
+      <CardFooter className="bg-gradient-to-r from-purple-400 to-indigo-500">
+        <Button onClick={initializeGame} className="w-full bg-white text-purple-600 hover:bg-gray-100 font-bold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+          🎮 New Game
         </Button>
       </CardFooter>
     </Card>
@@ -640,16 +645,24 @@ const ColoringBook = () => {
   const { t } = useTranslation();
   
   return (
-    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="text-xl">{t('games.coloringBook.title')}</CardTitle>
-        <CardDescription>{t('games.coloringBook.description')}</CardDescription>
+    <Card className="overflow-hidden border-dream-light/20 bg-gradient-to-br from-white/80 to-pink-light/20 dark:from-nightsky-light/80 dark:to-nightsky/80 backdrop-blur-sm shadow-2xl">
+      <CardHeader className="text-center bg-gradient-to-r from-pink-500 to-purple-500 text-white">
+        <div className="flex items-center justify-center gap-2">
+          <Palette className="w-6 h-6" />
+          <CardTitle className="text-2xl font-bold">{t('games.coloringBook.title')}</CardTitle>
+        </div>
+        <CardDescription className="text-pink-100">{t('games.coloringBook.description')}</CardDescription>
       </CardHeader>
-      <CardContent className="text-center p-8">
-        <p className="mb-6 text-muted-foreground">
-          {t('games.coloringBook.comingSoon')}
-        </p>
-        <Button variant="outline">{t('games.coloringBook.seePlans')}</Button>
+      <CardContent className="text-center p-12">
+        <div className="space-y-6">
+          <div className="text-6xl">🎨</div>
+          <p className="mb-6 text-xl text-muted-foreground font-semibold">
+            {t('games.coloringBook.comingSoon')}
+          </p>
+          <Button variant="outline" className="bg-gradient-to-r from-pink-100 to-purple-100 border-pink-300 text-pink-600 hover:from-pink-200 hover:to-purple-200 font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+            {t('games.coloringBook.seePlans')}
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
@@ -664,66 +677,88 @@ const Games = () => {
   }, [t]);
 
   return (
-    <div className="py-12 px-4">
+    <div className="py-12 px-4 min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-nightsky-DEFAULT dark:via-nightsky-light dark:to-nightsky">
       <div className="container mx-auto max-w-6xl">
-        <h1 className="text-3xl md:text-4xl font-bubbly mb-6">{t('games.title')}</h1>
-        <p className="text-muted-foreground mb-8 max-w-2xl">
-          {t('games.subtitle')}
-        </p>
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bubbly mb-4 bg-gradient-to-r from-dream-DEFAULT via-purple-600 to-pink-600 bg-clip-text text-transparent">
+            {t('games.title')}
+          </h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            {t('games.subtitle')}
+          </p>
+        </div>
         
         <Tabs defaultValue="tic-tac-toe" className="w-full">
-          <TabsList className="grid w-full grid-cols-6">
-            <TabsTrigger value="tic-tac-toe">Tic-Tac-Toe</TabsTrigger>
-            <TabsTrigger value="memory">Memory</TabsTrigger>
-            <TabsTrigger value="rock-paper-scissors">Rock Paper Scissors</TabsTrigger>
-            <TabsTrigger value="snake">Snake</TabsTrigger>
-            <TabsTrigger value="hangman">Hangman</TabsTrigger>
-            <TabsTrigger value="coloring">Coloring</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-6 bg-white/80 dark:bg-nightsky-light/80 backdrop-blur-sm shadow-lg rounded-2xl p-2">
+            <TabsTrigger value="tic-tac-toe" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-dream-DEFAULT data-[state=active]:to-dream-dark data-[state=active]:text-white rounded-xl transition-all duration-300">
+              <Grid3X3 className="w-4 h-4" />
+              <span className="hidden sm:inline">Tic-Tac-Toe</span>
+            </TabsTrigger>
+            <TabsTrigger value="memory" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-brain-DEFAULT data-[state=active]:to-brain-dark data-[state=active]:text-white rounded-xl transition-all duration-300">
+              <Brain className="w-4 h-4" />
+              <span className="hidden sm:inline">Memory</span> 
+            </TabsTrigger>
+            <TabsTrigger value="rock-paper-scissors" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-red-500 data-[state=active]:text-white rounded-xl transition-all duration-300">
+              <Scissors className="w-4 h-4" />
+              <span className="hidden sm:inline">RPS</span>
+            </TabsTrigger>
+            <TabsTrigger value="snake" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-emerald-600 data-[state=active]:text-white rounded-xl transition-all duration-300">
+              <Snake className="w-4 h-4" />
+              <span className="hidden sm:inline">Snake</span>
+            </TabsTrigger>
+            <TabsTrigger value="hangman" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white rounded-xl transition-all duration-300">
+              <TreePine className="w-4 h-4" />
+              <span className="hidden sm:inline">Hangman</span>
+            </TabsTrigger>
+            <TabsTrigger value="coloring" className="flex items-center gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-pink-500 data-[state=active]:to-purple-500 data-[state=active]:text-white rounded-xl transition-all duration-300">
+              <Palette className="w-4 h-4" />
+              <span className="hidden sm:inline">Coloring</span>
+            </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="tic-tac-toe" className="mt-6">
+          <TabsContent value="tic-tac-toe" className="mt-8">
             <div className="flex justify-center">
-              <div className="w-full max-w-md">
+              <div className="w-full max-w-lg">
                 <TicTacToe />
               </div>
             </div>
           </TabsContent>
           
-          <TabsContent value="memory" className="mt-6">
+          <TabsContent value="memory" className="mt-8">
             <div className="flex justify-center">
-              <div className="w-full max-w-md">
+              <div className="w-full max-w-lg">
                 <MemoryCardGame />
               </div>
             </div>
           </TabsContent>
           
-          <TabsContent value="rock-paper-scissors" className="mt-6">
+          <TabsContent value="rock-paper-scissors" className="mt-8">
             <div className="flex justify-center">
-              <div className="w-full max-w-md">
+              <div className="w-full max-w-lg">
                 <RockPaperScissors />
               </div>
             </div>
           </TabsContent>
           
-          <TabsContent value="snake" className="mt-6">
+          <TabsContent value="snake" className="mt-8">
             <div className="flex justify-center">
-              <div className="w-full max-w-md">
+              <div className="w-full max-w-lg">
                 <SnakeGame />
               </div>
             </div>
           </TabsContent>
           
-          <TabsContent value="hangman" className="mt-6">
+          <TabsContent value="hangman" className="mt-8">
             <div className="flex justify-center">
-              <div className="w-full max-w-md">
+              <div className="w-full max-w-lg">
                 <HangmanGame />
               </div>
             </div>
           </TabsContent>
           
-          <TabsContent value="coloring" className="mt-6">
+          <TabsContent value="coloring" className="mt-8">
             <div className="flex justify-center">
-              <div className="w-full max-w-md">
+              <div className="w-full max-w-lg">
                 <ColoringBook />
               </div>
             </div>
