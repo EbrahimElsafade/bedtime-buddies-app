@@ -105,6 +105,137 @@ const TicTacToe = () => {
   );
 };
 
+const MemoryCardGame = () => {
+  const { t } = useTranslation();
+  const [cards, setCards] = useState<Array<{ id: number; symbol: string; isFlipped: boolean; isMatched: boolean }>>([]);
+  const [flippedCards, setFlippedCards] = useState<number[]>([]);
+  const [moves, setMoves] = useState(0);
+  const [isWon, setIsWon] = useState(false);
+
+  const symbols = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
+
+  const initializeGame = () => {
+    const shuffledCards = [...symbols, ...symbols]
+      .sort(() => Math.random() - 0.5)
+      .map((symbol, index) => ({
+        id: index,
+        symbol,
+        isFlipped: false,
+        isMatched: false
+      }));
+    
+    setCards(shuffledCards);
+    setFlippedCards([]);
+    setMoves(0);
+    setIsWon(false);
+  };
+
+  useEffect(() => {
+    initializeGame();
+  }, []);
+
+  useEffect(() => {
+    if (flippedCards.length === 2) {
+      const [first, second] = flippedCards;
+      const firstCard = cards[first];
+      const secondCard = cards[second];
+
+      if (firstCard.symbol === secondCard.symbol) {
+        // Match found
+        setTimeout(() => {
+          setCards(prevCards => 
+            prevCards.map(card => 
+              card.id === first || card.id === second 
+                ? { ...card, isMatched: true, isFlipped: false }
+                : card
+            )
+          );
+          setFlippedCards([]);
+          
+          // Check if game is won
+          const updatedCards = cards.map(card => 
+            card.id === first || card.id === second 
+              ? { ...card, isMatched: true }
+              : card
+          );
+          
+          if (updatedCards.every(card => card.isMatched)) {
+            setIsWon(true);
+            toast.success(`Congratulations! You won in ${moves + 1} moves!`);
+          }
+        }, 1000);
+      } else {
+        // No match
+        setTimeout(() => {
+          setCards(prevCards => 
+            prevCards.map(card => 
+              card.id === first || card.id === second 
+                ? { ...card, isFlipped: false }
+                : card
+            )
+          );
+          setFlippedCards([]);
+        }, 1000);
+      }
+      setMoves(prev => prev + 1);
+    }
+  }, [flippedCards, cards, moves]);
+
+  const handleCardClick = (cardId: number) => {
+    const card = cards[cardId];
+    
+    if (card.isFlipped || card.isMatched || flippedCards.length === 2) {
+      return;
+    }
+
+    setCards(prevCards => 
+      prevCards.map(card => 
+        card.id === cardId ? { ...card, isFlipped: true } : card
+      )
+    );
+    
+    setFlippedCards(prev => [...prev, cardId]);
+  };
+
+  return (
+    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+      <CardHeader>
+        <CardTitle className="text-xl">Memory Card Game</CardTitle>
+        <CardDescription>Flip cards to find matching pairs</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col items-center">
+          <div className="mb-4 text-lg font-medium">
+            {isWon ? `🎉 You Won in ${moves} moves!` : `Moves: ${moves}`}
+          </div>
+          
+          <div className="grid grid-cols-4 gap-2 mb-4">
+            {cards.map((card) => (
+              <button
+                key={card.id}
+                className={`w-16 h-16 flex items-center justify-center text-2xl rounded-md transition-all duration-300 transform ${
+                  card.isFlipped || card.isMatched
+                    ? 'bg-white/90 dark:bg-nightsky/90 scale-105'
+                    : 'bg-dream-DEFAULT hover:bg-dream-dark hover:scale-105'
+                } border border-dream-light/30`}
+                onClick={() => handleCardClick(card.id)}
+                disabled={card.isFlipped || card.isMatched}
+              >
+                {card.isFlipped || card.isMatched ? card.symbol : '?'}
+              </button>
+            ))}
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Button onClick={initializeGame} className="w-full bg-dream-DEFAULT hover:bg-dream-dark">
+          New Game
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+};
+
 const ColoringBook = () => {
   const { t } = useTranslation();
   
@@ -134,14 +265,15 @@ const Games = () => {
 
   return (
     <div className="py-12 px-4">
-      <div className="container mx-auto max-w-4xl">
+      <div className="container mx-auto max-w-6xl">
         <h1 className="text-3xl md:text-4xl font-bubbly mb-6">{t('games.title')}</h1>
         <p className="text-muted-foreground mb-8 max-w-2xl">
           {t('games.subtitle')}
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <TicTacToe />
+          <MemoryCardGame />
           <ColoringBook />
         </div>
       </div>
