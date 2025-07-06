@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { Moon, Sun, Menu, X, Home, Book, BookOpen, User, Layers } from "lucide-react";
+import { Moon, Sun, Menu, X, Home, Book, BookOpen, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
@@ -39,7 +39,6 @@ const Layout = () => {
   const navItems = [
     { name: t('nav.home'), path: '/', icon: Home },
     { name: t('nav.stories'), path: '/stories', icon: Book },
-    { name: t('nav.courses'), path: '/courses', icon: Layers },
     { name: t('nav.games'), path: '/games', icon: BookOpen },
     { name: t('nav.profile'), path: isAuthenticated ? '/profile' : '/login', icon: User }
   ];
@@ -252,7 +251,7 @@ const Layout = () => {
               className={cn(
                 "flex flex-col items-center justify-center w-1/4 py-1 px-2 rounded-lg",
                 isActive(item.path)
-                  ? "text-dream-DEFAULT bg-dream-DEFAULT/10"
+                  ? "text-dream-DEFAULT bg-dream-default/10"
                   : "text-dream-DEFAULT/70 dark:text-white/70"
               )}
             >

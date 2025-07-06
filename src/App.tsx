@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,8 +12,6 @@ import Index from "./pages/Index";
 import Stories from "./pages/Stories";
 import Story from "./pages/Story";
 import Games from "./pages/Games";
-import Courses from "./pages/Courses";
-import Course from "./pages/Course";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
@@ -93,8 +92,6 @@ const App = () => {
                 <Route path="/stories" element={<Stories />} />
                 <Route path="/stories/:storyId" element={<Story />} />
                 <Route path="/games" element={<Games />} />
-                <Route path="/courses" element={<Courses />} />
-                <Route path="/courses/:courseId" element={<Course />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/subscription" element={<Subscription />} />
                 <Route path="/login" element={<Login />} />
