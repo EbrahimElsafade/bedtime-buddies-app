@@ -527,12 +527,16 @@ const StoryEditor = () => {
                         <SelectGroup>
                           <SelectLabel>Categories</SelectLabel>
                           {categoriesLoading ? (
-                            <SelectItem value="" disabled>Loading categories...</SelectItem>
-                          ) : categories?.map(category => (
-                            <SelectItem key={category.id} value={category.name}>
-                              {category.name}
-                            </SelectItem>
-                          ))}
+                            <div className="px-2 py-1 text-sm text-muted-foreground">Loading categories...</div>
+                          ) : categories && categories.length > 0 ? (
+                            categories.map(category => (
+                              <SelectItem key={category.id} value={category.name}>
+                                {category.name}
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <div className="px-2 py-1 text-sm text-muted-foreground">No categories available</div>
+                          )}
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -671,16 +675,20 @@ const StoryEditor = () => {
                       <SelectGroup>
                         <SelectLabel>Languages</SelectLabel>
                         {languagesLoading ? (
-                          <SelectItem value="" disabled>Loading languages...</SelectItem>
-                        ) : languages?.map(language => (
-                          <SelectItem
-                            key={language.id}
-                            value={language.code}
-                            disabled={storyData.languages.includes(language.code)}
-                          >
-                            {language.name}
-                          </SelectItem>
-                        ))}
+                          <div className="px-2 py-1 text-sm text-muted-foreground">Loading languages...</div>
+                        ) : languages && languages.length > 0 ? (
+                          languages.map(language => (
+                            <SelectItem
+                              key={language.id}
+                              value={language.code}
+                              disabled={storyData.languages.includes(language.code)}
+                            >
+                              {language.name}
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <div className="px-2 py-1 text-sm text-muted-foreground">No languages available</div>
+                        )}
                       </SelectGroup>
                     </SelectContent>
                   </Select>
