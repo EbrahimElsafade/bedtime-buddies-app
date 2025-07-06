@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink, useLocation, Outlet } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { Users, Book, Presentation, Home, Settings, LogOut } from "lucide-react";
+import { Users, Book, Presentation, Home, Settings, LogOut, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useTranslation } from "react-i18next";
@@ -118,6 +118,18 @@ const AdminLayout = () => {
                   <NavLink to="/admin/courses" className="flex items-center">
                     <Presentation className={`h-5 w-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
                     <span>{t('navigation.courses')}</span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={isActive("/admin/appearance")}
+                  tooltip="Appearance"
+                >
+                  <NavLink to="/admin/appearance" className="flex items-center">
+                    <Palette className={`h-5 w-5 ${isRTL ? 'ml-3' : 'mr-3'}`} />
+                    <span>Appearance</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>

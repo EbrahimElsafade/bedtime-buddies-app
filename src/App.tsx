@@ -28,6 +28,7 @@ import AdminStoryEditor from "./pages/admin/StoryEditor";
 import AdminStoryOptions from "./pages/admin/StoryOptions";
 import AdminCourses from "./pages/admin/Courses";
 import AdminSettings from "./pages/admin/Settings";
+import AdminAppearance from "./pages/admin/Appearance";
 
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -113,6 +114,7 @@ const App = () => {
                   <Route path="stories/edit/:id" element={<AdminStoryEditor />} />
                   <Route path="stories/options" element={<AdminStoryOptions />} />
                   <Route path="courses" element={<AdminCourses />} />
+                  <Route path="appearance" element={<AdminAppearance />} />
                   <Route path="settings" element={<AdminSettings />} />
                 </Route>
               </Route>
