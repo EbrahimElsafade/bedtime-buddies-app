@@ -122,7 +122,7 @@ const Stories = () => {
           </div>
           
           <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
-            <TabsList className="mb-4 w-full max-w-2xl h-auto" style={{ gridTemplateColumns: `repeat(${categories.length + 1}, 1fr)` }}>
+            <TabsList className="mb-4 w-full max-w-2xl h-auto flex" >
               <TabsTrigger value="all">
                 All Stories
               </TabsTrigger>
