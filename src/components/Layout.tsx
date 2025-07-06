@@ -78,8 +78,8 @@ const Layout = () => {
                 className={cn(
                   "px-4 py-2 rounded-full text-sm font-medium transition-colors",
                   isActive(item.path)
-                    ? "bg-dream-DEFAULT text-white"
-                    : "dark:text-foreground text-dream-DEFAULT hover:bg-secondary"
+                    ? "bg-dream-DEFAULT text-white shadow-md"
+                    : "text-dream-DEFAULT hover:bg-dream-DEFAULT/10 dark:text-white dark:hover:bg-white/10"
                 )}
               >
                 {item.name}
@@ -151,8 +151,8 @@ const Layout = () => {
                   className={cn(
                     "px-4 py-3 rounded-md text-center text-lg font-medium",
                     isActive(item.path)
-                      ? "bg-dream-DEFAULT text-white"
-                      : "text-dream-DEFAULT hover:bg-secondary dark:text-white"
+                      ? "bg-dream-DEFAULT text-white shadow-md"
+                      : "text-dream-DEFAULT hover:bg-dream-DEFAULT/10 dark:text-white dark:hover:bg-white/10"
                   )}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -164,13 +164,13 @@ const Layout = () => {
                 <>
                   <Link
                     to="/profile"
-                    className="px-4 py-3 rounded-md text-lg font-medium text-center text-dream-DEFAULT hover:bg-secondary dark:text-white"
+                    className="px-4 py-3 rounded-md text-lg font-medium text-center text-dream-DEFAULT hover:bg-dream-DEFAULT/10 dark:text-white dark:hover:bg-white/10"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {t('auth.profile')}
                   </Link>
                   <button
-                    className="px-4 py-3 rounded-md text-lg font-medium text-center text-dream-DEFAULT hover:bg-secondary dark:text-white w-full"
+                    className="px-4 py-3 rounded-md text-lg font-medium text-center text-dream-DEFAULT hover:bg-dream-DEFAULT/10 dark:text-white dark:hover:bg-white/10 w-full"
                     onClick={() => {
                       logout();
                       setIsMenuOpen(false);
@@ -183,7 +183,7 @@ const Layout = () => {
                 <>
                   <Link
                     to="/login"
-                    className="px-4 py-3 rounded-md text-lg font-medium text-center text-dream-DEFAULT hover:bg-secondary dark:text-white"
+                    className="px-4 py-3 rounded-md text-lg font-medium text-center text-dream-DEFAULT hover:bg-dream-DEFAULT/10 dark:text-white dark:hover:bg-white/10"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     {t('auth.login')}
@@ -252,7 +252,7 @@ const Layout = () => {
               className={cn(
                 "flex flex-col items-center justify-center w-1/4 py-1 px-2 rounded-lg",
                 isActive(item.path)
-                  ? "text-dream-DEFAULT"
+                  ? "text-dream-DEFAULT bg-dream-DEFAULT/10"
                   : "text-dream-DEFAULT/70 dark:text-white/70"
               )}
             >
