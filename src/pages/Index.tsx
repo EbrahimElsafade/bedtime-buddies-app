@@ -22,6 +22,8 @@ interface HomePageSettings {
   topRated: boolean;
   courses: boolean;
   specialStory: boolean;
+  features: boolean;
+  subscribeBanner: boolean;
 }
 
 const Index = () => {
@@ -74,15 +76,15 @@ const Index = () => {
       <Hero />
       
       {/* Conditionally render sections based on appearance settings */}
-      <FreeStory />
+      {homePageSettings?.freeStoryEnabled !== false && <FreeStory />}
       
       {homePageSettings?.storiesSection !== false && <FeaturedStories />}
       {homePageSettings?.topRated !== false && <PopularStories />}
       {homePageSettings?.specialStory !== false && <EntertainmentStories />}
       {homePageSettings?.courses !== false && <FeaturedCourses />}
       
-      <Features />
-      <SubscribeBanner />
+      {homePageSettings?.features !== false && <Features />}
+      {homePageSettings?.subscribeBanner !== false && <SubscribeBanner />}
     </div>
   );
 };

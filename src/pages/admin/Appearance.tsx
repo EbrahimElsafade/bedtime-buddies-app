@@ -29,6 +29,8 @@ interface HomePageSettings {
   topRated: boolean;
   courses: boolean;
   specialStory: boolean;
+  features: boolean;
+  subscribeBanner: boolean;
 }
 
 const Appearance = () => {
@@ -42,6 +44,8 @@ const Appearance = () => {
     topRated: true,
     courses: true,
     specialStory: true,
+    features: true,
+    subscribeBanner: true,
   });
 
   // Fetch current appearance settings
@@ -290,6 +294,32 @@ const Appearance = () => {
                 />
                 <Label htmlFor="specialStory" className="text-base font-medium">
                   Special Story Section
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="features"
+                  checked={homePageSections.features}
+                  onCheckedChange={(checked) => 
+                    handleHomePageSectionChange('features', checked as boolean)
+                  }
+                />
+                <Label htmlFor="features" className="text-base font-medium">
+                  Features Section
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="subscribeBanner"
+                  checked={homePageSections.subscribeBanner}
+                  onCheckedChange={(checked) => 
+                    handleHomePageSectionChange('subscribeBanner', checked as boolean)
+                  }
+                />
+                <Label htmlFor="subscribeBanner" className="text-base font-medium">
+                  Subscribe Banner
                 </Label>
               </div>
             </CardContent>
