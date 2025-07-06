@@ -6,6 +6,7 @@ import { Users, Book, Presentation, Home, Settings, LogOut } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import {
   Sidebar,
   SidebarContent,
@@ -128,6 +129,9 @@ const AdminLayout = () => {
           <SidebarFooter className="p-2">
             <Separator className="my-2" />
             <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-center py-2">
+                <LanguageSwitcher />
+              </div>
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
