@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
@@ -670,14 +671,64 @@ const Games = () => {
           {t('games.subtitle')}
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <TicTacToe />
-          <MemoryCardGame />
-          <RockPaperScissors />
-          <SnakeGame />
-          <HangmanGame />
-          <ColoringBook />
-        </div>
+        <Tabs defaultValue="tic-tac-toe" className="w-full">
+          <TabsList className="grid w-full grid-cols-6">
+            <TabsTrigger value="tic-tac-toe">Tic-Tac-Toe</TabsTrigger>
+            <TabsTrigger value="memory">Memory</TabsTrigger>
+            <TabsTrigger value="rock-paper-scissors">Rock Paper Scissors</TabsTrigger>
+            <TabsTrigger value="snake">Snake</TabsTrigger>
+            <TabsTrigger value="hangman">Hangman</TabsTrigger>
+            <TabsTrigger value="coloring">Coloring</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="tic-tac-toe" className="mt-6">
+            <div className="flex justify-center">
+              <div className="w-full max-w-md">
+                <TicTacToe />
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="memory" className="mt-6">
+            <div className="flex justify-center">
+              <div className="w-full max-w-md">
+                <MemoryCardGame />
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="rock-paper-scissors" className="mt-6">
+            <div className="flex justify-center">
+              <div className="w-full max-w-md">
+                <RockPaperScissors />
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="snake" className="mt-6">
+            <div className="flex justify-center">
+              <div className="w-full max-w-md">
+                <SnakeGame />
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="hangman" className="mt-6">
+            <div className="flex justify-center">
+              <div className="w-full max-w-md">
+                <HangmanGame />
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="coloring" className="mt-6">
+            <div className="flex justify-center">
+              <div className="w-full max-w-md">
+                <ColoringBook />
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
