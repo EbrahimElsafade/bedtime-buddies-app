@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { getImageUrl } from "@/utils/imageUtils";
+import { useTranslation } from "react-i18next";
 
 type StoryListItem = {
   id: string;
@@ -27,6 +28,7 @@ type StoryCategory = {
 };
 
 const Stories = () => {
+  const { t } = useTranslation(['navigation', 'stories', 'misc']);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   
@@ -71,6 +73,12 @@ const Stories = () => {
     }
   });
 
+  // Get featured stories (first 3 stories)
+  const featuredStories = allStories.slice(0, 3);
+  
+  // Get popular stories (next 3 stories after featured)
+  const popularStories = allStories.slice(3, 6);
+
   const filteredStories = allStories.filter((story: StoryListItem) => {
     const matchesSearch = story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          story.description.toLowerCase().includes(searchQuery.toLowerCase());
@@ -101,13 +109,112 @@ const Stories = () => {
     );
   }
 
+  const StoryCard = ({ story }: { story: StoryListItem }) => {
+    const imageUrl = getImageUrl(story.cover_image);
+    console.log(`Story ${story.title} - cover_image:`, story.cover_image, 'final URL:', imageUrl);
+    
+    return (
+      <Link to={`/stories/${story.id}`}>
+        <Card className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow">
+          <div className="aspect-[3/2] relative">
+            {imageUrl ? (
+              <img 
+                src={imageUrl}
+                alt={story.title} 
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  console.log('Image failed to load for story:', story.title, 'URL:', imageUrl);
+                  e.currentTarget.style.display = 'none';
+                }}
+                onLoad={() => {
+                  console.log('Image loaded successfully for story:', story.title);
+                }}
+              />
+            ) : (
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                <span className="text-gray-500">No Image</span>
+              </div>
+            )}
+            <div className="absolute top-2 right-2 text-xs font-medium px-2 py-1 rounded-full bg-white/80 dark:bg-nightsky-light/80">
+              {story.duration} mins
+            </div>
+            {story.is_free ? (
+              <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                FREE
+              </div>
+            ) : (
+              <div className="absolute top-2 left-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                PREMIUM
+              </div>
+            )}
+          </div>
+          <CardHeader className="pb-2">
+            <div className="flex justify-between items-start">
+              <CardTitle className="text-xl">{story.title}</CardTitle>
+              <span className="text-xs px-2 py-1 bg-secondary rounded-full">
+                {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
+              </span>
+            </div>
+            <CardDescription className="line-clamp-2">{story.description}</CardDescription>
+          </CardHeader>
+          <CardContent className="pb-2">
+            <div className="flex flex-wrap gap-1">
+              {story.languages.map(lang => (
+                <span 
+                  key={lang} 
+                  className="text-xs px-2 py-1 bg-secondary/50 rounded-full"
+                >
+                  {lang === 'en' ? 'English' : lang === 'ar-eg' ? 'Arabic (Egyptian)' : 'Arabic (Fos7a)'}
+                </span>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </Link>
+    );
+  };
+
   return (
     <div className="py-12 px-4">
       <div className="container mx-auto">
         <h1 className="text-3xl md:text-4xl font-bubbly mb-6">Discover Stories</h1>
         
+        {/* Featured Stories Section */}
+        {featuredStories.length > 0 && (
+          <section className="mb-12">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl md:text-3xl font-bubbly text-dream-DEFAULT">Featured Stories</h2>
+              <Link to="#all-stories" className="text-dream-DEFAULT hover:text-dream-dark text-sm font-medium flex items-center">
+                View All Stories
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {featuredStories.map((story) => (
+                <StoryCard key={story.id} story={story} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Popular Stories Section */}
+        {popularStories.length > 0 && (
+          <section className="mb-12">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl md:text-3xl font-bubbly text-dream-DEFAULT">Popular Stories</h2>
+              <Link to="#all-stories" className="text-dream-DEFAULT hover:text-dream-dark text-sm font-medium flex items-center">
+                View All Stories
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {popularStories.map((story) => (
+                <StoryCard key={story.id} story={story} />
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Search and Filters */}
-        <div className="mb-8">
+        <div id="all-stories" className="mb-8">
           <div className="relative max-w-md mb-6">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
@@ -141,72 +248,11 @@ const Stories = () => {
           </Tabs>
         </div>
         
-        {/* Story Grid */}
+        {/* All Stories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredStories.map((story: StoryListItem) => {
-            const imageUrl = getImageUrl(story.cover_image);
-            console.log(`Story ${story.title} - cover_image:`, story.cover_image, 'final URL:', imageUrl);
-            
-            return (
-              <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow">
-                  <div className="aspect-[3/2] relative">
-                    {imageUrl ? (
-                      <img 
-                        src={imageUrl}
-                        alt={story.title} 
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          console.log('Image failed to load for story:', story.title, 'URL:', imageUrl);
-                          e.currentTarget.style.display = 'none';
-                        }}
-                        onLoad={() => {
-                          console.log('Image loaded successfully for story:', story.title);
-                        }}
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <span className="text-gray-500">No Image</span>
-                      </div>
-                    )}
-                    <div className="absolute top-2 right-2 text-xs font-medium px-2 py-1 rounded-full bg-white/80 dark:bg-nightsky-light/80">
-                      {story.duration} mins
-                    </div>
-                    {story.is_free ? (
-                      <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                        FREE
-                      </div>
-                    ) : (
-                      <div className="absolute top-2 left-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                        PREMIUM
-                      </div>
-                    )}
-                  </div>
-                  <CardHeader className="pb-2">
-                    <div className="flex justify-between items-start">
-                      <CardTitle className="text-xl">{story.title}</CardTitle>
-                      <span className="text-xs px-2 py-1 bg-secondary rounded-full">
-                        {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
-                      </span>
-                    </div>
-                    <CardDescription className="line-clamp-2">{story.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="pb-2">
-                    <div className="flex flex-wrap gap-1">
-                      {story.languages.map(lang => (
-                        <span 
-                          key={lang} 
-                          className="text-xs px-2 py-1 bg-secondary/50 rounded-full"
-                        >
-                          {lang === 'en' ? 'English' : lang === 'ar-eg' ? 'Arabic (Egyptian)' : 'Arabic (Fos7a)'}
-                        </span>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            );
-          })}
+          {filteredStories.map((story: StoryListItem) => (
+            <StoryCard key={story.id} story={story} />
+          ))}
         </div>
       </div>
     </div>
