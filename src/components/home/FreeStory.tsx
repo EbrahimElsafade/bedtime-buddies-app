@@ -30,7 +30,7 @@ const FreeStory = () => {
         .single();
       
       if (error) throw error;
-      return data?.setting_value as HomePageSettings;
+      return data?.setting_value as unknown as HomePageSettings;
     }
   });
 

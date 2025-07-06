@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -54,7 +53,7 @@ const Appearance = () => {
         .single();
       
       if (error) throw error;
-      return data?.setting_value as HomePageSettings;
+      return data?.setting_value as unknown as HomePageSettings;
     }
   });
 
@@ -86,7 +85,7 @@ const Appearance = () => {
       const { error } = await supabase
         .from("appearance_settings")
         .update({ 
-          setting_value: settings,
+          setting_value: settings as any,
           updated_at: new Date().toISOString()
         })
         .eq("setting_key", "home_page");
