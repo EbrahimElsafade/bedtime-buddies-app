@@ -112,7 +112,13 @@
     "next": "التالي",
     "previous": "السابق",
     "yes": "نعم",
-    "no": "لا"
+    "no": "لا",
+    "back": "رجوع",
+    "continue": "متابعة",
+    "submit": "إرسال",
+    "update": "تحديث",
+    "create": "إنشاء",
+    "confirm": "تأكيد"
   },
   "auth": {
     "login": "تسجيل الدخول",
@@ -209,7 +215,15 @@
     "readStory": "اقرأ القصة",
     "readNow": "اقرأ الآن",
     "premium": "مميز",
-    "startLearning": "ابدأ التعلم"
+    "startLearning": "ابدأ التعلم",
+    "viewAll": "عرض الكل",
+    "exploreStories": "استكشف القصص",
+    "startFreeTrial": "ابدأ التجربة المجانية",
+    "watchDemo": "شاهد العرض التوضيحي",
+    "subscribeNow": "اشترك الآن",
+    "maybelar": "ربما لاحقاً",
+    "goBack": "ارجع",
+    "tryAgain": "حاول مرة أخرى"
   },
   "duration": "دقيقة",
   "subscribe": {

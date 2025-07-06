@@ -112,7 +112,13 @@
     "next": "Next",
     "previous": "Previous",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "back": "Back",
+    "continue": "Continue",
+    "submit": "Submit",
+    "update": "Update",
+    "create": "Create",
+    "confirm": "Confirm"
   },
   "auth": {
     "login": "Login",
@@ -209,7 +215,15 @@
     "readStory": "Read Story",
     "readNow": "Read Now",
     "premium": "Premium",
-    "startLearning": "Start Learning"
+    "startLearning": "Start Learning",
+    "viewAll": "View All",
+    "exploreStories": "Explore Stories",
+    "startFreeTrial": "Start Free Trial",
+    "watchDemo": "Watch Demo",
+    "subscribeNow": "Subscribe Now",
+    "maybelater": "Maybe Later",
+    "goBack": "Go Back",
+    "tryAgain": "Try Again"
   },
   "duration": "min",
   "subscribe": {

@@ -112,7 +112,13 @@
     "next": "Suivant",
     "previous": "Précédent",
     "yes": "Oui",
-    "no": "Non"
+    "no": "Non",
+    "back": "Retour",
+    "continue": "Continuer",
+    "submit": "Soumettre",
+    "update": "Mettre à jour",
+    "create": "Créer",
+    "confirm": "Confirmer"
   },
   "auth": {
     "login": "Connexion",
@@ -209,7 +215,15 @@
     "readStory": "Lire l'Histoire",
     "readNow": "Lire Maintenant",
     "premium": "Premium",
-    "startLearning": "Commencer l'Apprentissage"
+    "startLearning": "Commencer l'Apprentissage",
+    "viewAll": "Voir Tout",
+    "exploreStories": "Explorer les Histoires",
+    "startFreeTrial": "Commencer l'Essai Gratuit",
+    "watchDemo": "Voir la Démo",
+    "subscribeNow": "S'abonner Maintenant",
+    "maybeLater": "Plus Tard",
+    "goBack": "Retourner",
+    "tryAgain": "Réessayer"
   },
   "duration": "min",
   "subscribe": {
