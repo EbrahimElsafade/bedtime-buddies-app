@@ -14,10 +14,13 @@
     "title": "Magical Stories for Sweet Dreams",
     "subtitle": "Interactive bedtime stories that spark imagination and create peaceful sleep for your little ones",
     "cta": "Start Free Trial",
-    "watchDemo": "Watch Demo"
+    "watchDemo": "Watch Demo",
+    "exploreButton": "Explore Stories",
+    "signUpButton": "Start Free Trial"
   },
   "features": {
     "title": "Why Choose Our Stories?",
+    "subtitle": "Discover the magic of our carefully crafted bedtime stories",
     "interactive": {
       "title": "Interactive Stories",
       "description": "Engaging narratives that respond to your child's choices"
@@ -33,6 +36,18 @@
     "peaceful": {
       "title": "Peaceful Sleep",
       "description": "Specially designed to help children relax and fall asleep"
+    },
+    "soothing": {
+      "title": "Soothing Stories",
+      "desc": "Carefully designed to help your child relax and drift into peaceful sleep"
+    },
+    "languages": {
+      "title": "Multiple Languages",
+      "desc": "Available in Arabic, English, and French to suit your family's needs"
+    },
+    "games": {
+      "title": "Interactive Games",
+      "desc": "Fun educational games that complement our stories"
     }
   },
   "stories": {
@@ -54,7 +69,9 @@
     "featured": "Featured Courses",
     "viewAll": "View All Courses",
     "startCourse": "Start Course",
-    "lessons": "{{count}} lessons"
+    "lessons": "{{count}} lessons",
+    "title": "Featured Courses",
+    "years": "years"
   },
   "subscription": {
     "title": "Subscribe for Premium Content",
@@ -161,6 +178,44 @@
     "languageSelection": "Select language",
     "toggleTheme": "Toggle theme",
     "menu": "Menu"
+  },
+  "popup": {
+    "special": "Special Offer!",
+    "limitedTime": "Limited Time Only",
+    "unlock": "Unlock Premium Features",
+    "feature1": "Unlimited access to all stories",
+    "feature2": "Ad-free experience",
+    "feature3": "Offline downloads",
+    "month": "month",
+    "off": "OFF",
+    "subscribe": "Subscribe Now",
+    "later": "Maybe Later"
+  },
+  "free": {
+    "story": "Free Story of the Day",
+    "viewAll": "View All Stories",
+    "tag": "FREE"
+  },
+  "popular": {
+    "title": "Popular Stories"
+  },
+  "entertainment": {
+    "title": "Entertainment Stories"
+  },
+  "premium": {
+    "tag": "PREMIUM"
+  },
+  "button": {
+    "readStory": "Read Story",
+    "readNow": "Read Now",
+    "premium": "Premium",
+    "startLearning": "Start Learning"
+  },
+  "duration": "min",
+  "subscribe": {
+    "title": "Subscribe for Premium Content", 
+    "subtitle": "Unlock all stories and features with our premium subscription",
+    "button": "Subscribe Now"
   },
   "admin": {
     "storyOptions": {

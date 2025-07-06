@@ -14,10 +14,13 @@
     "title": "Histoires Magiques pour des Rêves Paisibles",
     "subtitle": "Histoires interactives du coucher qui éveillent l'imagination et créent un sommeil paisible pour vos petits",
     "cta": "Commencer l'Essai Gratuit",
-    "watchDemo": "Voir la Démo"
+    "watchDemo": "Voir la Démo",
+    "exploreButton": "Explorer les Histoires",
+    "signUpButton": "Commencer l'Essai Gratuit"
   },
   "features": {
     "title": "Pourquoi Choisir Nos Histoires ?",
+    "subtitle": "Découvrez la magie de nos histoires du coucher soigneusement créées",
     "interactive": {
       "title": "Histoires Interactives",
       "description": "Récits captivants qui répondent aux choix de votre enfant"
@@ -33,6 +36,18 @@
     "peaceful": {
       "title": "Sommeil Paisible",
       "description": "Spécialement conçues pour aider les enfants à se détendre et s'endormir"
+    },
+    "soothing": {
+      "title": "Histoires Apaisantes",
+      "desc": "Soigneusement conçues pour aider votre enfant à se détendre et s'endormir paisiblement"
+    },
+    "languages": {
+      "title": "Plusieurs Langues",
+      "desc": "Disponibles en arabe, anglais et français pour répondre aux besoins de votre famille"
+    },
+    "games": {
+      "title": "Jeux Interactifs",
+      "desc": "Jeux éducatifs amusants qui complètent nos histoires"
     }
   },
   "stories": {
@@ -54,7 +69,9 @@
     "featured": "Cours en Vedette",
     "viewAll": "Voir Tous les Cours",
     "startCourse": "Commencer le Cours",
-    "lessons": "{{count}} leçons"
+    "lessons": "{{count}} leçons",
+    "title": "Cours en Vedette",
+    "years": "ans"
   },
   "subscription": {
     "title": "S'abonner pour le Contenu Premium",
@@ -161,6 +178,44 @@
     "languageSelection": "Sélectionner la langue",
     "toggleTheme": "Basculer le thème",
     "menu": "Menu"
+  },
+  "popup": {
+    "special": "Offre Spéciale !",
+    "limitedTime": "Offre Limitée",
+    "unlock": "Débloquez les Fonctionnalités Premium",
+    "feature1": "Accès illimité à toutes les histoires",
+    "feature2": "Expérience sans publicité",
+    "feature3": "Téléchargements hors ligne",
+    "month": "mois",
+    "off": "RÉDUCTION",
+    "subscribe": "S'abonner Maintenant",
+    "later": "Plus Tard"
+  },
+  "free": {
+    "story": "Histoire Gratuite du Jour",
+    "viewAll": "Voir Toutes les Histoires",
+    "tag": "GRATUIT"
+  },
+  "popular": {
+    "title": "Histoires Populaires"
+  },
+  "entertainment": {
+    "title": "Histoires de Divertissement"
+  },
+  "premium": {
+    "tag": "PREMIUM"
+  },
+  "button": {
+    "readStory": "Lire l'Histoire",
+    "readNow": "Lire Maintenant",
+    "premium": "Premium",
+    "startLearning": "Commencer l'Apprentissage"
+  },
+  "duration": "min",
+  "subscribe": {
+    "title": "S'abonner pour le Contenu Premium",
+    "subtitle": "Débloquez toutes les histoires et fonctionnalités avec notre abonnement premium",
+    "button": "S'abonner Maintenant"
   },
   "admin": {
     "storyOptions": {
