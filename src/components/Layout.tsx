@@ -5,8 +5,18 @@ import { Moon, Sun, Menu, X, Home, Book, BookOpen, User, Layers } from "lucide-r
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { cn } from "@/lib/utils";
+
+interface NavigationSettings {
+  home: boolean;
+  stories: boolean;
+  courses: boolean;
+  games: boolean;
+  profile: boolean;
+}
 
 const Layout = () => {
   const { isAuthenticated, user, profile, logout } = useAuth();
@@ -14,6 +24,38 @@ const Layout = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const location = useLocation();
+
+  // Fetch navigation settings
+  const { data: navigationSettings } = useQuery({
+    queryKey: ["appearance-settings", "navigation"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("appearance_settings")
+        .select("setting_value")
+        .eq("setting_key", "navigation")
+        .maybeSingle();
+      
+      if (error) {
+        console.error("Error fetching navigation settings:", error);
+        // Return default settings if error
+        return {
+          home: true,
+          stories: true,
+          courses: true,
+          games: true,
+          profile: true,
+        };
+      }
+      
+      return data?.setting_value as unknown as NavigationSettings || {
+        home: true,
+        stories: true,
+        courses: true,
+        games: true,
+        profile: true,
+      };
+    }
+  });
 
   // Check for system preferred color scheme on initial load
   useEffect(() => {
@@ -36,13 +78,19 @@ const Layout = () => {
     return location.pathname === path;
   };
 
-  const navItems = [
-    { name: t('navigation:home'), path: '/', icon: Home },
-    { name: t('navigation:stories'), path: '/stories', icon: Book },
-    { name: t('nav.courses'), path: '/courses', icon: Layers },
-    { name: t('navigation:games'), path: '/games', icon: BookOpen },
-    { name: t('navigation:profile'), path: isAuthenticated ? '/profile' : '/login', icon: User }
+  const allNavItems = [
+    { name: t('navigation:home'), path: '/', icon: Home, key: 'home' },
+    { name: t('navigation:stories'), path: '/stories', icon: Book, key: 'stories' },
+    { name: t('nav.courses'), path: '/courses', icon: Layers, key: 'courses' },
+    { name: t('navigation:games'), path: '/games', icon: BookOpen, key: 'games' },
+    { name: t('navigation:profile'), path: isAuthenticated ? '/profile' : '/login', icon: User, key: 'profile' }
   ];
+
+  // Filter nav items based on navigation settings
+  const navItems = allNavItems.filter(item => {
+    if (!navigationSettings) return true; // Show all if settings not loaded yet
+    return navigationSettings[item.key as keyof NavigationSettings] !== false;
+  });
 
   // Handle scrolling when mobile menu is open
   useEffect(() => {

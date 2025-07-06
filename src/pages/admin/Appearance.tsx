@@ -33,6 +33,14 @@ interface HomePageSettings {
   subscribeBanner: boolean;
 }
 
+interface NavigationSettings {
+  home: boolean;
+  stories: boolean;
+  courses: boolean;
+  games: boolean;
+  profile: boolean;
+}
+
 const Appearance = () => {
   const queryClient = useQueryClient();
   
@@ -46,6 +54,15 @@ const Appearance = () => {
     specialStory: true,
     features: true,
     subscribeBanner: true,
+  });
+
+  // State for navigation settings
+  const [navigationSettings, setNavigationSettings] = useState<NavigationSettings>({
+    home: true,
+    stories: true,
+    courses: true,
+    games: true,
+    profile: true,
   });
 
   // Fetch current appearance settings
@@ -63,12 +80,33 @@ const Appearance = () => {
     }
   });
 
+  // Fetch navigation settings
+  const { data: navSettings, isLoading: navSettingsLoading } = useQuery({
+    queryKey: ["appearance-settings", "navigation"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("appearance_settings")
+        .select("setting_value")
+        .eq("setting_key", "navigation")
+        .maybeSingle();
+      
+      if (error) throw error;
+      return data?.setting_value as unknown as NavigationSettings;
+    }
+  });
+
   // Load settings when data is fetched
   useEffect(() => {
     if (appearanceSettings) {
       setHomePageSections(appearanceSettings);
     }
   }, [appearanceSettings]);
+
+  useEffect(() => {
+    if (navSettings) {
+      setNavigationSettings(navSettings);
+    }
+  }, [navSettings]);
 
   // Fetch published stories for the free story select
   const { data: stories, isLoading: storiesLoading } = useQuery({
@@ -110,6 +148,31 @@ const Appearance = () => {
     }
   });
 
+  // Mutation to save navigation settings
+  const saveNavigationMutation = useMutation({
+    mutationFn: async (settings: NavigationSettings) => {
+      const { error } = await supabase
+        .from("appearance_settings")
+        .upsert({ 
+          setting_key: "navigation",
+          setting_value: settings as any,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: "setting_key"
+        });
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Navigation settings saved successfully!");
+      queryClient.invalidateQueries({ queryKey: ["appearance-settings"] });
+    },
+    onError: (error) => {
+      console.error("Error saving navigation settings:", error);
+      toast.error("Failed to save navigation settings. Please try again.");
+    }
+  });
+
   const handleFreeStoryEnabledChange = (checked: boolean) => {
     const updatedSections = {
       ...homePageSections,
@@ -140,8 +203,19 @@ const Appearance = () => {
     }));
   };
 
+  const handleNavigationSectionChange = (section: keyof NavigationSettings, checked: boolean) => {
+    setNavigationSettings(prev => ({
+      ...prev,
+      [section]: checked
+    }));
+  };
+
   const handleSaveHomePageSettings = () => {
     saveSettingsMutation.mutate(homePageSections);
+  };
+
+  const handleSaveNavigationSettings = () => {
+    saveNavigationMutation.mutate(navigationSettings);
   };
 
   if (settingsLoading) {
@@ -183,16 +257,85 @@ const Appearance = () => {
         <TabsContent value="general">
           <Card>
             <CardHeader>
-              <CardTitle>General Appearance</CardTitle>
+              <CardTitle>Navigation Settings</CardTitle>
               <CardDescription>
-                Configure general appearance settings
+                Configure which navigation links appear in the main menu
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <p className="text-center py-8 text-muted-foreground">
-                Coming soon...
-              </p>
+            <CardContent className="space-y-6">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="navHome"
+                  checked={navigationSettings.home}
+                  onCheckedChange={(checked) => 
+                    handleNavigationSectionChange('home', checked as boolean)
+                  }
+                />
+                <Label htmlFor="navHome" className="text-base font-medium">
+                  Home
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="navStories"
+                  checked={navigationSettings.stories}
+                  onCheckedChange={(checked) => 
+                    handleNavigationSectionChange('stories', checked as boolean)
+                  }
+                />
+                <Label htmlFor="navStories" className="text-base font-medium">
+                  Stories
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="navCourses"
+                  checked={navigationSettings.courses}
+                  onCheckedChange={(checked) => 
+                    handleNavigationSectionChange('courses', checked as boolean)
+                  }
+                />
+                <Label htmlFor="navCourses" className="text-base font-medium">
+                  Courses
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="navGames"
+                  checked={navigationSettings.games}
+                  onCheckedChange={(checked) => 
+                    handleNavigationSectionChange('games', checked as boolean)
+                  }
+                />
+                <Label htmlFor="navGames" className="text-base font-medium">
+                  Games
+                </Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="navProfile"
+                  checked={navigationSettings.profile}
+                  onCheckedChange={(checked) => 
+                    handleNavigationSectionChange('profile', checked as boolean)
+                  }
+                />
+                <Label htmlFor="navProfile" className="text-base font-medium">
+                  Profile
+                </Label>
+              </div>
             </CardContent>
+            <CardFooter>
+              <Button 
+                onClick={handleSaveNavigationSettings}
+                disabled={saveNavigationMutation.isPending}
+              >
+                {saveNavigationMutation.isPending ? "Saving..." : "Save Navigation Settings"}
+              </Button>
+            </CardFooter>
           </Card>
         </TabsContent>
 
