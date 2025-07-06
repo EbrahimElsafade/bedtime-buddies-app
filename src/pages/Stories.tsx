@@ -123,11 +123,11 @@ const Stories = () => {
           
           <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
             <TabsList className="mb-4 w-fit h-auto flex justify-start">
-              <TabsTrigger className="min-w-16" value="all">
+              <TabsTrigger className="min-w-20" value="all">
                 All Stories
               </TabsTrigger>
               {categories.map((category) => (
-                <TabsTrigger className="min-w-16" key={category.id} value={category.name}>
+                <TabsTrigger className="min-w-20" key={category.id} value={category.name}>
                   {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
                 </TabsTrigger>
               ))}
