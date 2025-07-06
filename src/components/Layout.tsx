@@ -78,7 +78,7 @@ const Layout = () => {
                 className={cn(
                   "px-4 py-2 rounded-full text-sm font-medium transition-colors",
                   isActive(item.path)
-                    ? "bg-dream-DEFAULT dark:text-white shadow-md"
+                    ? "bg-dream-DEFAULT text-black dark:text-white shadow-md"
                     : "text-dream-DEFAULT hover:bg-dream-DEFAULT/10 dark:text-white dark:hover:bg-white/10"
                 )}
               >
