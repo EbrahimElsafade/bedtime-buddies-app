@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 
 const PricingPopup = () => {
   const { isAuthenticated } = useAuth();
-  const { t } = useTranslation();
+  const { t } = useTranslation('misc');
   const [isOpen, setIsOpen] = useState(false);
   
   useEffect(() => {
