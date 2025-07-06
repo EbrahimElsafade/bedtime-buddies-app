@@ -4,13 +4,58 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle, CardDescription } from "@/components/ui/card";
 import { useTranslation } from "react-i18next";
-import { getFreeStories } from "@/data/stories";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { getImageUrl } from "@/utils/imageUtils";
+
+interface HomePageSettings {
+  freeStory: string;
+  storiesSection: boolean;
+  topRated: boolean;
+  courses: boolean;
+  specialStory: boolean;
+}
 
 const FreeStory = () => {
   const { t } = useTranslation(['misc', 'stories']);
-  const freeStory = getFreeStories()[0];
 
-  if (!freeStory) return null;
+  // Fetch home page settings to get the selected free story
+  const { data: settings } = useQuery({
+    queryKey: ["appearance-settings", "home_page"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("appearance_settings")
+        .select("setting_value")
+        .eq("setting_key", "home_page")
+        .single();
+      
+      if (error) throw error;
+      return data?.setting_value as HomePageSettings;
+    }
+  });
+
+  // Fetch the selected free story details
+  const { data: freeStory, isLoading } = useQuery({
+    queryKey: ["free-story", settings?.freeStory],
+    queryFn: async () => {
+      if (!settings?.freeStory) return null;
+      
+      const { data, error } = await supabase
+        .from("stories")
+        .select("*")
+        .eq("id", settings.freeStory)
+        .eq("is_published", true)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!settings?.freeStory
+  });
+
+  if (isLoading || !freeStory) return null;
+
+  const coverImage = freeStory.cover_image ? getImageUrl(freeStory.cover_image) : '/placeholder.svg';
 
   return (
     <section className="py-12 px-4 bg-gradient-to-b from-transparent to-dream-light/10">
@@ -26,7 +71,7 @@ const FreeStory = () => {
           <div className="md:flex">
             <div className="md:w-1/3 aspect-[3/2] md:aspect-auto relative">
               <img 
-                src={freeStory.coverImage} 
+                src={coverImage} 
                 alt={freeStory.title} 
                 className="w-full h-full object-cover"
               />
@@ -39,7 +84,7 @@ const FreeStory = () => {
               <CardDescription className="mb-4 text-dream-DEFAULT dark:text-foreground">{freeStory.description}</CardDescription>
               <div className="flex items-center text-sm text-dream-DEFAULT dark:text-foreground mb-6">
                 <span className="mr-4">{freeStory.duration} {t('stories:duration')}</span>
-                <span>{freeStory.languages.map(lang => {
+                <span>{freeStory.languages.map((lang: string) => {
                   if (lang === 'en') return 'English';
                   if (lang === 'ar-eg') return 'Arabic (Egyptian)';
                   if (lang === 'ar-fos7a') return 'Arabic (Fos7a)';
@@ -47,7 +92,7 @@ const FreeStory = () => {
                 }).join(', ')}</span>
               </div>
               <Link to={`/stories/${freeStory.id}`}>
-                <Button className="bg-dream-DEFAULT hover:bg-dream-dark text-black dark:text-white dark:text-white">{t('misc:button.readStory')}</Button>
+                <Button className="bg-dream-DEFAULT hover:bg-dream-dark text-black dark:text-white">{t('misc:button.readStory')}</Button>
               </Link>
             </div>
           </div>

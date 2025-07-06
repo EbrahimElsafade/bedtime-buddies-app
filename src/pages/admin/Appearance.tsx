@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
@@ -23,15 +23,47 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+interface HomePageSettings {
+  freeStory: string;
+  storiesSection: boolean;
+  topRated: boolean;
+  courses: boolean;
+  specialStory: boolean;
+}
+
 const Appearance = () => {
+  const queryClient = useQueryClient();
+  
   // State for home page sections
-  const [homePageSections, setHomePageSections] = useState({
+  const [homePageSections, setHomePageSections] = useState<HomePageSettings>({
     freeStory: "",
     storiesSection: true,
     topRated: true,
     courses: true,
     specialStory: true,
   });
+
+  // Fetch current appearance settings
+  const { data: appearanceSettings, isLoading: settingsLoading } = useQuery({
+    queryKey: ["appearance-settings", "home_page"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("appearance_settings")
+        .select("setting_value")
+        .eq("setting_key", "home_page")
+        .single();
+      
+      if (error) throw error;
+      return data?.setting_value as HomePageSettings;
+    }
+  });
+
+  // Load settings when data is fetched
+  useEffect(() => {
+    if (appearanceSettings) {
+      setHomePageSections(appearanceSettings);
+    }
+  }, [appearanceSettings]);
 
   // Fetch published stories for the free story select
   const { data: stories, isLoading: storiesLoading } = useQuery({
@@ -48,6 +80,29 @@ const Appearance = () => {
     }
   });
 
+  // Mutation to save settings
+  const saveSettingsMutation = useMutation({
+    mutationFn: async (settings: HomePageSettings) => {
+      const { error } = await supabase
+        .from("appearance_settings")
+        .update({ 
+          setting_value: settings,
+          updated_at: new Date().toISOString()
+        })
+        .eq("setting_key", "home_page");
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Home page settings saved successfully!");
+      queryClient.invalidateQueries({ queryKey: ["appearance-settings"] });
+    },
+    onError: (error) => {
+      console.error("Error saving settings:", error);
+      toast.error("Failed to save settings. Please try again.");
+    }
+  });
+
   const handleFreeStoryChange = (storyId: string) => {
     setHomePageSections(prev => ({
       ...prev,
@@ -55,7 +110,7 @@ const Appearance = () => {
     }));
   };
 
-  const handleHomePageSectionChange = (section: keyof typeof homePageSections, checked: boolean) => {
+  const handleHomePageSectionChange = (section: keyof HomePageSettings, checked: boolean) => {
     if (section === 'freeStory') return; // Handle free story separately
     
     setHomePageSections(prev => ({
@@ -65,9 +120,25 @@ const Appearance = () => {
   };
 
   const handleSaveHomePageSettings = () => {
-    // In a real app, this would save to the database
-    toast.success("Home page settings saved successfully!");
+    saveSettingsMutation.mutate(homePageSections);
   };
+
+  if (settingsLoading) {
+    return (
+      <div>
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold">Appearance</h1>
+          <p className="text-muted-foreground">
+            Customize the appearance and layout of your application pages
+          </p>
+        </header>
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded mb-4"></div>
+          <div className="h-6 bg-gray-200 rounded mb-6 w-2/3"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -191,8 +262,11 @@ const Appearance = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={handleSaveHomePageSettings}>
-                Save Home Page Settings
+              <Button 
+                onClick={handleSaveHomePageSettings}
+                disabled={saveSettingsMutation.isPending}
+              >
+                {saveSettingsMutation.isPending ? "Saving..." : "Save Home Page Settings"}
               </Button>
             </CardFooter>
           </Card>
