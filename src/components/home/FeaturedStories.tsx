@@ -44,10 +44,11 @@ const FeaturedStories = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
-              <Card key={i} className="story-card h-[400px] overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm animate-pulse">
+              <Card key={i} className="story-card h-[500px] overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm animate-pulse">
                 <div className="aspect-[3/2] bg-gray-200"></div>
                 <CardHeader className="pb-2">
                   <div className="h-6 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded mb-1"></div>
                   <div className="h-4 bg-gray-200 rounded"></div>
                 </CardHeader>
               </Card>
@@ -83,7 +84,7 @@ const FeaturedStories = () => {
             
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card h-[400px] overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow flex flex-col">
+                <Card className="story-card h-[500px] overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow flex flex-col">
                   <div className="aspect-[3/2] relative">
                     {imageUrl ? (
                       <img 
@@ -112,13 +113,13 @@ const FeaturedStories = () => {
                   </div>
                   <div className="flex flex-col flex-1">
                     <CardHeader className="pb-2 flex-1">
-                      <CardTitle className="text-xl text-dream-DEFAULT line-clamp-2">{story.title}</CardTitle>
-                      <CardDescription className="line-clamp-2 text-dream-DEFAULT dark:text-foreground">
+                      <CardTitle className="text-xl text-dream-DEFAULT line-clamp-2 mb-2">{story.title}</CardTitle>
+                      <CardDescription className="line-clamp-3 text-dream-DEFAULT dark:text-foreground text-sm leading-relaxed">
                         {story.description}
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="pb-4 mt-auto">
-                      <div className="flex flex-wrap gap-2 mb-2">
+                      <div className="flex flex-wrap gap-2 mb-3">
                         <Badge variant="secondary" className="bg-dream-light/30 text-dream-DEFAULT">
                           {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
                         </Badge>
