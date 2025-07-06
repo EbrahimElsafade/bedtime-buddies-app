@@ -75,6 +75,11 @@
     "terms": "Conditions d'Utilisation",
     "rights": "Tous droits réservés"
   },
+  "layout": {
+    "appName": "HistoiresDeRêve",
+    "subscribe": "S'abonner",
+    "copyright": "Tous droits réservés"
+  },
   "common": {
     "loading": "Chargement...",
     "error": "Une erreur s'est produite",
@@ -103,7 +108,8 @@
     "noAccount": "Vous n'avez pas de compte ?",
     "hasAccount": "Vous avez déjà un compte ?",
     "signUp": "S'inscrire",
-    "signIn": "Se connecter"
+    "signIn": "Se connecter",
+    "profile": "Profil"
   },
   "profile": {
     "title": "Profil",
@@ -152,7 +158,9 @@
     "french": "Français"
   },
   "accessibility": {
-    "languageSelection": "Sélectionner la langue"
+    "languageSelection": "Sélectionner la langue",
+    "toggleTheme": "Basculer le thème",
+    "menu": "Menu"
   },
   "admin": {
     "storyOptions": {

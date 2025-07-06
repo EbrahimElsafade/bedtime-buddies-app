@@ -75,6 +75,11 @@
     "terms": "شروط الخدمة",
     "rights": "جميع الحقوق محفوظة"
   },
+  "layout": {
+    "appName": "قصص الأحلام",
+    "subscribe": "اشترك",
+    "copyright": "جميع الحقوق محفوظة"
+  },
   "common": {
     "loading": "جاري التحميل...",
     "error": "حدث خطأ ما",
@@ -103,7 +108,8 @@
     "noAccount": "ليس لديك حساب؟",
     "hasAccount": "لديك حساب بالفعل؟",
     "signUp": "إنشاء حساب",
-    "signIn": "تسجيل الدخول"
+    "signIn": "تسجيل الدخول",
+    "profile": "الملف الشخصي"
   },
   "profile": {
     "title": "الملف الشخصي",
@@ -152,7 +158,9 @@
     "french": "Français"
   },
   "accessibility": {
-    "languageSelection": "اختيار اللغة"
+    "languageSelection": "اختيار اللغة",
+    "toggleTheme": "تبديل السمة",
+    "menu": "القائمة"
   },
   "admin": {
     "storyOptions": {
