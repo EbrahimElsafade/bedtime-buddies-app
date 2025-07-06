@@ -7,28 +7,28 @@ import { useTranslation } from "react-i18next";
 
 const Hero = () => {
   const { isAuthenticated } = useAuth();
-  const { t } = useTranslation();
+  const { t } = useTranslation('hero');
   
   return (
     <section className="py-12 md:py-20 px-4 relative overflow-hidden">
       <div className="container mx-auto relative z-10">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-bubbly mb-4 text-dream-DEFAULT">
-            {t('hero.title')}
+            {t('title')}
           </h1>
           <p className="text-lg md:text-xl mb-8 text-dream-DEFAULT dark:text-foreground">
-            {t('hero.subtitle')}
+            {t('subtitle')}
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link to="/stories">
               <Button size="lg" className="rounded-full bg-dream-DEFAULT hover:bg-dream-dark hover:text-white text-black dark:text-white">
-                {t('hero.exploreButton')} <ArrowRight className="rtl:rotate-180 ms-2 h-4 w-4" />
+                {t('exploreButton')} <ArrowRight className="rtl:rotate-180 ms-2 h-4 w-4" />
               </Button>
             </Link>
             {!isAuthenticated && (
               <Link to="/register">
                 <Button size="lg" variant="outline" className="rounded-full border-dream-light dark:text-dream-DEFAULT">
-                  {t('hero.signUpButton')}
+                  {t('signUpButton')}
                 </Button>
               </Link>
             )}

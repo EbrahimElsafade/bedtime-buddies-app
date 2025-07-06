@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 
 const SubscribeBanner = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('misc');
 
   return (
     <section className="py-12 px-4 bg-gradient-to-r from-dream-DEFAULT to-dream-dark text-black dark:text-white">

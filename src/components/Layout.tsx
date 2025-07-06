@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 const Layout = () => {
   const { isAuthenticated, user, profile, logout } = useAuth();
-  const { t } = useTranslation();
+  const { t } = useTranslation(['navigation', 'auth', 'misc']);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const location = useLocation();
@@ -37,10 +37,10 @@ const Layout = () => {
   };
 
   const navItems = [
-    { name: t('nav.home'), path: '/', icon: Home },
-    { name: t('nav.stories'), path: '/stories', icon: Book },
-    { name: t('nav.games'), path: '/games', icon: BookOpen },
-    { name: t('nav.profile'), path: isAuthenticated ? '/profile' : '/login', icon: User }
+    { name: t('navigation:home'), path: '/', icon: Home },
+    { name: t('navigation:stories'), path: '/stories', icon: Book },
+    { name: t('navigation:games'), path: '/games', icon: BookOpen },
+    { name: t('navigation:profile'), path: isAuthenticated ? '/profile' : '/login', icon: User }
   ];
 
   // Handle scrolling when mobile menu is open
@@ -65,7 +65,7 @@ const Layout = () => {
             <div className="w-10 h-10 rounded-full bg-dream-DEFAULT flex items-center justify-center mr-2">
               <Moon className="h-6 w-6 text-black dark:text-white animate-float" />
             </div>
-            <h1 className="text-xl font-bubbly text-dream-DEFAULT">{t('layout.appName')}</h1>
+            <h1 className="text-xl font-bubbly text-dream-DEFAULT">{t('misc:layout.appName')}</h1>
           </Link>
           
           {/* Desktop Navigation */}
@@ -95,7 +95,7 @@ const Layout = () => {
               size="icon"
               onClick={toggleDarkMode}
               className="rounded-full"
-              aria-label={t('accessibility.toggleTheme')}
+              aria-label={t('misc:accessibility.toggleTheme')}
             >
               {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
@@ -104,23 +104,23 @@ const Layout = () => {
               <div className="hidden md:flex items-center space-x-2">
                 <Link to="/profile">
                   <Button variant="ghost" size="sm" className="text-dream-DEFAULT  dark:text-white">
-                    {profile?.parent_name || t('auth.profile')}
+                    {profile?.parent_name || t('auth:profile')}
                   </Button>
                 </Link>
                 <Button variant="ghost" size="sm" onClick={logout} className="text-dream-DEFAULT  dark:text-white">
-                  {t('auth.logout')}
+                  {t('auth:logout')}
                 </Button>
               </div>
             ) : (
               <div className="hidden md:flex items-center space-x-2">
                 <Link to="/login">
                   <Button variant="ghost" size="sm" className="text-dream-DEFAULT  dark:text-white">
-                    {t('auth.login')}
+                    {t('auth:login')}
                   </Button>
                 </Link>
                 <Link to="/register">
                   <Button variant="default" size="sm">
-                    {t('auth.signUp')}
+                    {t('auth:signUp')}
                   </Button>
                 </Link>
               </div>
@@ -132,7 +132,7 @@ const Layout = () => {
               size="icon"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden rounded-full"
-              aria-label={t('accessibility.menu')}
+              aria-label={t('misc:accessibility.menu')}
             >
               {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </Button>
@@ -166,7 +166,7 @@ const Layout = () => {
                     className="px-4 py-3 rounded-md text-lg font-medium text-center text-dream-DEFAULT hover:bg-dream-DEFAULT/10 dark:text-white dark:hover:bg-white/10"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {t('auth.profile')}
+                    {t('auth:profile')}
                   </Link>
                   <button
                     className="px-4 py-3 rounded-md text-lg font-medium text-center text-dream-DEFAULT hover:bg-dream-DEFAULT/10 dark:text-white dark:hover:bg-white/10 w-full"
@@ -175,7 +175,7 @@ const Layout = () => {
                       setIsMenuOpen(false);
                     }}
                   >
-                    {t('auth.logout')}
+                    {t('auth:logout')}
                   </button>
                 </>
               ) : (
@@ -185,14 +185,14 @@ const Layout = () => {
                     className="px-4 py-3 rounded-md text-lg font-medium text-center text-dream-DEFAULT hover:bg-dream-DEFAULT/10 dark:text-white dark:hover:bg-white/10"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {t('auth.login')}
+                    {t('auth:login')}
                   </Link>
                   <Link
                     to="/register"
                     className="px-4 py-3 rounded-md text-center text-lg font-medium bg-dream-DEFAULT text-white"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {t('auth.signUp')}
+                    {t('auth:signUp')}
                   </Link>
                 </>
               )}
@@ -202,7 +202,7 @@ const Layout = () => {
                 className="px-4 py-3 rounded-md text-center text-lg font-medium text-moon-DEFAULT font-bold hover:bg-secondary/50"
                 onClick={() => setIsMenuOpen(false)}
               >
-                ✨ {t('layout.subscribe')}
+                ✨ {t('misc:layout.subscribe')}
               </Link>
             </nav>
           </div>
@@ -231,11 +231,11 @@ const Layout = () => {
               to="/subscription"
               className="text-sm text-moon-DEFAULT hover:text-moon-dark"
             >
-              {t('layout.subscribe')}
+              {t('misc:layout.subscribe')}
             </Link>
           </div>
           <p className="text-xs text-dream-DEFAULT dark:text-muted-foreground">
-            © {new Date().getFullYear()} {t('layout.appName')}. {t('layout.copyright')}
+            © {new Date().getFullYear()} {t('misc:layout.appName')}. {t('misc:layout.copyright')}
           </p>
         </div>
       </footer>

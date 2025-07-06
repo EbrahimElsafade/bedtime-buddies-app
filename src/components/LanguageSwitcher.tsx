@@ -6,7 +6,7 @@ import { GlobeIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const LanguageSwitcher = () => {
-  const { i18n, t } = useTranslation();
+  const { i18n, t } = useTranslation('misc');
   const [open, setOpen] = useState(false);
 
   const changeLanguage = (language: string) => {
