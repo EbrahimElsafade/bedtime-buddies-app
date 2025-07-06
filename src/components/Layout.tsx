@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
-import { Moon, Sun, Menu, X, Home, Book, BookOpen, User, Presentation } from "lucide-react";
+import { Moon, Sun, Menu, X, Home, Book, BookOpen, User, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
@@ -39,7 +39,7 @@ const Layout = () => {
   const navItems = [
     { name: t('navigation:home'), path: '/', icon: Home },
     { name: t('navigation:stories'), path: '/stories', icon: Book },
-    { name: t('navigation:courses'), path: '/courses', icon: Presentation },
+    { name: t('nav.courses'), path: '/courses', icon: Layers },
     { name: t('navigation:games'), path: '/games', icon: BookOpen },
     { name: t('navigation:profile'), path: isAuthenticated ? '/profile' : '/login', icon: User }
   ];
