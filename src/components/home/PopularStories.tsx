@@ -100,11 +100,11 @@ const PopularStories = () => {
                       </div>
                     )}
                     {story.is_free ? (
-                      <div className="absolute top-2 start-2 bg-dream-DEFAULT text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-md backdrop-blur-sm">
+                      <div className="absolute top-2 start-2 bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white">
                         {t('misc:free.tag')}
                       </div>
                     ) : (
-                      <div className="absolute top-2 start-2 bg-moon-DEFAULT text-white text-xs font-medium px-3 py-1.5 rounded-full shadow-md backdrop-blur-sm">
+                      <div className="absolute top-2 start-2 bg-amber-500 text-black text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white">
                         {t('misc:premium.tag')}
                       </div>
                     )}
