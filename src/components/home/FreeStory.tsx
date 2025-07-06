@@ -71,7 +71,7 @@ const FreeStory = () => {
         
         <Card className="story-card overflow-hidden border-2 border-moon-light/50 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
           <div className="md:flex">
-            <div className="md:w-1/3 h-40 md:h-40 relative">
+            <div className="md:w-1/3 h-72 md:h-72 relative">
               <img 
                 src={coverImage} 
                 alt={freeStory.title} 
