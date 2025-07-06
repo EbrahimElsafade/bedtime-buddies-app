@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Card, CardTitle, CardDescription } from "@/components/ui/card";
@@ -77,9 +76,6 @@ const FreeStory = () => {
                   alt={freeStory.title} 
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                  {t('misc:free.tag')}
-                </div>
               </div>
               <div className="md:w-2/3 p-6">
                 <CardTitle className="text-xl md:text-2xl mb-2 text-dream-DEFAULT">{freeStory.title}</CardTitle>

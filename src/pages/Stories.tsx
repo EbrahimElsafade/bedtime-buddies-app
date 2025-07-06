@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
@@ -172,11 +171,11 @@ const Stories = () => {
                       </div>
                     )}
                     {story.is_free ? (
-                      <div className="absolute top-2 left-2 bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white">
+                      <div className="absolute top-2 end-2 bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white">
                         FREE
                       </div>
                     ) : (
-                      <div className="absolute top-2 left-2 bg-amber-500 text-black text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white">
+                      <div className="absolute top-2 end-2 bg-amber-500 text-black text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white">
                         PREMIUM
                       </div>
                     )}
