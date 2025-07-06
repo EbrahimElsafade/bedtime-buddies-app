@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -26,7 +25,7 @@ type StoryLanguage = {
 };
 
 const StoryOptions = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('admin');
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
@@ -78,8 +77,8 @@ const StoryOptions = () => {
       queryClient.invalidateQueries({ queryKey: ['story-categories'] });
       setNewCategory("");
       toast({
-        title: t('admin.storyOptions.categoryAdded'),
-        description: t('admin.storyOptions.categoryAddedDesc', { category: data.name }),
+        title: t('storyOptions.categoryAdded'),
+        description: t('storyOptions.categoryAddedDesc', { category: data.name }),
       });
     }
   });
@@ -98,8 +97,8 @@ const StoryOptions = () => {
       const category = categories.find(cat => cat.id === id);
       queryClient.invalidateQueries({ queryKey: ['story-categories'] });
       toast({
-        title: t('admin.storyOptions.categoryRemoved'),
-        description: t('admin.storyOptions.categoryRemovedDesc', { category: category?.name }),
+        title: t('storyOptions.categoryRemoved'),
+        description: t('storyOptions.categoryRemovedDesc', { category: category?.name }),
       });
     }
   });
@@ -121,8 +120,8 @@ const StoryOptions = () => {
       setNewLanguageCode("");
       setNewLanguageName("");
       toast({
-        title: t('admin.storyOptions.languageAdded'),
-        description: t('admin.storyOptions.languageAddedDesc', { language: data.name }),
+        title: t('storyOptions.languageAdded'),
+        description: t('storyOptions.languageAddedDesc', { language: data.name }),
       });
     }
   });
@@ -141,8 +140,8 @@ const StoryOptions = () => {
       const language = languages.find(lang => lang.id === id);
       queryClient.invalidateQueries({ queryKey: ['story-languages'] });
       toast({
-        title: t('admin.storyOptions.languageRemoved'),
-        description: t('admin.storyOptions.languageRemovedDesc', { language: language?.name }),
+        title: t('storyOptions.languageRemoved'),
+        description: t('storyOptions.languageRemovedDesc', { language: language?.name }),
       });
     }
   });
@@ -174,9 +173,9 @@ const StoryOptions = () => {
   return (
     <div className="container mx-auto p-6 space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">{t('admin.storyOptions.title')}</h1>
+        <h1 className="text-3xl font-bold">{t('storyOptions.title')}</h1>
         <p className="text-muted-foreground mt-2">
-          {t('admin.storyOptions.description')}
+          {t('storyOptions.description')}
         </p>
       </div>
 
@@ -185,16 +184,16 @@ const StoryOptions = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              {t('admin.storyOptions.categories')}
+              {t('storyOptions.categories')}
             </CardTitle>
             <CardDescription>
-              {t('admin.storyOptions.categoriesDesc')}
+              {t('storyOptions.categoriesDesc')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex gap-2">
               <Input
-                placeholder={t('admin.storyOptions.addCategoryPlaceholder')}
+                placeholder={t('storyOptions.addCategoryPlaceholder')}
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && addCategory()}
@@ -235,10 +234,10 @@ const StoryOptions = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              {t('admin.storyOptions.languages')}
+              {t('storyOptions.languages')}
             </CardTitle>
             <CardDescription>
-              {t('admin.storyOptions.languagesDesc')}
+              {t('storyOptions.languagesDesc')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">

@@ -11,7 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getImageUrl } from "@/utils/imageUtils";
 
 const FeaturedStories = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['misc', 'stories']);
 
   const { data: featuredStories = [], isLoading } = useQuery({
     queryKey: ["featured-stories"],
@@ -39,9 +39,9 @@ const FeaturedStories = () => {
       <section className="py-12 px-4 bg-secondary/50 relative">
         <div className="container mx-auto">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl md:text-3xl font-bubbly text-dream-DEFAULT">{t('featured.title')}</h2>
+            <h2 className="text-2xl md:text-3xl font-bubbly text-dream-DEFAULT">{t('stories:featured.title')}</h2>
             <Link to="/stories" className="text-dream-DEFAULT hover:text-dream-dark text-sm font-medium flex items-center">
-              {t('free.viewAll')} <ArrowRight className="rtl:rotate-180 ms-1 h-4 w-4" />
+              {t('misc:free.viewAll')} <ArrowRight className="rtl:rotate-180 ms-1 h-4 w-4" />
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -72,10 +72,10 @@ const FeaturedStories = () => {
       <div className="container mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl md:text-3xl font-bubbly text-dream-DEFAULT">
-            {t('featured.title')}
+            {t('stories:featured.title')}
           </h2>
           <Link to="/stories" className="text-dream-DEFAULT hover:text-dream-dark text-sm font-medium flex items-center">
-            {t('free.viewAll')} <ArrowRight className="rtl:rotate-180 ms-1 h-4 w-4" />
+            {t('misc:free.viewAll')} <ArrowRight className="rtl:rotate-180 ms-1 h-4 w-4" />
           </Link>
         </div>
         
@@ -103,11 +103,11 @@ const FeaturedStories = () => {
                   )}
                   {story.is_free ? (
                     <div className="absolute top-2 start-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                      {t('free.tag')}
+                      {t('misc:free.tag')}
                     </div>
                   ) : (
                     <div className="absolute top-2 start-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                      {t('premium.tag')}
+                      {t('misc:premium.tag')}
                     </div>
                   )}
                 </div>
@@ -126,7 +126,7 @@ const FeaturedStories = () => {
                   <div className="flex items-center text-sm text-dream-DEFAULT">
                     <div className="flex items-center">
                       <Clock className="h-4 w-4 mr-1" />
-                      <span>{story.duration} {t('duration')}</span>
+                      <span>{story.duration} {t('misc:duration')}</span>
                     </div>
                   </div>
                 </CardContent>
@@ -140,7 +140,7 @@ const FeaturedStories = () => {
                           : "bg-moon-DEFAULT hover:bg-moon-dark text-black dark:text-white"
                       )}
                     >
-                      {story.is_free ? t('button.readNow') : t('button.premium')}
+                      {story.is_free ? t('misc:button.readNow') : t('misc:button.premium')}
                     </Button>
                   </Link>
                 </CardFooter>
