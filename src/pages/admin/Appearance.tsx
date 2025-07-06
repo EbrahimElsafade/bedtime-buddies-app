@@ -1,5 +1,7 @@
 
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
   Card,
@@ -13,18 +15,49 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const Appearance = () => {
   // State for home page sections
   const [homePageSections, setHomePageSections] = useState({
-    freeStory: true,
+    freeStory: "",
     storiesSection: true,
     topRated: true,
     courses: true,
     specialStory: true,
   });
 
+  // Fetch published stories for the free story select
+  const { data: stories, isLoading: storiesLoading } = useQuery({
+    queryKey: ["published-stories"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("stories")
+        .select("id, title")
+        .eq("is_published", true)
+        .order("title");
+      
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  const handleFreeStoryChange = (storyId: string) => {
+    setHomePageSections(prev => ({
+      ...prev,
+      freeStory: storyId
+    }));
+  };
+
   const handleHomePageSectionChange = (section: keyof typeof homePageSections, checked: boolean) => {
+    if (section === 'freeStory') return; // Handle free story separately
+    
     setHomePageSections(prev => ({
       ...prev,
       [section]: checked
@@ -80,17 +113,29 @@ const Appearance = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="freeStory"
-                  checked={homePageSections.freeStory}
-                  onCheckedChange={(checked) => 
-                    handleHomePageSectionChange('freeStory', checked as boolean)
-                  }
-                />
-                <Label htmlFor="freeStory" className="text-base font-medium">
-                  Free Story Section
-                </Label>
+              <div className="space-y-2">
+                <Label htmlFor="freeStory">Free Story Section</Label>
+                <Select
+                  value={homePageSections.freeStory}
+                  onValueChange={handleFreeStoryChange}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a story to feature as free" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {storiesLoading ? (
+                      <SelectItem value="" disabled>Loading stories...</SelectItem>
+                    ) : stories?.length === 0 ? (
+                      <SelectItem value="" disabled>No published stories available</SelectItem>
+                    ) : (
+                      stories?.map(story => (
+                        <SelectItem key={story.id} value={story.id}>
+                          {story.title}
+                        </SelectItem>
+                      ))
+                    )}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="flex items-center space-x-2">
