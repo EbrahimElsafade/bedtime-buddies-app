@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
@@ -40,7 +39,7 @@ const Stories = () => {
   const { data: categories = [] } = useQuery({
     queryKey: ['story-categories'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('story_categories')
         .select('*')
         .order('name');

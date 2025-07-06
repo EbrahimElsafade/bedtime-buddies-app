@@ -21,7 +21,7 @@ export const useStoryOptions = () => {
   const categoriesQuery = useQuery({
     queryKey: ['story-categories'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('story_categories')
         .select('*')
         .order('name');
@@ -34,7 +34,7 @@ export const useStoryOptions = () => {
   const languagesQuery = useQuery({
     queryKey: ['story-languages'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('story_languages')
         .select('*')
         .order('name');

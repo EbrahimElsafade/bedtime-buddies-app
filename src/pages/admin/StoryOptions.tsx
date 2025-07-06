@@ -38,7 +38,7 @@ const StoryOptions = () => {
   const { data: categories = [], isLoading: categoriesLoading } = useQuery({
     queryKey: ['story-categories'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('story_categories')
         .select('*')
         .order('name');
@@ -52,7 +52,7 @@ const StoryOptions = () => {
   const { data: languages = [], isLoading: languagesLoading } = useQuery({
     queryKey: ['story-languages'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('story_languages')
         .select('*')
         .order('name');
@@ -65,7 +65,7 @@ const StoryOptions = () => {
   // Add category mutation
   const addCategoryMutation = useMutation({
     mutationFn: async (name: string) => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('story_categories')
         .insert({ name })
         .select()
@@ -87,7 +87,7 @@ const StoryOptions = () => {
   // Remove category mutation
   const removeCategoryMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('story_categories')
         .delete()
         .eq('id', id);
@@ -107,7 +107,7 @@ const StoryOptions = () => {
   // Add language mutation
   const addLanguageMutation = useMutation({
     mutationFn: async ({ code, name }: { code: string; name: string }) => {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('story_languages')
         .insert({ code, name })
         .select()
@@ -130,7 +130,7 @@ const StoryOptions = () => {
   // Remove language mutation
   const removeLanguageMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from('story_languages')
         .delete()
         .eq('id', id);
