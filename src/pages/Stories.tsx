@@ -122,7 +122,7 @@ const Stories = () => {
           </div>
           
           <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
-            <TabsList className="mb-4 w-full max-w-2xl h-auto flex justify-start">
+            <TabsList className="mb-4 w-full max-w-2xl h-auto flex justify-between">
               <TabsTrigger value="all">
                 All Stories
               </TabsTrigger>
