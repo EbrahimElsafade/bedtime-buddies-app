@@ -115,7 +115,7 @@ const FeaturedStories = () => {
                         {t('misc:free.tag')}
                       </div>
                     ) : (
-                      <div className="absolute top-2 end-2 bg-amber-500 text-black text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white">
+                      <div className="absolute top-2 end-2 bg-yellow-500 text-black text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white">
                         {t('misc:premium.tag')}
                       </div>
                     )}
