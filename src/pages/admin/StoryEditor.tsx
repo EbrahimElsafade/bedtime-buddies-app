@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -70,7 +69,7 @@ const StoryEditor = () => {
   const [storyData, setStoryData] = useState({
     title: "",
     description: "",
-    category: "bedtime",
+    category: "",
     duration: 5,
     is_free: true,
     is_published: false,
@@ -81,21 +80,33 @@ const StoryEditor = () => {
   // Story sections
   const [storySections, setStorySections] = useState<StorySectionForm[]>([]);
   
-  // Available language options
-  const languageOptions = [
-    { value: "en", label: "English" },
-    { value: "ar-eg", label: "Arabic (Egyptian)" },
-    { value: "ar-fos7a", label: "Arabic (Fos7a)" }
-  ];
-  
-  // Category options
-  const categoryOptions = [
-    { value: "bedtime", label: "Bedtime" },
-    { value: "adventure", label: "Adventure" },
-    { value: "educational", label: "Educational" },
-    { value: "animals", label: "Animals" },
-    { value: "fantasy", label: "Fantasy" }
-  ];
+  // Fetch categories from database
+  const { data: categories, isLoading: categoriesLoading } = useQuery({
+    queryKey: ["story-categories"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("story_categories")
+        .select("*")
+        .order("name");
+      
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  // Fetch languages from database
+  const { data: languages, isLoading: languagesLoading } = useQuery({
+    queryKey: ["story-languages"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("story_languages")
+        .select("*")
+        .order("name");
+      
+      if (error) throw error;
+      return data;
+    }
+  });
 
   // Fetch story data if editing
   const fetchStory = async (): Promise<Story | null> => {
@@ -165,7 +176,7 @@ const StoryEditor = () => {
       setStoryData({
         title: storyDetails.title || "",
         description: storyDetails.description || "",
-        category: storyDetails.category || "bedtime",
+        category: storyDetails.category || "",
         duration: storyDetails.duration || 5,
         is_free: storyDetails.is_free,
         is_published: storyDetails.is_published,
@@ -190,6 +201,13 @@ const StoryEditor = () => {
       addNewSection();
     }
   }, [storyData.languages, isEditing]);
+
+  // Set default category when categories are loaded and no category is set
+  useEffect(() => {
+    if (categories && categories.length > 0 && !storyData.category && !isEditing) {
+      setStoryData(prev => ({ ...prev, category: categories[0].name }));
+    }
+  }, [categories, storyData.category, isEditing]);
   
   // Handle file input change for cover image
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -508,9 +526,11 @@ const StoryEditor = () => {
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Categories</SelectLabel>
-                          {categoryOptions.map(category => (
-                            <SelectItem key={category.value} value={category.value}>
-                              {category.label}
+                          {categoriesLoading ? (
+                            <SelectItem value="" disabled>Loading categories...</SelectItem>
+                          ) : categories?.map(category => (
+                            <SelectItem key={category.id} value={category.name}>
+                              {category.name}
                             </SelectItem>
                           ))}
                         </SelectGroup>
@@ -623,10 +643,10 @@ const StoryEditor = () => {
               <CardContent className="space-y-4">
                 <div className="flex flex-wrap gap-2">
                   {storyData.languages.map(language => {
-                    const langOption = languageOptions.find(opt => opt.value === language);
+                    const langOption = languages?.find(opt => opt.code === language);
                     return (
                       <Badge key={language} variant="outline" className="py-2 text-sm">
-                        {langOption?.label || language}
+                        {langOption?.name || language}
                         <Button
                           type="button"
                           variant="ghost"
@@ -650,13 +670,15 @@ const StoryEditor = () => {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Languages</SelectLabel>
-                        {languageOptions.map(language => (
+                        {languagesLoading ? (
+                          <SelectItem value="" disabled>Loading languages...</SelectItem>
+                        ) : languages?.map(language => (
                           <SelectItem
-                            key={language.value}
-                            value={language.value}
-                            disabled={storyData.languages.includes(language.value)}
+                            key={language.id}
+                            value={language.code}
+                            disabled={storyData.languages.includes(language.code)}
                           >
-                            {language.label}
+                            {language.name}
                           </SelectItem>
                         ))}
                       </SelectGroup>
@@ -752,10 +774,10 @@ const StoryEditor = () => {
                             <Tabs defaultValue={storyData.languages[0]} className="w-full">
                               <TabsList>
                                 {storyData.languages.map(lang => {
-                                  const langOption = languageOptions.find(opt => opt.value === lang);
+                                  const langOption = languages?.find(opt => opt.code === lang);
                                   return (
                                     <TabsTrigger key={lang} value={lang}>
-                                      {langOption?.label || lang}
+                                      {langOption?.name || lang}
                                     </TabsTrigger>
                                   );
                                 })}
@@ -764,7 +786,7 @@ const StoryEditor = () => {
                                 <TabsContent key={lang} value={lang} className="space-y-4">
                                   {/* Text content */}
                                   <div className="space-y-2">
-                                    <Label>Text Content ({languageOptions.find(opt => opt.value === lang)?.label})</Label>
+                                    <Label>Text Content ({languages?.find(opt => opt.code === lang)?.name})</Label>
                                     <Textarea
                                       placeholder={`Enter section text in ${lang}`}
                                       value={section.texts[lang] || ""}
@@ -775,7 +797,7 @@ const StoryEditor = () => {
 
                                   {/* Voice upload */}
                                   <div className="space-y-2">
-                                    <Label>Voice Audio ({languageOptions.find(opt => opt.value === lang)?.label})</Label>
+                                    <Label>Voice Audio ({languages?.find(opt => opt.code === lang)?.name})</Label>
                                     <Input 
                                       type="file"
                                       accept="audio/*"
