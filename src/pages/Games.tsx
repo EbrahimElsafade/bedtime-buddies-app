@@ -614,7 +614,7 @@ const HangmanGame = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-3xl shadow-2xl border border-blue-200">
+    <div className="w-full p-6 bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-3xl shadow-2xl border border-blue-200">
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-4">
           <TreePine className="w-8 h-8 text-purple-600" />
@@ -729,7 +729,7 @@ const Games = () => {
 
   return (
     <div className="py-12 px-4 min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-nightsky-DEFAULT dark:via-nightsky-light dark:to-nightsky">
-      <div className="container mx-auto max-w-6xl">
+      <div className="container mx-auto max-w-7xl">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bubbly mb-4 bg-gradient-to-r from-dream-DEFAULT via-purple-600 to-pink-600 bg-clip-text text-transparent">
             {t('games.title')}
@@ -769,7 +769,7 @@ const Games = () => {
           
           <TabsContent value="tic-tac-toe" className="mt-8">
             <div className="flex justify-center">
-              <div className="w-full max-w-lg">
+              <div className="w-full max-w-2xl">
                 <TicTacToe />
               </div>
             </div>
@@ -777,7 +777,7 @@ const Games = () => {
           
           <TabsContent value="memory" className="mt-8">
             <div className="flex justify-center">
-              <div className="w-full max-w-lg">
+              <div className="w-full max-w-2xl">
                 <MemoryCardGame />
               </div>
             </div>
@@ -785,7 +785,7 @@ const Games = () => {
           
           <TabsContent value="rock-paper-scissors" className="mt-8">
             <div className="flex justify-center">
-              <div className="w-full max-w-lg">
+              <div className="w-full max-w-2xl">
                 <RockPaperScissors />
               </div>
             </div>
@@ -793,7 +793,7 @@ const Games = () => {
           
           <TabsContent value="snake" className="mt-8">
             <div className="flex justify-center">
-              <div className="w-full max-w-lg">
+              <div className="w-full max-w-2xl">
                 <SnakeGame />
               </div>
             </div>
@@ -801,7 +801,7 @@ const Games = () => {
           
           <TabsContent value="hangman" className="mt-8">
             <div className="flex justify-center">
-              <div className="w-full max-w-lg">
+              <div className="w-full max-w-2xl">
                 <HangmanGame />
               </div>
             </div>
@@ -809,7 +809,7 @@ const Games = () => {
           
           <TabsContent value="coloring" className="mt-8">
             <div className="flex justify-center">
-              <div className="w-full max-w-lg">
+              <div className="w-full max-w-2xl">
                 <ColoringBook />
               </div>
             </div>
