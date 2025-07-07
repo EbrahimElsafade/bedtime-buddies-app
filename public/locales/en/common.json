@@ -21,6 +21,38 @@
       "newHighScore": "New High Score!",
       "playAgain": "Play Again",
       "startGame": "Start Game"
+    },
+    "rockPaperScissors": {
+      "title": "Rock Paper Scissors",
+      "description": "Choose your weapon and battle the computer!",
+      "rock": "Rock",
+      "paper": "Paper",
+      "scissors": "Scissors",
+      "youWin": "You Win!",
+      "computerWins": "Computer Wins!",
+      "tie": "It's a Tie!",
+      "resetGame": "Reset Game"
+    },
+    "hangman": {
+      "title": "Hangman",
+      "description": "Guess the word before the drawing is complete!",
+      "hint": "Hint:",
+      "incorrectGuesses": "Incorrect guesses:",
+      "newGame": "New Game",
+      "gameOver": "Game Over!",
+      "youWin": "You Win!",
+      "youLose": "You Lose!"
+    },
+    "memory": {
+      "title": "Memory Game",
+      "description": "Match all the pairs of cards to win!",
+      "testYourMemory": "Test Your Memory!",
+      "clickToFlip": "Click on cards to flip them and find matching pairs. Try to complete the game in as few moves as possible!",
+      "startGame": "Start Game",
+      "moves": "Moves:",
+      "congratulations": "Congratulations!",
+      "gameCompleted": "You completed the game in {moves} moves!",
+      "playAgain": "Play Again"
     }
   }
 }

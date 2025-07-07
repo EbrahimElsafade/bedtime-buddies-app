@@ -21,6 +21,38 @@
       "newHighScore": "Nouveau Record!",
       "playAgain": "Rejouer",
       "startGame": "Commencer le Jeu"
+    },
+    "rockPaperScissors": {
+      "title": "Pierre Papier Ciseaux",
+      "description": "Choisissez votre arme et battez l'ordinateur!",
+      "rock": "Pierre",
+      "paper": "Papier",
+      "scissors": "Ciseaux",
+      "youWin": "Vous Gagnez!",
+      "computerWins": "L'Ordinateur Gagne!",
+      "tie": "Égalité!",
+      "resetGame": "Nouvelle Partie"
+    },
+    "hangman": {
+      "title": "Le Pendu",
+      "description": "Devinez le mot avant que le dessin soit terminé!",
+      "hint": "Indice:",
+      "incorrectGuesses": "Mauvaises tentatives:",
+      "newGame": "Nouvelle Partie",
+      "gameOver": "Jeu Terminé!",
+      "youWin": "Vous Gagnez!",
+      "youLose": "Vous Perdez!"
+    },
+    "memory": {
+      "title": "Jeu de Mémoire",
+      "description": "Associez toutes les paires de cartes pour gagner!",
+      "testYourMemory": "Testez Votre Mémoire!",
+      "clickToFlip": "Cliquez sur les cartes pour les retourner et trouvez les paires correspondantes. Essayez de terminer le jeu avec le moins de coups possible!",
+      "startGame": "Commencer le Jeu",
+      "moves": "Coups:",
+      "congratulations": "Félicitations!",
+      "gameCompleted": "Vous avez terminé le jeu en {moves} coups!",
+      "playAgain": "Rejouer"
     }
   }
 }

@@ -21,6 +21,38 @@
       "newHighScore": "رقم قياسي جديد!",
       "playAgain": "العب مرة أخرى",
       "startGame": "ابدأ اللعبة"
+    },
+    "rockPaperScissors": {
+      "title": "حجر ورقة مقص",
+      "description": "اختر سلاحك وحارب الكمبيوتر!",
+      "rock": "حجر",
+      "paper": "ورقة",
+      "scissors": "مقص",
+      "youWin": "أنت الفائز!",
+      "computerWins": "الكمبيوتر يفوز!",
+      "tie": "تعادل!",
+      "resetGame": "إعادة تعيين اللعبة"
+    },
+    "hangman": {
+      "title": "لعبة الرجل المشنوق",
+      "description": "خمن الكلمة قبل اكتمال الرسم!",
+      "hint": "تلميح:",
+      "incorrectGuesses": "التخمينات الخاطئة:",
+      "newGame": "لعبة جديدة",
+      "gameOver": "انتهت اللعبة!",
+      "youWin": "أنت الفائز!",
+      "youLose": "لقد خسرت!"
+    },
+    "memory": {
+      "title": "لعبة الذاكرة",
+      "description": "طابق جميع أزواج البطاقات للفوز!",
+      "testYourMemory": "اختبر ذاكرتك!",
+      "clickToFlip": "انقر على البطاقات لقلبها والعثور على الأزواج المطابقة. حاول إكمال اللعبة بأقل عدد من الحركات الممكنة!",
+      "startGame": "ابدأ اللعبة",
+      "moves": "الحركات:",
+      "congratulations": "تهانينا!",
+      "gameCompleted": "لقد أكملت اللعبة في {moves} حركة!",
+      "playAgain": "العب مرة أخرى"
     }
   }
 }
