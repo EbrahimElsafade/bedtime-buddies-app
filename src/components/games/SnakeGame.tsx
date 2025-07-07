@@ -1,9 +1,10 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const SnakeGame = () => {
+  const { t, i18n } = useTranslation('common');
   const [gameState, setGameState] = useState<'menu' | 'playing' | 'gameOver'>('menu');
   const [snake, setSnake] = useState([{ x: 5, y: 5 }]);
   const [food, setFood] = useState({ x: 15, y: 15 });
@@ -17,6 +18,7 @@ const SnakeGame = () => {
 
   const gridSize = 30;
   const gameSpeed = 100;
+  const isRTL = i18n.language === 'ar';
 
   const generateFood = useCallback(() => {
     return {
@@ -131,17 +133,17 @@ const SnakeGame = () => {
 
   if (gameState === 'menu') {
     return (
-      <div className="w-full h-full flex items-center justify-center p-6">
+      <div className="w-full h-full flex items-center justify-center p-6" dir={isRTL ? 'rtl' : 'ltr'}>
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 max-w-md w-full">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">Snake Game</h2>
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">{t('games.snake.title')}</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Use arrow keys to control the snake and eat the food!
+              {t('games.snake.description')}
             </p>
             
             {highScore > 0 && (
               <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6">
-                <div className="text-gray-600 dark:text-gray-300 text-sm">High Score</div>
+                <div className="text-gray-600 dark:text-gray-300 text-sm">{t('games.snake.highScore')}</div>
                 <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{highScore}</div>
               </div>
             )}
@@ -150,7 +152,7 @@ const SnakeGame = () => {
               onClick={resetGame}
               className="px-8 py-3 text-lg"
             >
-              Start Game
+              {t('games.snake.startGame')}
             </Button>
           </div>
         </div>
@@ -160,17 +162,17 @@ const SnakeGame = () => {
 
   if (gameState === 'gameOver') {
     return (
-      <div className="w-full h-full flex items-center justify-center p-6">
+      <div className="w-full h-full flex items-center justify-center p-6" dir={isRTL ? 'rtl' : 'ltr'}>
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 max-w-md w-full">
           <div className="text-center">
-            <h2 className="text-3xl font-bold text-red-600 dark:text-red-400 mb-4">Game Over!</h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">Final Score: {score}</p>
+            <h2 className="text-3xl font-bold text-red-600 dark:text-red-400 mb-4">{t('games.snake.gameOver')}</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">{t('games.snake.score')} {score}</p>
             {score === highScore && score > 0 && (
-              <p className="text-blue-600 dark:text-blue-400 mb-6 font-semibold">🎉 New High Score!</p>
+              <p className="text-blue-600 dark:text-blue-400 mb-6 font-semibold">🎉 {t('games.snake.newHighScore')}</p>
             )}
             
             <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6">
-              <div className="text-gray-600 dark:text-gray-300 text-sm">High Score</div>
+              <div className="text-gray-600 dark:text-gray-300 text-sm">{t('games.snake.highScore')}</div>
               <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{highScore}</div>
             </div>
 
@@ -178,7 +180,7 @@ const SnakeGame = () => {
               onClick={resetGame}
               className="px-8 py-3 text-lg"
             >
-              Play Again
+              {t('games.snake.playAgain')}
             </Button>
           </div>
         </div>
@@ -187,22 +189,22 @@ const SnakeGame = () => {
   }
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full h-full flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden flex-1 flex flex-col">
         {/* Game Header */}
         <div className="bg-gray-50 dark:bg-gray-700 px-6 py-4 flex justify-between items-center">
           <div className="text-lg font-semibold text-gray-800 dark:text-white">
-            Score: {score}
+            {t('games.snake.score')} {score}
           </div>
           <div className="text-lg font-semibold text-gray-800 dark:text-white">
-            High Score: {highScore}
+            {t('games.snake.highScore')} {highScore}
           </div>
         </div>
 
         {/* Game Board */}
         <div className="relative bg-gray-900 p-4 flex-1 flex items-center justify-center">
           <div 
-            className="w-full h-full max-w-[80vh] max-h-[80vh] bg-gray-800 grid gap-0"
+            className="w-full h-full max-w-[min(90vw,90vh)] max-h-[min(90vw,90vh)] bg-gray-800 grid gap-0"
             style={{
               gridTemplate: `repeat(${gridSize}, 1fr) / repeat(${gridSize}, 1fr)`,
               aspectRatio: '1'

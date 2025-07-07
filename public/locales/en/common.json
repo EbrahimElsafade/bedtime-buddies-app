@@ -1,24 +1,26 @@
 
 {
-  "loading": "Loading...",
-  "error": "Something went wrong",
-  "retry": "Try Again",
-  "close": "Close",
-  "save": "Save",
-  "cancel": "Cancel",
-  "delete": "Delete",
-  "edit": "Edit",
-  "add": "Add",
-  "search": "Search",
-  "filter": "Filter",
-  "next": "Next",
-  "previous": "Previous",
-  "yes": "Yes",
-  "no": "No",
-  "back": "Back",
-  "continue": "Continue",
-  "submit": "Submit",
-  "update": "Update",
-  "create": "Create",
-  "confirm": "Confirm"
+  "games": {
+    "title": "Fun Games",
+    "subtitle": "Enjoy these fun and educational games designed for children and families.",
+    "ticTacToe": {
+      "title": "Tic Tac Toe",
+      "description": "Classic strategy game for two players",
+      "won": "wins!",
+      "draw": "It's a draw!",
+      "winner": "Winner:",
+      "nextPlayer": "Next player:",
+      "newGame": "New Game"
+    },
+    "snake": {
+      "title": "Snake Game",
+      "description": "Guide the snake to eat food and grow longer",
+      "gameOver": "Game Over!",
+      "score": "Score:",
+      "highScore": "High Score:",
+      "newHighScore": "New High Score!",
+      "playAgain": "Play Again",
+      "startGame": "Start Game"
+    }
+  }
 }

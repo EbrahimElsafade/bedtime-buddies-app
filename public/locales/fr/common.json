@@ -1,24 +1,26 @@
 
 {
-  "loading": "Chargement...",
-  "error": "Une erreur s'est produite",
-  "retry": "Réessayer",
-  "close": "Fermer",
-  "save": "Enregistrer",
-  "cancel": "Annuler",
-  "delete": "Supprimer",
-  "edit": "Modifier",
-  "add": "Ajouter",
-  "search": "Rechercher",
-  "filter": "Filtrer",
-  "next": "Suivant",
-  "previous": "Précédent",
-  "yes": "Oui",
-  "no": "Non",
-  "back": "Retour",
-  "continue": "Continuer",
-  "submit": "Soumettre",
-  "update": "Mettre à jour",
-  "create": "Créer",
-  "confirm": "Confirmer"
+  "games": {
+    "title": "Jeux Amusants",
+    "subtitle": "Profitez de ces jeux amusants et éducatifs conçus pour les enfants et les familles.",
+    "ticTacToe": {
+      "title": "Tic Tac Toe",
+      "description": "Jeu de stratégie classique pour deux joueurs",
+      "won": "gagne!",
+      "draw": "Match nul!",
+      "winner": "Gagnant:",
+      "nextPlayer": "Joueur suivant:",
+      "newGame": "Nouvelle Partie"
+    },
+    "snake": {
+      "title": "Jeu du Serpent",
+      "description": "Guidez le serpent pour manger la nourriture et grandir",
+      "gameOver": "Jeu Terminé!",
+      "score": "Score:",
+      "highScore": "Meilleur Score:",
+      "newHighScore": "Nouveau Record!",
+      "playAgain": "Rejouer",
+      "startGame": "Commencer le Jeu"
+    }
+  }
 }
