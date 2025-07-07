@@ -91,7 +91,13 @@ const SnakeGame = () => {
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
+      // Only handle arrow keys when the game is playing
       if (gameState !== 'playing') return;
+
+      // Prevent default behavior to stop page scrolling
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+        e.preventDefault();
+      }
 
       let newDirection = { x: 0, y: 0 };
       let validMove = false;
@@ -134,20 +140,6 @@ const SnakeGame = () => {
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [direction, gameState, gameStarted]);
-
-  const handleDirectionClick = (newDirection: { x: number; y: number }) => {
-    if (gameState !== 'playing') return;
-    
-    const canMove = (newDirection.x !== 0 && direction.x === 0) || 
-                   (newDirection.y !== 0 && direction.y === 0);
-    
-    if (canMove) {
-      setDirection(newDirection);
-      if (!gameStarted) {
-        setGameStarted(true);
-      }
-    }
-  };
 
   if (gameState === 'menu') {
     return (
@@ -210,7 +202,7 @@ const SnakeGame = () => {
           🐍 Snake Game
         </CardTitle>
         <CardDescription>
-          {!gameStarted ? 'Press an arrow key or click a direction button to start!' : 'Use arrow keys to control the snake!'}
+          {!gameStarted ? 'Press an arrow key to start!' : 'Use arrow keys to control the snake!'}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -277,56 +269,6 @@ const SnakeGame = () => {
                   </div>
                 );
               })}
-            </div>
-          </div>
-
-          <div className="flex justify-center">
-            <div className="grid grid-cols-3 gap-2 max-w-xs">
-              <div></div>
-              <Button
-                variant="outline"
-                size="lg"
-                className="aspect-square"
-                onClick={() => handleDirectionClick({ x: 0, y: -1 })}
-                disabled={gameState !== 'playing'}
-              >
-                ⬆️
-              </Button>
-              <div></div>
-              
-              <Button
-                variant="outline"
-                size="lg"
-                className="aspect-square"
-                onClick={() => handleDirectionClick({ x: -1, y: 0 })}
-                disabled={gameState !== 'playing'}
-              >
-                ⬅️
-              </Button>
-              <div className="flex items-center justify-center">
-                <div className="text-2xl">🐍</div>
-              </div>
-              <Button
-                variant="outline"
-                size="lg"
-                className="aspect-square"
-                onClick={() => handleDirectionClick({ x: 1, y: 0 })}
-                disabled={gameState !== 'playing'}
-              >
-                ➡️
-              </Button>
-              
-              <div></div>
-              <Button
-                variant="outline"
-                size="lg"
-                className="aspect-square"
-                onClick={() => handleDirectionClick({ x: 0, y: 1 })}
-                disabled={gameState !== 'playing'}
-              >
-                ⬇️
-              </Button>
-              <div></div>
             </div>
           </div>
         </div>
