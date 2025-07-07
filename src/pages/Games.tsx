@@ -135,7 +135,8 @@ const TicTacToe = () => {
     }
   };
   
-  const startGame = () => {
+  const startGameWithMode = (mode: 'player' | 'computer') => {
+    setGameMode(mode);
     setGameStarted(true);
     resetGame();
   };
@@ -175,12 +176,8 @@ const TicTacToe = () => {
               <h3 className="text-lg font-medium mb-4 text-center">Select Game Mode:</h3>
               <div className="grid grid-cols-2 gap-4">
                 <button
-                  onClick={() => setGameMode('player')}
-                  className={`p-6 rounded-lg border-2 transition-all hover:scale-105 ${
-                    gameMode === 'player'
-                      ? 'border-dream-DEFAULT bg-dream-DEFAULT/10 text-dream-DEFAULT'
-                      : 'border-gray-200 dark:border-gray-700 hover:border-dream-light'
-                  }`}
+                  onClick={() => startGameWithMode('player')}
+                  className="p-6 rounded-lg border-2 transition-all hover:scale-105 border-gray-200 dark:border-gray-700 hover:border-dream-light"
                 >
                   <Users className="w-12 h-12 mx-auto mb-3" />
                   <div className="text-center">
@@ -190,12 +187,8 @@ const TicTacToe = () => {
                 </button>
                 
                 <button
-                  onClick={() => setGameMode('computer')}
-                  className={`p-6 rounded-lg border-2 transition-all hover:scale-105 ${
-                    gameMode === 'computer'
-                      ? 'border-dream-DEFAULT bg-dream-DEFAULT/10 text-dream-DEFAULT'
-                      : 'border-gray-200 dark:border-gray-700 hover:border-dream-light'
-                  }`}
+                  onClick={() => startGameWithMode('computer')}
+                  className="p-6 rounded-lg border-2 transition-all hover:scale-105 border-gray-200 dark:border-gray-700 hover:border-dream-light"
                 >
                   <Bot className="w-12 h-12 mx-auto mb-3" />
                   <div className="text-center">
@@ -207,11 +200,6 @@ const TicTacToe = () => {
             </div>
           </div>
         </CardContent>
-        <CardFooter>
-          <Button onClick={startGame} className="w-full bg-dream-DEFAULT hover:bg-dream-dark">
-            Start Game
-          </Button>
-        </CardFooter>
       </Card>
     );
   }
