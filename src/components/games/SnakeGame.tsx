@@ -131,9 +131,9 @@ const SnakeGame = () => {
 
   if (gameState === 'menu') {
     return (
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-          <div className="text-center mb-8">
+      <div className="w-full h-full flex items-center justify-center p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 max-w-md w-full">
+          <div className="text-center">
             <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">Snake Game</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
               Use arrow keys to control the snake and eat the food!
@@ -160,9 +160,9 @@ const SnakeGame = () => {
 
   if (gameState === 'gameOver') {
     return (
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-          <div className="text-center mb-8">
+      <div className="w-full h-full flex items-center justify-center p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 max-w-md w-full">
+          <div className="text-center">
             <h2 className="text-3xl font-bold text-red-600 dark:text-red-400 mb-4">Game Over!</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-4">Final Score: {score}</p>
             {score === highScore && score > 0 && (
@@ -187,8 +187,8 @@ const SnakeGame = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+    <div className="w-full h-full flex flex-col">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden flex-1 flex flex-col">
         {/* Game Header */}
         <div className="bg-gray-50 dark:bg-gray-700 px-6 py-4 flex justify-between items-center">
           <div className="text-lg font-semibold text-gray-800 dark:text-white">
@@ -200,11 +200,12 @@ const SnakeGame = () => {
         </div>
 
         {/* Game Board */}
-        <div className="relative bg-gray-900 p-4">
+        <div className="relative bg-gray-900 p-4 flex-1 flex items-center justify-center">
           <div 
-            className="w-full aspect-square max-w-md mx-auto bg-gray-800 grid gap-0"
+            className="w-full h-full max-w-[80vh] max-h-[80vh] bg-gray-800 grid gap-0"
             style={{
-              gridTemplate: `repeat(${gridSize}, 1fr) / repeat(${gridSize}, 1fr)`
+              gridTemplate: `repeat(${gridSize}, 1fr) / repeat(${gridSize}, 1fr)`,
+              aspectRatio: '1'
             }}
           >
             {/* Food */}
