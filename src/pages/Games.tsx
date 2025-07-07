@@ -1,4 +1,3 @@
-
 import { useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
@@ -22,7 +21,6 @@ const Games = () => {
   return (
     <div className="py-12 px-4" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="container mx-auto max-w-6xl">
-        <h1 className="text-3xl md:text-4xl font-bubbly mb-6">{t('games.title', { ns: 'common' })}</h1>
         <p className="text-muted-foreground mb-8 max-w-2xl">
           {t('games.subtitle', { ns: 'common' })}
         </p>
