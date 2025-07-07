@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
-import { Users, Bot, Hand, Scissors } from "lucide-react";
+import { Users, Bot, Hand, Scissors, Skull } from "lucide-react";
 
 const TicTacToe = () => {
   const { t } = useTranslation();
@@ -493,17 +493,64 @@ const HangmanGame = () => {
   };
 
   const drawHangman = () => {
-    const hangmanParts = [
-      '', // 0 wrong guesses
-      '  |', // 1 wrong guess
-      '  |\n  |', // 2 wrong guesses  
-      '  ___\n  |  |\n  |', // 3 wrong guesses
-      '  ___\n  |  |\n  |  O', // 4 wrong guesses
-      '  ___\n  |  |\n  |  O\n  |  |', // 5 wrong guesses
-      '  ___\n  |  |\n  |  O\n  | /|\\\n  |  |', // 6 wrong guesses (game over)
-    ];
-    
-    return hangmanParts[wrongGuesses] || '';
+    return (
+      <div className="relative w-48 h-64 border-4 border-gray-800 dark:border-gray-200 bg-white dark:bg-nightsky-light rounded-lg">
+        <svg width="100%" height="100%" viewBox="0 0 200 250" className="absolute inset-0">
+          {/* Gallows base */}
+          <line x1="10" y1="230" x2="100" y2="230" stroke="currentColor" strokeWidth="4"/>
+          {/* Gallows vertical post */}
+          <line x1="30" y1="230" x2="30" y2="20" stroke="currentColor" strokeWidth="4"/>
+          {/* Gallows horizontal beam */}
+          <line x1="30" y1="20" x2="120" y2="20" stroke="currentColor" strokeWidth="4"/>
+          {/* Gallows rope */}
+          <line x1="120" y1="20" x2="120" y2="50" stroke="currentColor" strokeWidth="4"/>
+          
+          {/* Head */}
+          {wrongGuesses >= 1 && (
+            <circle cx="120" cy="65" r="15" stroke="currentColor" strokeWidth="3" fill="none"/>
+          )}
+          
+          {/* Body */}
+          {wrongGuesses >= 2 && (
+            <line x1="120" y1="80" x2="120" y2="150" stroke="currentColor" strokeWidth="3"/>
+          )}
+          
+          {/* Left arm */}
+          {wrongGuesses >= 3 && (
+            <line x1="120" y1="100" x2="90" y2="130" stroke="currentColor" strokeWidth="3"/>
+          )}
+          
+          {/* Right arm */}
+          {wrongGuesses >= 4 && (
+            <line x1="120" y1="100" x2="150" y2="130" stroke="currentColor" strokeWidth="3"/>
+          )}
+          
+          {/* Left leg */}
+          {wrongGuesses >= 5 && (
+            <line x1="120" y1="150" x2="90" y2="190" stroke="currentColor" strokeWidth="3"/>
+          )}
+          
+          {/* Right leg */}
+          {wrongGuesses >= 6 && (
+            <line x1="120" y1="150" x2="150" y2="190" stroke="currentColor" strokeWidth="3"/>
+          )}
+        </svg>
+        
+        {/* Game Over overlay */}
+        {gameStatus === 'lost' && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg">
+            <div className="text-center text-white">
+              <Skull className="w-12 h-12 mx-auto mb-2" />
+              <div className="text-xl font-bold text-red-400">GAME OVER</div>
+            </div>
+          </div>
+        )}
+        
+        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-sm font-semibold text-gray-600 dark:text-gray-300">
+          HANGMAN GAME
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -515,116 +562,115 @@ const HangmanGame = () => {
         <CardDescription>Guess the word before the drawing is complete!</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col items-center space-y-8">
-          {/* Game Status */}
-          <div className="text-center">
-            {gameStatus === 'won' && (
-              <div className="text-2xl font-bold text-green-600 animate-pulse">
-                🎉 YOU WON! 🎉
-              </div>
-            )}
-            {gameStatus === 'lost' && (
-              <div className="text-2xl font-bold text-red-600 animate-pulse">
-                💀 GAME OVER 💀
-              </div>
-            )}
-          </div>
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
+          {/* Left side - Hangman drawing */}
+          <div className="flex-shrink-0">
+            {/* Game Status */}
+            <div className="text-center mb-4">
+              {gameStatus === 'won' && (
+                <div className="text-2xl font-bold text-green-600 animate-pulse">
+                  🎉 YOU WON! 🎉
+                </div>
+              )}
+              {gameStatus === 'lost' && (
+                <div className="text-2xl font-bold text-red-600 animate-pulse">
+                  💀 GAME OVER 💀
+                </div>
+              )}
+            </div>
 
-          {/* Hangman Drawing */}
-          <div className="relative">
-            <div className="w-48 h-64 border-4 border-gray-800 dark:border-gray-200 bg-gradient-to-b from-blue-50 to-purple-50 dark:from-nightsky-light dark:to-nightsky rounded-lg p-4 shadow-lg">
-              <pre className="font-mono text-lg text-gray-800 dark:text-gray-200 leading-tight">
-                {drawHangman()}
-              </pre>
-            </div>
-            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-sm font-semibold text-gray-600 dark:text-gray-300">
-              HANGMAN GAME
-            </div>
-          </div>
-
-          {/* Word Display */}
-          <div className="text-center">
-            <div className="text-4xl font-bold font-mono tracking-wider text-gray-800 dark:text-gray-200 mb-4 bg-gradient-to-r from-white to-gray-100 dark:from-nightsky-light dark:to-nightsky p-4 rounded-lg shadow-inner border-2 border-dashed border-gray-300 dark:border-gray-600">
-              {displayWord()}
-            </div>
-            
-            {/* Hint */}
-            <div className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 p-4 rounded-lg shadow-lg border border-blue-200 dark:border-blue-700 mb-6">
-              <div className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-1">
-                Hint:
-              </div>
-              <div className="text-blue-700 dark:text-blue-300">
-                {hint}
-              </div>
-            </div>
+            {/* Hangman Drawing */}
+            {drawHangman()}
 
             {/* Wrong Guesses Counter */}
-            <div className="text-lg font-semibold text-red-600 dark:text-red-400 mb-4">
-              Incorrect guesses: {wrongGuesses} / {maxWrongGuesses}
+            <div className="text-center mt-4">
+              <div className="text-lg font-semibold text-red-600 dark:text-red-400">
+                Incorrect guesses: {wrongGuesses} / {maxWrongGuesses}
+              </div>
             </div>
           </div>
 
-          {/* Alphabet Buttons */}
-          <div className="w-full max-w-2xl">
-            <div className="grid grid-cols-9 gap-2 mb-4">
-              {alphabet.slice(0, 9).map((letter) => (
-                <button
-                  key={letter}
-                  onClick={() => handleLetterClick(letter)}
-                  disabled={guessedLetters.includes(letter) || gameStatus !== 'playing'}
-                  className={`w-10 h-10 rounded-md font-bold text-sm transition-all duration-200 ${
-                    guessedLetters.includes(letter)
-                      ? currentWord.includes(letter)
-                        ? 'bg-green-500 text-white shadow-lg'
-                        : 'bg-red-500 text-white shadow-lg'
-                      : 'bg-gradient-to-br from-purple-400 to-purple-600 text-white hover:from-purple-500 hover:to-purple-700 hover:scale-105 shadow-md'
-                  } ${
-                    gameStatus !== 'playing' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                  }`}
-                >
-                  {letter}
-                </button>
-              ))}
+          {/* Right side - Game content */}
+          <div className="flex-1 space-y-6">
+            {/* Word Display */}
+            <div className="text-center">
+              <div className="text-4xl font-bold font-mono tracking-wider text-gray-800 dark:text-gray-200 mb-6 bg-gradient-to-r from-white to-gray-100 dark:from-nightsky-light dark:to-nightsky p-6 rounded-lg shadow-inner border-2 border-dashed border-gray-300 dark:border-gray-600">
+                {displayWord()}
+              </div>
+              
+              {/* Hint */}
+              <div className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 p-4 rounded-lg shadow-lg border border-blue-200 dark:border-blue-700 mb-6">
+                <div className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-1">
+                  Hint:
+                </div>
+                <div className="text-blue-700 dark:text-blue-300">
+                  {hint}
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-8 gap-2 mb-4">
-              {alphabet.slice(9, 17).map((letter) => (
-                <button
-                  key={letter}
-                  onClick={() => handleLetterClick(letter)}
-                  disabled={guessedLetters.includes(letter) || gameStatus !== 'playing'}
-                  className={`w-10 h-10 rounded-md font-bold text-sm transition-all duration-200 ${
-                    guessedLetters.includes(letter)
-                      ? currentWord.includes(letter)
-                        ? 'bg-green-500 text-white shadow-lg'
-                        : 'bg-red-500 text-white shadow-lg'
-                      : 'bg-gradient-to-br from-purple-400 to-purple-600 text-white hover:from-purple-500 hover:to-purple-700 hover:scale-105 shadow-md'
-                  } ${
-                    gameStatus !== 'playing' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                  }`}
-                >
-                  {letter}
-                </button>
-              ))}
-            </div>
-            <div className="grid grid-cols-9 gap-2">
-              {alphabet.slice(17, 26).map((letter) => (
-                <button
-                  key={letter}
-                  onClick={() => handleLetterClick(letter)}
-                  disabled={guessedLetters.includes(letter) || gameStatus !== 'playing'}
-                  className={`w-10 h-10 rounded-md font-bold text-sm transition-all duration-200 ${
-                    guessedLetters.includes(letter)
-                      ? currentWord.includes(letter)
-                        ? 'bg-green-500 text-white shadow-lg'
-                        : 'bg-red-500 text-white shadow-lg'
-                      : 'bg-gradient-to-br from-purple-400 to-purple-600 text-white hover:from-purple-500 hover:to-purple-700 hover:scale-105 shadow-md'
-                  } ${
-                    gameStatus !== 'playing' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                  }`}
-                >
-                  {letter}
-                </button>
-              ))}
+
+            {/* Alphabet Buttons */}
+            <div className="w-full">
+              <div className="grid grid-cols-9 gap-2 mb-3">
+                {alphabet.slice(0, 9).map((letter) => (
+                  <button
+                    key={letter}
+                    onClick={() => handleLetterClick(letter)}
+                    disabled={guessedLetters.includes(letter) || gameStatus !== 'playing'}
+                    className={`w-10 h-10 rounded-md font-bold text-sm transition-all duration-200 ${
+                      guessedLetters.includes(letter)
+                        ? currentWord.includes(letter)
+                          ? 'bg-green-500 text-white shadow-lg'
+                          : 'bg-red-500 text-white shadow-lg'
+                        : 'bg-gradient-to-br from-purple-400 to-purple-600 text-white hover:from-purple-500 hover:to-purple-700 hover:scale-105 shadow-md'
+                    } ${
+                      gameStatus !== 'playing' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                    }`}
+                  >
+                    {letter}
+                  </button>
+                ))}
+              </div>
+              <div className="grid grid-cols-8 gap-2 mb-3">
+                {alphabet.slice(9, 17).map((letter) => (
+                  <button
+                    key={letter}
+                    onClick={() => handleLetterClick(letter)}
+                    disabled={guessedLetters.includes(letter) || gameStatus !== 'playing'}
+                    className={`w-10 h-10 rounded-md font-bold text-sm transition-all duration-200 ${
+                      guessedLetters.includes(letter)
+                        ? currentWord.includes(letter)
+                          ? 'bg-green-500 text-white shadow-lg'
+                          : 'bg-red-500 text-white shadow-lg'
+                        : 'bg-gradient-to-br from-purple-400 to-purple-600 text-white hover:from-purple-500 hover:to-purple-700 hover:scale-105 shadow-md'
+                    } ${
+                      gameStatus !== 'playing' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                    }`}
+                  >
+                    {letter}
+                  </button>
+                ))}
+              </div>
+              <div className="grid grid-cols-9 gap-2">
+                {alphabet.slice(17, 26).map((letter) => (
+                  <button
+                    key={letter}
+                    onClick={() => handleLetterClick(letter)}
+                    disabled={guessedLetters.includes(letter) || gameStatus !== 'playing'}
+                    className={`w-10 h-10 rounded-md font-bold text-sm transition-all duration-200 ${
+                      guessedLetters.includes(letter)
+                        ? currentWord.includes(letter)
+                          ? 'bg-green-500 text-white shadow-lg'
+                          : 'bg-red-500 text-white shadow-lg'
+                        : 'bg-gradient-to-br from-purple-400 to-purple-600 text-white hover:from-purple-500 hover:to-purple-700 hover:scale-105 shadow-md'
+                    } ${
+                      gameStatus !== 'playing' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                    }`}
+                  >
+                    {letter}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
