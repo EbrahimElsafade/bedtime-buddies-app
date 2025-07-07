@@ -10,6 +10,7 @@ const SnakeGame = () => {
   const [food, setFood] = useState({ x: 15, y: 15 });
   const [direction, setDirection] = useState({ x: 0, y: 0 });
   const [score, setScore] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
   const [highScore, setHighScore] = useState(() => {
     const saved = localStorage.getItem('snakeHighScore');
     return saved ? parseInt(saved) : 0;
@@ -31,10 +32,12 @@ const SnakeGame = () => {
     setDirection({ x: 0, y: 0 });
     setScore(0);
     setGameState('playing');
+    setGameStarted(false);
   }, [generateFood]);
 
   const gameOver = useCallback(() => {
     setGameState('gameOver');
+    setGameStarted(false);
     if (score > highScore) {
       setHighScore(score);
       localStorage.setItem('snakeHighScore', score.toString());
@@ -45,7 +48,7 @@ const SnakeGame = () => {
   }, [score, highScore]);
 
   const moveSnake = useCallback(() => {
-    if (gameState !== 'playing') return;
+    if (gameState !== 'playing' || !gameStarted) return;
 
     setSnake(currentSnake => {
       const newSnake = [...currentSnake];
@@ -54,11 +57,13 @@ const SnakeGame = () => {
       head.x += direction.x;
       head.y += direction.y;
 
+      // Check wall collision
       if (head.x < 0 || head.x >= gridSize || head.y < 0 || head.y >= gridSize) {
         gameOver();
         return currentSnake;
       }
 
+      // Check self collision
       if (newSnake.some(segment => segment.x === head.x && segment.y === head.y)) {
         gameOver();
         return currentSnake;
@@ -66,6 +71,7 @@ const SnakeGame = () => {
 
       newSnake.unshift(head);
 
+      // Check food collision
       if (head.x === food.x && head.y === food.y) {
         setScore(prev => prev + 10);
         setFood(generateFood());
@@ -76,7 +82,7 @@ const SnakeGame = () => {
 
       return newSnake;
     });
-  }, [direction, food, gameState, gameOver, generateFood, gridSize]);
+  }, [direction, food, gameState, gameStarted, gameOver, generateFood, gridSize]);
 
   useEffect(() => {
     const gameInterval = setInterval(moveSnake, gameSpeed);
@@ -87,25 +93,61 @@ const SnakeGame = () => {
     const handleKeyPress = (e: KeyboardEvent) => {
       if (gameState !== 'playing') return;
 
+      let newDirection = { x: 0, y: 0 };
+      let validMove = false;
+
       switch (e.key) {
         case 'ArrowUp':
-          if (direction.y === 0) setDirection({ x: 0, y: -1 });
+          if (direction.y === 0) {
+            newDirection = { x: 0, y: -1 };
+            validMove = true;
+          }
           break;
         case 'ArrowDown':
-          if (direction.y === 0) setDirection({ x: 0, y: 1 });
+          if (direction.y === 0) {
+            newDirection = { x: 0, y: 1 };
+            validMove = true;
+          }
           break;
         case 'ArrowLeft':
-          if (direction.x === 0) setDirection({ x: -1, y: 0 });
+          if (direction.x === 0) {
+            newDirection = { x: -1, y: 0 };
+            validMove = true;
+          }
           break;
         case 'ArrowRight':
-          if (direction.x === 0) setDirection({ x: 1, y: 0 });
+          if (direction.x === 0) {
+            newDirection = { x: 1, y: 0 };
+            validMove = true;
+          }
           break;
+      }
+
+      if (validMove) {
+        setDirection(newDirection);
+        if (!gameStarted) {
+          setGameStarted(true);
+        }
       }
     };
 
     window.addEventListener('keydown', handleKeyPress);
     return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [direction, gameState]);
+  }, [direction, gameState, gameStarted]);
+
+  const handleDirectionClick = (newDirection: { x: number; y: number }) => {
+    if (gameState !== 'playing') return;
+    
+    const canMove = (newDirection.x !== 0 && direction.x === 0) || 
+                   (newDirection.y !== 0 && direction.y === 0);
+    
+    if (canMove) {
+      setDirection(newDirection);
+      if (!gameStarted) {
+        setGameStarted(true);
+      }
+    }
+  };
 
   if (gameState === 'menu') {
     return (
@@ -167,7 +209,9 @@ const SnakeGame = () => {
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">
           🐍 Snake Game
         </CardTitle>
-        <CardDescription>Use arrow keys to control the snake!</CardDescription>
+        <CardDescription>
+          {!gameStarted ? 'Press an arrow key or click a direction button to start!' : 'Use arrow keys to control the snake!'}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
@@ -243,7 +287,7 @@ const SnakeGame = () => {
                 variant="outline"
                 size="lg"
                 className="aspect-square"
-                onClick={() => gameState === 'playing' && direction.y === 0 && setDirection({ x: 0, y: -1 })}
+                onClick={() => handleDirectionClick({ x: 0, y: -1 })}
                 disabled={gameState !== 'playing'}
               >
                 ⬆️
@@ -254,7 +298,7 @@ const SnakeGame = () => {
                 variant="outline"
                 size="lg"
                 className="aspect-square"
-                onClick={() => gameState === 'playing' && direction.x === 0 && setDirection({ x: -1, y: 0 })}
+                onClick={() => handleDirectionClick({ x: -1, y: 0 })}
                 disabled={gameState !== 'playing'}
               >
                 ⬅️
@@ -266,7 +310,7 @@ const SnakeGame = () => {
                 variant="outline"
                 size="lg"
                 className="aspect-square"
-                onClick={() => gameState === 'playing' && direction.x === 0 && setDirection({ x: 1, y: 0 })}
+                onClick={() => handleDirectionClick({ x: 1, y: 0 })}
                 disabled={gameState !== 'playing'}
               >
                 ➡️
@@ -277,7 +321,7 @@ const SnakeGame = () => {
                 variant="outline"
                 size="lg"
                 className="aspect-square"
-                onClick={() => gameState === 'playing' && direction.y === 0 && setDirection({ x: 0, y: 1 })}
+                onClick={() => handleDirectionClick({ x: 0, y: 1 })}
                 disabled={gameState !== 'playing'}
               >
                 ⬇️
