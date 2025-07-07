@@ -1,3 +1,4 @@
+
 import { useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
@@ -21,16 +22,12 @@ const Games = () => {
   return (
     <div className="py-12 px-4" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="container mx-auto max-w-6xl">
-        <p className="text-muted-foreground mb-8 max-w-2xl">
-          {t('games.subtitle', { ns: 'common' })}
-        </p>
-        
         <Tabs defaultValue="tic-tac-toe" className="w-full">
           <TabsList className="grid w-full grid-cols-5 mb-8">
             <TabsTrigger value="tic-tac-toe">{t('games.ticTacToe.title', { ns: 'common' })}</TabsTrigger>
-            <TabsTrigger value="rock-paper-scissors">Rock Paper Scissors</TabsTrigger>
-            <TabsTrigger value="hangman">Hangman</TabsTrigger>
-            <TabsTrigger value="memory">Memory Cards</TabsTrigger>
+            <TabsTrigger value="rock-paper-scissors">{t('games.rockPaperScissors.title', { ns: 'common' })}</TabsTrigger>
+            <TabsTrigger value="hangman">{t('games.hangman.title', { ns: 'common' })}</TabsTrigger>
+            <TabsTrigger value="memory">{t('games.memory.title', { ns: 'common' })}</TabsTrigger>
             <TabsTrigger value="snake">{t('games.snake.title', { ns: 'common' })}</TabsTrigger>
           </TabsList>
           
