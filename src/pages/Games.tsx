@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -249,6 +250,153 @@ const TicTacToe = () => {
   );
 };
 
+const RockPaperScissors = () => {
+  const [playerChoice, setPlayerChoice] = useState<string>('');
+  const [computerChoice, setComputerChoice] = useState<string>('');
+  const [playerScore, setPlayerScore] = useState(0);
+  const [computerScore, setComputerScore] = useState(0);
+  const [result, setResult] = useState<string>('');
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const choices = [
+    { name: 'rock', emoji: '🪨', icon: '✊' },
+    { name: 'paper', emoji: '📄', icon: '✋' },
+    { name: 'scissors', emoji: '✂️', icon: '✌️' }
+  ];
+
+  const getRandomChoice = () => {
+    const randomIndex = Math.floor(Math.random() * choices.length);
+    return choices[randomIndex].name;
+  };
+
+  const determineWinner = (player: string, computer: string) => {
+    if (player === computer) return 'tie';
+    
+    if (
+      (player === 'rock' && computer === 'scissors') ||
+      (player === 'paper' && computer === 'rock') ||
+      (player === 'scissors' && computer === 'paper')
+    ) {
+      return 'player';
+    }
+    return 'computer';
+  };
+
+  const playGame = (playerChoice: string) => {
+    setIsPlaying(true);
+    const computerChoice = getRandomChoice();
+    
+    setPlayerChoice(playerChoice);
+    setComputerChoice(computerChoice);
+
+    setTimeout(() => {
+      const winner = determineWinner(playerChoice, computerChoice);
+      
+      if (winner === 'player') {
+        setPlayerScore(prev => prev + 1);
+        setResult('You Win!');
+        toast.success('You won this round!');
+      } else if (winner === 'computer') {
+        setComputerScore(prev => prev + 1);
+        setResult('Computer Wins!');
+        toast.error('Computer won this round!');
+      } else {
+        setResult("It's a Tie!");
+        toast.info("It's a tie!");
+      }
+      
+      setIsPlaying(false);
+    }, 1000);
+  };
+
+  const resetGame = () => {
+    setPlayerChoice('');
+    setComputerChoice('');
+    setPlayerScore(0);
+    setComputerScore(0);
+    setResult('');
+    setIsPlaying(false);
+  };
+
+  const getChoiceDisplay = (choice: string) => {
+    const choiceObj = choices.find(c => c.name === choice);
+    return choiceObj ? choiceObj.emoji : '❓';
+  };
+
+  return (
+    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+      <CardHeader>
+        <CardTitle className="text-xl">Rock Paper Scissors</CardTitle>
+        <CardDescription>Classic game - Beat the computer!</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col items-center space-y-6">
+          {/* Score Display */}
+          <div className="flex justify-between w-full max-w-md">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-dream-DEFAULT">{playerScore}</div>
+              <div className="text-sm text-muted-foreground">You</div>
+            </div>
+            <div className="text-center">
+              <div className="text-lg font-medium">VS</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-red-500">{computerScore}</div>
+              <div className="text-sm text-muted-foreground">Computer</div>
+            </div>
+          </div>
+
+          {/* Game Display */}
+          <div className="flex items-center justify-center space-x-8">
+            <div className="text-center">
+              <div className="text-6xl mb-2">
+                {isPlaying ? '🤔' : getChoiceDisplay(playerChoice)}
+              </div>
+              <div className="text-sm text-muted-foreground">Your Choice</div>
+            </div>
+            
+            <div className="text-4xl">🆚</div>
+            
+            <div className="text-center">
+              <div className="text-6xl mb-2">
+                {isPlaying ? '🤖' : getChoiceDisplay(computerChoice)}
+              </div>
+              <div className="text-sm text-muted-foreground">Computer</div>
+            </div>
+          </div>
+
+          {/* Result */}
+          {result && !isPlaying && (
+            <div className="text-xl font-bold text-center">
+              {result}
+            </div>
+          )}
+
+          {/* Choice Buttons */}
+          <div className="grid grid-cols-3 gap-4 w-full max-w-md">
+            {choices.map((choice) => (
+              <button
+                key={choice.name}
+                onClick={() => playGame(choice.name)}
+                disabled={isPlaying}
+                className="p-6 rounded-lg border-2 transition-all hover:scale-105 border-gray-200 dark:border-gray-700 hover:border-dream-light disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <div className="text-4xl mb-2">{choice.emoji}</div>
+                <div className="text-sm font-medium capitalize">{choice.name}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <Button onClick={resetGame} variant="outline" className="w-full">
+          Reset Game
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+};
+
 const ColoringBook = () => {
   const { t } = useTranslation();
   
@@ -319,8 +467,9 @@ const Games = () => {
         </p>
         
         <Tabs defaultValue="tic-tac-toe" className="w-full">
-          <TabsList className="grid w-full grid-cols-4 mb-8">
+          <TabsList className="grid w-full grid-cols-5 mb-8">
             <TabsTrigger value="tic-tac-toe">Tic Tac Toe</TabsTrigger>
+            <TabsTrigger value="rock-paper-scissors">Rock Paper Scissors</TabsTrigger>
             <TabsTrigger value="coloring">Coloring Book</TabsTrigger>
             <TabsTrigger value="puzzle">Puzzle Game</TabsTrigger>
             <TabsTrigger value="memory">Memory Game</TabsTrigger>
@@ -328,6 +477,10 @@ const Games = () => {
           
           <TabsContent value="tic-tac-toe" className="mt-0">
             <TicTacToe />
+          </TabsContent>
+          
+          <TabsContent value="rock-paper-scissors" className="mt-0">
+            <RockPaperScissors />
           </TabsContent>
           
           <TabsContent value="coloring" className="mt-0">
