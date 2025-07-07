@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
-import { Users, Bot, Hand, Scissors, Skull } from "lucide-react";
+import { Users, Bot, Hand, Scissors } from "lucide-react";
 
 const TicTacToe = () => {
   const { t } = useTranslation();
@@ -540,7 +540,7 @@ const HangmanGame = () => {
         {gameStatus === 'lost' && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg">
             <div className="text-center text-white">
-              <Skull className="w-12 h-12 mx-auto mb-2" />
+              <div className="text-4xl mb-2">😔</div>
               <div className="text-xl font-bold text-red-400">GAME OVER</div>
             </div>
           </div>
@@ -574,7 +574,7 @@ const HangmanGame = () => {
               )}
               {gameStatus === 'lost' && (
                 <div className="text-2xl font-bold text-red-600 animate-pulse">
-                  💀 GAME OVER 💀
+                  😔 TRY AGAIN! 😔
                 </div>
               )}
             </div>
