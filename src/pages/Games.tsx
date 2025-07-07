@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
-import { Users, Bot } from "lucide-react";
+import { Users, Bot, Hand, Scissors } from "lucide-react";
 
 const TicTacToe = () => {
   const { t } = useTranslation();
@@ -259,9 +258,9 @@ const RockPaperScissors = () => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const choices = [
-    { name: 'rock', icon: '✊' },
-    { name: 'paper', icon: '✋' },
-    { name: 'scissors', icon: '✌️' }
+    { name: 'rock', icon: Hand, rotation: 'rotate-90' },
+    { name: 'paper', icon: Hand, rotation: '' },
+    { name: 'scissors', icon: Scissors, rotation: '' }
   ];
 
   const getRandomChoice = () => {
@@ -318,9 +317,12 @@ const RockPaperScissors = () => {
     setIsPlaying(false);
   };
 
-  const getChoiceDisplay = (choice: string) => {
+  const getChoiceIcon = (choice: string) => {
     const choiceObj = choices.find(c => c.name === choice);
-    return choiceObj ? choiceObj.icon : '❓';
+    if (!choiceObj) return null;
+    
+    const IconComponent = choiceObj.icon;
+    return <IconComponent size={80} className={choiceObj.rotation} />;
   };
 
   return (
@@ -349,8 +351,8 @@ const RockPaperScissors = () => {
           {/* Game Display */}
           <div className="flex items-center justify-center space-x-8">
             <div className="text-center">
-              <div className="text-6xl mb-2">
-                {isPlaying ? '🤔' : getChoiceDisplay(playerChoice)}
+              <div className="flex justify-center items-center h-24 mb-2">
+                {isPlaying ? '🤔' : playerChoice ? getChoiceIcon(playerChoice) : '❓'}
               </div>
               <div className="text-sm text-muted-foreground">Your Choice</div>
             </div>
@@ -358,8 +360,8 @@ const RockPaperScissors = () => {
             <div className="text-4xl">🆚</div>
             
             <div className="text-center">
-              <div className="text-6xl mb-2">
-                {isPlaying ? '🤖' : getChoiceDisplay(computerChoice)}
+              <div className="flex justify-center items-center h-24 mb-2">
+                {isPlaying ? '🤖' : computerChoice ? getChoiceIcon(computerChoice) : '❓'}
               </div>
               <div className="text-sm text-muted-foreground">Computer</div>
             </div>
@@ -374,17 +376,22 @@ const RockPaperScissors = () => {
 
           {/* Choice Buttons */}
           <div className="grid grid-cols-3 gap-4 w-full max-w-md">
-            {choices.map((choice) => (
-              <button
-                key={choice.name}
-                onClick={() => playGame(choice.name)}
-                disabled={isPlaying}
-                className="p-6 rounded-lg border-2 transition-all hover:scale-105 border-gray-200 dark:border-gray-700 hover:border-dream-light disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <div className="text-4xl mb-2">{choice.icon}</div>
-                <div className="text-sm font-medium capitalize">{choice.name}</div>
-              </button>
-            ))}
+            {choices.map((choice) => {
+              const IconComponent = choice.icon;
+              return (
+                <button
+                  key={choice.name}
+                  onClick={() => playGame(choice.name)}
+                  disabled={isPlaying}
+                  className="p-6 rounded-lg border-2 transition-all hover:scale-105 border-gray-200 dark:border-gray-700 hover:border-dream-light disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <div className="flex justify-center mb-2">
+                    <IconComponent size={48} className={choice.rotation} />
+                  </div>
+                  <div className="text-sm font-medium capitalize">{choice.name}</div>
+                </button>
+              );
+            })}
           </div>
         </div>
       </CardContent>
