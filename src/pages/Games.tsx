@@ -259,9 +259,9 @@ const RockPaperScissors = () => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const choices = [
-    { name: 'rock', emoji: '🪨', icon: '✊' },
-    { name: 'paper', emoji: '📄', icon: '✋' },
-    { name: 'scissors', emoji: '✂️', icon: '✌️' }
+    { name: 'rock', icon: '✊' },
+    { name: 'paper', icon: '✋' },
+    { name: 'scissors', icon: '✌️' }
   ];
 
   const getRandomChoice = () => {
@@ -320,7 +320,7 @@ const RockPaperScissors = () => {
 
   const getChoiceDisplay = (choice: string) => {
     const choiceObj = choices.find(c => c.name === choice);
-    return choiceObj ? choiceObj.emoji : '❓';
+    return choiceObj ? choiceObj.icon : '❓';
   };
 
   return (
@@ -381,7 +381,7 @@ const RockPaperScissors = () => {
                 disabled={isPlaying}
                 className="p-6 rounded-lg border-2 transition-all hover:scale-105 border-gray-200 dark:border-gray-700 hover:border-dream-light disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <div className="text-4xl mb-2">{choice.emoji}</div>
+                <div className="text-4xl mb-2">{choice.icon}</div>
                 <div className="text-sm font-medium capitalize">{choice.name}</div>
               </button>
             ))}
