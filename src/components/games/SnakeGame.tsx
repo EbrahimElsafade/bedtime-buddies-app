@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -133,29 +134,29 @@ const SnakeGame = () => {
 
   if (gameState === 'menu') {
     return (
-      <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent">
+      <Card className="overflow-hidden border-dream-light/20 bg-white/80 dark:bg-nightsky-light/80 backdrop-blur-sm shadow-xl">
+        <CardHeader className="text-center bg-gradient-to-br from-dream-light/10 to-purple-100/50 dark:from-nightsky/50 dark:to-nightsky-light/30">
+          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent">
             {t('games.snake.title')}
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-gray-600 dark:text-gray-300">
             {t('games.snake.description')}
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-8">
           <div className="flex flex-col items-center space-y-6">
             {highScore > 0 && (
-              <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-nightsky-light to-nightsky rounded-xl p-6 shadow-lg">
-                <div className="text-gray-600 dark:text-gray-300 text-sm mb-1">{t('games.snake.highScore')}</div>
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{highScore}</div>
+              <div className="bg-gradient-to-r from-dream-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-xl p-6 shadow-lg border border-dream-light/20 dark:border-nightsky-light/30">
+                <div className="text-gray-600 dark:text-gray-300 text-sm mb-1 text-center">{t('games.snake.highScore')}</div>
+                <div className="text-3xl font-bold text-dream-DEFAULT dark:text-dream-light text-center">{highScore}</div>
               </div>
             )}
           </div>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="p-6">
           <Button 
             onClick={resetGame}
-            className="w-full py-3 text-lg font-semibold hover:bg-dream-light hover:text-white transition-all duration-300"
+            className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-dream-DEFAULT to-dream-dark hover:from-dream-light hover:to-dream-DEFAULT text-white shadow-lg hover:shadow-xl transition-all duration-300"
           >
             {t('games.snake.startGame')}
           </Button>
@@ -166,33 +167,33 @@ const SnakeGame = () => {
 
   if (gameState === 'gameOver') {
     return (
-      <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-        <CardHeader className="text-center">
+      <Card className="overflow-hidden border-dream-light/20 bg-white/80 dark:bg-nightsky-light/80 backdrop-blur-sm shadow-xl">
+        <CardHeader className="text-center bg-gradient-to-br from-red-50/50 to-red-100/30 dark:from-red-900/20 dark:to-red-800/10">
           <CardTitle className="text-2xl font-bold text-red-600 dark:text-red-400">
             {t('games.snake.gameOver')}
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-gray-600 dark:text-gray-300">
             {t('games.snake.score')} {score}
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-8">
           <div className="flex flex-col items-center space-y-6">
             {score === highScore && score > 0 && (
-              <div className="text-blue-600 dark:text-blue-400 font-semibold text-lg">
+              <div className="text-dream-DEFAULT dark:text-dream-light font-bold text-lg animate-bounce">
                 🎉 {t('games.snake.newHighScore')}
               </div>
             )}
             
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-nightsky-light to-nightsky rounded-xl p-6 shadow-lg w-full max-w-sm">
+            <div className="bg-gradient-to-r from-dream-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-xl p-6 shadow-lg w-full max-w-sm border border-dream-light/20 dark:border-nightsky-light/30">
               <div className="text-gray-600 dark:text-gray-300 text-sm mb-1 text-center">{t('games.snake.highScore')}</div>
-              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 text-center">{highScore}</div>
+              <div className="text-3xl font-bold text-dream-DEFAULT dark:text-dream-light text-center">{highScore}</div>
             </div>
           </div>
         </CardContent>
-        <CardFooter>
+        <CardFooter className="p-6">
           <Button 
             onClick={resetGame}
-            className="w-full py-3 text-lg font-semibold hover:bg-dream-light hover:text-white transition-all duration-300"
+            className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-dream-DEFAULT to-dream-dark hover:from-dream-light hover:to-dream-DEFAULT text-white shadow-lg hover:shadow-xl transition-all duration-300"
           >
             {t('games.snake.playAgain')}
           </Button>
@@ -202,24 +203,24 @@ const SnakeGame = () => {
   }
 
   return (
-    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-      <CardHeader>
+    <Card className="overflow-hidden border-dream-light/20 bg-white/80 dark:bg-nightsky-light/80 backdrop-blur-sm shadow-xl">
+      <CardHeader className="bg-gradient-to-br from-dream-light/10 to-purple-100/50 dark:from-nightsky/50 dark:to-nightsky-light/30">
         <div className="flex justify-between items-center">
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-nightsky-light to-nightsky rounded-lg px-4 py-2">
+          <div className="bg-gradient-to-r from-dream-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-lg px-4 py-2 border border-dream-light/20 dark:border-nightsky-light/30">
             <div className="text-sm text-gray-600 dark:text-gray-300">{t('games.snake.score')}</div>
-            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{score}</div>
+            <div className="text-2xl font-bold text-dream-DEFAULT dark:text-dream-light">{score}</div>
           </div>
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-nightsky-light to-nightsky rounded-lg px-4 py-2">
+          <div className="bg-gradient-to-r from-dream-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-lg px-4 py-2 border border-dream-light/20 dark:border-nightsky-light/30">
             <div className="text-sm text-gray-600 dark:text-gray-300">{t('games.snake.highScore')}</div>
-            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{highScore}</div>
+            <div className="text-2xl font-bold text-dream-DEFAULT dark:text-dream-light">{highScore}</div>
           </div>
         </div>
       </CardHeader>
       
-      <CardContent>
-        <div className="relative bg-gray-900 rounded-lg p-4 mb-6">
+      <CardContent className="p-6">
+        <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 dark:from-nightsky dark:to-nightsky-light rounded-lg p-4 mb-6 border-2 border-gray-300 dark:border-nightsky-light/50 shadow-inner">
           <div 
-            className="w-full h-full max-w-[min(70vw,70vh)] max-h-[min(70vw,70vh)] bg-gray-800 grid gap-0 mx-auto"
+            className="w-full h-full max-w-[min(70vw,70vh)] max-h-[min(70vw,70vh)] bg-white/90 dark:bg-nightsky-light/50 grid gap-0 mx-auto border border-gray-200 dark:border-nightsky-light/30 rounded shadow-sm"
             style={{
               gridTemplate: `repeat(${gridSize}, 1fr) / repeat(${gridSize}, 1fr)`,
               aspectRatio: '1'
@@ -227,7 +228,7 @@ const SnakeGame = () => {
           >
             {/* Food */}
             <div
-              className="bg-red-500 rounded-sm"
+              className="bg-gradient-to-br from-red-400 to-red-600 rounded-sm shadow-sm animate-pulse"
               style={{
                 gridArea: `${food.y} / ${food.x}`
               }}
@@ -237,7 +238,11 @@ const SnakeGame = () => {
             {snake.map((segment, index) => (
               <div
                 key={index}
-                className={`${index === 0 ? 'bg-green-400' : 'bg-green-500'} rounded-sm`}
+                className={`${
+                  index === 0 
+                    ? 'bg-gradient-to-br from-green-300 to-green-500 dark:from-green-400 dark:to-green-600' 
+                    : 'bg-gradient-to-br from-green-400 to-green-600 dark:from-green-500 dark:to-green-700'
+                } rounded-sm shadow-sm`}
                 style={{
                   gridArea: `${segment.y} / ${segment.x}`
                 }}
@@ -251,32 +256,32 @@ const SnakeGame = () => {
           <div></div>
           <button
             onClick={() => handleDirectionChange({ x: 0, y: -1 })}
-            className="p-4 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-lg hover:scale-105 transition-all duration-200 flex items-center justify-center"
+            className="p-4 bg-gradient-to-br from-dream-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-lg hover:scale-105 transition-all duration-200 flex items-center justify-center border border-dream-light/20 dark:border-nightsky-light/30 shadow-md"
           >
-            <ArrowUp size={24} />
+            <ArrowUp size={24} className="text-dream-DEFAULT dark:text-dream-light" />
           </button>
           <div></div>
           
           <button
             onClick={() => handleDirectionChange({ x: -1, y: 0 })}
-            className="p-4 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-lg hover:scale-105 transition-all duration-200 flex items-center justify-center"
+            className="p-4 bg-gradient-to-br from-dream-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-lg hover:scale-105 transition-all duration-200 flex items-center justify-center border border-dream-light/20 dark:border-nightsky-light/30 shadow-md"
           >
-            <ArrowLeft size={24} />
+            <ArrowLeft size={24} className="text-dream-DEFAULT dark:text-dream-light" />
           </button>
           <div></div>
           <button
             onClick={() => handleDirectionChange({ x: 1, y: 0 })}
-            className="p-4 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-lg hover:scale-105 transition-all duration-200 flex items-center justify-center"
+            className="p-4 bg-gradient-to-br from-dream-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-lg hover:scale-105 transition-all duration-200 flex items-center justify-center border border-dream-light/20 dark:border-nightsky-light/30 shadow-md"
           >
-            <ArrowRight size={24} />
+            <ArrowRight size={24} className="text-dream-DEFAULT dark:text-dream-light" />
           </button>
           
           <div></div>
           <button
             onClick={() => handleDirectionChange({ x: 0, y: 1 })}
-            className="p-4 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 rounded-lg hover:scale-105 transition-all duration-200 flex items-center justify-center"
+            className="p-4 bg-gradient-to-br from-dream-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-lg hover:scale-105 transition-all duration-200 flex items-center justify-center border border-dream-light/20 dark:border-nightsky-light/30 shadow-md"
           >
-            <ArrowDown size={24} />
+            <ArrowDown size={24} className="text-dream-DEFAULT dark:text-dream-light" />
           </button>
           <div></div>
         </div>
