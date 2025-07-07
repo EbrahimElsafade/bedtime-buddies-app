@@ -136,7 +136,7 @@ const SnakeGame = () => {
 
   if (gameState === 'menu') {
     return (
-      <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm" dir={isRTL ? 'rtl' : 'ltr'}>
+      <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent">
             {t('games.snake.title')}
@@ -169,7 +169,7 @@ const SnakeGame = () => {
 
   if (gameState === 'gameOver') {
     return (
-      <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm" dir={isRTL ? 'rtl' : 'ltr'}>
+      <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-red-600 dark:text-red-400">
             {t('games.snake.gameOver')}
@@ -205,7 +205,7 @@ const SnakeGame = () => {
   }
 
   return (
-    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm" dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
       <CardHeader>
         <div className="flex justify-between items-center">
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-nightsky-light to-nightsky rounded-lg px-4 py-2">
@@ -222,10 +222,11 @@ const SnakeGame = () => {
       <CardContent>
         <div className="relative bg-gray-900 rounded-lg p-4 mb-6">
           <div 
-            className="w-full h-full max-w-[min(70vw,70vh)] max-h-[min(70vw,70vh)] bg-gray-800 grid gap-0 mx-auto"
+            className={`w-full h-full max-w-[min(70vw,70vh)] max-h-[min(70vw,70vh)] bg-gray-800 grid gap-0 mx-auto ${isRTL ? 'rtl' : 'ltr'}`}
             style={{
               gridTemplate: `repeat(${gridSize}, 1fr) / repeat(${gridSize}, 1fr)`,
-              aspectRatio: '1'
+              aspectRatio: '1',
+              direction: isRTL ? 'rtl' : 'ltr'
             }}
           >
             {/* Food */}
