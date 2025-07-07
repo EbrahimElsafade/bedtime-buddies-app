@@ -2,11 +2,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "sonner";
+import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight } from 'lucide-react';
 
 const SnakeGame = () => {
   const [gameState, setGameState] = useState<'menu' | 'playing' | 'gameOver'>('menu');
-  const [snake, setSnake] = useState([{ x: 10, y: 10 }]);
+  const [snake, setSnake] = useState([{ x: 5, y: 5 }]);
   const [food, setFood] = useState({ x: 15, y: 15 });
   const [direction, setDirection] = useState({ x: 0, y: 0 });
   const [score, setScore] = useState(0);
@@ -16,24 +16,18 @@ const SnakeGame = () => {
     return saved ? parseInt(saved) : 0;
   });
 
-  const gridSize = 20;
-  const gameSpeed = 150;
-
-  // Array of fruit emojis for variety
-  const fruits = ['🍎', '🍊', '🍌', '🍇', '🍓', '🥝', '🍑', '🥭'];
-  const [currentFruit, setCurrentFruit] = useState('🍎');
+  const gridSize = 30;
+  const gameSpeed = 100;
 
   const generateFood = useCallback(() => {
-    // Pick a random fruit
-    setCurrentFruit(fruits[Math.floor(Math.random() * fruits.length)]);
     return {
-      x: Math.floor(Math.random() * gridSize),
-      y: Math.floor(Math.random() * gridSize)
+      x: Math.floor(Math.random() * gridSize) + 1,
+      y: Math.floor(Math.random() * gridSize) + 1
     };
   }, [gridSize]);
 
   const resetGame = useCallback(() => {
-    setSnake([{ x: 10, y: 10 }]);
+    setSnake([{ x: 5, y: 5 }]);
     setFood(generateFood());
     setDirection({ x: 0, y: 0 });
     setScore(0);
@@ -47,9 +41,6 @@ const SnakeGame = () => {
     if (score > highScore) {
       setHighScore(score);
       localStorage.setItem('snakeHighScore', score.toString());
-      toast.success(`New High Score: ${score}!`);
-    } else {
-      toast.error(`Game Over! Score: ${score}`);
     }
   }, [score, highScore]);
 
@@ -64,7 +55,7 @@ const SnakeGame = () => {
       head.y += direction.y;
 
       // Check wall collision
-      if (head.x < 0 || head.x >= gridSize || head.y < 0 || head.y >= gridSize) {
+      if (head.x <= 0 || head.x > gridSize || head.y <= 0 || head.y > gridSize) {
         gameOver();
         return currentSnake;
       }
@@ -79,7 +70,7 @@ const SnakeGame = () => {
 
       // Check food collision
       if (head.x === food.x && head.y === food.y) {
-        setScore(prev => prev + 10);
+        setScore(prev => prev + 1);
         setFood(generateFood());
       } else {
         newSnake.pop();
@@ -94,51 +85,44 @@ const SnakeGame = () => {
     return () => clearInterval(gameInterval);
   }, [moveSnake, gameSpeed]);
 
+  const handleDirectionChange = (newDirection: { x: number; y: number }) => {
+    if (gameState !== 'playing') return;
+    
+    // Prevent reverse direction
+    if ((newDirection.x === 1 && direction.x === -1) ||
+        (newDirection.x === -1 && direction.x === 1) ||
+        (newDirection.y === 1 && direction.y === -1) ||
+        (newDirection.y === -1 && direction.y === 1)) {
+      return;
+    }
+
+    setDirection(newDirection);
+    if (!gameStarted) {
+      setGameStarted(true);
+    }
+  };
+
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      // Only handle arrow keys when the game is playing
       if (gameState !== 'playing') return;
 
-      // Prevent default behavior to stop page scrolling
       if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
         e.preventDefault();
       }
 
-      let newDirection = { x: 0, y: 0 };
-      let validMove = false;
-
       switch (e.key) {
         case 'ArrowUp':
-          if (direction.y === 0) {
-            newDirection = { x: 0, y: -1 };
-            validMove = true;
-          }
+          handleDirectionChange({ x: 0, y: -1 });
           break;
         case 'ArrowDown':
-          if (direction.y === 0) {
-            newDirection = { x: 0, y: 1 };
-            validMove = true;
-          }
+          handleDirectionChange({ x: 0, y: 1 });
           break;
         case 'ArrowLeft':
-          if (direction.x === 0) {
-            newDirection = { x: -1, y: 0 };
-            validMove = true;
-          }
+          handleDirectionChange({ x: -1, y: 0 });
           break;
         case 'ArrowRight':
-          if (direction.x === 0) {
-            newDirection = { x: 1, y: 0 };
-            validMove = true;
-          }
+          handleDirectionChange({ x: 1, y: 0 });
           break;
-      }
-
-      if (validMove) {
-        setDirection(newDirection);
-        if (!gameStarted) {
-          setGameStarted(true);
-        }
       }
     };
 
@@ -148,294 +132,118 @@ const SnakeGame = () => {
 
   if (gameState === 'menu') {
     return (
-      <Card className="overflow-hidden border-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white shadow-2xl">
-        <CardHeader className="text-center pb-8">
-          <CardTitle className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
-            Snake Game
-          </CardTitle>
-          <CardDescription className="text-slate-300 text-lg">
-            Control the snake to eat delicious fruits and grow longer!
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col items-center space-y-8">
-            <div className="text-center space-y-6">
-              <div className="text-8xl mb-6 animate-bounce">🐍</div>
-              <h3 className="text-2xl font-semibold text-cyan-300">Classic Snake Adventure</h3>
-              <p className="text-slate-300 max-w-md leading-relaxed">
-                Use arrow keys to guide your snake around the board. Eat colorful fruits to grow bigger and earn points! 
-                Watch out for walls and don't bite yourself!
-              </p>
-            </div>
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-slate-700 rounded-lg shadow-2xl overflow-hidden">
+          <div className="p-8 text-center">
+            <h1 className="text-4xl font-bold text-slate-200 mb-4">Snake Game</h1>
+            <p className="text-slate-400 mb-8">Use arrow keys to control the snake</p>
             
             {highScore > 0 && (
-              <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border border-yellow-500/30 px-8 py-6 rounded-2xl">
-                <div className="text-center">
-                  <div className="text-sm font-medium text-yellow-300 mb-1">🏆 High Score</div>
-                  <div className="text-4xl font-bold text-yellow-400">{highScore}</div>
-                </div>
+              <div className="bg-slate-600 rounded-lg p-4 mb-8">
+                <div className="text-slate-300 text-sm">High Score</div>
+                <div className="text-2xl font-bold text-blue-400">{highScore}</div>
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-6 text-center max-w-md">
-              <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 backdrop-blur-sm border border-blue-500/30 p-6 rounded-2xl">
-                <div className="text-3xl mb-3">⬆️⬇️⬅️➡️</div>
-                <div className="text-sm font-medium text-blue-300">Arrow Keys</div>
-                <div className="text-xs text-slate-400 mt-1">Move Snake</div>
-              </div>
-              <div className="bg-gradient-to-br from-red-500/20 to-pink-500/20 backdrop-blur-sm border border-red-500/30 p-6 rounded-2xl">
-                <div className="text-3xl mb-3">{fruits.join('')}</div>
-                <div className="text-sm font-medium text-red-300">Eat Fruits</div>
-                <div className="text-xs text-slate-400 mt-1">Grow & Score</div>
-              </div>
-            </div>
-
             <Button 
               onClick={resetGame}
-              className="px-10 py-6 text-lg font-semibold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 border-0 rounded-2xl shadow-lg transform transition-all duration-200 hover:scale-105"
+              className="w-full py-3 text-lg bg-blue-600 hover:bg-blue-700"
             >
-              🎮 Start Game
+              Start Game
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     );
   }
 
   return (
-    <Card className="overflow-hidden border-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white shadow-2xl">
-      <CardHeader className="text-center pb-6">
-        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-          Snake Game
-        </CardTitle>
-        <CardDescription className="text-slate-300 text-lg">
-          {!gameStarted ? 'Press an arrow key to start!' : 'Use arrow keys to control the snake!'}
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-8">
-          <div className="flex justify-center space-x-6">
-            <div className="text-center bg-gradient-to-br from-blue-500/20 to-purple-500/20 backdrop-blur-sm border border-blue-500/30 px-6 py-4 rounded-2xl">
-              <div className="text-3xl font-bold text-blue-400">{score}</div>
-              <div className="text-sm text-slate-400">Score</div>
-            </div>
-            <div className="text-center bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border border-yellow-500/30 px-6 py-4 rounded-2xl">
-              <div className="text-3xl font-bold text-yellow-400">{highScore}</div>
-              <div className="text-sm text-slate-400">Best</div>
-            </div>
-            <div className="text-center bg-gradient-to-br from-green-500/20 to-teal-500/20 backdrop-blur-sm border border-green-500/30 px-6 py-4 rounded-2xl">
-              <div className="text-3xl font-bold text-green-400">{snake.length}</div>
-              <div className="text-sm text-slate-400">Length</div>
-            </div>
-          </div>
-
-          {gameState === 'gameOver' && (
-            <div className="text-center bg-gradient-to-br from-red-500/20 to-pink-500/20 backdrop-blur-sm border border-red-500/30 p-8 rounded-2xl">
-              <div className="text-6xl mb-4 animate-pulse">💔</div>
-              <div className="text-3xl font-bold text-red-400 mb-4">
-                Game Over!
-              </div>
-              <div className="text-slate-300 text-lg">
-                Final Score: <span className="text-white font-bold">{score}</span>
-                {score === highScore && score > 0 && (
-                  <div className="text-yellow-400 font-semibold mt-2">🎉 New High Score! 🎉</div>
-                )}
-              </div>
-            </div>
-          )}
-
-          <div className="flex justify-center">
-            <div 
-              className="grid relative rounded-3xl overflow-hidden"
-              style={{
-                gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-                width: '480px',
-                height: '480px',
-                background: `
-                  linear-gradient(135deg, 
-                    rgba(15, 23, 42, 0.9) 0%, 
-                    rgba(30, 41, 59, 0.95) 25%, 
-                    rgba(51, 65, 85, 0.9) 50%, 
-                    rgba(30, 41, 59, 0.95) 75%, 
-                    rgba(15, 23, 42, 0.9) 100%
-                  ),
-                  radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
-                  radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-                  repeating-linear-gradient(
-                    45deg,
-                    transparent,
-                    transparent 12px,
-                    rgba(255, 255, 255, 0.02) 12px,
-                    rgba(255, 255, 255, 0.02) 24px
-                  )
-                `,
-                backgroundSize: '100% 100%, 200px 200px, 200px 200px, 24px 24px',
-                boxShadow: `
-                  inset 0 0 100px rgba(0, 0, 0, 0.8), 
-                  0 0 50px rgba(59, 130, 246, 0.3),
-                  inset 0 0 200px rgba(34, 197, 94, 0.05)
-                `,
-                border: '2px solid rgba(59, 130, 246, 0.3)'
-              }}
-            >
-              {/* Enhanced smoky overlay effect */}
-              <div 
-                className="absolute inset-0 pointer-events-none opacity-20"
-                style={{
-                  background: `
-                    radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.3) 0%, transparent 40%), 
-                    radial-gradient(circle at 70% 70%, rgba(139, 92, 246, 0.3) 0%, transparent 40%),
-                    radial-gradient(circle at 50% 10%, rgba(34, 197, 94, 0.2) 0%, transparent 30%),
-                    radial-gradient(circle at 10% 90%, rgba(168, 85, 247, 0.2) 0%, transparent 30%)
-                  `,
-                  animation: 'float 6s ease-in-out infinite alternate, twinkle 8s ease-in-out infinite'
-                }}
-              />
-              
-              {Array.from({ length: gridSize * gridSize }).map((_, index) => {
-                const x = index % gridSize;
-                const y = Math.floor(index / gridSize);
-                
-                const isSnakeHead = snake[0]?.x === x && snake[0]?.y === y;
-                const isSnakeBody = snake.slice(1).some(segment => segment.x === x && segment.y === y);
-                const isFood = food.x === x && food.y === y;
-                
-                // Get snake segment index for gradient effect
-                const snakeIndex = snake.findIndex(segment => segment.x === x && segment.y === y);
-                const segmentOpacity = snakeIndex === 0 ? 1 : Math.max(0.7, 1 - (snakeIndex * 0.05));
-                
-                return (
-                  <div
-                    key={index}
-                    className={`
-                      flex items-center justify-center text-lg transition-all duration-300 relative
-                      ${isFood ? 'animate-bounce' : ''}
-                      ${isSnakeHead || isSnakeBody ? 'transform transition-transform duration-150' : ''}
-                    `}
-                    style={{
-                      background: isSnakeBody && !isSnakeHead
-                        ? `radial-gradient(circle, 
-                            rgba(34, 197, 94, ${segmentOpacity * 0.4}) 0%, 
-                            rgba(21, 128, 61, ${segmentOpacity * 0.3}) 50%, 
-                            rgba(22, 101, 52, ${segmentOpacity * 0.2}) 100%
-                          )`
-                        : isSnakeHead
-                        ? `radial-gradient(circle, 
-                            rgba(34, 197, 94, 0.6) 0%, 
-                            rgba(21, 128, 61, 0.4) 50%, 
-                            rgba(22, 101, 52, 0.2) 100%
-                          )`
-                        : isFood 
-                        ? 'radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, transparent 70%)'
-                        : 'transparent',
-                      boxShadow: isSnakeHead 
-                        ? `
-                          0 0 25px rgba(34, 197, 94, 0.8),
-                          0 0 50px rgba(34, 197, 94, 0.4),
-                          inset 0 0 20px rgba(255, 255, 255, 0.1)
-                        `
-                        : isSnakeBody 
-                        ? `
-                          0 0 15px rgba(34, 197, 94, ${segmentOpacity * 0.6}),
-                          0 0 30px rgba(34, 197, 94, ${segmentOpacity * 0.3}),
-                          inset 0 0 15px rgba(255, 255, 255, ${segmentOpacity * 0.05})
-                        `
-                        : isFood 
-                        ? '0 0 25px rgba(239, 68, 68, 0.5), 0 0 50px rgba(239, 68, 68, 0.3)'
-                        : 'none',
-                      borderRadius: (isSnakeHead || isSnakeBody) ? '50%' : '0',
-                      border: isSnakeBody ? `1px solid rgba(255, 255, 255, ${segmentOpacity * 0.2})` : 'none',
-                      transform: isSnakeHead ? 'scale(1.1)' : isSnakeBody ? 'scale(0.95)' : 'scale(1)'
-                    }}
-                  >
-                    {isSnakeHead && (
-                      <div 
-                        className="text-2xl relative z-10"
-                        style={{
-                          filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.9))',
-                          textShadow: '0 0 15px rgba(34, 197, 94, 0.9), 0 0 30px rgba(34, 197, 94, 0.6)',
-                          animation: 'float 2s ease-in-out infinite'
-                        }}
-                      >
-                        🐍
-                      </div>
-                    )}
-                    {isSnakeBody && (
-                      <>
-                        <div 
-                          className="absolute inset-0 rounded-full"
-                          style={{
-                            background: `linear-gradient(135deg, 
-                              rgba(34, 197, 94, ${segmentOpacity * 0.8}) 0%, 
-                              rgba(21, 128, 61, ${segmentOpacity * 0.6}) 50%, 
-                              rgba(22, 101, 52, ${segmentOpacity * 0.4}) 100%
-                            )`,
-                            filter: 'blur(0.5px)',
-                            animation: `pulse ${2 + snakeIndex * 0.1}s ease-in-out infinite alternate`
-                          }}
-                        />
-                        <div 
-                          className="absolute inset-1 rounded-full z-10"
-                          style={{
-                            background: `linear-gradient(135deg, 
-                              rgba(74, 222, 128, ${segmentOpacity * 0.9}) 0%, 
-                              rgba(34, 197, 94, ${segmentOpacity * 0.7}) 50%, 
-                              rgba(21, 128, 61, ${segmentOpacity * 0.5}) 100%
-                            )`,
-                            boxShadow: `inset 0 0 10px rgba(255, 255, 255, ${segmentOpacity * 0.3})`
-                          }}
-                        />
-                        {/* Smoky particle effect */}
-                        <div 
-                          className="absolute inset-0 pointer-events-none opacity-40 rounded-full"
-                          style={{
-                            background: `radial-gradient(circle, 
-                              rgba(34, 197, 94, ${segmentOpacity * 0.4}) 0%, 
-                              rgba(34, 197, 94, ${segmentOpacity * 0.2}) 40%, 
-                              transparent 70%
-                            )`,
-                            animation: `twinkle ${3 + snakeIndex * 0.2}s ease-in-out infinite alternate`,
-                            transform: 'scale(1.5)'
-                          }}
-                        />
-                      </>
-                    )}
-                    {isFood && (
-                      <div 
-                        className="text-2xl relative z-10"
-                        style={{
-                          filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.7))',
-                          animation: 'bounce 1s ease-in-out infinite, twinkle 2s ease-in-out infinite'
-                        }}
-                      >
-                        {currentFruit}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+    <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-2xl bg-slate-700 rounded-lg shadow-2xl overflow-hidden">
+        {/* Game Details */}
+        <div className="flex justify-between items-center p-6 text-slate-300 font-medium text-lg">
+          <span>Score: {score}</span>
+          <span>High Score: {highScore}</span>
         </div>
-      </CardContent>
-      <CardFooter className="flex gap-4 pt-6">
-        {gameState === 'playing' && (
-          <Button 
-            onClick={() => setGameState('menu')} 
-            variant="outline" 
-            className="flex-1 bg-slate-800/50 border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white rounded-xl"
-          >
-            Back to Menu
-          </Button>
-        )}
-        <Button 
-          onClick={resetGame} 
-          className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 border-0 rounded-xl shadow-lg"
+
+        {/* Game Board */}
+        <div 
+          className="w-full h-96 md:h-[500px] bg-slate-800 relative"
+          style={{
+            display: 'grid',
+            gridTemplate: `repeat(${gridSize}, 1fr) / repeat(${gridSize}, 1fr)`
+          }}
         >
-          {gameState === 'gameOver' ? '🔄 Play Again' : '🆕 New Game'}
-        </Button>
-      </CardFooter>
-    </Card>
+          {/* Food */}
+          <div
+            className="bg-red-500"
+            style={{
+              gridArea: `${food.y} / ${food.x}`
+            }}
+          />
+          
+          {/* Snake */}
+          {snake.map((segment, index) => (
+            <div
+              key={index}
+              className="bg-cyan-400"
+              style={{
+                gridArea: `${segment.y} / ${segment.x}`
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Game Over Message */}
+        {gameState === 'gameOver' && (
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+            <div className="bg-slate-700 p-8 rounded-lg text-center">
+              <h2 className="text-2xl font-bold text-red-400 mb-4">Game Over!</h2>
+              <p className="text-slate-300 mb-6">Final Score: {score}</p>
+              <Button onClick={resetGame} className="bg-blue-600 hover:bg-blue-700">
+                Play Again
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* Mobile Controls */}
+        <div className="md:hidden grid grid-cols-4 border-t border-slate-600">
+          <button
+            onClick={() => handleDirectionChange({ x: -1, y: 0 })}
+            className="p-4 text-slate-300 hover:bg-slate-600 border-r border-slate-600 flex items-center justify-center"
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <button
+            onClick={() => handleDirectionChange({ x: 0, y: -1 })}
+            className="p-4 text-slate-300 hover:bg-slate-600 border-r border-slate-600 flex items-center justify-center"
+          >
+            <ArrowUp size={20} />
+          </button>
+          <button
+            onClick={() => handleDirectionChange({ x: 1, y: 0 })}
+            className="p-4 text-slate-300 hover:bg-slate-600 border-r border-slate-600 flex items-center justify-center"
+          >
+            <ArrowRight size={20} />
+          </button>
+          <button
+            onClick={() => handleDirectionChange({ x: 0, y: 1 })}
+            className="p-4 text-slate-300 hover:bg-slate-600 flex items-center justify-center"
+          >
+            <ArrowDown size={20} />
+          </button>
+        </div>
+
+        {/* Instructions */}
+        <div className="p-4 text-center text-slate-400 text-sm">
+          {!gameStarted && gameState === 'playing' ? 
+            'Press an arrow key to start!' : 
+            'Use arrow keys to control the snake'
+          }
+        </div>
+      </div>
+    </div>
   );
 };
 
