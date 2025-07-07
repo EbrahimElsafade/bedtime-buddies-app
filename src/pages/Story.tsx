@@ -5,6 +5,8 @@ import { Heart, Share, ChevronLeft, ChevronRight, VolumeX, Volume2 } from "lucid
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
@@ -21,6 +23,7 @@ const Story = () => {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const [isSingleAudioMode, setIsSingleAudioMode] = useState(false);
 
   const { data: story, isLoading, error } = useQuery({
     queryKey: ["story", storyId],
@@ -217,6 +220,20 @@ const Story = () => {
                 )}
               </TabsList>
             </Tabs>
+          </div>
+        )}
+        
+        {/* Audio Mode Switch */}
+        {canAccessStory && (
+          <div className="mb-6 flex items-center space-x-2">
+            <Switch 
+              id="audio-mode" 
+              checked={isSingleAudioMode}
+              onCheckedChange={setIsSingleAudioMode}
+            />
+            <Label htmlFor="audio-mode" className="text-sm">
+              {isSingleAudioMode ? "Single audio for whole story" : "Audio per section"}
+            </Label>
           </div>
         )}
         
