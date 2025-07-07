@@ -1,8 +1,10 @@
+
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
@@ -259,6 +261,40 @@ const ColoringBook = () => {
   );
 };
 
+const PuzzleGame = () => {
+  return (
+    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+      <CardHeader>
+        <CardTitle className="text-xl">Puzzle Game</CardTitle>
+        <CardDescription>Coming soon - Mind-bending puzzles for kids</CardDescription>
+      </CardHeader>
+      <CardContent className="text-center p-8">
+        <p className="mb-6 text-muted-foreground">
+          This exciting puzzle game is under development!
+        </p>
+        <Button variant="outline">See Plans</Button>
+      </CardContent>
+    </Card>
+  );
+};
+
+const MemoryGame = () => {
+  return (
+    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+      <CardHeader>
+        <CardTitle className="text-xl">Memory Game</CardTitle>
+        <CardDescription>Test your memory with fun card matching</CardDescription>
+      </CardHeader>
+      <CardContent className="text-center p-8">
+        <p className="mb-6 text-muted-foreground">
+          This memory card game is coming soon!
+        </p>
+        <Button variant="outline">See Plans</Button>
+      </CardContent>
+    </Card>
+  );
+};
+
 const Games = () => {
   const { isAuthenticated } = useAuth();
   const { t } = useTranslation();
@@ -269,16 +305,36 @@ const Games = () => {
 
   return (
     <div className="py-12 px-4">
-      <div className="container mx-auto max-w-4xl">
+      <div className="container mx-auto max-w-6xl">
         <h1 className="text-3xl md:text-4xl font-bubbly mb-6">{t('games.title')}</h1>
         <p className="text-muted-foreground mb-8 max-w-2xl">
           {t('games.subtitle')}
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <TicTacToe />
-          <ColoringBook />
-        </div>
+        <Tabs defaultValue="tic-tac-toe" className="w-full">
+          <TabsList className="grid w-full grid-cols-4 mb-8">
+            <TabsTrigger value="tic-tac-toe">Tic Tac Toe</TabsTrigger>
+            <TabsTrigger value="coloring">Coloring Book</TabsTrigger>
+            <TabsTrigger value="puzzle">Puzzle Game</TabsTrigger>
+            <TabsTrigger value="memory">Memory Game</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="tic-tac-toe" className="mt-0">
+            <TicTacToe />
+          </TabsContent>
+          
+          <TabsContent value="coloring" className="mt-0">
+            <ColoringBook />
+          </TabsContent>
+          
+          <TabsContent value="puzzle" className="mt-0">
+            <PuzzleGame />
+          </TabsContent>
+          
+          <TabsContent value="memory" className="mt-0">
+            <MemoryGame />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
