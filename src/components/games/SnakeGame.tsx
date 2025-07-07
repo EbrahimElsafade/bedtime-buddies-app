@@ -19,7 +19,6 @@ const SnakeGame = () => {
 
   const gridSize = 30;
   const gameSpeed = 100;
-  const isRTL = i18n.language === 'ar';
 
   const generateFood = useCallback(() => {
     return {
@@ -120,11 +119,9 @@ const SnakeGame = () => {
           handleDirectionChange({ x: 0, y: 1 });
           break;
         case 'ArrowLeft':
-          // Always move left regardless of RTL
           handleDirectionChange({ x: -1, y: 0 });
           break;
         case 'ArrowRight':
-          // Always move right regardless of RTL
           handleDirectionChange({ x: 1, y: 0 });
           break;
       }
@@ -222,11 +219,10 @@ const SnakeGame = () => {
       <CardContent>
         <div className="relative bg-gray-900 rounded-lg p-4 mb-6">
           <div 
-            className={`w-full h-full max-w-[min(70vw,70vh)] max-h-[min(70vw,70vh)] bg-gray-800 grid gap-0 mx-auto ${isRTL ? 'rtl' : 'ltr'}`}
+            className="w-full h-full max-w-[min(70vw,70vh)] max-h-[min(70vw,70vh)] bg-gray-800 grid gap-0 mx-auto"
             style={{
               gridTemplate: `repeat(${gridSize}, 1fr) / repeat(${gridSize}, 1fr)`,
-              aspectRatio: '1',
-              direction: isRTL ? 'rtl' : 'ltr'
+              aspectRatio: '1'
             }}
           >
             {/* Food */}
