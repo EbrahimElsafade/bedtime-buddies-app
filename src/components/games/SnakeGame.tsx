@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -283,20 +282,9 @@ const SnakeGame = () => {
                       ${isFood ? 'animate-bounce' : ''}
                     `}
                     style={{
-                      background: isSnakeBody 
-                        ? 'linear-gradient(135deg, #16a34a 0%, #15803d 50%, #166534 100%)'
-                        : isFood 
+                      background: isFood 
                         ? 'radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, transparent 70%)'
-                        : 'transparent',
-                      boxShadow: isSnakeHead 
-                        ? '0 0 20px rgba(34, 197, 94, 0.8)'
-                        : isSnakeBody 
-                        ? '0 0 15px rgba(34, 197, 94, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.1)'
-                        : isFood 
-                        ? '0 0 25px rgba(239, 68, 68, 0.5)'
-                        : 'none',
-                      border: isSnakeBody ? '1px solid rgba(255, 255, 255, 0.3)' : 'none',
-                      borderRadius: isSnakeBody ? '50%' : '0'
+                        : 'transparent'
                     }}
                   >
                     {isSnakeHead && (
@@ -307,7 +295,18 @@ const SnakeGame = () => {
                           textShadow: '0 0 10px rgba(34, 197, 94, 0.8)'
                         }}
                       >
-                        🐸
+                        🐍
+                      </div>
+                    )}
+                    {isSnakeBody && (
+                      <div 
+                        className="text-xl relative z-10"
+                        style={{
+                          filter: 'drop-shadow(0 0 6px rgba(34, 197, 94, 0.6))',
+                          textShadow: '0 0 8px rgba(34, 197, 94, 0.6)'
+                        }}
+                      >
+                        🟢
                       </div>
                     )}
                     {isFood && (
@@ -320,18 +319,6 @@ const SnakeGame = () => {
                       >
                         {currentFruit}
                       </div>
-                    )}
-                    
-                    {/* Smoke effect for snake segments */}
-                    {isSnakeBody && (
-                      <div 
-                        className="absolute inset-0 pointer-events-none opacity-60"
-                        style={{
-                          background: 'radial-gradient(circle, rgba(34, 197, 94, 0.3) 0%, rgba(34, 197, 94, 0.1) 50%, transparent 100%)',
-                          animation: 'pulse 2s ease-in-out infinite alternate',
-                          borderRadius: '50%'
-                        }}
-                      />
                     )}
                   </div>
                 );
