@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -247,13 +246,26 @@ const SnakeGame = () => {
 
           <div className="flex justify-center">
             <div 
-              className="grid border-4 border-slate-700 rounded-2xl overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900 shadow-inner"
+              className="grid relative rounded-3xl overflow-hidden"
               style={{
                 gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
                 width: '480px',
-                height: '480px'
+                height: '480px',
+                background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #1e293b 75%, #0f172a 100%)',
+                backgroundSize: '20px 20px',
+                boxShadow: 'inset 0 0 100px rgba(0, 0, 0, 0.8), 0 0 50px rgba(59, 130, 246, 0.3)',
+                border: '2px solid rgba(59, 130, 246, 0.3)'
               }}
             >
+              {/* Smoky overlay effect */}
+              <div 
+                className="absolute inset-0 pointer-events-none opacity-30"
+                style={{
+                  background: 'radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.2) 0%, transparent 50%), radial-gradient(circle at 70% 70%, rgba(139, 92, 246, 0.2) 0%, transparent 50%)',
+                  animation: 'pulse 4s ease-in-out infinite alternate'
+                }}
+              />
+              
               {Array.from({ length: gridSize * gridSize }).map((_, index) => {
                 const x = index % gridSize;
                 const y = Math.floor(index / gridSize);
@@ -266,18 +278,63 @@ const SnakeGame = () => {
                   <div
                     key={index}
                     className={`
-                      border border-slate-700/30 flex items-center justify-center text-lg transition-all duration-150
-                      ${isSnakeHead ? 'bg-gradient-to-br from-cyan-400 to-blue-500 shadow-lg shadow-cyan-500/30' : ''}
-                      ${isSnakeBody ? 'bg-gradient-to-br from-cyan-500 to-blue-600' : ''}
-                      ${isFood ? 'bg-gradient-to-br from-red-400/20 to-pink-400/20 animate-pulse' : ''}
-                      ${!isSnakeHead && !isSnakeBody && !isFood ? 'bg-slate-800/50' : ''}
+                      flex items-center justify-center text-lg transition-all duration-300 relative
+                      ${isSnakeHead ? 'animate-pulse' : ''}
+                      ${isSnakeBody ? 'animate-pulse' : ''}
+                      ${isFood ? 'animate-bounce' : ''}
                     `}
+                    style={{
+                      background: isSnakeHead 
+                        ? 'radial-gradient(circle, #06b6d4 0%, #0891b2 40%, #0e7490 70%, #164e63 100%)'
+                        : isSnakeBody 
+                        ? 'radial-gradient(circle, #0891b2 0%, #0e7490 50%, #164e63 100%)'
+                        : isFood 
+                        ? 'radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, transparent 70%)'
+                        : 'transparent',
+                      boxShadow: isSnakeHead 
+                        ? '0 0 20px rgba(6, 182, 212, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.2)'
+                        : isSnakeBody 
+                        ? '0 0 15px rgba(8, 145, 178, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.1)'
+                        : isFood 
+                        ? '0 0 25px rgba(239, 68, 68, 0.5)'
+                        : 'none',
+                      border: (isSnakeHead || isSnakeBody) ? '1px solid rgba(255, 255, 255, 0.3)' : 'none',
+                      borderRadius: (isSnakeHead || isSnakeBody) ? '6px' : '0'
+                    }}
                   >
                     {isSnakeHead && (
-                      <div className="text-white text-lg animate-pulse">🐍</div>
+                      <div 
+                        className="text-white text-lg font-bold relative z-10"
+                        style={{
+                          filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.8))',
+                          textShadow: '0 0 10px rgba(6, 182, 212, 0.8)'
+                        }}
+                      >
+                        🐍
+                      </div>
                     )}
                     {isFood && (
-                      <div className="text-2xl animate-bounce">{currentFruit}</div>
+                      <div 
+                        className="text-2xl relative z-10"
+                        style={{
+                          filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))',
+                          animation: 'bounce 1s ease-in-out infinite'
+                        }}
+                      >
+                        {currentFruit}
+                      </div>
+                    )}
+                    
+                    {/* Smoke effect for snake segments */}
+                    {(isSnakeHead || isSnakeBody) && (
+                      <div 
+                        className="absolute inset-0 pointer-events-none opacity-60"
+                        style={{
+                          background: 'radial-gradient(circle, rgba(6, 182, 212, 0.3) 0%, rgba(6, 182, 212, 0.1) 50%, transparent 100%)',
+                          animation: 'pulse 2s ease-in-out infinite alternate',
+                          borderRadius: '6px'
+                        }}
+                      />
                     )}
                   </div>
                 );
