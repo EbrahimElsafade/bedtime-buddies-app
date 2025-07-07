@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -80,7 +81,6 @@ const SnakeGame = () => {
       if (head.x === food.x && head.y === food.y) {
         setScore(prev => prev + 10);
         setFood(generateFood());
-        // Removed toast notification here
       } else {
         newSnake.pop();
       }
@@ -251,18 +251,44 @@ const SnakeGame = () => {
                 gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
                 width: '480px',
                 height: '480px',
-                background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #1e293b 75%, #0f172a 100%)',
-                backgroundSize: '20px 20px',
-                boxShadow: 'inset 0 0 100px rgba(0, 0, 0, 0.8), 0 0 50px rgba(59, 130, 246, 0.3)',
+                background: `
+                  linear-gradient(135deg, 
+                    rgba(15, 23, 42, 0.9) 0%, 
+                    rgba(30, 41, 59, 0.95) 25%, 
+                    rgba(51, 65, 85, 0.9) 50%, 
+                    rgba(30, 41, 59, 0.95) 75%, 
+                    rgba(15, 23, 42, 0.9) 100%
+                  ),
+                  radial-gradient(circle at 20% 80%, rgba(34, 197, 94, 0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                  repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 12px,
+                    rgba(255, 255, 255, 0.02) 12px,
+                    rgba(255, 255, 255, 0.02) 24px
+                  )
+                `,
+                backgroundSize: '100% 100%, 200px 200px, 200px 200px, 24px 24px',
+                boxShadow: `
+                  inset 0 0 100px rgba(0, 0, 0, 0.8), 
+                  0 0 50px rgba(59, 130, 246, 0.3),
+                  inset 0 0 200px rgba(34, 197, 94, 0.05)
+                `,
                 border: '2px solid rgba(59, 130, 246, 0.3)'
               }}
             >
-              {/* Smoky overlay effect */}
+              {/* Enhanced smoky overlay effect */}
               <div 
-                className="absolute inset-0 pointer-events-none opacity-30"
+                className="absolute inset-0 pointer-events-none opacity-20"
                 style={{
-                  background: 'radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.2) 0%, transparent 50%), radial-gradient(circle at 70% 70%, rgba(139, 92, 246, 0.2) 0%, transparent 50%)',
-                  animation: 'pulse 4s ease-in-out infinite alternate'
+                  background: `
+                    radial-gradient(circle at 30% 30%, rgba(59, 130, 246, 0.3) 0%, transparent 40%), 
+                    radial-gradient(circle at 70% 70%, rgba(139, 92, 246, 0.3) 0%, transparent 40%),
+                    radial-gradient(circle at 50% 10%, rgba(34, 197, 94, 0.2) 0%, transparent 30%),
+                    radial-gradient(circle at 10% 90%, rgba(168, 85, 247, 0.2) 0%, transparent 30%)
+                  `,
+                  animation: 'float 6s ease-in-out infinite alternate, twinkle 8s ease-in-out infinite'
                 }}
               />
               
@@ -274,47 +300,112 @@ const SnakeGame = () => {
                 const isSnakeBody = snake.slice(1).some(segment => segment.x === x && segment.y === y);
                 const isFood = food.x === x && food.y === y;
                 
+                // Get snake segment index for gradient effect
+                const snakeIndex = snake.findIndex(segment => segment.x === x && segment.y === y);
+                const segmentOpacity = snakeIndex === 0 ? 1 : Math.max(0.7, 1 - (snakeIndex * 0.05));
+                
                 return (
                   <div
                     key={index}
                     className={`
                       flex items-center justify-center text-lg transition-all duration-300 relative
                       ${isFood ? 'animate-bounce' : ''}
+                      ${isSnakeHead || isSnakeBody ? 'transform transition-transform duration-150' : ''}
                     `}
                     style={{
-                      background: isFood 
+                      background: isSnakeBody && !isSnakeHead
+                        ? `radial-gradient(circle, 
+                            rgba(34, 197, 94, ${segmentOpacity * 0.4}) 0%, 
+                            rgba(21, 128, 61, ${segmentOpacity * 0.3}) 50%, 
+                            rgba(22, 101, 52, ${segmentOpacity * 0.2}) 100%
+                          )`
+                        : isSnakeHead
+                        ? `radial-gradient(circle, 
+                            rgba(34, 197, 94, 0.6) 0%, 
+                            rgba(21, 128, 61, 0.4) 50%, 
+                            rgba(22, 101, 52, 0.2) 100%
+                          )`
+                        : isFood 
                         ? 'radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, transparent 70%)'
-                        : 'transparent'
+                        : 'transparent',
+                      boxShadow: isSnakeHead 
+                        ? `
+                          0 0 25px rgba(34, 197, 94, 0.8),
+                          0 0 50px rgba(34, 197, 94, 0.4),
+                          inset 0 0 20px rgba(255, 255, 255, 0.1)
+                        `
+                        : isSnakeBody 
+                        ? `
+                          0 0 15px rgba(34, 197, 94, ${segmentOpacity * 0.6}),
+                          0 0 30px rgba(34, 197, 94, ${segmentOpacity * 0.3}),
+                          inset 0 0 15px rgba(255, 255, 255, ${segmentOpacity * 0.05})
+                        `
+                        : isFood 
+                        ? '0 0 25px rgba(239, 68, 68, 0.5), 0 0 50px rgba(239, 68, 68, 0.3)'
+                        : 'none',
+                      borderRadius: (isSnakeHead || isSnakeBody) ? '50%' : '0',
+                      border: isSnakeBody ? `1px solid rgba(255, 255, 255, ${segmentOpacity * 0.2})` : 'none',
+                      transform: isSnakeHead ? 'scale(1.1)' : isSnakeBody ? 'scale(0.95)' : 'scale(1)'
                     }}
                   >
                     {isSnakeHead && (
                       <div 
                         className="text-2xl relative z-10"
                         style={{
-                          filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.8))',
-                          textShadow: '0 0 10px rgba(34, 197, 94, 0.8)'
+                          filter: 'drop-shadow(0 0 12px rgba(255, 255, 255, 0.9))',
+                          textShadow: '0 0 15px rgba(34, 197, 94, 0.9), 0 0 30px rgba(34, 197, 94, 0.6)',
+                          animation: 'float 2s ease-in-out infinite'
                         }}
                       >
                         🐍
                       </div>
                     )}
                     {isSnakeBody && (
-                      <div 
-                        className="text-xl relative z-10"
-                        style={{
-                          filter: 'drop-shadow(0 0 6px rgba(34, 197, 94, 0.6))',
-                          textShadow: '0 0 8px rgba(34, 197, 94, 0.6)'
-                        }}
-                      >
-                        🟢
-                      </div>
+                      <>
+                        <div 
+                          className="absolute inset-0 rounded-full"
+                          style={{
+                            background: `linear-gradient(135deg, 
+                              rgba(34, 197, 94, ${segmentOpacity * 0.8}) 0%, 
+                              rgba(21, 128, 61, ${segmentOpacity * 0.6}) 50%, 
+                              rgba(22, 101, 52, ${segmentOpacity * 0.4}) 100%
+                            )`,
+                            filter: 'blur(0.5px)',
+                            animation: `pulse ${2 + snakeIndex * 0.1}s ease-in-out infinite alternate`
+                          }}
+                        />
+                        <div 
+                          className="absolute inset-1 rounded-full z-10"
+                          style={{
+                            background: `linear-gradient(135deg, 
+                              rgba(74, 222, 128, ${segmentOpacity * 0.9}) 0%, 
+                              rgba(34, 197, 94, ${segmentOpacity * 0.7}) 50%, 
+                              rgba(21, 128, 61, ${segmentOpacity * 0.5}) 100%
+                            )`,
+                            boxShadow: `inset 0 0 10px rgba(255, 255, 255, ${segmentOpacity * 0.3})`
+                          }}
+                        />
+                        {/* Smoky particle effect */}
+                        <div 
+                          className="absolute inset-0 pointer-events-none opacity-40 rounded-full"
+                          style={{
+                            background: `radial-gradient(circle, 
+                              rgba(34, 197, 94, ${segmentOpacity * 0.4}) 0%, 
+                              rgba(34, 197, 94, ${segmentOpacity * 0.2}) 40%, 
+                              transparent 70%
+                            )`,
+                            animation: `twinkle ${3 + snakeIndex * 0.2}s ease-in-out infinite alternate`,
+                            transform: 'scale(1.5)'
+                          }}
+                        />
+                      </>
                     )}
                     {isFood && (
                       <div 
                         className="text-2xl relative z-10"
                         style={{
-                          filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.6))',
-                          animation: 'bounce 1s ease-in-out infinite'
+                          filter: 'drop-shadow(0 0 10px rgba(255, 255, 255, 0.7))',
+                          animation: 'bounce 1s ease-in-out infinite, twinkle 2s ease-in-out infinite'
                         }}
                       >
                         {currentFruit}
