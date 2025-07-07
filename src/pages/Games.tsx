@@ -155,7 +155,7 @@ const TicTacToe = () => {
   const renderSquare = (i: number) => {
     return (
       <button
-        className="w-24 h-24 sm:w-32 sm:h-32 flex items-center justify-center text-3xl sm:text-4xl bg-white/70 dark:bg-nightsky-light/70 hover:bg-white/90 dark:hover:bg-nightsky/90 border-2 border-dream-light/30 rounded-lg transition-colors shadow-lg"
+        className="w-20 h-20 flex items-center justify-center text-2xl bg-white/70 dark:bg-nightsky-light/70 hover:bg-white/90 dark:hover:bg-nightsky/90 border border-dream-light/30 rounded-md transition-colors"
         onClick={() => handleClick(i)}
       >
         {board[i]}
@@ -165,58 +165,56 @@ const TicTacToe = () => {
 
   if (!gameStarted) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="w-full max-w-4xl mx-auto px-4">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bubbly mb-4">{t('games.ticTacToe.title')}</h2>
-            <p className="text-lg text-muted-foreground">{t('games.ticTacToe.description')}</p>
-          </div>
-          
-          <div className="space-y-8">
+      <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+        <CardHeader>
+          <CardTitle className="text-xl">{t('games.ticTacToe.title')}</CardTitle>
+          <CardDescription>{t('games.ticTacToe.description')}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
             <div>
-              <h3 className="text-2xl font-medium mb-8 text-center">Select Game Mode:</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+              <h3 className="text-lg font-medium mb-4 text-center">Select Game Mode:</h3>
+              <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={() => startGameWithMode('player')}
-                  className="p-8 rounded-xl border-2 transition-all hover:scale-105 border-gray-200 dark:border-gray-700 hover:border-dream-light bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm shadow-lg"
+                  className="p-6 rounded-lg border-2 transition-all hover:scale-105 border-gray-200 dark:border-gray-700 hover:border-dream-light"
                 >
-                  <Users className="w-16 h-16 mx-auto mb-4" />
+                  <Users className="w-12 h-12 mx-auto mb-3" />
                   <div className="text-center">
-                    <div className="text-xl font-semibold mb-2">Player vs Player</div>
-                    <div className="text-muted-foreground">Play with a friend</div>
+                    <div className="font-semibold">Player vs Player</div>
+                    <div className="text-sm text-muted-foreground mt-1">Play with a friend</div>
                   </div>
                 </button>
                 
                 <button
                   onClick={() => startGameWithMode('computer')}
-                  className="p-8 rounded-xl border-2 transition-all hover:scale-105 border-gray-200 dark:border-gray-700 hover:border-dream-light bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm shadow-lg"
+                  className="p-6 rounded-lg border-2 transition-all hover:scale-105 border-gray-200 dark:border-gray-700 hover:border-dream-light"
                 >
-                  <Bot className="w-16 h-16 mx-auto mb-4" />
+                  <Bot className="w-12 h-12 mx-auto mb-3" />
                   <div className="text-center">
-                    <div className="text-xl font-semibold mb-2">Player vs Computer</div>
-                    <div className="text-muted-foreground">Challenge the AI</div>
+                    <div className="font-semibold">Player vs Computer</div>
+                    <div className="text-sm text-muted-foreground mt-1">Challenge the AI</div>
                   </div>
                 </button>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="min-h-[70vh] flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-2xl mx-auto">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bubbly mb-2">
-            {t('games.ticTacToe.title')} - {gameMode === 'computer' ? 'vs Computer' : 'vs Player'}
-          </h2>
-          <p className="text-muted-foreground">{t('games.ticTacToe.description')}</p>
-        </div>
-
-        <div className="flex flex-col items-center space-y-8">
-          <div className="text-xl font-medium text-center">
+    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+      <CardHeader>
+        <CardTitle className="text-xl">
+          {t('games.ticTacToe.title')} - {gameMode === 'computer' ? 'vs Computer' : 'vs Player'}
+        </CardTitle>
+        <CardDescription>{t('games.ticTacToe.description')}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col items-center">
+          <div className="mb-4 text-lg font-medium">
             {winner 
               ? winner === 'draw' 
                 ? t('games.ticTacToe.draw')
@@ -226,7 +224,7 @@ const TicTacToe = () => {
                 : `${t('games.ticTacToe.nextPlayer')} ${isXNext ? '✖️' : '⭕'}`}
           </div>
           
-          <div className="grid grid-cols-3 gap-3 p-6 bg-white/30 dark:bg-nightsky-light/30 rounded-xl backdrop-blur-sm shadow-lg border border-dream-light/20">
+          <div className="grid grid-cols-3 gap-2 mb-4">
             {renderSquare(0)}
             {renderSquare(1)}
             {renderSquare(2)}
@@ -237,18 +235,17 @@ const TicTacToe = () => {
             {renderSquare(7)}
             {renderSquare(8)}
           </div>
-
-          <div className="flex gap-4 w-full max-w-md">
-            <Button onClick={resetGame} variant="outline" className="flex-1">
-              {t('games.ticTacToe.newGame')}
-            </Button>
-            <Button onClick={backToMenu} className="flex-1 bg-dream-DEFAULT hover:bg-dream-dark">
-              Back to Menu
-            </Button>
-          </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+      <CardFooter className="flex gap-2">
+        <Button onClick={resetGame} variant="outline" className="flex-1">
+          {t('games.ticTacToe.newGame')}
+        </Button>
+        <Button onClick={backToMenu} className="flex-1 bg-dream-DEFAULT hover:bg-dream-dark">
+          Back to Menu
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
 
