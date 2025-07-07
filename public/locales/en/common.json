@@ -10,7 +10,17 @@
       "draw": "It's a draw!",
       "winner": "Winner:",
       "nextPlayer": "Next player:",
-      "newGame": "New Game"
+      "newGame": "New Game",
+      "selectGameMode": "Select Game Mode:",
+      "playerVsPlayer": "Player vs Player",
+      "playWithFriend": "Play with a friend",
+      "playerVsComputer": "Player vs Computer",
+      "challengeAI": "Challenge the AI",
+      "vsComputer": "vs Computer",
+      "vsPlayer": "vs Player",
+      "yourTurn": "Your turn (✖️)",
+      "computerThinking": "Computer thinking... (⭕)",
+      "backToMenu": "Back to Menu"
     },
     "snake": {
       "title": "Snake Game",

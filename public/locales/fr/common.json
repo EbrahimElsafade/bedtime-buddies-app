@@ -10,7 +10,17 @@
       "draw": "Match nul!",
       "winner": "Gagnant:",
       "nextPlayer": "Joueur suivant:",
-      "newGame": "Nouvelle Partie"
+      "newGame": "Nouvelle Partie",
+      "selectGameMode": "Sélectionnez le Mode de Jeu:",
+      "playerVsPlayer": "Joueur vs Joueur",
+      "playWithFriend": "Jouer avec un ami",
+      "playerVsComputer": "Joueur vs Ordinateur",
+      "challengeAI": "Défiez l'IA",
+      "vsComputer": "vs Ordinateur",
+      "vsPlayer": "vs Joueur",
+      "yourTurn": "Votre tour (✖️)",
+      "computerThinking": "L'ordinateur réfléchit... (⭕)",
+      "backToMenu": "Retour au Menu"
     },
     "snake": {
       "title": "Jeu du Serpent",

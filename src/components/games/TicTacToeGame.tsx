@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -166,7 +165,7 @@ const TicTacToeGame = () => {
         <CardContent>
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-medium mb-4 text-center">Select Game Mode:</h3>
+              <h3 className="text-lg font-medium mb-4 text-center">{t('games.ticTacToe.selectGameMode')}</h3>
               <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={() => startGameWithMode('player')}
@@ -174,8 +173,8 @@ const TicTacToeGame = () => {
                 >
                   <Users className="w-12 h-12 mx-auto mb-3" />
                   <div className="text-center">
-                    <div className="font-semibold">Player vs Player</div>
-                    <div className="text-sm text-muted-foreground mt-1">Play with a friend</div>
+                    <div className="font-semibold">{t('games.ticTacToe.playerVsPlayer')}</div>
+                    <div className="text-sm text-muted-foreground mt-1">{t('games.ticTacToe.playWithFriend')}</div>
                   </div>
                 </button>
                 
@@ -185,8 +184,8 @@ const TicTacToeGame = () => {
                 >
                   <Bot className="w-12 h-12 mx-auto mb-3" />
                   <div className="text-center">
-                    <div className="font-semibold">Player vs Computer</div>
-                    <div className="text-sm text-muted-foreground mt-1">Challenge the AI</div>
+                    <div className="font-semibold">{t('games.ticTacToe.playerVsComputer')}</div>
+                    <div className="text-sm text-muted-foreground mt-1">{t('games.ticTacToe.challengeAI')}</div>
                   </div>
                 </button>
               </div>
@@ -201,7 +200,7 @@ const TicTacToeGame = () => {
     <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
       <CardHeader>
         <CardTitle className="text-xl">
-          {t('games.ticTacToe.title')} - {gameMode === 'computer' ? 'vs Computer' : 'vs Player'}
+          {t('games.ticTacToe.title')} - {gameMode === 'computer' ? t('games.ticTacToe.vsComputer') : t('games.ticTacToe.vsPlayer')}
         </CardTitle>
         <CardDescription>{t('games.ticTacToe.description')}</CardDescription>
       </CardHeader>
@@ -213,7 +212,7 @@ const TicTacToeGame = () => {
                 ? t('games.ticTacToe.draw')
                 : `${t('games.ticTacToe.winner')} ${winner}` 
               : gameMode === 'computer' 
-                ? `${isXNext ? 'Your turn (✖️)' : 'Computer thinking... (⭕)'}`
+                ? `${isXNext ? t('games.ticTacToe.yourTurn') : t('games.ticTacToe.computerThinking')}`
                 : `${t('games.ticTacToe.nextPlayer')} ${isXNext ? '✖️' : '⭕'}`}
           </div>
           
@@ -227,7 +226,7 @@ const TicTacToeGame = () => {
           {t('games.ticTacToe.newGame')}
         </Button>
         <Button onClick={backToMenu} className="flex-1 bg-dream-DEFAULT hover:bg-dream-dark">
-          Back to Menu
+          {t('games.ticTacToe.backToMenu')}
         </Button>
       </CardFooter>
     </Card>

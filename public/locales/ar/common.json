@@ -10,7 +10,17 @@
       "draw": "تعادل!",
       "winner": "الفائز:",
       "nextPlayer": "اللاعب التالي:",
-      "newGame": "لعبة جديدة"
+      "newGame": "لعبة جديدة",
+      "selectGameMode": "اختر نمط اللعبة:",
+      "playerVsPlayer": "لاعب ضد لاعب",
+      "playWithFriend": "العب مع صديق",
+      "playerVsComputer": "لاعب ضد الكمبيوتر",
+      "challengeAI": "تحدى الذكاء الاصطناعي",
+      "vsComputer": "ضد الكمبيوتر",
+      "vsPlayer": "ضد لاعب",
+      "yourTurn": "دورك (✖️)",
+      "computerThinking": "الكمبيوتر يفكر... (⭕)",
+      "backToMenu": "العودة للقائمة"
     },
     "snake": {
       "title": "لعبة الثعبان",
