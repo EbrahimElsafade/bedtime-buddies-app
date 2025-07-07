@@ -589,124 +589,106 @@ const HangmanGame = () => {
 
   const getHangmanSvg = () => {
     const parts = [
-      // Head
       wrongGuessCount > 0 ? <circle key="head" cx="50" cy="25" r="10" stroke="#ef4444" strokeWidth="3" fill="none" /> : null,
-      // Body
       wrongGuessCount > 1 ? <line key="body" x1="50" y1="35" x2="50" y2="70" stroke="#ef4444" strokeWidth="3" /> : null,
-      // Left arm
       wrongGuessCount > 2 ? <line key="leftarm" x1="50" y1="45" x2="35" y2="55" stroke="#ef4444" strokeWidth="3" /> : null,
-      // Right arm
       wrongGuessCount > 3 ? <line key="rightarm" x1="50" y1="45" x2="65" y2="55" stroke="#ef4444" strokeWidth="3" /> : null,
-      // Left leg
       wrongGuessCount > 4 ? <line key="leftleg" x1="50" y1="70" x2="35" y2="85" stroke="#ef4444" strokeWidth="3" /> : null,
-      // Right leg
       wrongGuessCount > 5 ? <line key="rightleg" x1="50" y1="70" x2="65" y2="85" stroke="#ef4444" strokeWidth="3" /> : null,
     ];
 
     return (
-      <svg width="120" height="120" className="mx-auto">
-        {/* Gallows */}
-        <line x1="10" y1="110" x2="70" y2="110" stroke="#8b5a3c" strokeWidth="4" />
-        <line x1="30" y1="110" x2="30" y2="10" stroke="#8b5a3c" strokeWidth="4" />
-        <line x1="30" y1="10" x2="50" y2="10" stroke="#8b5a3c" strokeWidth="4" />
-        <line x1="50" y1="10" x2="50" y2="15" stroke="#8b5a3c" strokeWidth="3" />
-        
-        {/* Hangman parts */}
-        {parts}
-      </svg>
+      <div className="flex flex-col items-center bg-white rounded-2xl shadow-lg p-6 border-2 border-blue-100">
+        <svg width="120" height="120" className="mb-4">
+          <line x1="10" y1="110" x2="70" y2="110" stroke="#8b5a3c" strokeWidth="4" />
+          <line x1="30" y1="110" x2="30" y2="10" stroke="#8b5a3c" strokeWidth="4" />
+          <line x1="30" y1="10" x2="50" y2="10" stroke="#8b5a3c" strokeWidth="4" />
+          <line x1="50" y1="10" x2="50" y2="15" stroke="#8b5a3c" strokeWidth="3" />
+          {parts}
+        </svg>
+        <div className="text-lg font-semibold text-gray-700">
+          Wrong Guesses: {wrongGuessCount} / {maxGuesses}
+        </div>
+      </div>
     );
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-purple-200 shadow-2xl">
-      <CardHeader className="text-center bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-t-lg">
-        <div className="flex items-center justify-center gap-2 mb-2">
-          <TreePine className="w-6 h-6" />
-          <CardTitle className="text-2xl font-bold">Hangman Game</CardTitle>
+    <div className="max-w-2xl mx-auto p-6 bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-3xl shadow-2xl border border-blue-200">
+      <div className="text-center mb-8">
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <TreePine className="w-8 h-8 text-purple-600" />
+          <h1 className="text-4xl font-bold text-gray-800">Hangman Game</h1>
         </div>
-        <CardDescription className="text-purple-100 text-lg">
-          Guess the word before the drawing completes!
-        </CardDescription>
-      </CardHeader>
+        <p className="text-lg text-gray-600">Guess the word before the drawing completes!</p>
+      </div>
       
-      <CardContent className="p-8">
-        <div className="text-center space-y-6">
-          {/* Hangman Drawing */}
-          <div className="bg-white rounded-xl p-6 shadow-inner border-2 border-gray-200">
-            {getHangmanSvg()}
-          </div>
-          
-          {/* Game Info */}
-          <div className="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-lg p-4 border-2 border-yellow-300">
-            <div className="text-lg font-semibold text-gray-700 mb-2">
-              Incorrect Guesses: {wrongGuessCount} / {maxGuesses}
-            </div>
-            <div className="text-sm text-gray-600">
-              <strong>Hint:</strong> {hint}
-            </div>
-          </div>
-          
-          {/* Word Display */}
-          <div className="bg-white rounded-lg p-6 shadow-lg border-2 border-blue-200">
-            <div className="text-4xl font-bold tracking-wider text-gray-800 font-mono">
-              {getDisplayWord()}
-            </div>
-          </div>
-          
-          {/* Game Status */}
-          {gameOver && (
-            <div className={`text-2xl font-bold p-4 rounded-lg shadow-lg ${
-              gameWon 
-                ? 'bg-green-100 text-green-700 border-2 border-green-300' 
-                : 'bg-red-100 text-red-700 border-2 border-red-300'
-            }`}>
-              {gameWon ? '🎉 You Won! Great Job!' : `💀 Game Over! Word: ${currentWord.toUpperCase()}`}
-            </div>
-          )}
-          
-          {/* Alphabet Buttons */}
-          <div className="bg-gray-50 rounded-xl p-6 border-2 border-gray-200">
-            <h3 className="text-lg font-semibold mb-4 text-gray-700">Choose a Letter:</h3>
-            <div className="grid grid-cols-6 gap-2">
-              {alphabet.split('').map(letter => {
-                const isGuessed = guessedLetters.includes(letter);
-                const isCorrect = isGuessed && currentWord.toLowerCase().includes(letter);
-                const isWrong = isGuessed && !currentWord.toLowerCase().includes(letter);
-                
-                return (
-                  <button
-                    key={letter}
-                    onClick={() => handleLetterClick(letter)}
-                    disabled={isGuessed || gameOver}
-                    className={`
-                      p-3 text-lg font-bold rounded-lg transition-all duration-200 transform hover:scale-105 shadow-md
-                      ${isCorrect 
-                        ? 'bg-green-500 text-white border-2 border-green-600' 
-                        : isWrong 
-                          ? 'bg-red-500 text-white border-2 border-red-600'
-                          : 'bg-white hover:bg-blue-100 text-gray-700 border-2 border-blue-300 hover:border-blue-500'
-                      }
-                      ${(isGuessed || gameOver) ? 'cursor-not-allowed opacity-60 transform-none' : 'cursor-pointer'}
-                    `}
-                  >
-                    {letter.toUpperCase()}
-                  </button>
-                );
-              })}
-            </div>
+      <div className="space-y-8">
+        {getHangmanSvg()}
+        
+        <div className="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-2xl p-6 border-2 border-yellow-300 shadow-lg">
+          <div className="text-sm text-gray-600 mb-2">
+            <strong>💡 Hint:</strong> {hint}
           </div>
         </div>
-      </CardContent>
-      
-      <CardFooter className="bg-gradient-to-r from-purple-500 to-blue-500 rounded-b-lg">
-        <Button 
-          onClick={initGame} 
-          className="w-full bg-white text-purple-600 hover:bg-gray-100 font-bold py-3 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-        >
-          🎮 New Game
-        </Button>
-      </CardFooter>
-    </Card>
+        
+        <div className="bg-white rounded-2xl p-8 shadow-lg border-2 border-blue-200">
+          <div className="text-5xl font-bold tracking-wider text-center text-gray-800 font-mono mb-4">
+            {getDisplayWord()}
+          </div>
+        </div>
+        
+        {gameOver && (
+          <div className={`text-2xl font-bold text-center p-6 rounded-2xl shadow-lg ${
+            gameWon 
+              ? 'bg-green-100 text-green-700 border-2 border-green-300' 
+              : 'bg-red-100 text-red-700 border-2 border-red-300'
+          }`}>
+            {gameWon ? '🎉 You Won! Great Job!' : `💀 Game Over! Word: ${currentWord.toUpperCase()}`}
+          </div>
+        )}
+        
+        <div className="bg-gray-50 rounded-2xl p-6 border-2 border-gray-200 shadow-lg">
+          <h3 className="text-xl font-semibold mb-6 text-center text-gray-700">Choose a Letter:</h3>
+          <div className="grid grid-cols-6 gap-3">
+            {alphabet.split('').map(letter => {
+              const isGuessed = guessedLetters.includes(letter);
+              const isCorrect = isGuessed && currentWord.toLowerCase().includes(letter);
+              const isWrong = isGuessed && !currentWord.toLowerCase().includes(letter);
+              
+              return (
+                <button
+                  key={letter}
+                  onClick={() => handleLetterClick(letter)}
+                  disabled={isGuessed || gameOver}
+                  className={`
+                    p-3 text-lg font-bold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-md border-2
+                    ${isCorrect 
+                      ? 'bg-green-500 text-white border-green-600 shadow-green-200' 
+                      : isWrong 
+                        ? 'bg-red-500 text-white border-red-600 shadow-red-200'
+                        : 'bg-white hover:bg-blue-100 text-gray-700 border-blue-300 hover:border-blue-500 hover:shadow-blue-200'
+                    }
+                    ${(isGuessed || gameOver) ? 'cursor-not-allowed opacity-60 transform-none' : 'cursor-pointer hover:shadow-lg'}
+                  `}
+                >
+                  {letter.toUpperCase()}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+        
+        <div className="text-center">
+          <Button 
+            onClick={initGame} 
+            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+          >
+            🎮 New Game
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 
