@@ -390,7 +390,6 @@ const RockPaperScissors = () => {
             {/* Choice Buttons */}
             <div className="grid grid-cols-3 gap-6 w-full">
               {choices.map((choice) => {
-                const IconComponent = choice.icon;
                 return (
                   <button
                     key={choice.name}
@@ -427,59 +426,6 @@ const RockPaperScissors = () => {
   );
 };
 
-const ColoringBook = () => {
-  const { t } = useTranslation();
-  
-  return (
-    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="text-xl">{t('games.coloringBook.title')}</CardTitle>
-        <CardDescription>{t('games.coloringBook.description')}</CardDescription>
-      </CardHeader>
-      <CardContent className="text-center p-8">
-        <p className="mb-6 text-muted-foreground">
-          {t('games.coloringBook.comingSoon')}
-        </p>
-        <Button variant="outline">{t('games.coloringBook.seePlans')}</Button>
-      </CardContent>
-    </Card>
-  );
-};
-
-const PuzzleGame = () => {
-  return (
-    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="text-xl">Puzzle Game</CardTitle>
-        <CardDescription>Coming soon - Mind-bending puzzles for kids</CardDescription>
-      </CardHeader>
-      <CardContent className="text-center p-8">
-        <p className="mb-6 text-muted-foreground">
-          This exciting puzzle game is under development!
-        </p>
-        <Button variant="outline">See Plans</Button>
-      </CardContent>
-    </Card>
-  );
-};
-
-const MemoryGame = () => {
-  return (
-    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="text-xl">Memory Game</CardTitle>
-        <CardDescription>Test your memory with fun card matching</CardDescription>
-      </CardHeader>
-      <CardContent className="text-center p-8">
-        <p className="mb-6 text-muted-foreground">
-          This memory card game is coming soon!
-        </p>
-        <Button variant="outline">See Plans</Button>
-      </CardContent>
-    </Card>
-  );
-};
-
 const Games = () => {
   const { isAuthenticated } = useAuth();
   const { t } = useTranslation();
@@ -497,12 +443,9 @@ const Games = () => {
         </p>
         
         <Tabs defaultValue="tic-tac-toe" className="w-full">
-          <TabsList className="grid w-full grid-cols-5 mb-8">
+          <TabsList className="grid w-full grid-cols-2 mb-8">
             <TabsTrigger value="tic-tac-toe">Tic Tac Toe</TabsTrigger>
             <TabsTrigger value="rock-paper-scissors">Rock Paper Scissors</TabsTrigger>
-            <TabsTrigger value="coloring">Coloring Book</TabsTrigger>
-            <TabsTrigger value="puzzle">Puzzle Game</TabsTrigger>
-            <TabsTrigger value="memory">Memory Game</TabsTrigger>
           </TabsList>
           
           <TabsContent value="tic-tac-toe" className="mt-0">
@@ -511,18 +454,6 @@ const Games = () => {
           
           <TabsContent value="rock-paper-scissors" className="mt-0">
             <RockPaperScissors />
-          </TabsContent>
-          
-          <TabsContent value="coloring" className="mt-0">
-            <ColoringBook />
-          </TabsContent>
-          
-          <TabsContent value="puzzle" className="mt-0">
-            <PuzzleGame />
-          </TabsContent>
-          
-          <TabsContent value="memory" className="mt-0">
-            <MemoryGame />
           </TabsContent>
         </Tabs>
       </div>
