@@ -259,18 +259,9 @@ const RockPaperScissors = () => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const choices = [
-    { 
-      name: 'rock', 
-      image: 'https://www.codingnepalweb.com/demos/rock-paper-scissors-game-html-css-javascript/images/rock.png'
-    },
-    { 
-      name: 'paper', 
-      image: 'https://www.codingnepalweb.com/demos/rock-paper-scissors-game-html-css-javascript/images/paper.png'
-    },
-    { 
-      name: 'scissors', 
-      image: 'https://www.codingnepalweb.com/demos/rock-paper-scissors-game-html-css-javascript/images/scissors.png'
-    }
+    { name: 'rock', icon: Hand, rotation: 'rotate-90', emoji: '✊' },
+    { name: 'paper', icon: Hand, rotation: '', emoji: '✋' },
+    { name: 'scissors', icon: Scissors, rotation: '', emoji: '✌️' }
   ];
 
   const getRandomChoice = () => {
@@ -327,9 +318,9 @@ const RockPaperScissors = () => {
     setIsPlaying(false);
   };
 
-  const getChoiceImage = (choice: string) => {
+  const getChoiceEmoji = (choice: string) => {
     const choiceObj = choices.find(c => c.name === choice);
-    return choiceObj ? choiceObj.image : '';
+    return choiceObj ? choiceObj.emoji : '❓';
   };
 
   return (
@@ -362,18 +353,10 @@ const RockPaperScissors = () => {
             <div className="flex items-center justify-center space-x-12 mb-8">
               {/* Player Side */}
               <div className="text-center">
-                <div className="w-32 h-32 rounded-full border-4 border-blue-400 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 flex items-center justify-center mb-4 shadow-lg transition-all duration-300 p-4">
-                  {isPlaying ? (
-                    <div className="text-6xl animate-pulse">🤔</div>
-                  ) : playerChoice ? (
-                    <img 
-                      src={getChoiceImage(playerChoice)} 
-                      alt={playerChoice}
-                      className="w-20 h-20 object-contain"
-                    />
-                  ) : (
-                    <div className="text-6xl">❓</div>
-                  )}
+                <div className="w-32 h-32 rounded-full border-4 border-blue-400 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900 dark:to-blue-800 flex items-center justify-center mb-4 shadow-lg transition-all duration-300">
+                  <div className="text-6xl">
+                    {isPlaying ? '🤔' : playerChoice ? getChoiceEmoji(playerChoice) : '❓'}
+                  </div>
                 </div>
                 <div className="text-lg font-semibold text-blue-600 dark:text-blue-400">You</div>
               </div>
@@ -386,18 +369,10 @@ const RockPaperScissors = () => {
               
               {/* Computer Side */}
               <div className="text-center">
-                <div className="w-32 h-32 rounded-full border-4 border-red-400 bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900 dark:to-red-800 flex items-center justify-center mb-4 shadow-lg transition-all duration-300 p-4">
-                  {isPlaying ? (
-                    <div className="text-6xl animate-pulse">🤖</div>
-                  ) : computerChoice ? (
-                    <img 
-                      src={getChoiceImage(computerChoice)} 
-                      alt={computerChoice}
-                      className="w-20 h-20 object-contain"
-                    />
-                  ) : (
-                    <div className="text-6xl">❓</div>
-                  )}
+                <div className="w-32 h-32 rounded-full border-4 border-red-400 bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900 dark:to-red-800 flex items-center justify-center mb-4 shadow-lg transition-all duration-300">
+                  <div className="text-6xl">
+                    {isPlaying ? '🤖' : computerChoice ? getChoiceEmoji(computerChoice) : '❓'}
+                  </div>
                 </div>
                 <div className="text-lg font-semibold text-red-500">Computer</div>
               </div>
@@ -414,28 +389,27 @@ const RockPaperScissors = () => {
 
             {/* Choice Buttons */}
             <div className="grid grid-cols-3 gap-6 w-full">
-              {choices.map((choice) => (
-                <button
-                  key={choice.name}
-                  onClick={() => playGame(choice.name)}
-                  disabled={isPlaying}
-                  className="group relative p-8 rounded-2xl border-3 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-300 dark:border-gray-600 hover:border-dream-light bg-gradient-to-br from-white to-gray-50 dark:from-nightsky-light dark:to-nightsky hover:from-dream-light/10 hover:to-purple-100/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
-                >
-                  <div className="flex flex-col items-center space-y-3">
-                    <div className="w-16 h-16 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <img 
-                        src={choice.image} 
-                        alt={choice.name}
-                        className="w-full h-full object-contain"
-                      />
+              {choices.map((choice) => {
+                const IconComponent = choice.icon;
+                return (
+                  <button
+                    key={choice.name}
+                    onClick={() => playGame(choice.name)}
+                    disabled={isPlaying}
+                    className="group relative p-8 rounded-2xl border-3 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-300 dark:border-gray-600 hover:border-dream-light bg-gradient-to-br from-white to-gray-50 dark:from-nightsky-light dark:to-nightsky hover:from-dream-light/10 hover:to-purple-100/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  >
+                    <div className="flex flex-col items-center space-y-3">
+                      <div className="text-5xl group-hover:scale-110 transition-transform duration-300">
+                        {choice.emoji}
+                      </div>
+                      <div className="text-lg font-bold capitalize text-gray-700 dark:text-gray-200 group-hover:text-dream-DEFAULT transition-colors">
+                        {choice.name}
+                      </div>
                     </div>
-                    <div className="text-lg font-bold capitalize text-gray-700 dark:text-gray-200 group-hover:text-dream-DEFAULT transition-colors">
-                      {choice.name}
-                    </div>
-                  </div>
-                  <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-dream-light/0 to-purple-500/0 group-hover:from-dream-light/10 group-hover:to-purple-500/10 transition-all duration-300"></div>
-                </button>
-              ))}
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-dream-light/0 to-purple-500/0 group-hover:from-dream-light/10 group-hover:to-purple-500/10 transition-all duration-300"></div>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
