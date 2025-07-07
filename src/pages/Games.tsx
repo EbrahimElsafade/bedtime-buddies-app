@@ -1,13 +1,11 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
+import { Users, Bot } from "lucide-react";
 
 const TicTacToe = () => {
   const { t } = useTranslation();
@@ -174,17 +172,38 @@ const TicTacToe = () => {
         <CardContent>
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-medium mb-3">Select Game Mode:</h3>
-              <RadioGroup value={gameMode} onValueChange={(value: 'player' | 'computer') => setGameMode(value)}>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="player" id="player" />
-                  <Label htmlFor="player">Player vs Player</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="computer" id="computer" />
-                  <Label htmlFor="computer">Player vs Computer</Label>
-                </div>
-              </RadioGroup>
+              <h3 className="text-lg font-medium mb-4 text-center">Select Game Mode:</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  onClick={() => setGameMode('player')}
+                  className={`p-6 rounded-lg border-2 transition-all hover:scale-105 ${
+                    gameMode === 'player'
+                      ? 'border-dream-DEFAULT bg-dream-DEFAULT/10 text-dream-DEFAULT'
+                      : 'border-gray-200 dark:border-gray-700 hover:border-dream-light'
+                  }`}
+                >
+                  <Users className="w-12 h-12 mx-auto mb-3" />
+                  <div className="text-center">
+                    <div className="font-semibold">Player vs Player</div>
+                    <div className="text-sm text-muted-foreground mt-1">Play with a friend</div>
+                  </div>
+                </button>
+                
+                <button
+                  onClick={() => setGameMode('computer')}
+                  className={`p-6 rounded-lg border-2 transition-all hover:scale-105 ${
+                    gameMode === 'computer'
+                      ? 'border-dream-DEFAULT bg-dream-DEFAULT/10 text-dream-DEFAULT'
+                      : 'border-gray-200 dark:border-gray-700 hover:border-dream-light'
+                  }`}
+                >
+                  <Bot className="w-12 h-12 mx-auto mb-3" />
+                  <div className="text-center">
+                    <div className="font-semibold">Player vs Computer</div>
+                    <div className="text-sm text-muted-foreground mt-1">Challenge the AI</div>
+                  </div>
+                </button>
+              </div>
             </div>
           </div>
         </CardContent>
