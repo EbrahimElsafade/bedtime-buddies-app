@@ -19,7 +19,13 @@ const SnakeGame = () => {
   const gridSize = 20;
   const gameSpeed = 150;
 
+  // Array of fruit emojis for variety
+  const fruits = ['🍎', '🍊', '🍌', '🍇', '🍓', '🥝', '🍑', '🥭'];
+  const [currentFruit, setCurrentFruit] = useState('🍎');
+
   const generateFood = useCallback(() => {
+    // Pick a random fruit
+    setCurrentFruit(fruits[Math.floor(Math.random() * fruits.length)]);
     return {
       x: Math.floor(Math.random() * gridSize),
       y: Math.floor(Math.random() * gridSize)
@@ -75,14 +81,14 @@ const SnakeGame = () => {
       if (head.x === food.x && head.y === food.y) {
         setScore(prev => prev + 10);
         setFood(generateFood());
-        toast.success('Yummy! +10 points');
+        toast.success(`Yummy ${currentFruit}! +10 points`);
       } else {
         newSnake.pop();
       }
 
       return newSnake;
     });
-  }, [direction, food, gameState, gameStarted, gameOver, generateFood, gridSize]);
+  }, [direction, food, gameState, gameStarted, gameOver, generateFood, gridSize, currentFruit]);
 
   useEffect(() => {
     const gameInterval = setInterval(moveSnake, gameSpeed);
@@ -143,49 +149,51 @@ const SnakeGame = () => {
 
   if (gameState === 'menu') {
     return (
-      <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-        <CardHeader className="text-center">
-          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">
-            🐍 Snake Game
+      <Card className="overflow-hidden border-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white shadow-2xl">
+        <CardHeader className="text-center pb-8">
+          <CardTitle className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-2">
+            Snake Game
           </CardTitle>
-          <CardDescription>Control the snake to eat food and grow longer!</CardDescription>
+          <CardDescription className="text-slate-300 text-lg">
+            Control the snake to eat delicious fruits and grow longer!
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center space-y-8">
-            <div className="text-center space-y-4">
-              <div className="text-6xl mb-4">🐍</div>
-              <h3 className="text-xl font-semibold">Classic Snake Game</h3>
-              <p className="text-muted-foreground max-w-md">
-                Use arrow keys to control the snake. Eat the red food to grow and earn points. 
-                Don't hit the walls or yourself!
+            <div className="text-center space-y-6">
+              <div className="text-8xl mb-6 animate-bounce">🐍</div>
+              <h3 className="text-2xl font-semibold text-cyan-300">Classic Snake Adventure</h3>
+              <p className="text-slate-300 max-w-md leading-relaxed">
+                Use arrow keys to guide your snake around the board. Eat colorful fruits to grow bigger and earn points! 
+                Watch out for walls and don't bite yourself!
               </p>
             </div>
             
             {highScore > 0 && (
-              <div className="bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900 dark:to-orange-900 px-6 py-4 rounded-lg">
+              <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border border-yellow-500/30 px-8 py-6 rounded-2xl">
                 <div className="text-center">
-                  <div className="text-sm font-medium text-yellow-800 dark:text-yellow-200">High Score</div>
-                  <div className="text-3xl font-bold text-yellow-600">{highScore}</div>
+                  <div className="text-sm font-medium text-yellow-300 mb-1">🏆 High Score</div>
+                  <div className="text-4xl font-bold text-yellow-400">{highScore}</div>
                 </div>
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-4 text-center">
-              <div className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 p-4 rounded-lg">
-                <div className="text-2xl mb-2">⬆️⬇️⬅️➡️</div>
-                <div className="text-sm font-medium">Arrow Keys</div>
-                <div className="text-xs text-muted-foreground">Move Snake</div>
+            <div className="grid grid-cols-2 gap-6 text-center max-w-md">
+              <div className="bg-gradient-to-br from-blue-500/20 to-purple-500/20 backdrop-blur-sm border border-blue-500/30 p-6 rounded-2xl">
+                <div className="text-3xl mb-3">⬆️⬇️⬅️➡️</div>
+                <div className="text-sm font-medium text-blue-300">Arrow Keys</div>
+                <div className="text-xs text-slate-400 mt-1">Move Snake</div>
               </div>
-              <div className="bg-gradient-to-r from-red-100 to-pink-100 dark:from-red-900 dark:to-pink-900 p-4 rounded-lg">
-                <div className="text-2xl mb-2">🍎</div>
-                <div className="text-sm font-medium">Eat Food</div>
-                <div className="text-xs text-muted-foreground">Grow & Score</div>
+              <div className="bg-gradient-to-br from-red-500/20 to-pink-500/20 backdrop-blur-sm border border-red-500/30 p-6 rounded-2xl">
+                <div className="text-3xl mb-3">{fruits.join('')}</div>
+                <div className="text-sm font-medium text-red-300">Eat Fruits</div>
+                <div className="text-xs text-slate-400 mt-1">Grow & Score</div>
               </div>
             </div>
 
             <Button 
               onClick={resetGame}
-              className="px-8 py-4 text-lg font-semibold bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+              className="px-10 py-6 text-lg font-semibold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 border-0 rounded-2xl shadow-lg transform transition-all duration-200 hover:scale-105"
             >
               🎮 Start Game
             </Button>
@@ -196,42 +204,42 @@ const SnakeGame = () => {
   }
 
   return (
-    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold bg-gradient-to-r from-green-500 to-emerald-600 bg-clip-text text-transparent">
-          🐍 Snake Game
+    <Card className="overflow-hidden border-0 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white shadow-2xl">
+      <CardHeader className="text-center pb-6">
+        <CardTitle className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+          Snake Game
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-slate-300 text-lg">
           {!gameStarted ? 'Press an arrow key to start!' : 'Use arrow keys to control the snake!'}
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-6">
-          <div className="flex justify-center space-x-8">
-            <div className="text-center bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 px-6 py-3 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{score}</div>
-              <div className="text-sm text-muted-foreground">Score</div>
+        <div className="space-y-8">
+          <div className="flex justify-center space-x-6">
+            <div className="text-center bg-gradient-to-br from-blue-500/20 to-purple-500/20 backdrop-blur-sm border border-blue-500/30 px-6 py-4 rounded-2xl">
+              <div className="text-3xl font-bold text-blue-400">{score}</div>
+              <div className="text-sm text-slate-400">Score</div>
             </div>
-            <div className="text-center bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900 dark:to-orange-900 px-6 py-3 rounded-lg">
-              <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{highScore}</div>
-              <div className="text-sm text-muted-foreground">High Score</div>
+            <div className="text-center bg-gradient-to-br from-yellow-500/20 to-orange-500/20 backdrop-blur-sm border border-yellow-500/30 px-6 py-4 rounded-2xl">
+              <div className="text-3xl font-bold text-yellow-400">{highScore}</div>
+              <div className="text-sm text-slate-400">Best</div>
             </div>
-            <div className="text-center bg-gradient-to-r from-green-100 to-teal-100 dark:from-green-900 dark:to-teal-900 px-6 py-3 rounded-lg">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">{snake.length}</div>
-              <div className="text-sm text-muted-foreground">Length</div>
+            <div className="text-center bg-gradient-to-br from-green-500/20 to-teal-500/20 backdrop-blur-sm border border-green-500/30 px-6 py-4 rounded-2xl">
+              <div className="text-3xl font-bold text-green-400">{snake.length}</div>
+              <div className="text-sm text-slate-400">Length</div>
             </div>
           </div>
 
           {gameState === 'gameOver' && (
-            <div className="text-center">
-              <div className="text-4xl mb-2">😔</div>
-              <div className="text-2xl font-bold text-red-600 animate-pulse mb-2">
+            <div className="text-center bg-gradient-to-br from-red-500/20 to-pink-500/20 backdrop-blur-sm border border-red-500/30 p-8 rounded-2xl">
+              <div className="text-6xl mb-4 animate-pulse">💔</div>
+              <div className="text-3xl font-bold text-red-400 mb-4">
                 Game Over!
               </div>
-              <div className="text-muted-foreground">
-                Final Score: {score}
+              <div className="text-slate-300 text-lg">
+                Final Score: <span className="text-white font-bold">{score}</span>
                 {score === highScore && score > 0 && (
-                  <span className="block text-yellow-600 font-semibold">🎉 New High Score! 🎉</span>
+                  <div className="text-yellow-400 font-semibold mt-2">🎉 New High Score! 🎉</div>
                 )}
               </div>
             </div>
@@ -239,11 +247,11 @@ const SnakeGame = () => {
 
           <div className="flex justify-center">
             <div 
-              className="grid border-4 border-gray-800 dark:border-gray-200 rounded-lg overflow-hidden bg-green-100 dark:bg-green-900"
+              className="grid border-4 border-slate-700 rounded-2xl overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900 shadow-inner"
               style={{
                 gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-                width: '400px',
-                height: '400px'
+                width: '480px',
+                height: '480px'
               }}
             >
               {Array.from({ length: gridSize * gridSize }).map((_, index) => {
@@ -258,14 +266,19 @@ const SnakeGame = () => {
                   <div
                     key={index}
                     className={`
-                      border border-green-200 dark:border-green-700 flex items-center justify-center text-xs
-                      ${isSnakeHead ? 'bg-green-600 text-white' : ''}
-                      ${isSnakeBody ? 'bg-green-500' : ''}
-                      ${isFood ? 'bg-red-500' : ''}
+                      border border-slate-700/30 flex items-center justify-center text-lg transition-all duration-150
+                      ${isSnakeHead ? 'bg-gradient-to-br from-cyan-400 to-blue-500 shadow-lg shadow-cyan-500/30' : ''}
+                      ${isSnakeBody ? 'bg-gradient-to-br from-cyan-500 to-blue-600' : ''}
+                      ${isFood ? 'bg-gradient-to-br from-red-400/20 to-pink-400/20 animate-pulse' : ''}
+                      ${!isSnakeHead && !isSnakeBody && !isFood ? 'bg-slate-800/50' : ''}
                     `}
                   >
-                    {isSnakeHead && '🐍'}
-                    {isFood && '🍎'}
+                    {isSnakeHead && (
+                      <div className="text-white text-lg animate-pulse">🐍</div>
+                    )}
+                    {isFood && (
+                      <div className="text-2xl animate-bounce">{currentFruit}</div>
+                    )}
                   </div>
                 );
               })}
@@ -273,21 +286,21 @@ const SnakeGame = () => {
           </div>
         </div>
       </CardContent>
-      <CardFooter className="flex gap-2">
+      <CardFooter className="flex gap-4 pt-6">
         {gameState === 'playing' && (
           <Button 
             onClick={() => setGameState('menu')} 
             variant="outline" 
-            className="flex-1"
+            className="flex-1 bg-slate-800/50 border-slate-600 text-slate-300 hover:bg-slate-700 hover:text-white rounded-xl"
           >
             Back to Menu
           </Button>
         )}
         <Button 
           onClick={resetGame} 
-          className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+          className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 border-0 rounded-xl shadow-lg"
         >
-          {gameState === 'gameOver' ? 'Play Again' : 'New Game'}
+          {gameState === 'gameOver' ? '🔄 Play Again' : '🆕 New Game'}
         </Button>
       </CardFooter>
     </Card>
