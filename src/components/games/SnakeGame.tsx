@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -121,9 +120,11 @@ const SnakeGame = () => {
           handleDirectionChange({ x: 0, y: 1 });
           break;
         case 'ArrowLeft':
+          // Always move left regardless of RTL
           handleDirectionChange({ x: -1, y: 0 });
           break;
         case 'ArrowRight':
+          // Always move right regardless of RTL
           handleDirectionChange({ x: 1, y: 0 });
           break;
       }
