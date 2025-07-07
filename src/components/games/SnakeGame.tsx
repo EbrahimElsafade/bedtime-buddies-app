@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -80,14 +81,14 @@ const SnakeGame = () => {
       if (head.x === food.x && head.y === food.y) {
         setScore(prev => prev + 10);
         setFood(generateFood());
-        toast.success(`Yummy ${currentFruit}! +10 points`);
+        // Removed toast notification here
       } else {
         newSnake.pop();
       }
 
       return newSnake;
     });
-  }, [direction, food, gameState, gameStarted, gameOver, generateFood, gridSize, currentFruit]);
+  }, [direction, food, gameState, gameStarted, gameOver, generateFood, gridSize]);
 
   useEffect(() => {
     const gameInterval = setInterval(moveSnake, gameSpeed);
@@ -279,38 +280,34 @@ const SnakeGame = () => {
                     key={index}
                     className={`
                       flex items-center justify-center text-lg transition-all duration-300 relative
-                      ${isSnakeHead ? 'animate-pulse' : ''}
-                      ${isSnakeBody ? 'animate-pulse' : ''}
                       ${isFood ? 'animate-bounce' : ''}
                     `}
                     style={{
-                      background: isSnakeHead 
-                        ? 'radial-gradient(circle, #06b6d4 0%, #0891b2 40%, #0e7490 70%, #164e63 100%)'
-                        : isSnakeBody 
-                        ? 'radial-gradient(circle, #0891b2 0%, #0e7490 50%, #164e63 100%)'
+                      background: isSnakeBody 
+                        ? 'linear-gradient(135deg, #16a34a 0%, #15803d 50%, #166534 100%)'
                         : isFood 
                         ? 'radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, transparent 70%)'
                         : 'transparent',
                       boxShadow: isSnakeHead 
-                        ? '0 0 20px rgba(6, 182, 212, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.2)'
+                        ? '0 0 20px rgba(34, 197, 94, 0.8)'
                         : isSnakeBody 
-                        ? '0 0 15px rgba(8, 145, 178, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.1)'
+                        ? '0 0 15px rgba(34, 197, 94, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.1)'
                         : isFood 
                         ? '0 0 25px rgba(239, 68, 68, 0.5)'
                         : 'none',
-                      border: (isSnakeHead || isSnakeBody) ? '1px solid rgba(255, 255, 255, 0.3)' : 'none',
-                      borderRadius: (isSnakeHead || isSnakeBody) ? '6px' : '0'
+                      border: isSnakeBody ? '1px solid rgba(255, 255, 255, 0.3)' : 'none',
+                      borderRadius: isSnakeBody ? '50%' : '0'
                     }}
                   >
                     {isSnakeHead && (
                       <div 
-                        className="text-white text-lg font-bold relative z-10"
+                        className="text-2xl relative z-10"
                         style={{
                           filter: 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.8))',
-                          textShadow: '0 0 10px rgba(6, 182, 212, 0.8)'
+                          textShadow: '0 0 10px rgba(34, 197, 94, 0.8)'
                         }}
                       >
-                        🐍
+                        🐸
                       </div>
                     )}
                     {isFood && (
@@ -326,13 +323,13 @@ const SnakeGame = () => {
                     )}
                     
                     {/* Smoke effect for snake segments */}
-                    {(isSnakeHead || isSnakeBody) && (
+                    {isSnakeBody && (
                       <div 
                         className="absolute inset-0 pointer-events-none opacity-60"
                         style={{
-                          background: 'radial-gradient(circle, rgba(6, 182, 212, 0.3) 0%, rgba(6, 182, 212, 0.1) 50%, transparent 100%)',
+                          background: 'radial-gradient(circle, rgba(34, 197, 94, 0.3) 0%, rgba(34, 197, 94, 0.1) 50%, transparent 100%)',
                           animation: 'pulse 2s ease-in-out infinite alternate',
-                          borderRadius: '6px'
+                          borderRadius: '50%'
                         }}
                       />
                     )}
