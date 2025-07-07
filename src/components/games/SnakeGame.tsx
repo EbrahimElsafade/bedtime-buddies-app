@@ -1,7 +1,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight } from 'lucide-react';
 
 const SnakeGame = () => {
@@ -132,22 +131,24 @@ const SnakeGame = () => {
 
   if (gameState === 'menu') {
     return (
-      <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-slate-700 rounded-lg shadow-2xl overflow-hidden">
-          <div className="p-8 text-center">
-            <h1 className="text-4xl font-bold text-slate-200 mb-4">Snake Game</h1>
-            <p className="text-slate-400 mb-8">Use arrow keys to control the snake</p>
+      <div className="max-w-4xl mx-auto p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-4">Snake Game</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Use arrow keys to control the snake and eat the food!
+            </p>
             
             {highScore > 0 && (
-              <div className="bg-slate-600 rounded-lg p-4 mb-8">
-                <div className="text-slate-300 text-sm">High Score</div>
-                <div className="text-2xl font-bold text-blue-400">{highScore}</div>
+              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6">
+                <div className="text-gray-600 dark:text-gray-300 text-sm">High Score</div>
+                <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{highScore}</div>
               </div>
             )}
 
             <Button 
               onClick={resetGame}
-              className="w-full py-3 text-lg bg-blue-600 hover:bg-blue-700"
+              className="px-8 py-3 text-lg"
             >
               Start Game
             </Button>
@@ -158,89 +159,97 @@ const SnakeGame = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-2xl bg-slate-700 rounded-lg shadow-2xl overflow-hidden">
-        {/* Game Details */}
-        <div className="flex justify-between items-center p-6 text-slate-300 font-medium text-lg">
-          <span>Score: {score}</span>
-          <span>High Score: {highScore}</span>
+    <div className="max-w-4xl mx-auto p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+        {/* Game Header */}
+        <div className="bg-gray-50 dark:bg-gray-700 px-6 py-4 flex justify-between items-center">
+          <div className="text-lg font-semibold text-gray-800 dark:text-white">
+            Score: {score}
+          </div>
+          <div className="text-lg font-semibold text-gray-800 dark:text-white">
+            High Score: {highScore}
+          </div>
         </div>
 
         {/* Game Board */}
-        <div 
-          className="w-full h-96 md:h-[500px] bg-slate-800 relative"
-          style={{
-            display: 'grid',
-            gridTemplate: `repeat(${gridSize}, 1fr) / repeat(${gridSize}, 1fr)`
-          }}
-        >
-          {/* Food */}
-          <div
-            className="bg-red-500"
+        <div className="relative">
+          <div 
+            className="w-full h-96 md:h-[500px] bg-gray-800 relative"
             style={{
-              gridArea: `${food.y} / ${food.x}`
+              display: 'grid',
+              gridTemplate: `repeat(${gridSize}, 1fr) / repeat(${gridSize}, 1fr)`
             }}
-          />
-          
-          {/* Snake */}
-          {snake.map((segment, index) => (
+          >
+            {/* Food */}
             <div
-              key={index}
-              className="bg-cyan-400"
+              className="bg-red-500"
               style={{
-                gridArea: `${segment.y} / ${segment.x}`
+                gridArea: `${food.y} / ${food.x}`
               }}
             />
-          ))}
+            
+            {/* Snake */}
+            {snake.map((segment, index) => (
+              <div
+                key={index}
+                className="bg-blue-400"
+                style={{
+                  gridArea: `${segment.y} / ${segment.x}`
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Game Over Overlay */}
+          {gameState === 'gameOver' && (
+            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+              <div className="bg-white dark:bg-gray-800 p-8 rounded-lg text-center shadow-xl">
+                <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">Game Over!</h2>
+                <p className="text-gray-600 dark:text-gray-300 mb-6">Final Score: {score}</p>
+                <Button onClick={resetGame}>
+                  Play Again
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Game Over Message */}
-        {gameState === 'gameOver' && (
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <div className="bg-slate-700 p-8 rounded-lg text-center">
-              <h2 className="text-2xl font-bold text-red-400 mb-4">Game Over!</h2>
-              <p className="text-slate-300 mb-6">Final Score: {score}</p>
-              <Button onClick={resetGame} className="bg-blue-600 hover:bg-blue-700">
-                Play Again
-              </Button>
-            </div>
-          </div>
-        )}
-
         {/* Mobile Controls */}
-        <div className="md:hidden grid grid-cols-4 border-t border-slate-600">
+        <div className="md:hidden bg-gray-50 dark:bg-gray-700 grid grid-cols-4">
           <button
             onClick={() => handleDirectionChange({ x: -1, y: 0 })}
-            className="p-4 text-slate-300 hover:bg-slate-600 border-r border-slate-600 flex items-center justify-center"
+            className="p-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 border-r border-gray-200 dark:border-gray-600 flex items-center justify-center"
           >
             <ArrowLeft size={20} />
           </button>
           <button
             onClick={() => handleDirectionChange({ x: 0, y: -1 })}
-            className="p-4 text-slate-300 hover:bg-slate-600 border-r border-slate-600 flex items-center justify-center"
+            className="p-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 border-r border-gray-200 dark:border-gray-600 flex items-center justify-center"
           >
             <ArrowUp size={20} />
           </button>
           <button
             onClick={() => handleDirectionChange({ x: 1, y: 0 })}
-            className="p-4 text-slate-300 hover:bg-slate-600 border-r border-slate-600 flex items-center justify-center"
+            className="p-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 border-r border-gray-200 dark:border-gray-600 flex items-center justify-center"
           >
             <ArrowRight size={20} />
           </button>
           <button
             onClick={() => handleDirectionChange({ x: 0, y: 1 })}
-            className="p-4 text-slate-300 hover:bg-slate-600 flex items-center justify-center"
+            className="p-4 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 flex items-center justify-center"
           >
             <ArrowDown size={20} />
           </button>
         </div>
 
         {/* Instructions */}
-        <div className="p-4 text-center text-slate-400 text-sm">
-          {!gameStarted && gameState === 'playing' ? 
-            'Press an arrow key to start!' : 
-            'Use arrow keys to control the snake'
-          }
+        <div className="bg-gray-50 dark:bg-gray-700 px-6 py-4 text-center">
+          <p className="text-gray-600 dark:text-gray-300 text-sm">
+            {!gameStarted && gameState === 'playing' ? 
+              'Press an arrow key to start!' : 
+              'Use arrow keys to control the snake'
+            }
+          </p>
         </div>
       </div>
     </div>
