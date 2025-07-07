@@ -3,8 +3,10 @@ import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { useTranslation } from 'react-i18next';
 
 const HangmanGame = () => {
+  const { t } = useTranslation('common');
   const [currentWord, setCurrentWord] = useState('');
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
   const [wrongGuesses, setWrongGuesses] = useState(0);
@@ -50,7 +52,7 @@ const HangmanGame = () => {
       
       if (newWrongGuesses >= maxWrongGuesses) {
         setGameStatus('lost');
-        toast.error(`Game Over! The word was "${currentWord}"`);
+        toast.error(`${t('games.hangman.gameOver')} The word was "${currentWord}"`);
       }
     } else {
       const wordLetters = currentWord.split('');
@@ -58,7 +60,7 @@ const HangmanGame = () => {
       
       if (isComplete) {
         setGameStatus('won');
-        toast.success('Congratulations! You won!');
+        toast.success(t('games.hangman.youWin'));
       }
     }
   };
@@ -124,9 +126,9 @@ const HangmanGame = () => {
     <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent">
-          HANGMAN GAME
+          {t('games.hangman.title')}
         </CardTitle>
-        <CardDescription>Guess the word before the drawing is complete!</CardDescription>
+        <CardDescription>{t('games.hangman.description')}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col lg:flex-row gap-8 items-start">
@@ -134,12 +136,12 @@ const HangmanGame = () => {
             <div className="text-center mb-4">
               {gameStatus === 'won' && (
                 <div className="text-2xl font-bold text-green-600 animate-pulse">
-                  🎉 YOU WON! 🎉
+                  🎉 {t('games.hangman.youWin')} 🎉
                 </div>
               )}
               {gameStatus === 'lost' && (
                 <div className="text-2xl font-bold text-red-600 animate-pulse">
-                  😔 TRY AGAIN! 😔
+                  😔 {t('games.hangman.youLose')} 😔
                 </div>
               )}
             </div>
@@ -148,7 +150,7 @@ const HangmanGame = () => {
 
             <div className="text-center mt-4">
               <div className="text-lg font-semibold text-red-600 dark:text-red-400">
-                Incorrect guesses: {wrongGuesses} / {maxWrongGuesses}
+                {t('games.hangman.incorrectGuesses')} {wrongGuesses} / {maxWrongGuesses}
               </div>
             </div>
           </div>
@@ -161,7 +163,7 @@ const HangmanGame = () => {
               
               <div className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 p-4 rounded-lg shadow-lg border border-blue-200 dark:border-blue-700 mb-6">
                 <div className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-1">
-                  Hint:
+                  {t('games.hangman.hint')}
                 </div>
                 <div className="text-blue-700 dark:text-blue-300">
                   {hint}
@@ -239,7 +241,7 @@ const HangmanGame = () => {
           onClick={initializeGame} 
           className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-dream-DEFAULT to-purple-600 hover:from-dream-dark hover:to-purple-700 transition-all duration-300"
         >
-          New Game
+          {t('games.hangman.newGame')}
         </Button>
       </CardFooter>
     </Card>

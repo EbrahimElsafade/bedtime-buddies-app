@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Diamond, Heart, Star, Circle, Square, Triangle, Hexagon, Crown } from "lucide-react";
+import { useTranslation } from 'react-i18next';
 
 const MemoryCardGame = () => {
+  const { t } = useTranslation('common');
   const [cards, setCards] = useState<Array<{id: number, icon: any, color: string, isFlipped: boolean, isMatched: boolean}>>([]);
   const [flippedCards, setFlippedCards] = useState<number[]>([]);
   const [matchedPairs, setMatchedPairs] = useState(0);
@@ -100,7 +102,7 @@ const MemoryCardGame = () => {
             const newMatchedPairs = prev + 1;
             if (newMatchedPairs === cardIcons.length) {
               setGameStatus('won');
-              toast.success(`Congratulations! You won in ${moves + 1} moves and ${Math.floor(timeElapsed / 60)}:${(timeElapsed % 60).toString().padStart(2, '0')}`);
+              toast.success(t('games.memory.gameCompleted', { moves: moves + 1 }));
             }
             return newMatchedPairs;
           });
@@ -131,24 +133,24 @@ const MemoryCardGame = () => {
       <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent">
-            Memory Card Game
+            {t('games.memory.title')}
           </CardTitle>
-          <CardDescription>Match all the pairs of cards to win!</CardDescription>
+          <CardDescription>{t('games.memory.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center space-y-6">
             <div className="text-center">
               <div className="text-6xl mb-4">🧠</div>
-              <h3 className="text-xl font-semibold mb-2">Test Your Memory!</h3>
+              <h3 className="text-xl font-semibold mb-2">{t('games.memory.testYourMemory')}</h3>
               <p className="text-muted-foreground mb-6">
-                Click on cards to flip them and find matching pairs. Try to complete the game in as few moves as possible!
+                {t('games.memory.clickToFlip')}
               </p>
             </div>
             <Button 
               onClick={initializeGame}
               className="px-8 py-4 text-lg font-semibold bg-gradient-to-r from-dream-DEFAULT to-purple-600 hover:from-dream-dark hover:to-purple-700"
             >
-              Start Game
+              {t('games.memory.startGame')}
             </Button>
           </div>
         </CardContent>
@@ -160,16 +162,16 @@ const MemoryCardGame = () => {
     <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent">
-          Memory Card Game
+          {t('games.memory.title')}
         </CardTitle>
-        <CardDescription>Match all the pairs to win!</CardDescription>
+        <CardDescription>{t('games.memory.description')}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
           <div className="flex justify-center space-x-8">
             <div className="text-center bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 px-6 py-3 rounded-lg">
               <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{moves}</div>
-              <div className="text-sm text-muted-foreground">Moves</div>
+              <div className="text-sm text-muted-foreground">{t('games.memory.moves')}</div>
             </div>
             <div className="text-center bg-gradient-to-r from-green-100 to-teal-100 dark:from-green-900 dark:to-teal-900 px-6 py-3 rounded-lg">
               <div className="text-2xl font-bold text-green-600 dark:text-green-400">{matchedPairs}/{cardIcons.length}</div>
@@ -185,10 +187,10 @@ const MemoryCardGame = () => {
             <div className="text-center">
               <div className="text-4xl mb-2">🎉</div>
               <div className="text-2xl font-bold text-green-600 animate-pulse mb-2">
-                Congratulations!
+                {t('games.memory.congratulations')}
               </div>
               <div className="text-muted-foreground">
-                You completed the game in {moves} moves and {formatTime(timeElapsed)}!
+                {t('games.memory.gameCompleted', { moves })}
               </div>
             </div>
           )}
@@ -234,7 +236,7 @@ const MemoryCardGame = () => {
           onClick={initializeGame} 
           className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-dream-DEFAULT to-purple-600 hover:from-dream-dark hover:to-purple-700 transition-all duration-300"
         >
-          New Game
+          {t('games.memory.playAgain')}
         </Button>
       </CardFooter>
     </Card>
