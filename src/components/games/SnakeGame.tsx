@@ -158,6 +158,34 @@ const SnakeGame = () => {
     );
   }
 
+  if (gameState === 'gameOver') {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-red-600 dark:text-red-400 mb-4">Game Over!</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">Final Score: {score}</p>
+            {score === highScore && score > 0 && (
+              <p className="text-blue-600 dark:text-blue-400 mb-6 font-semibold">🎉 New High Score!</p>
+            )}
+            
+            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 mb-6">
+              <div className="text-gray-600 dark:text-gray-300 text-sm">High Score</div>
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{highScore}</div>
+            </div>
+
+            <Button 
+              onClick={resetGame}
+              className="px-8 py-3 text-lg"
+            >
+              Play Again
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
@@ -172,11 +200,10 @@ const SnakeGame = () => {
         </div>
 
         {/* Game Board */}
-        <div className="relative">
+        <div className="relative bg-gray-900 p-4">
           <div 
-            className="w-full h-96 md:h-[500px] bg-gray-800 relative"
+            className="w-full aspect-square max-w-md mx-auto bg-gray-800 grid gap-0"
             style={{
-              display: 'grid',
               gridTemplate: `repeat(${gridSize}, 1fr) / repeat(${gridSize}, 1fr)`
             }}
           >
@@ -199,19 +226,6 @@ const SnakeGame = () => {
               />
             ))}
           </div>
-
-          {/* Game Over Overlay */}
-          {gameState === 'gameOver' && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <div className="bg-white dark:bg-gray-800 p-8 rounded-lg text-center shadow-xl">
-                <h2 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">Game Over!</h2>
-                <p className="text-gray-600 dark:text-gray-300 mb-6">Final Score: {score}</p>
-                <Button onClick={resetGame}>
-                  Play Again
-                </Button>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Mobile Controls */}
