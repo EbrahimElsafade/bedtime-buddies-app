@@ -11,6 +11,8 @@ export interface Story {
   languages: string[]; // e.g., ["en", "ar-eg"]
   created_at: string;
   updated_at: string;
+  audio_mode: "per_section" | "single_story";
+  story_audio: string | null;
   sections: StorySection[];
 }
 
