@@ -1,0 +1,55 @@
+
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { getImageUrl } from "@/utils/imageUtils";
+import { Story as StoryType, StorySection } from "@/types/story";
+
+export const useStoryData = (storyId: string | undefined) => {
+  return useQuery({
+    queryKey: ["story", storyId],
+    queryFn: async (): Promise<StoryType> => {
+      if (!storyId) throw new Error("Story ID is required");
+      
+      // Fetch story details
+      const { data: storyData, error: storyError } = await supabase
+        .from("stories")
+        .select("*")
+        .eq("id", storyId)
+        .eq("is_published", true)
+        .single();
+      
+      if (storyError) {
+        console.error("Error fetching story:", storyError);
+        throw storyError;
+      }
+
+      // Fetch story sections
+      const { data: sectionsData, error: sectionsError } = await supabase
+        .from("story_sections")
+        .select("*")
+        .eq("story_id", storyId)
+        .order("order", { ascending: true });
+      
+      if (sectionsError) {
+        console.error("Error fetching sections:", sectionsError);
+        throw sectionsError;
+      }
+
+      // Transform sections to match our interface
+      const sections: StorySection[] = sectionsData?.map(section => ({
+        id: section.id,
+        order: section.order,
+        texts: section.texts as Record<string, string>,
+        voices: section.voices as Record<string, string> | undefined,
+        image: section.image || undefined
+      })) || [];
+
+      return {
+        ...storyData,
+        audio_mode: (storyData.audio_mode || "per_section") as "per_section" | "single_story",
+        sections
+      };
+    },
+    enabled: !!storyId
+  });
+};
