@@ -5,8 +5,6 @@ import { Heart, Share, ChevronLeft, ChevronRight, VolumeX, Volume2 } from "lucid
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
@@ -23,7 +21,6 @@ const Story = () => {
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  const [isSingleAudioMode, setIsSingleAudioMode] = useState(false);
 
   const { data: story, isLoading, error } = useQuery({
     queryKey: ["story", storyId],
@@ -141,7 +138,12 @@ const Story = () => {
   };
   
   const toggleAudio = () => {
-    if (currentSection?.voices?.[currentLanguage]) {
+    // Check if we have audio based on the story's audio mode
+    const hasAudio = story.audio_mode === 'single_story' 
+      ? !!story.story_audio 
+      : !!(currentSection?.voices?.[currentLanguage]);
+      
+    if (hasAudio) {
       // In a real app, this would control audio playback
       setIsAudioPlaying(!isAudioPlaying);
     }
@@ -149,6 +151,11 @@ const Story = () => {
 
   const canAccessStory = story.is_free || (isAuthenticated && profile?.is_premium);
   const showPremiumMessage = !story.is_free && (!isAuthenticated || !profile?.is_premium);
+  
+  // Determine if audio is available
+  const hasAudio = story.audio_mode === 'single_story' 
+    ? !!story.story_audio 
+    : !!(currentSection?.voices?.[currentLanguage]);
   
   return (
     <div className="py-8 px-4">
@@ -201,6 +208,9 @@ const Story = () => {
                 Premium
               </span>
             )}
+            <span className="px-2 py-1 bg-secondary/50 rounded-full">
+              {story.audio_mode === 'single_story' ? 'Single Audio' : 'Section Audio'}
+            </span>
           </div>
         </div>
         
@@ -220,20 +230,6 @@ const Story = () => {
                 )}
               </TabsList>
             </Tabs>
-          </div>
-        )}
-        
-        {/* Audio Mode Switch */}
-        {canAccessStory && (
-          <div className="mb-6 flex items-center space-x-2">
-            <Switch 
-              id="audio-mode" 
-              checked={isSingleAudioMode}
-              onCheckedChange={setIsSingleAudioMode}
-            />
-            <Label htmlFor="audio-mode" className="text-sm">
-              {isSingleAudioMode ? "Single audio for whole story" : "Audio per section"}
-            </Label>
           </div>
         )}
         
@@ -269,38 +265,40 @@ const Story = () => {
                     </p>
                   </div>
                   
-                  {/* Section Navigation */}
-                  <div className="flex justify-between items-center pt-4 mt-auto">
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      onClick={handlePrevSection} 
-                      disabled={currentSectionIndex === 0}
-                      aria-label="Previous section"
-                    >
-                      <ChevronLeft className="rtl:rotate-180 h-5 w-5" />
-                    </Button>
-                    
-                    <span className="text-sm text-muted-foreground">
-                      {currentSectionIndex + 1} / {story.sections.length || 1}
-                    </span>
-                    
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      onClick={handleNextSection} 
-                      disabled={currentSectionIndex === story.sections.length - 1}
-                      aria-label="Next section"
-                    >
-                      <ChevronRight className="rtl:rotate-180 h-5 w-5" />
-                    </Button>
-                  </div>
+                  {/* Section Navigation - only show if not in single story audio mode or if no sections */}
+                  {(story.audio_mode !== 'single_story' || story.sections.length > 1) && (
+                    <div className="flex justify-between items-center pt-4 mt-auto">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={handlePrevSection} 
+                        disabled={currentSectionIndex === 0}
+                        aria-label="Previous section"
+                      >
+                        <ChevronLeft className="rtl:rotate-180 h-5 w-5" />
+                      </Button>
+                      
+                      <span className="text-sm text-muted-foreground">
+                        {currentSectionIndex + 1} / {story.sections.length || 1}
+                      </span>
+                      
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={handleNextSection} 
+                        disabled={currentSectionIndex === story.sections.length - 1}
+                        aria-label="Next section"
+                      >
+                        <ChevronRight className="rtl:rotate-180 h-5 w-5" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </Card>
             
             {/* Audio Controls */}
-            {currentSection?.voices?.[currentLanguage] && (
+            {hasAudio && (
               <div className="flex justify-center mb-8">
                 <Button 
                   onClick={toggleAudio} 
@@ -313,7 +311,8 @@ const Story = () => {
                     </>
                   ) : (
                     <>
-                      <Volume2 className="mr-2 h-4 w-4" /> Play Narration
+                      <Volume2 className="mr-2 h-4 w-4" /> 
+                      Play {story.audio_mode === 'single_story' ? 'Story' : 'Section'} Narration
                     </>
                   )}
                 </Button>

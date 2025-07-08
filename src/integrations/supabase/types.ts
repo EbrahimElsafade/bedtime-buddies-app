@@ -200,6 +200,7 @@ export type Database = {
       }
       stories: {
         Row: {
+          audio_mode: string | null
           category: string
           cover_image: string | null
           created_at: string | null
@@ -209,10 +210,12 @@ export type Database = {
           is_free: boolean
           is_published: boolean
           languages: string[]
+          story_audio: string | null
           title: string
           updated_at: string | null
         }
         Insert: {
+          audio_mode?: string | null
           category: string
           cover_image?: string | null
           created_at?: string | null
@@ -222,10 +225,12 @@ export type Database = {
           is_free?: boolean
           is_published?: boolean
           languages?: string[]
+          story_audio?: string | null
           title: string
           updated_at?: string | null
         }
         Update: {
+          audio_mode?: string | null
           category?: string
           cover_image?: string | null
           created_at?: string | null
@@ -235,6 +240,7 @@ export type Database = {
           is_free?: boolean
           is_published?: boolean
           languages?: string[]
+          story_audio?: string | null
           title?: string
           updated_at?: string | null
         }

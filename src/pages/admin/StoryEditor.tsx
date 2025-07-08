@@ -64,6 +64,8 @@ const StoryEditor = () => {
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(null);
   const [playingAudio, setPlayingAudio] = useState<{ sectionIndex: number; language: string } | null>(null);
+  const [storyAudioFile, setStoryAudioFile] = useState<File | null>(null);
+  const [storyAudioPreview, setStoryAudioPreview] = useState<string | null>(null);
   
   // Story form data
   const [storyData, setStoryData] = useState({
@@ -75,6 +77,8 @@ const StoryEditor = () => {
     is_published: false,
     languages: ["en"],
     cover_image: null as string | null,
+    audio_mode: "per_section" as "per_section" | "single_story",
+    story_audio: null as string | null,
   });
 
   // Story sections
@@ -146,6 +150,12 @@ const StoryEditor = () => {
       console.log('Setting preview image URL:', imageUrl);
       setCoverImagePreview(imageUrl);
     }
+
+    // Set story audio preview if exists
+    if (story.story_audio) {
+      const audioUrl = getImageUrl(story.story_audio);
+      setStoryAudioPreview(audioUrl);
+    }
     
     // Format sections for the UI - ensure all sections have proper structure
     const formattedSections: StorySection[] = sections.map(section => ({
@@ -182,6 +192,8 @@ const StoryEditor = () => {
         is_published: storyDetails.is_published,
         languages: storyDetails.languages || ["en"],
         cover_image: storyDetails.cover_image,
+        audio_mode: (storyDetails.audio_mode || "per_section") as "per_section" | "single_story",
+        story_audio: storyDetails.story_audio,
       });
       
       if (storyDetails.sections) {
@@ -220,6 +232,15 @@ const StoryEditor = () => {
       const objectUrl = URL.createObjectURL(file);
       console.log('Created preview URL:', objectUrl);
       setCoverImagePreview(objectUrl);
+    }
+  };
+
+  // Handle story audio file change
+  const handleStoryAudioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setStoryAudioFile(file);
+      setStoryAudioPreview(URL.createObjectURL(file));
     }
   };
   
@@ -339,6 +360,7 @@ const StoryEditor = () => {
     
     try {
       let coverImageUrl = storyData.cover_image;
+      let storyAudioUrl = storyData.story_audio;
       
       // Upload cover image if changed
       if (coverImageFile) {
@@ -361,6 +383,24 @@ const StoryEditor = () => {
         coverImageUrl = filename;
         console.log('Storing filename in DB:', coverImageUrl);
       }
+
+      // Upload story audio if changed and in single story mode
+      if (storyAudioFile && storyData.audio_mode === 'single_story') {
+        const filename = `story-audio-${Date.now()}-${storyAudioFile.name}`;
+        
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from("admin-content")
+          .upload(`story-audio/${filename}`, storyAudioFile, {
+            cacheControl: '3600',
+            upsert: false
+          });
+          
+        if (uploadError) {
+          throw uploadError;
+        }
+        
+        storyAudioUrl = filename;
+      }
       
       // Create or update the story
       let storyId = id;
@@ -375,7 +415,9 @@ const StoryEditor = () => {
             duration: storyData.duration,
             is_free: storyData.is_free,
             is_published: storyData.is_published,
-            languages: storyData.languages
+            languages: storyData.languages,
+            audio_mode: storyData.audio_mode,
+            story_audio: storyAudioUrl
           })
           .select('id')
           .single();
@@ -393,7 +435,9 @@ const StoryEditor = () => {
             duration: storyData.duration,
             is_free: storyData.is_free,
             is_published: storyData.is_published,
-            languages: storyData.languages
+            languages: storyData.languages,
+            audio_mode: storyData.audio_mode,
+            story_audio: storyAudioUrl
           })
           .eq("id", storyId);
           
@@ -431,9 +475,9 @@ const StoryEditor = () => {
           sectionImageUrl = section.image;
         }
         
-        // Upload voice files
+        // Upload voice files only if in per_section mode
         const voiceUrls: Record<string, string> = { ...section.voices };
-        if (section.voiceFiles) {
+        if (storyData.audio_mode === 'per_section' && section.voiceFiles) {
           for (const [language, voiceFile] of Object.entries(section.voiceFiles)) {
             const filename = `voice-${storyId}-${section.order}-${language}-${Date.now()}-${voiceFile.name}`;
             
@@ -457,7 +501,7 @@ const StoryEditor = () => {
             order: section.order,
             image: sectionImageUrl,
             texts: section.texts,
-            voices: voiceUrls
+            voices: storyData.audio_mode === 'per_section' ? voiceUrls : {}
           });
           
         if (sectionError) throw sectionError;
@@ -637,6 +681,73 @@ const StoryEditor = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Audio Mode Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Audio Settings</CardTitle>
+                <CardDescription>Configure how audio is handled for this story</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label htmlFor="audio-mode" className="text-base font-medium">Audio Mode</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Choose between single audio for the whole story or separate audio for each section
+                    </p>
+                  </div>
+                  <Switch
+                    id="audio-mode"
+                    checked={storyData.audio_mode === 'single_story'}
+                    onCheckedChange={(checked) => 
+                      setStoryData({ ...storyData, audio_mode: checked ? 'single_story' : 'per_section' })
+                    }
+                  />
+                </div>
+                
+                <div className="text-sm text-muted-foreground">
+                  Mode: <span className="font-medium">
+                    {storyData.audio_mode === 'single_story' ? 'Single audio for whole story' : 'Audio per section'}
+                  </span>
+                </div>
+
+                {/* Single Story Audio Upload */}
+                {storyData.audio_mode === 'single_story' && (
+                  <div className="space-y-2">
+                    <Label>Story Audio</Label>
+                    <div className="flex items-center gap-4">
+                      {storyAudioPreview ? (
+                        <div className="flex items-center gap-2 p-2 border rounded">
+                          <Volume2 className="h-4 w-4" />
+                          <span className="text-sm">Audio uploaded</span>
+                          <Button
+                            type="button"
+                            size="icon"
+                            variant="ghost"
+                            className="h-6 w-6"
+                            onClick={() => {
+                              setStoryAudioPreview(null);
+                              setStoryAudioFile(null);
+                              setStoryData({ ...storyData, story_audio: null });
+                            }}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      ) : (
+                        <div className="text-sm text-muted-foreground">No audio uploaded</div>
+                      )}
+                      <Input 
+                        type="file"
+                        accept="audio/*"
+                        onChange={handleStoryAudioChange}
+                        className="flex-1"
+                      />
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
             
             {/* Languages Card */}
             <Card>
@@ -803,15 +914,17 @@ const StoryEditor = () => {
                                     />
                                   </div>
 
-                                  {/* Voice upload */}
-                                  <div className="space-y-2">
-                                    <Label>Voice Audio ({languages?.find(opt => opt.code === lang)?.name})</Label>
-                                    <Input 
-                                      type="file"
-                                      accept="audio/*"
-                                      onChange={(e) => handleSectionVoiceChange(sectionIndex, lang, e)}
-                                    />
-                                  </div>
+                                  {/* Voice upload - only show if in per_section mode */}
+                                  {storyData.audio_mode === 'per_section' && (
+                                    <div className="space-y-2">
+                                      <Label>Voice Audio ({languages?.find(opt => opt.code === lang)?.name})</Label>
+                                      <Input 
+                                        type="file"
+                                        accept="audio/*"
+                                        onChange={(e) => handleSectionVoiceChange(sectionIndex, lang, e)}
+                                      />
+                                    </div>
+                                  )}
                                 </TabsContent>
                               ))}
                             </Tabs>
