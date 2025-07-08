@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Heart, Share, ChevronLeft, ChevronRight, VolumeX, Volume2 } from "lucide-react";
@@ -120,15 +119,15 @@ const Story = () => {
   
   // Get title and description for current language
   const getStoryTitle = () => {
-    if (typeof story.title === 'object' && story.title !== null) {
-      return (story.title as Record<string, string>)[currentLanguage] || story.title['en'] || Object.values(story.title)[0] || 'Untitled Story';
+    if (story.title && typeof story.title === 'object') {
+      return (story.title as Record<string, string>)[currentLanguage] || (story.title as Record<string, string>)['en'] || Object.values(story.title as Record<string, string>)[0] || 'Untitled Story';
     }
     return story.title || 'Untitled Story';
   };
 
   const getStoryDescription = () => {
-    if (typeof story.description === 'object' && story.description !== null) {
-      return (story.description as Record<string, string>)[currentLanguage] || story.description['en'] || Object.values(story.description)[0] || 'No description available';
+    if (story.description && typeof story.description === 'object') {
+      return (story.description as Record<string, string>)[currentLanguage] || (story.description as Record<string, string>)['en'] || Object.values(story.description as Record<string, string>)[0] || 'No description available';
     }
     return story.description || 'No description available';
   };
