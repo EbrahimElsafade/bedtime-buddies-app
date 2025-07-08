@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Heart, Share, ChevronLeft, ChevronRight, VolumeX, Volume2 } from "lucide-react";
@@ -117,6 +118,21 @@ const Story = () => {
   const currentText = currentSection?.texts[currentLanguage] || "Content not available in selected language";
   const currentImage = currentSection?.image ? getImageUrl(currentSection.image) : getImageUrl(story.cover_image);
   
+  // Get title and description for current language
+  const getStoryTitle = () => {
+    if (typeof story.title === 'object' && story.title !== null) {
+      return (story.title as Record<string, string>)[currentLanguage] || story.title['en'] || Object.values(story.title)[0] || 'Untitled Story';
+    }
+    return story.title || 'Untitled Story';
+  };
+
+  const getStoryDescription = () => {
+    if (typeof story.description === 'object' && story.description !== null) {
+      return (story.description as Record<string, string>)[currentLanguage] || story.description['en'] || Object.values(story.description)[0] || 'No description available';
+    }
+    return story.description || 'No description available';
+  };
+  
   const handleNextSection = () => {
     if (currentSectionIndex < story.sections.length - 1) {
       setCurrentSectionIndex(currentSectionIndex + 1);
@@ -188,9 +204,29 @@ const Story = () => {
           </div>
         </div>
         
+        {/* Language Selector */}
+        {story.languages.length > 1 && (
+          <div className="mb-6">
+            <Tabs value={currentLanguage} onValueChange={(value) => setCurrentLanguage(value as any)}>
+              <TabsList>
+                {story.languages.includes('en') && (
+                  <TabsTrigger value="en">English</TabsTrigger>
+                )}
+                {story.languages.includes('ar-eg') && (
+                  <TabsTrigger value="ar-eg">Arabic (Egyptian)</TabsTrigger>
+                )}
+                {story.languages.includes('ar-fos7a') && (
+                  <TabsTrigger value="ar-fos7a">Arabic (Fos7a)</TabsTrigger>
+                )}
+              </TabsList>
+            </Tabs>
+          </div>
+        )}
+
+        {/* Story Title and Description - Language Aware */}
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bubbly mb-2">{story.title}</h1>
-          <p className="text-muted-foreground mb-4">{story.description}</p>
+          <h1 className="text-3xl md:text-4xl font-bubbly mb-2">{getStoryTitle()}</h1>
+          <p className="text-muted-foreground mb-4">{getStoryDescription()}</p>
           
           <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
             <span className="px-2 py-1 bg-secondary/50 rounded-full">
@@ -214,25 +250,6 @@ const Story = () => {
           </div>
         </div>
         
-        {/* Language Selector */}
-        {story.languages.length > 1 && (
-          <div className="mb-6">
-            <Tabs value={currentLanguage} onValueChange={(value) => setCurrentLanguage(value as any)}>
-              <TabsList>
-                {story.languages.includes('en') && (
-                  <TabsTrigger value="en">English</TabsTrigger>
-                )}
-                {story.languages.includes('ar-eg') && (
-                  <TabsTrigger value="ar-eg">Arabic (Egyptian)</TabsTrigger>
-                )}
-                {story.languages.includes('ar-fos7a') && (
-                  <TabsTrigger value="ar-fos7a">Arabic (Fos7a)</TabsTrigger>
-                )}
-              </TabsList>
-            </Tabs>
-          </div>
-        )}
-        
         {/* Story Content */}
         {canAccessStory ? (
           <>
@@ -243,7 +260,7 @@ const Story = () => {
                   {currentImage ? (
                     <img 
                       src={currentImage} 
-                      alt={story.title} 
+                      alt={getStoryTitle()} 
                       className="w-full h-full object-cover aspect-square md:aspect-auto"
                       onError={(e) => {
                         console.log('Image failed to load:', currentImage);
