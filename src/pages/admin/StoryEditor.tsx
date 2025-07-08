@@ -67,10 +67,10 @@ const StoryEditor = () => {
   const [storyAudioFile, setStoryAudioFile] = useState<File | null>(null);
   const [storyAudioPreview, setStoryAudioPreview] = useState<string | null>(null);
   
-  // Story form data
+  // Story form data - Updated to handle multilingual titles and descriptions
   const [storyData, setStoryData] = useState({
-    title: "",
-    description: "",
+    title: {} as Record<string, string>,
+    description: {} as Record<string, string>,
     category: "",
     duration: 5,
     is_free: true,
@@ -184,9 +184,25 @@ const StoryEditor = () => {
     console.log("StoryEditor - isEditing:", isEditing, "id:", id, "storyDetails:", storyDetails);
     
     if (storyDetails) {
+      // Handle multilingual title and description
+      let titleObj = {};
+      let descriptionObj = {};
+      
+      if (typeof storyDetails.title === 'string') {
+        titleObj = { en: storyDetails.title };
+      } else if (storyDetails.title && typeof storyDetails.title === 'object') {
+        titleObj = storyDetails.title as Record<string, string>;
+      }
+      
+      if (typeof storyDetails.description === 'string') {
+        descriptionObj = { en: storyDetails.description };
+      } else if (storyDetails.description && typeof storyDetails.description === 'object') {
+        descriptionObj = storyDetails.description as Record<string, string>;
+      }
+      
       setStoryData({
-        title: storyDetails.title || "",
-        description: storyDetails.description || "",
+        title: titleObj,
+        description: descriptionObj,
         category: storyDetails.category || "",
         duration: storyDetails.duration || 5,
         is_free: storyDetails.is_free,
@@ -222,6 +238,30 @@ const StoryEditor = () => {
     }
   }, [categories, storyData.category, isEditing]);
   
+  // Initialize title and description for new languages
+  useEffect(() => {
+    const updatedTitle = { ...storyData.title };
+    const updatedDescription = { ...storyData.description };
+    
+    storyData.languages.forEach(lang => {
+      if (!updatedTitle[lang]) {
+        updatedTitle[lang] = "";
+      }
+      if (!updatedDescription[lang]) {
+        updatedDescription[lang] = "";
+      }
+    });
+    
+    if (JSON.stringify(updatedTitle) !== JSON.stringify(storyData.title) || 
+        JSON.stringify(updatedDescription) !== JSON.stringify(storyData.description)) {
+      setStoryData(prev => ({
+        ...prev,
+        title: updatedTitle,
+        description: updatedDescription
+      }));
+    }
+  }, [storyData.languages]);
+  
   // Handle file input change for cover image
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -249,9 +289,14 @@ const StoryEditor = () => {
   const handleAddLanguage = (language: string) => {
     if (!storyData.languages.includes(language)) {
       const updatedLanguages = [...storyData.languages, language];
+      const updatedTitle = { ...storyData.title, [language]: "" };
+      const updatedDescription = { ...storyData.description, [language]: "" };
+      
       setStoryData({
         ...storyData, 
-        languages: updatedLanguages
+        languages: updatedLanguages,
+        title: updatedTitle,
+        description: updatedDescription
       });
       
       // Add language fields to all sections
@@ -273,9 +318,16 @@ const StoryEditor = () => {
   // Handle removing a language
   const handleRemoveLanguage = (language: string) => {
     const updatedLanguages = storyData.languages.filter(lang => lang !== language);
+    const updatedTitle = { ...storyData.title };
+    const updatedDescription = { ...storyData.description };
+    delete updatedTitle[language];
+    delete updatedDescription[language];
+    
     setStoryData({
       ...storyData,
-      languages: updatedLanguages
+      languages: updatedLanguages,
+      title: updatedTitle,
+      description: updatedDescription
     });
     
     // Remove language fields from all sections
@@ -292,6 +344,27 @@ const StoryEditor = () => {
       };
     });
     setStorySections(updatedSections);
+  };
+
+  // Functions to update multilingual titles and descriptions
+  const updateStoryTitle = (language: string, value: string) => {
+    setStoryData(prev => ({
+      ...prev,
+      title: {
+        ...prev.title,
+        [language]: value
+      }
+    }));
+  };
+
+  const updateStoryDescription = (language: string, value: string) => {
+    setStoryData(prev => ({
+      ...prev,
+      description: {
+        ...prev.description,
+        [language]: value
+      }
+    }));
   };
 
   // Section management functions
@@ -403,7 +476,7 @@ const StoryEditor = () => {
         storyAudioUrl = filename;
       }
       
-      // Create or update the story
+      // Create or update the story with multilingual data
       let storyId = id;
       if (!isEditing) {
         const { data: newStory, error: storyError } = await supabase
@@ -541,24 +614,53 @@ const StoryEditor = () => {
       ) : (
         <form onSubmit={handleSubmit}>
           <div className="grid gap-6 mb-8">
-            {/* Story Details Card */}
+            {/* Story Details Card - Updated for multilingual support */}
             <Card>
               <CardHeader>
                 <CardTitle>Story Details</CardTitle>
-                <CardDescription>Basic information about the story</CardDescription>
+                <CardDescription>Basic information about the story in multiple languages</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
+                {/* Multilingual Title and Description */}
+                <Tabs defaultValue={storyData.languages[0]} className="w-full">
+                  <TabsList>
+                    {storyData.languages.map(lang => {
+                      const langOption = languages?.find(opt => opt.code === lang);
+                      return (
+                        <TabsTrigger key={lang} value={lang}>
+                          {langOption?.name || lang}
+                        </TabsTrigger>
+                      );
+                    })}
+                  </TabsList>
+                  {storyData.languages.map(lang => (
+                    <TabsContent key={lang} value={lang} className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor={`title-${lang}`}>Title ({languages?.find(opt => opt.code === lang)?.name})</Label>
+                        <Input
+                          id={`title-${lang}`}
+                          placeholder={`Enter story title in ${lang}`}
+                          value={storyData.title[lang] || ""}
+                          onChange={(e) => updateStoryTitle(lang, e.target.value)}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor={`description-${lang}`}>Description ({languages?.find(opt => opt.code === lang)?.name})</Label>
+                        <Textarea
+                          id={`description-${lang}`}
+                          placeholder={`Enter story description in ${lang}`}
+                          value={storyData.description[lang] || ""}
+                          onChange={(e) => updateStoryDescription(lang, e.target.value)}
+                          className="min-h-[100px]"
+                          required
+                        />
+                      </div>
+                    </TabsContent>
+                  ))}
+                </Tabs>
+                
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="title">Title</Label>
-                    <Input
-                      id="title"
-                      placeholder="Enter story title"
-                      value={storyData.title}
-                      onChange={(e) => setStoryData({ ...storyData, title: e.target.value })}
-                      required
-                    />
-                  </div>
                   <div className="space-y-2">
                     <Label htmlFor="category">Category</Label>
                     <Select
@@ -586,18 +688,6 @@ const StoryEditor = () => {
                       </SelectContent>
                     </Select>
                   </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    placeholder="Enter story description"
-                    value={storyData.description}
-                    onChange={(e) => setStoryData({ ...storyData, description: e.target.value })}
-                    className="min-h-[100px]"
-                    required
-                  />
                 </div>
                 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -683,7 +773,7 @@ const StoryEditor = () => {
               </CardContent>
             </Card>
 
-            {/* Audio Mode Card */}
+            {/* Audio Settings Card */}
             <Card>
               <CardHeader>
                 <CardTitle>Audio Settings</CardTitle>
@@ -950,7 +1040,7 @@ const StoryEditor = () => {
             </Button>
             <Button
               type="submit"
-              disabled={isSubmitting || storyData.title === "" || storyData.description === ""}
+              disabled={isSubmitting || Object.values(storyData.title).some(t => !t) || Object.values(storyData.description).some(d => !d)}
             >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isEditing ? "Update Story" : "Create Story"}

@@ -204,14 +204,14 @@ export type Database = {
           category: string
           cover_image: string | null
           created_at: string | null
-          description: string
+          description: Json
           duration: number
           id: string
           is_free: boolean
           is_published: boolean
           languages: string[]
           story_audio: string | null
-          title: string
+          title: Json
           updated_at: string | null
         }
         Insert: {
@@ -219,14 +219,14 @@ export type Database = {
           category: string
           cover_image?: string | null
           created_at?: string | null
-          description: string
+          description?: Json
           duration: number
           id?: string
           is_free?: boolean
           is_published?: boolean
           languages?: string[]
           story_audio?: string | null
-          title: string
+          title?: Json
           updated_at?: string | null
         }
         Update: {
@@ -234,14 +234,14 @@ export type Database = {
           category?: string
           cover_image?: string | null
           created_at?: string | null
-          description?: string
+          description?: Json
           duration?: number
           id?: string
           is_free?: boolean
           is_published?: boolean
           languages?: string[]
           story_audio?: string | null
-          title?: string
+          title?: Json
           updated_at?: string | null
         }
         Relationships: []
