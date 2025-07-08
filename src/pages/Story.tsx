@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Heart, Share, ChevronLeft, ChevronRight, VolumeX, Volume2 } from "lucide-react";
@@ -63,6 +62,7 @@ const Story = () => {
 
       return {
         ...storyData,
+        audio_mode: (storyData.audio_mode || "per_section") as "per_section" | "single_story",
         sections
       };
     },

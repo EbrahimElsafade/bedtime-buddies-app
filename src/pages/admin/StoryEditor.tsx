@@ -168,6 +168,7 @@ const StoryEditor = () => {
     
     return {
       ...story,
+      audio_mode: (story.audio_mode || "per_section") as "per_section" | "single_story",
       sections: formattedSections
     };
   };
