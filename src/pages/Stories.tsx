@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Search } from "lucide-react";
@@ -10,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getImageUrl } from "@/utils/imageUtils";
 import { Badge } from "@/components/ui/badge";
 import { getMultilingualText } from "@/utils/multilingualUtils";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Json } from "@/integrations/supabase/types";
 
 type StoryListItem = {
@@ -32,10 +32,27 @@ type StoryCategory = {
 const Stories = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const { language } = useLanguage();
   
   useEffect(() => {
     document.title = "Bedtime Stories - Browse Stories";
   }, []);
+
+  // Map website language to story language codes
+  const getStoryLanguageCode = (websiteLanguage: string) => {
+    switch (websiteLanguage) {
+      case 'ar':
+        return 'ar-eg'; // Default to Egyptian Arabic for Arabic website language
+      case 'en':
+        return 'en';
+      case 'fr':
+        return 'fr';
+      default:
+        return 'en';
+    }
+  };
+
+  const currentStoryLanguage = getStoryLanguageCode(language);
 
   // Fetch categories from database
   const { data: categories = [] } = useQuery({
@@ -75,8 +92,8 @@ const Stories = () => {
   });
 
   const filteredStories = allStories.filter((story) => {
-    const storyTitle = getMultilingualText(story.title, 'en', 'en');
-    const storyDescription = getMultilingualText(story.description, 'en', 'en');
+    const storyTitle = getMultilingualText(story.title, currentStoryLanguage, 'en');
+    const storyDescription = getMultilingualText(story.description, currentStoryLanguage, 'en');
     
     const matchesSearch = storyTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          storyDescription.toLowerCase().includes(searchQuery.toLowerCase());
@@ -152,8 +169,8 @@ const Stories = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredStories.map((story) => {
             const imageUrl = getImageUrl(story.cover_image);
-            const storyTitle = getMultilingualText(story.title, 'en', 'en');
-            const storyDescription = getMultilingualText(story.description, 'en', 'en');
+            const storyTitle = getMultilingualText(story.title, currentStoryLanguage, 'en');
+            const storyDescription = getMultilingualText(story.description, currentStoryLanguage, 'en');
             
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
