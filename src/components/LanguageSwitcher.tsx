@@ -4,13 +4,17 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { GlobeIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const LanguageSwitcher = () => {
   const { i18n, t } = useTranslation('misc');
+  const { setLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
 
   const changeLanguage = (language: string) => {
+    // Update both i18next and LanguageContext
     i18n.changeLanguage(language);
+    setLanguage(language as 'en' | 'ar' | 'fr');
     setOpen(false);
   };
 
