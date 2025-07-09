@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,13 +7,10 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -21,6 +19,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Loader2 } from "lucide-react";
+import { getMultilingualText } from "@/utils/multilingualUtils";
 
 interface HomePageSettings {
   freeStory: string;
@@ -29,44 +32,19 @@ interface HomePageSettings {
   topRated: boolean;
   courses: boolean;
   specialStory: boolean;
-  features: boolean;
-  subscribeBanner: boolean;
 }
 
-interface NavigationSettings {
-  home: boolean;
-  stories: boolean;
-  courses: boolean;
-  games: boolean;
-  profile: boolean;
+interface StoryOption {
+  id: string;
+  title: any;
+  cover_image: string | null;
 }
 
 const Appearance = () => {
   const queryClient = useQueryClient();
   
-  // State for home page sections
-  const [homePageSections, setHomePageSections] = useState<HomePageSettings>({
-    freeStory: "",
-    freeStoryEnabled: false,
-    storiesSection: true,
-    topRated: true,
-    courses: true,
-    specialStory: true,
-    features: true,
-    subscribeBanner: true,
-  });
-
-  // State for navigation settings
-  const [navigationSettings, setNavigationSettings] = useState<NavigationSettings>({
-    home: true,
-    stories: true,
-    courses: true,
-    games: true,
-    profile: true,
-  });
-
-  // Fetch current appearance settings
-  const { data: appearanceSettings, isLoading: settingsLoading } = useQuery({
+  // Fetch home page settings
+  const { data: homeSettings, isLoading: homeLoading } = useQuery({
     queryKey: ["appearance-settings", "home_page"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -80,58 +58,45 @@ const Appearance = () => {
     }
   });
 
-  // Fetch navigation settings
-  const { data: navSettings, isLoading: navSettingsLoading } = useQuery({
-    queryKey: ["appearance-settings", "navigation"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("appearance_settings")
-        .select("setting_value")
-        .eq("setting_key", "navigation")
-        .maybeSingle();
-      
-      if (error) throw error;
-      return data?.setting_value as unknown as NavigationSettings;
-    }
-  });
-
-  // Load settings when data is fetched
-  useEffect(() => {
-    if (appearanceSettings) {
-      setHomePageSections(appearanceSettings);
-    }
-  }, [appearanceSettings]);
-
-  useEffect(() => {
-    if (navSettings) {
-      setNavigationSettings(navSettings);
-    }
-  }, [navSettings]);
-
-  // Fetch published stories for the free story select
+  // Fetch stories for free story selection
   const { data: stories, isLoading: storiesLoading } = useQuery({
-    queryKey: ["published-stories"],
+    queryKey: ["stories-list"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("stories")
-        .select("id, title")
+        .select("id, title, cover_image")
         .eq("is_published", true)
-        .order("title");
+        .order("created_at", { ascending: false });
       
       if (error) throw error;
-      return data;
+      return data as StoryOption[];
     }
   });
 
-  // Mutation to save settings
-  const saveSettingsMutation = useMutation({
-    mutationFn: async (settings: HomePageSettings) => {
+  // Local state for settings
+  const [settings, setSettings] = useState<HomePageSettings>({
+    freeStory: "",
+    freeStoryEnabled: true,
+    storiesSection: true,
+    topRated: true,
+    courses: true,
+    specialStory: true,
+  });
+
+  useEffect(() => {
+    if (homeSettings) {
+      setSettings(homeSettings);
+    }
+  }, [homeSettings]);
+
+  // Mutation to update settings
+  const updateSettingsMutation = useMutation({
+    mutationFn: async (newSettings: HomePageSettings) => {
       const { error } = await supabase
         .from("appearance_settings")
-        .upsert({ 
+        .upsert({
           setting_key: "home_page",
-          setting_value: settings as any,
-          updated_at: new Date().toISOString()
+          setting_value: newSettings as any
         }, {
           onConflict: "setting_key"
         });
@@ -139,408 +104,169 @@ const Appearance = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Home page settings saved successfully!");
+      toast.success("Settings updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["appearance-settings"] });
     },
-    onError: (error) => {
-      console.error("Error saving settings:", error);
-      toast.error("Failed to save settings. Please try again.");
+    onError: (error: any) => {
+      console.error("Error updating settings:", error);
+      toast.error("Failed to update settings");
     }
   });
 
-  // Mutation to save navigation settings
-  const saveNavigationMutation = useMutation({
-    mutationFn: async (settings: NavigationSettings) => {
-      const { error } = await supabase
-        .from("appearance_settings")
-        .upsert({ 
-          setting_key: "navigation",
-          setting_value: settings as any,
-          updated_at: new Date().toISOString()
-        }, {
-          onConflict: "setting_key"
-        });
-      
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      toast.success("Navigation settings saved successfully!");
-      queryClient.invalidateQueries({ queryKey: ["appearance-settings"] });
-    },
-    onError: (error) => {
-      console.error("Error saving navigation settings:", error);
-      toast.error("Failed to save navigation settings. Please try again.");
-    }
-  });
-
-  const handleFreeStoryEnabledChange = (checked: boolean) => {
-    const updatedSections = {
-      ...homePageSections,
-      freeStoryEnabled: checked,
-      freeStory: checked ? homePageSections.freeStory : ""
-    };
-    setHomePageSections(updatedSections);
-    // Auto-save when checkbox is toggled
-    saveSettingsMutation.mutate(updatedSections);
+  const handleSave = () => {
+    updateSettingsMutation.mutate(settings);
   };
 
-  const handleFreeStoryChange = (storyId: string) => {
-    const updatedSections = {
-      ...homePageSections,
-      freeStory: storyId
-    };
-    setHomePageSections(updatedSections);
-    // Auto-save when free story is selected
-    saveSettingsMutation.mutate(updatedSections);
-  };
-
-  const handleHomePageSectionChange = (section: keyof HomePageSettings, checked: boolean) => {
-    if (section === 'freeStory' || section === 'freeStoryEnabled') return; // Handle free story separately
-    
-    setHomePageSections(prev => ({
+  const updateSetting = (key: keyof HomePageSettings, value: any) => {
+    setSettings(prev => ({
       ...prev,
-      [section]: checked
+      [key]: value
     }));
   };
 
-  const handleNavigationSectionChange = (section: keyof NavigationSettings, checked: boolean) => {
-    setNavigationSettings(prev => ({
-      ...prev,
-      [section]: checked
-    }));
-  };
-
-  const handleSaveHomePageSettings = () => {
-    saveSettingsMutation.mutate(homePageSections);
-  };
-
-  const handleSaveNavigationSettings = () => {
-    saveNavigationMutation.mutate(navigationSettings);
-  };
-
-  if (settingsLoading) {
+  if (homeLoading) {
     return (
-      <div>
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold">Appearance</h1>
-          <p className="text-muted-foreground">
-            Customize the appearance and layout of your application pages
-          </p>
-        </header>
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded mb-4"></div>
-          <div className="h-6 bg-gray-200 rounded mb-6 w-2/3"></div>
-        </div>
+      <div className="flex items-center justify-center p-12">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <span className="ml-2 text-lg">Loading appearance settings...</span>
       </div>
     );
   }
 
   return (
-    <div>
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold">Appearance</h1>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold mb-2">Appearance Settings</h1>
         <p className="text-muted-foreground">
-          Customize the appearance and layout of your application pages
+          Configure how your homepage appears to visitors
         </p>
-      </header>
+      </div>
 
-      <Tabs defaultValue="general">
-        <TabsList className="mb-6">
-          <TabsTrigger value="general">General</TabsTrigger>
-          <TabsTrigger value="home">Home Page</TabsTrigger>
-          <TabsTrigger value="story">Story Page</TabsTrigger>
-          <TabsTrigger value="course">Course Page</TabsTrigger>
-          <TabsTrigger value="games">Games Page</TabsTrigger>
-          <TabsTrigger value="profile">Profile Page</TabsTrigger>
-        </TabsList>
+      <Card>
+        <CardHeader>
+          <CardTitle>Homepage Sections</CardTitle>
+          <CardDescription>
+            Control which sections are displayed on your homepage
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="free-story-enabled">Free Story Section</Label>
+              <p className="text-sm text-muted-foreground">
+                Show a featured free story on the homepage
+              </p>
+            </div>
+            <Switch
+              id="free-story-enabled"
+              checked={settings.freeStoryEnabled}
+              onCheckedChange={(checked) => updateSetting('freeStoryEnabled', checked)}
+            />
+          </div>
 
-        <TabsContent value="general">
-          <Card>
-            <CardHeader>
-              <CardTitle>Navigation Settings</CardTitle>
-              <CardDescription>
-                Configure which navigation links appear in the main menu
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="navHome"
-                  checked={navigationSettings.home}
-                  onCheckedChange={(checked) => 
-                    handleNavigationSectionChange('home', checked as boolean)
-                  }
-                />
-                <Label htmlFor="navHome" className="text-base font-medium">
-                  Home
-                </Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="navStories"
-                  checked={navigationSettings.stories}
-                  onCheckedChange={(checked) => 
-                    handleNavigationSectionChange('stories', checked as boolean)
-                  }
-                />
-                <Label htmlFor="navStories" className="text-base font-medium">
-                  Stories
-                </Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="navCourses"
-                  checked={navigationSettings.courses}
-                  onCheckedChange={(checked) => 
-                    handleNavigationSectionChange('courses', checked as boolean)
-                  }
-                />
-                <Label htmlFor="navCourses" className="text-base font-medium">
-                  Courses
-                </Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="navGames"
-                  checked={navigationSettings.games}
-                  onCheckedChange={(checked) => 
-                    handleNavigationSectionChange('games', checked as boolean)
-                  }
-                />
-                <Label htmlFor="navGames" className="text-base font-medium">
-                  Games
-                </Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="navProfile"
-                  checked={navigationSettings.profile}
-                  onCheckedChange={(checked) => 
-                    handleNavigationSectionChange('profile', checked as boolean)
-                  }
-                />
-                <Label htmlFor="navProfile" className="text-base font-medium">
-                  Profile
-                </Label>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button 
-                onClick={handleSaveNavigationSettings}
-                disabled={saveNavigationMutation.isPending}
+          {settings.freeStoryEnabled && (
+            <div className="space-y-2 pl-6 border-l-2 border-muted">
+              <Label htmlFor="free-story">Select Free Story</Label>
+              <Select
+                value={settings.freeStory}
+                onValueChange={(value) => updateSetting('freeStory', value)}
               >
-                {saveNavigationMutation.isPending ? "Saving..." : "Save Navigation Settings"}
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
+                <SelectTrigger>
+                  <SelectValue placeholder="Choose a free story to feature" />
+                </SelectTrigger>
+                <SelectContent>
+                  {storiesLoading ? (
+                    <div className="px-2 py-1 text-sm text-muted-foreground">
+                      Loading stories...
+                    </div>
+                  ) : stories && stories.length > 0 ? (
+                    stories.map((story) => {
+                      const storyTitle = getMultilingualText(story.title, 'en', 'en');
+                      return (
+                        <SelectItem key={story.id} value={story.id}>
+                          {storyTitle}
+                        </SelectItem>
+                      );
+                    })
+                  ) : (
+                    <div className="px-2 py-1 text-sm text-muted-foreground">
+                      No published stories available
+                    </div>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
-        <TabsContent value="home">
-          <Card>
-            <CardHeader>
-              <CardTitle>Home Page Layout</CardTitle>
-              <CardDescription>
-                Configure which sections appear on the home page
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center space-x-4">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="freeStoryEnabled"
-                      checked={homePageSections.freeStoryEnabled}
-                      onCheckedChange={handleFreeStoryEnabledChange}
-                    />
-                    <Label htmlFor="freeStoryEnabled" className="text-base font-medium">
-                      Free Story
-                    </Label>
-                  </div>
-                  
-                  <div className="flex-1">
-                    <Select
-                      value={homePageSections.freeStoryEnabled ? homePageSections.freeStory : ""}
-                      onValueChange={handleFreeStoryChange}
-                      disabled={!homePageSections.freeStoryEnabled}
-                    >
-                      <SelectTrigger className={!homePageSections.freeStoryEnabled ? "opacity-50" : ""}>
-                        <SelectValue placeholder="Select a story to feature as free" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {storiesLoading ? (
-                          <SelectItem value="" disabled>Loading stories...</SelectItem>
-                        ) : stories?.length === 0 ? (
-                          <SelectItem value="" disabled>No published stories available</SelectItem>
-                        ) : (
-                          stories?.map(story => (
-                            <SelectItem key={story.id} value={story.id}>
-                              {story.title}
-                            </SelectItem>
-                          ))
-                        )}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="storiesSection"
-                  checked={homePageSections.storiesSection}
-                  onCheckedChange={(checked) => 
-                    handleHomePageSectionChange('storiesSection', checked as boolean)
-                  }
-                />
-                <Label htmlFor="storiesSection" className="text-base font-medium">
-                  Stories Section
-                </Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="topRated"
-                  checked={homePageSections.topRated}
-                  onCheckedChange={(checked) => 
-                    handleHomePageSectionChange('topRated', checked as boolean)
-                  }
-                />
-                <Label htmlFor="topRated" className="text-base font-medium">
-                  Top Rated Stories
-                </Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="courses"
-                  checked={homePageSections.courses}
-                  onCheckedChange={(checked) => 
-                    handleHomePageSectionChange('courses', checked as boolean)
-                  }
-                />
-                <Label htmlFor="courses" className="text-base font-medium">
-                  Courses Section
-                </Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="specialStory"
-                  checked={homePageSections.specialStory}
-                  onCheckedChange={(checked) => 
-                    handleHomePageSectionChange('specialStory', checked as boolean)
-                  }
-                />
-                <Label htmlFor="specialStory" className="text-base font-medium">
-                  Special Story Section
-                </Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="features"
-                  checked={homePageSections.features}
-                  onCheckedChange={(checked) => 
-                    handleHomePageSectionChange('features', checked as boolean)
-                  }
-                />
-                <Label htmlFor="features" className="text-base font-medium">
-                  Features Section
-                </Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="subscribeBanner"
-                  checked={homePageSections.subscribeBanner}
-                  onCheckedChange={(checked) => 
-                    handleHomePageSectionChange('subscribeBanner', checked as boolean)
-                  }
-                />
-                <Label htmlFor="subscribeBanner" className="text-base font-medium">
-                  Subscribe Banner
-                </Label>
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button 
-                onClick={handleSaveHomePageSettings}
-                disabled={saveSettingsMutation.isPending}
-              >
-                {saveSettingsMutation.isPending ? "Saving..." : "Save Home Page Settings"}
-              </Button>
-            </CardFooter>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="story">
-          <Card>
-            <CardHeader>
-              <CardTitle>Story Page Appearance</CardTitle>
-              <CardDescription>
-                Configure the appearance of story pages
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-center py-8 text-muted-foreground">
-                Coming soon...
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="stories-section">Stories Section</Label>
+              <p className="text-sm text-muted-foreground">
+                Display the main stories browsing section
               </p>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+            <Switch
+              id="stories-section"
+              checked={settings.storiesSection}
+              onCheckedChange={(checked) => updateSetting('storiesSection', checked)}
+            />
+          </div>
 
-        <TabsContent value="course">
-          <Card>
-            <CardHeader>
-              <CardTitle>Course Page Appearance</CardTitle>
-              <CardDescription>
-                Configure the appearance of course pages
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-center py-8 text-muted-foreground">
-                Coming soon...
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="top-rated">Top Rated Section</Label>
+              <p className="text-sm text-muted-foreground">
+                Show popular and highly-rated stories
               </p>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+            <Switch
+              id="top-rated"
+              checked={settings.topRated}
+              onCheckedChange={(checked) => updateSetting('topRated', checked)}
+            />
+          </div>
 
-        <TabsContent value="games">
-          <Card>
-            <CardHeader>
-              <CardTitle>Games Page Appearance</CardTitle>
-              <CardDescription>
-                Configure the appearance of games pages
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-center py-8 text-muted-foreground">
-                Coming soon...
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="courses">Courses Section</Label>
+              <p className="text-sm text-muted-foreground">
+                Display available courses and learning materials
               </p>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+            <Switch
+              id="courses"
+              checked={settings.courses}
+              onCheckedChange={(checked) => updateSetting('courses', checked)}
+            />
+          </div>
 
-        <TabsContent value="profile">
-          <Card>
-            <CardHeader>
-              <CardTitle>Profile Page Appearance</CardTitle>
-              <CardDescription>
-                Configure the appearance of profile pages
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p className="text-center py-8 text-muted-foreground">
-                Coming soon...
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="special-story">Special Story Section</Label>
+              <p className="text-sm text-muted-foreground">
+                Feature a special highlighted story
               </p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </div>
+            <Switch
+              id="special-story"
+              checked={settings.specialStory}
+              onCheckedChange={(checked) => updateSetting('specialStory', checked)}
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="flex justify-end">
+        <Button 
+          onClick={handleSave}
+          disabled={updateSettingsMutation.isPending}
+        >
+          {updateSettingsMutation.isPending && (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          )}
+          Save Changes
+        </Button>
+      </div>
     </div>
   );
 };

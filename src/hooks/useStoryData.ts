@@ -45,9 +45,24 @@ export const useStoryData = (storyId: string | undefined) => {
         image: section.image || undefined
       })) || [];
 
-      // Handle multilingual title and description
-      const title = storyData.title as Record<string, string> || {};
-      const description = storyData.description as Record<string, string> || {};
+      // Transform multilingual title and description to Record<string, string>
+      const title = (() => {
+        if (typeof storyData.title === 'string') {
+          return { en: storyData.title };
+        } else if (storyData.title && typeof storyData.title === 'object') {
+          return storyData.title as Record<string, string>;
+        }
+        return {} as Record<string, string>;
+      })();
+
+      const description = (() => {
+        if (typeof storyData.description === 'string') {
+          return { en: storyData.description };
+        } else if (storyData.description && typeof storyData.description === 'object') {
+          return storyData.description as Record<string, string>;
+        }
+        return {} as Record<string, string>;
+      })();
 
       return {
         ...storyData,
