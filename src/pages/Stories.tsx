@@ -9,11 +9,13 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { getImageUrl } from "@/utils/imageUtils";
 import { Badge } from "@/components/ui/badge";
+import { getMultilingualText } from "@/utils/multilingualUtils";
+import { Json } from "@/integrations/supabase/types";
 
 type StoryListItem = {
   id: string;
-  title: string;
-  description: string;
+  title: Json;
+  description: Json;
   category: string;
   is_free: boolean;
   duration: number;
@@ -72,9 +74,12 @@ const Stories = () => {
     }
   });
 
-  const filteredStories = allStories.filter((story: StoryListItem) => {
-    const matchesSearch = story.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         story.description.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredStories = allStories.filter((story) => {
+    const storyTitle = getMultilingualText(story.title, 'en', 'en');
+    const storyDescription = getMultilingualText(story.description, 'en', 'en');
+    
+    const matchesSearch = storyTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         storyDescription.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesCategory = selectedCategory === "all" || story.category === selectedCategory;
     
@@ -145,9 +150,10 @@ const Stories = () => {
         
         {/* Story Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredStories.map((story: StoryListItem) => {
+          {filteredStories.map((story) => {
             const imageUrl = getImageUrl(story.cover_image);
-            console.log(`Story ${story.title} - cover_image:`, story.cover_image, 'final URL:', imageUrl);
+            const storyTitle = getMultilingualText(story.title, 'en', 'en');
+            const storyDescription = getMultilingualText(story.description, 'en', 'en');
             
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
@@ -156,14 +162,14 @@ const Stories = () => {
                     {imageUrl ? (
                       <img 
                         src={imageUrl}
-                        alt={story.title} 
+                        alt={storyTitle} 
                         className="w-full h-full object-cover"
                         onError={(e) => {
-                          console.log('Image failed to load for story:', story.title, 'URL:', imageUrl);
+                          console.log('Image failed to load for story:', storyTitle, 'URL:', imageUrl);
                           e.currentTarget.style.display = 'none';
                         }}
                         onLoad={() => {
-                          console.log('Image loaded successfully for story:', story.title);
+                          console.log('Image loaded successfully for story:', storyTitle);
                         }}
                       />
                     ) : (
@@ -184,7 +190,7 @@ const Stories = () => {
                   <div className="flex flex-col flex-1">
                     <CardHeader className="pb-2 flex-1">
                       <div className="flex justify-between items-start mb-2">
-                        <CardTitle className="text-lg line-clamp-2 flex-1">{story.title}</CardTitle>
+                        <CardTitle className="text-lg line-clamp-2 flex-1">{storyTitle}</CardTitle>
                         <div className="flex items-center gap-2 ml-2">
                           <Badge variant="secondary" className="text-xs">
                             {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
@@ -194,7 +200,7 @@ const Stories = () => {
                           </div>
                         </div>
                       </div>
-                      <CardDescription className="line-clamp-2 text-sm leading-relaxed">{story.description}</CardDescription>
+                      <CardDescription className="line-clamp-2 text-sm leading-relaxed">{storyDescription}</CardDescription>
                     </CardHeader>
                     <CardContent className="pb-4 mt-auto">
                       <div className="flex flex-wrap gap-1">

@@ -1,5 +1,6 @@
 
 import { Story } from "@/types/story";
+import { getMultilingualText } from "@/utils/multilingualUtils";
 
 interface StoryInfoProps {
   story: Story;
@@ -8,17 +9,11 @@ interface StoryInfoProps {
 
 export const StoryInfo = ({ story, currentLanguage }: StoryInfoProps) => {
   const getStoryTitle = () => {
-    if (story.title && typeof story.title === 'object') {
-      return (story.title as Record<string, string>)[currentLanguage] || (story.title as Record<string, string>)['en'] || Object.values(story.title as Record<string, string>)[0] || 'Untitled Story';
-    }
-    return story.title || 'Untitled Story';
+    return getMultilingualText(story.title, currentLanguage, 'en') || 'Untitled Story';
   };
 
   const getStoryDescription = () => {
-    if (story.description && typeof story.description === 'object') {
-      return (story.description as Record<string, string>)[currentLanguage] || (story.description as Record<string, string>)['en'] || Object.values(story.description as Record<string, string>)[0] || 'No description available';
-    }
-    return story.description || 'No description available';
+    return getMultilingualText(story.description, currentLanguage, 'en') || 'No description available';
   };
 
   return (

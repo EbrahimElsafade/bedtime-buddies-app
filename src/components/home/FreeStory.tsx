@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Card, CardTitle, CardDescription } from "@/components/ui/card";
@@ -5,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { getImageUrl } from "@/utils/imageUtils";
+import { getMultilingualText } from "@/utils/multilingualUtils";
 
 interface HomePageSettings {
   freeStory: string;
@@ -56,6 +58,8 @@ const FreeStory = () => {
   if (!settings?.freeStoryEnabled || isLoading || !settings?.freeStory || !freeStory) return null;
 
   const coverImage = freeStory.cover_image ? getImageUrl(freeStory.cover_image) : '/placeholder.svg';
+  const storyTitle = getMultilingualText(freeStory.title, 'en', 'en');
+  const storyDescription = getMultilingualText(freeStory.description, 'en', 'en');
 
   return (
     <section className="py-12 px-4 bg-gradient-to-b from-transparent to-dream-light/10">
@@ -73,13 +77,13 @@ const FreeStory = () => {
               <div className="md:w-1/3 h-72 md:h-72 relative">
                 <img 
                   src={coverImage} 
-                  alt={freeStory.title} 
+                  alt={storyTitle} 
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="md:w-2/3 p-6">
-                <CardTitle className="text-xl md:text-2xl mb-2 text-dream-DEFAULT">{freeStory.title}</CardTitle>
-                <CardDescription className="mb-4 text-dream-DEFAULT dark:text-foreground">{freeStory.description}</CardDescription>
+                <CardTitle className="text-xl md:text-2xl mb-2 text-dream-DEFAULT">{storyTitle}</CardTitle>
+                <CardDescription className="mb-4 text-dream-DEFAULT dark:text-foreground">{storyDescription}</CardDescription>
                 <div className="flex items-center text-sm text-dream-DEFAULT dark:text-foreground">
                   <span className="mr-4">{freeStory.duration} {t('stories:duration')}</span>
                   <span>{freeStory.languages.map((lang: string) => {

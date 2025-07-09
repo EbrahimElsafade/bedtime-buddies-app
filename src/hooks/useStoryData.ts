@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { getImageUrl } from "@/utils/imageUtils";
 import { Story as StoryType, StorySection } from "@/types/story";
+import { Json } from "@/integrations/supabase/types";
 
 export const useStoryData = (storyId: string | undefined) => {
   return useQuery({
@@ -44,8 +45,14 @@ export const useStoryData = (storyId: string | undefined) => {
         image: section.image || undefined
       })) || [];
 
+      // Handle multilingual title and description
+      const title = storyData.title as Record<string, string> || {};
+      const description = storyData.description as Record<string, string> || {};
+
       return {
         ...storyData,
+        title,
+        description,
         audio_mode: (storyData.audio_mode || "per_section") as "per_section" | "single_story",
         sections
       };

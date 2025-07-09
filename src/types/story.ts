@@ -1,8 +1,8 @@
 
 export interface Story {
   id: string;
-  title: string;
-  description: string;
+  title: Record<string, string>; // Changed from string to Record<string, string>
+  description: Record<string, string>; // Changed from string to Record<string, string>
   category: string;
   cover_image: string;
   duration: number;

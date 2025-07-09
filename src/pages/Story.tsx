@@ -10,6 +10,7 @@ import { StoryInfo } from "@/components/story/StoryInfo";
 import { StoryContent } from "@/components/story/StoryContent";
 import { AudioControls } from "@/components/story/AudioControls";
 import { PremiumMessage } from "@/components/story/PremiumMessage";
+import { getMultilingualText } from "@/utils/multilingualUtils";
 
 const Story = () => {
   const { storyId } = useParams<{ storyId: string }>();
@@ -23,9 +24,10 @@ const Story = () => {
 
   useEffect(() => {
     if (story) {
-      document.title = `${story.title} - Bedtime Stories`;
+      const storyTitle = getMultilingualText(story.title, currentLanguage, 'en');
+      document.title = `${storyTitle} - Bedtime Stories`;
     }
-  }, [story]);
+  }, [story, currentLanguage]);
 
   useEffect(() => {
     if (error || (!isLoading && !story)) {
@@ -65,10 +67,7 @@ const Story = () => {
   
   // Get title for current language
   const getStoryTitle = () => {
-    if (story.title && typeof story.title === 'object') {
-      return (story.title as Record<string, string>)[currentLanguage] || (story.title as Record<string, string>)['en'] || Object.values(story.title as Record<string, string>)[0] || 'Untitled Story';
-    }
-    return story.title || 'Untitled Story';
+    return getMultilingualText(story.title, currentLanguage, 'en') || 'Untitled Story';
   };
   
   return (
