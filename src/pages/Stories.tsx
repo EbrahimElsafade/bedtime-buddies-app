@@ -73,7 +73,7 @@ const Stories = () => {
   });
 
   const { data: allStories = [], isLoading } = useQuery({
-    queryKey: ["published-stories"],
+    queryKey: ["published-stories", language],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("stories")

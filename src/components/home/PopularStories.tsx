@@ -30,7 +30,7 @@ const PopularStories = () => {
   const currentStoryLanguage = getStoryLanguageCode(language);
 
   const { data: popularStories = [], isLoading } = useQuery({
-    queryKey: ["popular-stories"],
+    queryKey: ["popular-stories", language],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("stories")
