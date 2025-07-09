@@ -166,8 +166,29 @@ const StoryEditor = () => {
       image: section.image || undefined,
     }));
     
+    // Transform multilingual title and description to Record<string, string>
+    const title = (() => {
+      if (typeof story.title === 'string') {
+        return { en: story.title };
+      } else if (story.title && typeof story.title === 'object') {
+        return story.title as Record<string, string>;
+      }
+      return {} as Record<string, string>;
+    })();
+
+    const description = (() => {
+      if (typeof story.description === 'string') {
+        return { en: story.description };
+      } else if (story.description && typeof story.description === 'object') {
+        return story.description as Record<string, string>;
+      }
+      return {} as Record<string, string>;
+    })();
+    
     return {
       ...story,
+      title,
+      description,
       audio_mode: (story.audio_mode || "per_section") as "per_section" | "single_story",
       sections: formattedSections
     };
