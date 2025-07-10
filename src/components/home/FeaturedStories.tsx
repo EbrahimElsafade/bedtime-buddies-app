@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { ArrowRight, Clock } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -57,22 +58,22 @@ const FeaturedStories = () => {
 
   if (isLoading) {
     return (
-      <section className="py-12 px-4 bg-secondary/50 relative">
+      <section className="py-8 md:py-12 px-4 bg-secondary/50 relative">
         <div className="container mx-auto">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl md:text-3xl font-bubbly text-dream-DEFAULT">{t('stories:featured.title')}</h2>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 gap-2">
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-bubbly text-dream-DEFAULT">{t('stories:featured.title')}</h2>
             <Link to="/stories" className="text-dream-DEFAULT hover:text-dream-dark text-sm font-medium flex items-center">
               {t('misc:free.viewAll')} <ArrowRight className="rtl:rotate-180 ms-1 h-4 w-4" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {[1, 2, 3].map((i) => (
-              <Card key={i} className="story-card h-[25rem] overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm animate-pulse pb-4">
+              <Card key={i} className="story-card h-80 md:h-96 lg:h-[25rem] overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm animate-pulse pb-4">
                 <div className="aspect-[3/2] bg-gray-200"></div>
-                <CardHeader className="pb-2">
-                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-1"></div>
-                  <div className="h-4 bg-gray-200 rounded"></div>
+                <CardHeader className="pb-2 px-3 md:px-6">
+                  <div className="h-5 md:h-6 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-3 md:h-4 bg-gray-200 rounded mb-1"></div>
+                  <div className="h-3 md:h-4 bg-gray-200 rounded"></div>
                 </CardHeader>
               </Card>
             ))}
@@ -90,22 +91,22 @@ const FeaturedStories = () => {
   }
 
   return (
-    <section className="py-12 px-4 bg-secondary/50 relative">
+    <section className="py-8 md:py-12 px-4 bg-secondary/50 relative">
       <div className="container mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl md:text-3xl font-bubbly text-dream-DEFAULT">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 gap-2">
+          <h2 className="text-xl md:text-2xl lg:text-3xl font-bubbly text-dream-DEFAULT">
             {t('stories:featured.title')}
           </h2>
           <Link 
             to="/stories" 
-            className="text-dream-DEFAULT hover:text-dream-dark text-sm font-medium flex items-center"
+            className="text-dream-DEFAULT hover:text-dream-dark text-sm font-medium flex items-center shrink-0"
             onClick={handleViewAllClick}
           >
             {t('misc:free.viewAll')} <ArrowRight className="rtl:rotate-180 ms-1 h-4 w-4" />
           </Link>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {featuredStories.map((story) => {
             const imageUrl = getImageUrl(story.cover_image);
             const storyTitle = getMultilingualText(story.title, currentStoryLanguage, 'en');
@@ -113,7 +114,7 @@ const FeaturedStories = () => {
             
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card h-[25rem] overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow flex flex-col pb-4">
+                <Card className="story-card h-80 md:h-96 lg:h-[25rem] overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow flex flex-col pb-4">
                   <div className="aspect-[3/2] relative">
                     {imageUrl ? (
                       <img 
@@ -127,24 +128,24 @@ const FeaturedStories = () => {
                       />
                     ) : (
                       <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <span className="text-gray-500">No Image</span>
+                        <span className="text-gray-500 text-sm">No Image</span>
                       </div>
                     )}
                     {story.is_free ? (
-                      <div className="absolute top-2 end-2 bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white">
+                      <div className="absolute top-2 end-2 bg-green-600 text-white text-xs font-bold px-2 md:px-3 py-1 md:py-1.5 rounded-full shadow-lg border-2 border-white">
                         {t('misc:free.tag')}
                       </div>
                     ) : (
-                      <div className="absolute top-2 end-2 bg-yellow-500 text-black text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white">
+                      <div className="absolute top-2 end-2 bg-yellow-500 text-black text-xs font-bold px-2 md:px-3 py-1 md:py-1.5 rounded-full shadow-lg border-2 border-white">
                         {t('misc:premium.tag')}
                       </div>
                     )}
                   </div>
                   <div className="flex flex-col flex-1">
-                    <CardHeader className="pb-2 flex-1">
-                      <div className="flex justify-between items-start mb-2">
-                        <CardTitle className="text-lg text-dream-DEFAULT line-clamp-2 flex-1">{storyTitle}</CardTitle>
-                        <div className="flex items-center gap-2 ml-2">
+                    <CardHeader className="pb-2 flex-1 px-3 md:px-6 pt-3 md:pt-6">
+                      <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start mb-2 gap-2">
+                        <CardTitle className="text-base md:text-lg text-dream-DEFAULT line-clamp-2 flex-1">{storyTitle}</CardTitle>
+                        <div className="flex items-center gap-2 shrink-0">
                           <Badge variant="secondary" className="bg-dream-light/30 text-dream-DEFAULT text-xs">
                             {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
                           </Badge>
