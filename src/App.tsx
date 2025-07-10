@@ -107,8 +107,6 @@ const LanguageRoutes = () => {
 };
 
 const App = () => {
-  const { i18n } = useTranslation();
-
   useEffect(() => {
     // Set initial direction to RTL for Arabic (default)
     document.documentElement.dir = 'rtl';
@@ -120,8 +118,8 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <LanguageProvider>
-          <BrowserRouter>
+        <BrowserRouter>
+          <LanguageProvider>
             <TooltipProvider>
               <Toaster />
               <Sonner />
@@ -136,8 +134,8 @@ const App = () => {
                 <Route path="*" element={<Navigate to="/ar" replace />} />
               </Routes>
             </TooltipProvider>
-          </BrowserRouter>
-        </LanguageProvider>
+          </LanguageProvider>
+        </BrowserRouter>
       </AuthProvider>
     </QueryClientProvider>
   );
