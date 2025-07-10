@@ -110,7 +110,7 @@ const Stories = () => {
           <h1 className="text-3xl md:text-4xl font-bubbly mb-6">Discover Stories</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Card key={i} className="story-card h-[400px] overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm animate-pulse pb-4">
+              <Card key={i} className="story-card h-[25rem] overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm animate-pulse pb-4">
                 <div className="aspect-[3/2] bg-gray-200"></div>
                 <CardHeader className="pb-2">
                   <div className="h-6 bg-gray-200 rounded mb-2"></div>
@@ -174,7 +174,7 @@ const Stories = () => {
             
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card h-[400px] overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow flex flex-col pb-4">
+                <Card className="story-card h-[25rem] overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow flex flex-col pb-4">
                   <div className="aspect-[3/2] relative">
                     {imageUrl ? (
                       <img 
