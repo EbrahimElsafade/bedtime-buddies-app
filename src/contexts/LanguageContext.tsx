@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, useEffect, ReactNode } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 type Language = 'en' | 'ar' | 'fr';
 
@@ -201,8 +202,23 @@ export function useLanguage() {
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>("ar");
+  const { lang } = useParams<{ lang: string }>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  const [language, setLanguageState] = useState<Language>(() => {
+    // Initialize from URL parameter or default to Arabic
+    return (lang && ['en', 'ar', 'fr'].includes(lang)) ? lang as Language : 'ar';
+  });
 
+  // Update language when URL parameter changes
+  useEffect(() => {
+    if (lang && ['en', 'ar', 'fr'].includes(lang) && lang !== language) {
+      setLanguageState(lang as Language);
+    }
+  }, [lang, language]);
+
+  // Set document direction when language changes
   useEffect(() => {
     if (language === "ar") {
       document.documentElement.dir = "rtl";
@@ -212,6 +228,16 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       document.documentElement.lang = language;
     }
   }, [language]);
+
+  const setLanguage = (newLanguage: Language) => {
+    // Update the URL to include the new language
+    const currentPath = location.pathname;
+    const pathWithoutLang = currentPath.replace(/^\/[a-z]{2}/, '');
+    const newPath = `/${newLanguage}${pathWithoutLang}`;
+    
+    navigate(newPath, { replace: true });
+    setLanguageState(newLanguage);
+  };
 
   const t = (key: string): string => {
     return translations[language]?.[key] || key;
