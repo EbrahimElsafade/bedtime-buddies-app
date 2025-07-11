@@ -1,48 +1,35 @@
+
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { getImageUrl } from "@/utils/imageUtils";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Clock, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { getImageUrl } from "@/utils/imageUtils";
 import { getMultilingualText } from "@/utils/multilingualUtils";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Json } from "@/integrations/supabase/types";
-
-type StoryListItem = {
-  id: string;
-  title: Json;
-  description: Json;
-  category: string;
-  is_free: boolean;
-  duration: number;
-  cover_image: string | null;
-  languages: string[];
-  is_published: boolean;
-};
-
-type StoryCategory = {
-  id: string;
-  name: string;
-};
 
 const Stories = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const { t, i18n } = useTranslation(['common', 'stories']);
   const { language } = useLanguage();
-  
+
   useEffect(() => {
-    document.title = "Bedtime Stories - Browse Stories";
-  }, []);
+    document.title = `${t('layout.appName', { ns: 'common' })} - ${t('stories', { ns: 'navigation' })}`;
+  }, [t]);
+
+  const isRTL = i18n.language === 'ar';
 
   // Map website language to story language codes
   const getStoryLanguageCode = (websiteLanguage: string) => {
     switch (websiteLanguage) {
       case 'ar':
-        return 'ar-eg'; // Default to Egyptian Arabic for Arabic website language
+        return 'ar-eg';
       case 'en':
         return 'en';
       case 'fr':
@@ -54,26 +41,8 @@ const Stories = () => {
 
   const currentStoryLanguage = getStoryLanguageCode(language);
 
-  // Fetch categories from database
-  const { data: categories = [] } = useQuery({
-    queryKey: ['story-categories'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('story_categories')
-        .select('*')
-        .order('name');
-      
-      if (error) {
-        console.error("Error fetching categories:", error);
-        return [];
-      }
-      
-      return data as StoryCategory[];
-    }
-  });
-
-  const { data: allStories = [], isLoading } = useQuery({
-    queryKey: ["published-stories", language],
+  const { data: stories = [], isLoading } = useQuery({
+    queryKey: ["stories", language],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("stories")
@@ -86,17 +55,34 @@ const Stories = () => {
         throw error;
       }
       
-      console.log("Fetched stories:", data);
       return data || [];
     }
   });
 
-  const filteredStories = allStories.filter((story) => {
+  const { data: categories = [] } = useQuery({
+    queryKey: ["story-categories"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("story_categories")
+        .select("*")
+        .order("name");
+      
+      if (error) {
+        console.error("Error fetching categories:", error);
+        throw error;
+      }
+      
+      return data || [];
+    }
+  });
+
+  const filteredStories = stories.filter(story => {
     const storyTitle = getMultilingualText(story.title, currentStoryLanguage, 'en');
     const storyDescription = getMultilingualText(story.description, currentStoryLanguage, 'en');
     
-    const matchesSearch = storyTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         storyDescription.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = searchTerm === "" || 
+      storyTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      storyDescription.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesCategory = selectedCategory === "all" || story.category === selectedCategory;
     
@@ -105,16 +91,19 @@ const Stories = () => {
 
   if (isLoading) {
     return (
-      <div className="py-12 px-4">
-        <div className="container mx-auto">
-          <h1 className="text-3xl md:text-4xl font-bubbly mb-6">Discover Stories</h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="py-4 md:py-8 lg:py-12 px-3 md:px-4" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="container mx-auto max-w-6xl">
+          <div className="mb-4 md:mb-6 lg:mb-8 text-center">
+            <h1 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent mb-2 md:mb-3 lg:mb-4 leading-tight">
+              {t('stories:allStories')}
+            </h1>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <Card key={i} className="story-card h-[25rem] overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm animate-pulse pb-4">
+              <Card key={i} className="h-[20rem] animate-pulse">
                 <div className="aspect-[3/2] bg-gray-200"></div>
-                <CardHeader className="pb-2">
+                <CardHeader>
                   <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-1"></div>
                   <div className="h-4 bg-gray-200 rounded"></div>
                 </CardHeader>
               </Card>
@@ -126,117 +115,126 @@ const Stories = () => {
   }
 
   return (
-    <div className="py-12 px-4">
-      <div className="container mx-auto">
-        <h1 className="text-3xl md:text-4xl font-bubbly mb-6">Discover Stories</h1>
-        
-        {/* Search and Filters */}
-        <div className="mb-8">
-          <div className="relative max-w-md mb-6">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+    <div className="py-4 md:py-8 lg:py-12 px-3 md:px-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="container mx-auto max-w-6xl">
+        <div className="mb-4 md:mb-6 lg:mb-8 text-center">
+          <h1 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent mb-2 md:mb-3 lg:mb-4 leading-tight">
+            {t('stories:allStories')}
+          </h1>
+          <p className="text-xs md:text-sm lg:text-base text-muted-foreground max-w-2xl mx-auto px-2">
+            {t('stories:browseCollection')}
+          </p>
+        </div>
+
+        {/* Search and Filter Section */}
+        <div className="mb-4 md:mb-6 lg:mb-8 space-y-3 md:space-y-4">
+          <div className="relative max-w-md mx-auto">
+            <Search className={`absolute top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground ${isRTL ? 'right-3' : 'left-3'}`} />
             <Input
-              type="search"
-              placeholder="Search for stories..."
-              className="pl-10"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              type="text"
+              placeholder={t('stories:searchStories')}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className={`w-full ${isRTL ? 'pr-10 text-right' : 'pl-10'} py-2 text-sm md:text-base`}
             />
           </div>
           
-          <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full">
-            <TabsList className="mb-4 w-fit h-auto flex justify-start">
-              <TabsTrigger className="min-w-24" value="all">
-                All Stories
-              </TabsTrigger>
-              {categories.map((category) => (
-                <TabsTrigger className="min-w-24" key={category.id} value={category.name}>
-                  {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            
-            <TabsContent value={selectedCategory}>
-              {filteredStories.length === 0 && !isLoading && (
-                <div className="text-center py-12">
-                  <p className="text-lg text-muted-foreground">No stories found matching your search.</p>
-                </div>
-              )}
-            </TabsContent>
-          </Tabs>
+          <div className="flex flex-wrap justify-center gap-2 md:gap-3">
+            <Button
+              variant={selectedCategory === "all" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setSelectedCategory("all")}
+              className="text-xs md:text-sm px-3 py-1.5 md:px-4 md:py-2"
+            >
+              {t('stories:allCategories')}
+            </Button>
+            {categories.map((category) => (
+              <Button
+                key={category.id}
+                variant={selectedCategory === category.name ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedCategory(category.name)}
+                className="text-xs md:text-sm px-3 py-1.5 md:px-4 md:py-2"
+              >
+                {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
+              </Button>
+            ))}
+          </div>
         </div>
-        
-        {/* Story Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredStories.map((story) => {
-            const imageUrl = getImageUrl(story.cover_image);
-            const storyTitle = getMultilingualText(story.title, currentStoryLanguage, 'en');
-            const storyDescription = getMultilingualText(story.description, currentStoryLanguage, 'en');
-            
-            return (
-              <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card h-[25rem] overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow flex flex-col pb-4">
-                  <div className="aspect-[3/2] relative">
-                    {imageUrl ? (
-                      <img 
-                        src={imageUrl}
-                        alt={storyTitle} 
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          console.log('Image failed to load for story:', storyTitle, 'URL:', imageUrl);
-                          e.currentTarget.style.display = 'none';
-                        }}
-                        onLoad={() => {
-                          console.log('Image loaded successfully for story:', storyTitle);
-                        }}
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                        <span className="text-gray-500">No Image</span>
-                      </div>
-                    )}
-                    {story.is_free ? (
-                      <div className="absolute top-2 end-2 bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white">
-                        FREE
-                      </div>
-                    ) : (
-                      <div className="absolute top-2 end-2 bg-yellow-500 text-black text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white">
-                        PREMIUM
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex flex-col flex-1">
-                    <CardHeader className="pb-2 flex-1">
-                      <div className="flex justify-between items-start mb-2">
-                        <CardTitle className="text-lg line-clamp-2 flex-1">{storyTitle}</CardTitle>
-                        <div className="flex items-center gap-2 ml-2">
-                          <Badge variant="secondary" className="text-xs">
-                            {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
-                          </Badge>
-                          <div className="text-xs px-2 py-1 bg-secondary rounded-full">
-                            {story.duration} mins
+
+        {/* Stories Grid */}
+        {filteredStories.length === 0 ? (
+          <div className="text-center py-8 md:py-12">
+            <p className="text-muted-foreground text-sm md:text-base">
+              {searchTerm || selectedCategory !== "all" 
+                ? t('stories:noStoriesFound') 
+                : t('stories:noStoriesAvailable')
+              }
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {filteredStories.map((story) => {
+              const imageUrl = getImageUrl(story.cover_image);
+              const storyTitle = getMultilingualText(story.title, currentStoryLanguage, 'en');
+              const storyDescription = getMultilingualText(story.description, currentStoryLanguage, 'en');
+              
+              return (
+                <Link key={story.id} to={`/stories/${story.id}`}>
+                  <Card className="story-card h-[20rem] md:h-[22rem] overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow flex flex-col">
+                    <div className="aspect-[3/2] relative">
+                      {imageUrl ? (
+                        <img 
+                          src={imageUrl}
+                          alt={storyTitle} 
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            console.log('Story image failed to load:', story.cover_image);
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                          <span className="text-gray-500 text-sm">No Image</span>
+                        </div>
+                      )}
+                      {story.is_free ? (
+                        <div className="absolute top-2 right-2 bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white">
+                          {t('misc:free.tag')}
+                        </div>
+                      ) : (
+                        <div className="absolute top-2 right-2 bg-yellow-500 text-black text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white">
+                          {t('misc:premium.tag')}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-col flex-1 p-3 md:p-4">
+                      <CardHeader className="p-0 pb-2 flex-1">
+                        <div className="flex justify-between items-start mb-2">
+                          <CardTitle className="text-sm md:text-base lg:text-lg text-dream-DEFAULT line-clamp-2 flex-1">
+                            {storyTitle}
+                          </CardTitle>
+                          <div className="flex items-center gap-2 ml-2 flex-shrink-0">
+                            <Badge variant="secondary" className="bg-dream-light/30 text-dream-DEFAULT text-xs">
+                              {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
+                            </Badge>
+                            <div className="flex items-center text-xs text-dream-DEFAULT">
+                              <Clock className="h-3 w-3 mr-1" />
+                              <span>{story.duration} {t('misc:duration')}</span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <CardDescription className="line-clamp-2 text-sm leading-relaxed">{storyDescription}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="pb-4 mt-auto">
-                      <div className="flex flex-wrap gap-1">
-                        {story.languages.map(lang => (
-                          <span 
-                            key={lang} 
-                            className="text-xs px-2 py-1 bg-secondary/50 rounded-full"
-                          >
-                            {lang === 'en' ? 'English' : lang === 'ar-eg' ? 'Arabic (Egyptian)' : 'Arabic (Fos7a)'}
-                          </span>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </div>
-                </Card>
-              </Link>
-            );
-          })}
-        </div>
+                        <CardDescription className="line-clamp-2 text-dream-DEFAULT dark:text-foreground text-xs md:text-sm leading-relaxed">
+                          {storyDescription}
+                        </CardDescription>
+                      </CardHeader>
+                    </div>
+                  </Card>
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );

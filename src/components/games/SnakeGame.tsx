@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -193,7 +192,7 @@ const SnakeGame = () => {
         <CardFooter className="p-6">
           <Button 
             onClick={resetGame}
-            className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-dream-DEFAULT to-dream-dark hover:from-dream-light hover:to-dream-DEFAULT text-white shadow-lg hover:shadow-xl transition-all duration-300"
+            className="w-full py-3 text-lg font-semibold bg-dream-DEFAULT hover:bg-dream-dark text-white dark:bg-gradient-to-r dark:from-dream-DEFAULT dark:to-dream-dark dark:hover:from-dream-light dark:hover:to-dream-DEFAULT shadow-lg hover:shadow-xl transition-all duration-300"
           >
             {t('games.snake.playAgain')}
           </Button>

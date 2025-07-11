@@ -33,7 +33,7 @@ const Games = () => {
           </p>
         </div>
 
-        <Tabs defaultValue="tic-tac-toe" className="w-full">
+        <Tabs defaultValue="tic-tac-toe" className="w-full" dir={isRTL ? 'rtl' : 'ltr'}>
           <TabsList className={`${
             isMobile 
               ? 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1 h-auto p-1' 
