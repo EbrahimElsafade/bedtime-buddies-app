@@ -130,116 +130,120 @@ const MemoryCardGame = () => {
 
   if (!gameStarted) {
     return (
-      <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent">
-            {t('games.memory.title')}
-          </CardTitle>
-          <CardDescription>{t('games.memory.description')}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col items-center space-y-6">
-            <div className="text-center">
-              <div className="text-6xl mb-4">🧠</div>
-              <h3 className="text-xl font-semibold mb-2">{t('games.memory.testYourMemory')}</h3>
-              <p className="text-muted-foreground mb-6">
-                {t('games.memory.clickToFlip')}
-              </p>
+      <div className="w-full max-w-2xl mx-auto px-2">
+        <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+          <CardHeader className="text-center px-4 py-6">
+            <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent">
+              {t('games.memory.title')}
+            </CardTitle>
+            <CardDescription className="text-sm md:text-base">{t('games.memory.description')}</CardDescription>
+          </CardHeader>
+          <CardContent className="px-4">
+            <div className="flex flex-col items-center space-y-4 md:space-y-6">
+              <div className="text-center">
+                <div className="text-4xl md:text-6xl mb-4">🧠</div>
+                <h3 className="text-lg md:text-xl font-semibold mb-2">{t('games.memory.testYourMemory')}</h3>
+                <p className="text-muted-foreground mb-4 md:mb-6 text-sm md:text-base px-2">
+                  {t('games.memory.clickToFlip')}
+                </p>
+              </div>
+              <Button 
+                onClick={initializeGame}
+                className="px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-semibold bg-gradient-to-r from-dream-DEFAULT to-purple-600 hover:from-dream-dark hover:to-purple-700 w-full max-w-xs"
+              >
+                {t('games.memory.startGame')}
+              </Button>
             </div>
-            <Button 
-              onClick={initializeGame}
-              className="px-8 py-4 text-lg font-semibold bg-gradient-to-r from-dream-DEFAULT to-purple-600 hover:from-dream-dark hover:to-purple-700"
-            >
-              {t('games.memory.startGame')}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
-    <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent">
-          {t('games.memory.title')}
-        </CardTitle>
-        <CardDescription>{t('games.memory.description')}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-6">
-          <div className="flex justify-center space-x-8">
-            <div className="text-center bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 px-6 py-3 rounded-lg">
-              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{moves}</div>
-              <div className="text-sm text-muted-foreground">{t('games.memory.moves')}</div>
-            </div>
-            <div className="text-center bg-gradient-to-r from-green-100 to-teal-100 dark:from-green-900 dark:to-teal-900 px-6 py-3 rounded-lg">
-              <div className="text-2xl font-bold text-green-600 dark:text-green-400">{matchedPairs}/{cardIcons.length}</div>
-              <div className="text-sm text-muted-foreground">Pairs</div>
-            </div>
-            <div className="text-center bg-gradient-to-r from-orange-100 to-red-100 dark:from-orange-900 dark:to-red-900 px-6 py-3 rounded-lg">
-              <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">{formatTime(timeElapsed)}</div>
-              <div className="text-sm text-muted-foreground">Time</div>
-            </div>
-          </div>
-
-          {gameStatus === 'won' && (
-            <div className="text-center">
-              <div className="text-4xl mb-2">🎉</div>
-              <div className="text-2xl font-bold text-green-600 animate-pulse mb-2">
-                {t('games.memory.congratulations')}
+    <div className="w-full max-w-2xl mx-auto px-2">
+      <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+        <CardHeader className="text-center px-4 py-4">
+          <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent">
+            {t('games.memory.title')}
+          </CardTitle>
+          <CardDescription className="text-sm md:text-base">{t('games.memory.description')}</CardDescription>
+        </CardHeader>
+        <CardContent className="px-4">
+          <div className="space-y-4 md:space-y-6">
+            <div className="grid grid-cols-3 gap-2 md:gap-4">
+              <div className="text-center bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 px-3 md:px-6 py-2 md:py-3 rounded-lg">
+                <div className="text-lg md:text-2xl font-bold text-blue-600 dark:text-blue-400">{moves}</div>
+                <div className="text-xs md:text-sm text-muted-foreground">{t('games.memory.moves')}</div>
               </div>
-              <div className="text-muted-foreground">
-                {t('games.memory.gameCompleted', { moves })}
+              <div className="text-center bg-gradient-to-r from-green-100 to-teal-100 dark:from-green-900 dark:to-teal-900 px-3 md:px-6 py-2 md:py-3 rounded-lg">
+                <div className="text-lg md:text-2xl font-bold text-green-600 dark:text-green-400">{matchedPairs}/{cardIcons.length}</div>
+                <div className="text-xs md:text-sm text-muted-foreground">Pairs</div>
+              </div>
+              <div className="text-center bg-gradient-to-r from-orange-100 to-red-100 dark:from-orange-900 dark:to-red-900 px-3 md:px-6 py-2 md:py-3 rounded-lg">
+                <div className="text-lg md:text-2xl font-bold text-orange-600 dark:text-orange-400">{formatTime(timeElapsed)}</div>
+                <div className="text-xs md:text-sm text-muted-foreground">Time</div>
               </div>
             </div>
-          )}
 
-          <div className="grid grid-cols-4 gap-4 max-w-md mx-auto">
-            {cards.map((card) => {
-              const IconComponent = card.icon;
-              return (
-                <button
-                  key={card.id}
-                  onClick={() => handleCardClick(card.id)}
-                  disabled={card.isMatched || card.isFlipped || gameStatus !== 'playing'}
-                  className={`
-                    relative w-20 h-20 rounded-lg border-2 transition-all duration-300 transform hover:scale-105
-                    ${card.isMatched 
-                      ? 'bg-green-100 dark:bg-green-900 border-green-400 opacity-75' 
-                      : card.isFlipped 
-                        ? 'bg-white dark:bg-nightsky-light border-dream-light shadow-lg' 
-                        : 'bg-gradient-to-br from-purple-400 to-purple-600 border-purple-500 hover:from-purple-500 hover:to-purple-700'
-                    }
-                    ${gameStatus !== 'playing' ? 'cursor-not-allowed' : 'cursor-pointer'}
-                  `}
-                >
-                  {card.isFlipped || card.isMatched ? (
-                    <IconComponent className={`w-8 h-8 mx-auto ${card.color}`} />
-                  ) : (
-                    <div className="text-2xl">❓</div>
-                  )}
-                  
-                  {card.isMatched && (
-                    <div className="absolute inset-0 bg-green-500/20 rounded-lg flex items-center justify-center">
-                      <div className="text-green-600 text-xl">✓</div>
-                    </div>
-                  )}
-                </button>
-              );
-            })}
+            {gameStatus === 'won' && (
+              <div className="text-center py-4">
+                <div className="text-3xl md:text-4xl mb-2">🎉</div>
+                <div className="text-xl md:text-2xl font-bold text-green-600 animate-pulse mb-2">
+                  {t('games.memory.congratulations')}
+                </div>
+                <div className="text-muted-foreground text-sm md:text-base">
+                  {t('games.memory.gameCompleted', { moves })}
+                </div>
+              </div>
+            )}
+
+            <div className="grid grid-cols-4 gap-2 md:gap-4 max-w-sm mx-auto">
+              {cards.map((card) => {
+                const IconComponent = card.icon;
+                return (
+                  <button
+                    key={card.id}
+                    onClick={() => handleCardClick(card.id)}
+                    disabled={card.isMatched || card.isFlipped || gameStatus !== 'playing'}
+                    className={`
+                      relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 transition-all duration-300 transform hover:scale-105
+                      ${card.isMatched 
+                        ? 'bg-green-100 dark:bg-green-900 border-green-400 opacity-75' 
+                        : card.isFlipped 
+                          ? 'bg-white dark:bg-nightsky-light border-dream-light shadow-lg' 
+                          : 'bg-gradient-to-br from-purple-400 to-purple-600 border-purple-500 hover:from-purple-500 hover:to-purple-700'
+                      }
+                      ${gameStatus !== 'playing' ? 'cursor-not-allowed' : 'cursor-pointer'}
+                    `}
+                  >
+                    {card.isFlipped || card.isMatched ? (
+                      <IconComponent className={`w-6 h-6 md:w-8 md:h-8 mx-auto ${card.color}`} />
+                    ) : (
+                      <div className="text-lg md:text-2xl">❓</div>
+                    )}
+                    
+                    {card.isMatched && (
+                      <div className="absolute inset-0 bg-green-500/20 rounded-lg flex items-center justify-center">
+                        <div className="text-green-600 text-lg md:text-xl">✓</div>
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button 
-          onClick={initializeGame} 
-          className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-dream-DEFAULT to-purple-600 hover:from-dream-dark hover:to-purple-700 transition-all duration-300"
-        >
-          {t('games.memory.playAgain')}
-        </Button>
-      </CardFooter>
-    </Card>
+        </CardContent>
+        <CardFooter className="px-4 py-4">
+          <Button 
+            onClick={initializeGame} 
+            className="w-full py-3 text-base md:text-lg font-semibold bg-gradient-to-r from-dream-DEFAULT to-purple-600 hover:from-dream-dark hover:to-purple-700 transition-all duration-300"
+          >
+            {t('games.memory.playAgain')}
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
   );
 };
 
