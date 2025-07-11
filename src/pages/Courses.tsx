@@ -47,76 +47,76 @@ const Courses = () => {
   const ageCounts = getAgeCounts();
   
   return (
-    <div className="py-12 px-4 relative">
+    <div className="py-8 md:py-12 px-3 md:px-4 relative">
       {/* Fun decorative elements */}
-      <div className="absolute top-20 left-10 w-20 h-20 rounded-full bg-dream-light/10 animate-float"></div>
-      <div className="absolute bottom-20 right-10 w-16 h-16 rounded-full bg-moon-light/10 animate-float" style={{ animationDelay: "1.5s" }}></div>
+      <div className="absolute top-20 left-10 w-20 h-20 rounded-full bg-dream-light/10 animate-float hidden md:block"></div>
+      <div className="absolute bottom-20 right-10 w-16 h-16 rounded-full bg-moon-light/10 animate-float hidden md:block" style={{ animationDelay: "1.5s" }}></div>
       
-      <div className="container mx-auto">
-        <h1 className="text-3xl md:text-4xl font-bubbly mb-6 text-dream-DEFAULT">
+      <div className="container mx-auto max-w-7xl">
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bubbly mb-4 md:mb-6 text-dream-DEFAULT">
           {t('courses.exploreTitle')}
         </h1>
         
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-8">
           {/* Sidebar Filters */}
           <div className="lg:col-span-1">
-            <div className="bg-white/80 dark:bg-nightsky-light/80 rounded-lg p-6 backdrop-blur-sm sticky top-24">
-              <h3 className="text-xl font-bubbly mb-4 text-dream-DEFAULT">{t('courses.allCourses')}</h3>
+            <div className="bg-white/80 dark:bg-nightsky-light/80 rounded-lg p-4 md:p-6 backdrop-blur-sm sticky top-24">
+              <h3 className="text-lg md:text-xl font-bubbly mb-3 md:mb-4 text-dream-DEFAULT">{t('courses.allCourses')}</h3>
               
               {/* Search */}
-              <div className="relative mb-6">
+              <div className="relative mb-4 md:mb-6">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="search"
                   placeholder={t('courses.searchPlaceholder')}
-                  className="pl-10"
+                  className="pl-10 text-sm"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
               
               {/* Category Filters */}
-              <div className="mb-6">
-                <h4 className="font-medium mb-2 text-dream-DEFAULT">{t('courses.categories.language')}</h4>
-                <div className="flex flex-col space-y-1.5">
+              <div className="mb-4 md:mb-6">
+                <h4 className="font-medium mb-2 text-dream-DEFAULT text-sm md:text-base">{t('courses.categories.language')}</h4>
+                <div className="flex flex-col space-y-1">
                   <Button
                     variant={activeCategory === 'all' ? "default" : "ghost"}
-                    className={activeCategory === 'all' ? "bg-dream-DEFAULT text-white" : "text-dream-DEFAULT"}
+                    className={`${activeCategory === 'all' ? "bg-dream-DEFAULT text-white" : "text-dream-DEFAULT"} justify-start text-xs md:text-sm h-8 md:h-9 px-2 md:px-3`}
                     onClick={() => handleCategoryChange('all')}
                   >
                     {t('courses.allCourses')} ({courses.length})
                   </Button>
                   <Button
                     variant={activeCategory === 'language' ? "default" : "ghost"}
-                    className={activeCategory === 'language' ? "bg-dream-DEFAULT text-white" : "text-dream-DEFAULT"}
+                    className={`${activeCategory === 'language' ? "bg-dream-DEFAULT text-white" : "text-dream-DEFAULT"} justify-start text-xs md:text-sm h-8 md:h-9 px-2 md:px-3`}
                     onClick={() => handleCategoryChange('language')}
                   >
                     {t('courses.categories.language')} ({courses.filter(c => c.category === 'language').length})
                   </Button>
                   <Button
                     variant={activeCategory === 'math' ? "default" : "ghost"}
-                    className={activeCategory === 'math' ? "bg-dream-DEFAULT text-white" : "text-dream-DEFAULT"}
+                    className={`${activeCategory === 'math' ? "bg-dream-DEFAULT text-white" : "text-dream-DEFAULT"} justify-start text-xs md:text-sm h-8 md:h-9 px-2 md:px-3`}
                     onClick={() => handleCategoryChange('math')}
                   >
                     {t('courses.categories.math')} ({courses.filter(c => c.category === 'math').length})
                   </Button>
                   <Button
                     variant={activeCategory === 'science' ? "default" : "ghost"}
-                    className={activeCategory === 'science' ? "bg-dream-DEFAULT text-white" : "text-dream-DEFAULT"}
+                    className={`${activeCategory === 'science' ? "bg-dream-DEFAULT text-white" : "text-dream-DEFAULT"} justify-start text-xs md:text-sm h-8 md:h-9 px-2 md:px-3`}
                     onClick={() => handleCategoryChange('science')}
                   >
                     {t('courses.categories.science')} ({courses.filter(c => c.category === 'science').length})
                   </Button>
                   <Button
                     variant={activeCategory === 'arts' ? "default" : "ghost"}
-                    className={activeCategory === 'arts' ? "bg-dream-DEFAULT text-white" : "text-dream-DEFAULT"}
+                    className={`${activeCategory === 'arts' ? "bg-dream-DEFAULT text-white" : "text-dream-DEFAULT"} justify-start text-xs md:text-sm h-8 md:h-9 px-2 md:px-3`}
                     onClick={() => handleCategoryChange('arts')}
                   >
                     {t('courses.categories.arts')} ({courses.filter(c => c.category === 'arts').length})
                   </Button>
                   <Button
                     variant={activeCategory === 'social' ? "default" : "ghost"}
-                    className={activeCategory === 'social' ? "bg-dream-DEFAULT text-white" : "text-dream-DEFAULT"}
+                    className={`${activeCategory === 'social' ? "bg-dream-DEFAULT text-white" : "text-dream-DEFAULT"} justify-start text-xs md:text-sm h-8 md:h-9 px-2 md:px-3`}
                     onClick={() => handleCategoryChange('social')}
                   >
                     {t('courses.categories.social')} ({courses.filter(c => c.category === 'social').length})
@@ -126,10 +126,10 @@ const Courses = () => {
               
               {/* Age Range Filters */}
               <div>
-                <h4 className="font-medium mb-2 text-dream-DEFAULT">{t('courses.years')}</h4>
-                <div className="flex flex-wrap gap-2">
+                <h4 className="font-medium mb-2 text-dream-DEFAULT text-sm md:text-base">{t('courses.years')}</h4>
+                <div className="flex flex-wrap gap-1 md:gap-2">
                   {Object.entries(ageCounts).map(([age, count]) => (
-                    <Badge key={age} variant="outline" className="bg-dream-light/20 border-dream-light">
+                    <Badge key={age} variant="outline" className="bg-dream-light/20 border-dream-light text-xs">
                       {age} {t('courses.years')} ({count})
                     </Badge>
                   ))}
@@ -141,11 +141,11 @@ const Courses = () => {
           {/* Courses Grid */}
           <div className="lg:col-span-3">
             {filteredCourses.length === 0 ? (
-              <div className="text-center py-12 bg-white/70 dark:bg-nightsky-light/70 rounded-lg">
-                <p className="text-lg text-dream-DEFAULT">{t('courses.noResults')}</p>
+              <div className="text-center py-8 md:py-12 bg-white/70 dark:bg-nightsky-light/70 rounded-lg">
+                <p className="text-base md:text-lg text-dream-DEFAULT">{t('courses.noResults')}</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
                 {filteredCourses.map((course) => (
                   <Card key={course.id} className="story-card overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm hover:shadow-lg transition-all">
                     <div className="aspect-[3/2] relative">
@@ -167,34 +167,34 @@ const Courses = () => {
                         </div>
                       )}
                     </div>
-                    <CardHeader className="pb-2">
-                      <div className="flex justify-between items-start">
-                        <CardTitle className="text-xl text-dream-DEFAULT">{course.title}</CardTitle>
-                        <Badge className="bg-dream-light/30 text-dream-DEFAULT border-none">
+                    <CardHeader className="pb-2 px-3 md:px-6 pt-3 md:pt-6">
+                      <div className="flex justify-between items-start gap-2">
+                        <CardTitle className="text-base md:text-xl text-dream-DEFAULT line-clamp-2 flex-1">{course.title}</CardTitle>
+                        <Badge className="bg-dream-light/30 text-dream-DEFAULT border-none text-xs shrink-0">
                           {course.category.charAt(0).toUpperCase() + course.category.slice(1)}
                         </Badge>
                       </div>
-                      <CardDescription className="line-clamp-2 text-dream-DEFAULT dark:text-foreground">
+                      <CardDescription className="line-clamp-2 text-dream-DEFAULT dark:text-foreground text-sm">
                         {course.description}
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="pb-2">
-                      <div className="flex items-center justify-between text-sm text-dream-DEFAULT dark:text-foreground">
+                    <CardContent className="pb-2 px-3 md:px-6">
+                      <div className="flex items-center justify-between text-xs md:text-sm text-dream-DEFAULT dark:text-foreground">
                         <div className="flex items-center">
-                          <BookOpen className="h-4 w-4 mr-1" />
+                          <BookOpen className="h-3 w-3 md:h-4 md:w-4 mr-1" />
                           <span>{course.lessons} {t('courses.lessons')}</span>
                         </div>
                         <div className="flex items-center">
-                          <Clock className="h-4 w-4 mr-1" />
+                          <Clock className="h-3 w-3 md:h-4 md:w-4 mr-1" />
                           <span>{course.duration} {t('duration')}</span>
                         </div>
                       </div>
                     </CardContent>
-                    <CardFooter>
+                    <CardFooter className="px-3 md:px-6 pt-2 md:pt-6">
                       <Link to={`/courses/${course.id}`} className="w-full">
                         <Button 
                           className={cn(
-                            "w-full", 
+                            "w-full text-xs md:text-sm h-8 md:h-9", 
                             course.isFree 
                               ? "bg-dream-DEFAULT hover:bg-dream-dark text-white dark:text-white" 
                               : "bg-moon-DEFAULT hover:bg-moon-dark text-dream-DEFAULT dark:text-white"

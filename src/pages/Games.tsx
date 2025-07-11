@@ -23,7 +23,7 @@ const Games = () => {
 
   return (
     <div className="py-4 md:py-8 lg:py-12 px-3 md:px-4" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="container mx-auto max-w-7xl">
+      <div className="container mx-auto max-w-6xl">
         <div className="mb-4 md:mb-6 lg:mb-8 text-center">
           <h1 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent mb-2 md:mb-3 lg:mb-4 leading-tight">
             {t('games.title', { ns: 'common' })}
@@ -91,7 +91,7 @@ const Games = () => {
             </TabsTrigger>
           </TabsList>
           
-          <div className="w-full">
+          <div className="w-full max-w-4xl mx-auto">
             <TabsContent value="tic-tac-toe" className="mt-0 focus-visible:outline-none">
               <TicTacToeGame />
             </TabsContent>
