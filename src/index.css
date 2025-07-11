@@ -108,6 +108,33 @@
     margin-left: 0.75rem;
     margin-left: 1rem;
   }
+
+  /* Arabic font improvements */
+  .font-arabic {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-weight: 500;
+  }
+
+  /* Scrollbar hiding */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Touch improvements for mobile games */
+  .touch-game {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+  }
 }
 
 .nightsky-gradient {
@@ -132,8 +159,8 @@
 /* Mobile Optimization */
 @media (max-width: 768px) {
   .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
   }
   
   .story-card:hover {
@@ -148,6 +175,12 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+  }
+
+  /* Better mobile tab styling */
+  [data-radix-tabs-trigger] {
+    min-height: 40px;
+    touch-action: manipulation;
   }
 }
 
@@ -212,3 +245,20 @@
   }
 }
 
+/* Games section specific improvements */
+.games-container {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+@media (max-width: 640px) {
+  .games-tabs {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+  
+  .games-tabs > * {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+}

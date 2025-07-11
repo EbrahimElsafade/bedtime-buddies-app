@@ -22,13 +22,13 @@ const Games = () => {
   const isRTL = i18n.language === 'ar';
 
   return (
-    <div className="py-6 md:py-12 px-4" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="container mx-auto max-w-6xl">
-        <div className="mb-6 md:mb-8 text-center">
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent mb-2 md:mb-4">
+    <div className="py-4 md:py-8 lg:py-12 px-3 md:px-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="container mx-auto max-w-7xl">
+        <div className="mb-4 md:mb-6 lg:mb-8 text-center">
+          <h1 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent mb-2 md:mb-3 lg:mb-4 leading-tight">
             {t('games.title', { ns: 'common' })}
           </h1>
-          <p className="text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xs md:text-sm lg:text-base text-muted-foreground max-w-2xl mx-auto px-2">
             {t('games.subtitle', { ns: 'common' })}
           </p>
         </div>
@@ -36,80 +36,82 @@ const Games = () => {
         <Tabs defaultValue="tic-tac-toe" className="w-full">
           <TabsList className={`${
             isMobile 
-              ? 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-1 h-auto p-1' 
-              : 'grid grid-cols-5 h-10 p-1'
-          } w-full mb-6 md:mb-8 bg-muted`}>
+              ? 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-1 h-auto p-1' 
+              : 'grid grid-cols-5 h-11 p-1'
+          } w-full mb-4 md:mb-6 lg:mb-8 bg-muted rounded-lg overflow-hidden`}>
             <TabsTrigger 
               value="tic-tac-toe" 
               className={`${
                 isMobile 
-                  ? 'text-xs px-2 py-2 h-auto whitespace-normal text-center' 
-                  : 'px-3 py-1.5'
-              } rounded-sm transition-all`}
+                  ? 'text-[10px] sm:text-xs px-1 sm:px-2 py-2 h-auto whitespace-normal text-center break-words' 
+                  : 'px-3 py-2 text-sm'
+              } rounded-md transition-all font-medium ${isRTL ? 'font-arabic' : ''}`}
             >
-              {isMobile ? t('games.ticTacToe.title', { ns: 'common' }).split(' ')[0] : t('games.ticTacToe.title', { ns: 'common' })}
+              {isMobile && isRTL ? 'إكس أو' : isMobile ? 'Tic Tac' : t('games.ticTacToe.title', { ns: 'common' })}
             </TabsTrigger>
             <TabsTrigger 
               value="rock-paper-scissors"
               className={`${
                 isMobile 
-                  ? 'text-xs px-2 py-2 h-auto whitespace-normal text-center' 
-                  : 'px-3 py-1.5'
-              } rounded-sm transition-all`}
+                  ? 'text-[10px] sm:text-xs px-1 sm:px-2 py-2 h-auto whitespace-normal text-center break-words' 
+                  : 'px-3 py-2 text-sm'
+              } rounded-md transition-all font-medium ${isRTL ? 'font-arabic' : ''}`}
             >
-              {isMobile ? 'RPS' : t('games.rockPaperScissors.title', { ns: 'common' })}
+              {isMobile && isRTL ? 'حجر ورقة' : isMobile ? 'RPS' : t('games.rockPaperScissors.title', { ns: 'common' })}
             </TabsTrigger>
             <TabsTrigger 
               value="hangman"
               className={`${
                 isMobile 
-                  ? 'text-xs px-2 py-2 h-auto whitespace-normal text-center' 
-                  : 'px-3 py-1.5'
-              } rounded-sm transition-all`}
+                  ? 'text-[10px] sm:text-xs px-1 sm:px-2 py-2 h-auto whitespace-normal text-center break-words' 
+                  : 'px-3 py-2 text-sm'
+              } rounded-md transition-all font-medium ${isRTL ? 'font-arabic' : ''}`}
             >
-              {t('games.hangman.title', { ns: 'common' })}
+              {isMobile && isRTL ? 'المشنوق' : t('games.hangman.title', { ns: 'common' })}
             </TabsTrigger>
             <TabsTrigger 
               value="memory"
               className={`${
                 isMobile 
-                  ? 'text-xs px-2 py-2 h-auto whitespace-normal text-center col-span-1 md:col-span-1' 
-                  : 'px-3 py-1.5'
-              } rounded-sm transition-all`}
+                  ? 'text-[10px] sm:text-xs px-1 sm:px-2 py-2 h-auto whitespace-normal text-center' 
+                  : 'px-3 py-2 text-sm'
+              } rounded-md transition-all font-medium ${isRTL ? 'font-arabic' : ''}`}
             >
-              {t('games.memory.title', { ns: 'common' })}
+              {isMobile && isRTL ? 'ذاكرة' : t('games.memory.title', { ns: 'common' })}
             </TabsTrigger>
             <TabsTrigger 
               value="snake"
               className={`${
                 isMobile 
-                  ? 'text-xs px-2 py-2 h-auto whitespace-normal text-center col-span-1 md:col-span-1' 
-                  : 'px-3 py-1.5'
-              } rounded-sm transition-all`}
+                  ? 'text-[10px] sm:text-xs px-1 sm:px-2 py-2 h-auto whitespace-normal text-center col-span-2 sm:col-span-1' 
+                  : 'px-3 py-2 text-sm'
+              } rounded-md transition-all font-medium ${isRTL ? 'font-arabic' : ''}`}
             >
-              {t('games.snake.title', { ns: 'common' })}
+              {isMobile && isRTL ? 'ثعبان' : t('games.snake.title', { ns: 'common' })}
             </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="tic-tac-toe" className="mt-0">
-            <TicTacToeGame />
-          </TabsContent>
-          
-          <TabsContent value="rock-paper-scissors" className="mt-0">
-            <RockPaperScissorsGame />
-          </TabsContent>
-          
-          <TabsContent value="hangman" className="mt-0">
-            <HangmanGame />
-          </TabsContent>
-          
-          <TabsContent value="memory" className="mt-0">
-            <MemoryCardGame />
-          </TabsContent>
-          
-          <TabsContent value="snake" className="mt-0">
-            <SnakeGame />
-          </TabsContent>
+          <div className="w-full">
+            <TabsContent value="tic-tac-toe" className="mt-0 focus-visible:outline-none">
+              <TicTacToeGame />
+            </TabsContent>
+            
+            <TabsContent value="rock-paper-scissors" className="mt-0 focus-visible:outline-none">
+              <RockPaperScissorsGame />
+            </TabsContent>
+            
+            <TabsContent value="hangman" className="mt-0 focus-visible:outline-none">
+              <HangmanGame />
+            </TabsContent>
+            
+            <TabsContent value="memory" className="mt-0 focus-visible:outline-none">
+              <MemoryCardGame />
+            </TabsContent>
+            
+            <TabsContent value="snake" className="mt-0 focus-visible:outline-none">
+              <SnakeGame />
+            </TabsContent>
+          </div>
         </Tabs>
       </div>
     </div>
