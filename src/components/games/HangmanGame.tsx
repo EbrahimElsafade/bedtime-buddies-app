@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -114,10 +113,6 @@ const HangmanGame = () => {
             </div>
           </div>
         )}
-        
-        <div className="absolute bottom-1 md:bottom-2 left-1/2 transform -translate-x-1/2 text-xs md:text-sm font-semibold text-gray-600 dark:text-gray-300">
-          HANGMAN GAME
-        </div>
       </div>
     );
   };
@@ -149,7 +144,13 @@ const HangmanGame = () => {
 
               {drawHangman()}
 
-              <div className="text-center mt-4">
+              <div className="text-center mt-2 mb-4">
+                <div className="text-xs md:text-sm font-semibold text-gray-600 dark:text-gray-300">
+                  HANGMAN GAME
+                </div>
+              </div>
+
+              <div className="text-center">
                 <div className="text-sm md:text-lg font-semibold text-red-600 dark:text-red-400">
                   {t('games.hangman.incorrectGuesses')} {wrongGuesses} / {maxWrongGuesses}
                 </div>
@@ -173,53 +174,13 @@ const HangmanGame = () => {
               </div>
 
               <div className="w-full">
-                <div className="grid grid-cols-7 md:grid-cols-9 gap-1 md:gap-2 mb-2 md:mb-3">
-                  {alphabet.slice(0, 9).map((letter) => (
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {alphabet.map((letter) => (
                     <button
                       key={letter}
                       onClick={() => handleLetterClick(letter)}
                       disabled={guessedLetters.includes(letter) || gameStatus !== 'playing'}
-                      className={`w-8 h-8 md:w-10 md:h-10 rounded-md font-bold text-xs md:text-sm transition-all duration-200 ${
-                        guessedLetters.includes(letter)
-                          ? currentWord.includes(letter)
-                            ? 'bg-green-500 text-white shadow-lg'
-                            : 'bg-red-500 text-white shadow-lg'
-                          : 'bg-gradient-to-br from-purple-400 to-purple-600 text-white hover:from-purple-500 hover:to-purple-700 hover:scale-105 shadow-md'
-                      } ${
-                        gameStatus !== 'playing' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                      }`}
-                    >
-                      {letter}
-                    </button>
-                  ))}
-                </div>
-                <div className="grid grid-cols-6 md:grid-cols-8 gap-1 md:gap-2 mb-2 md:mb-3">
-                  {alphabet.slice(9, 17).map((letter) => (
-                    <button
-                      key={letter}
-                      onClick={() => handleLetterClick(letter)}
-                      disabled={guessedLetters.includes(letter) || gameStatus !== 'playing'}
-                      className={`w-8 h-8 md:w-10 md:h-10 rounded-md font-bold text-xs md:text-sm transition-all duration-200 ${
-                        guessedLetters.includes(letter)
-                          ? currentWord.includes(letter)
-                            ? 'bg-green-500 text-white shadow-lg'
-                            : 'bg-red-500 text-white shadow-lg'
-                          : 'bg-gradient-to-br from-purple-400 to-purple-600 text-white hover:from-purple-500 hover:to-purple-700 hover:scale-105 shadow-md'
-                      } ${
-                        gameStatus !== 'playing' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                      }`}
-                    >
-                      {letter}
-                    </button>
-                  ))}
-                </div>
-                <div className="grid grid-cols-7 md:grid-cols-9 gap-1 md:gap-2">
-                  {alphabet.slice(17, 26).map((letter) => (
-                    <button
-                      key={letter}
-                      onClick={() => handleLetterClick(letter)}
-                      disabled={guessedLetters.includes(letter) || gameStatus !== 'playing'}
-                      className={`w-8 h-8 md:w-10 md:h-10 rounded-md font-bold text-xs md:text-sm transition-all duration-200 ${
+                      className={`w-10 h-10 md:w-12 md:h-12 rounded-md font-bold text-sm md:text-base transition-all duration-200 ${
                         guessedLetters.includes(letter)
                           ? currentWord.includes(letter)
                             ? 'bg-green-500 text-white shadow-lg'
