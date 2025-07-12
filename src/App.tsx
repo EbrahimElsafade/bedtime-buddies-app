@@ -44,10 +44,10 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
-      staleTime: 30000,
+      staleTime: 60000, // Increased to 1 minute
       refetchOnWindowFocus: false, // Disable refetching when switching tabs
       refetchOnMount: false, // Prevent unnecessary refetches on mount
-      refetchOnReconnect: 'always', // Only refetch when network reconnects
+      refetchOnReconnect: false, // Disable refetch on reconnect to prevent tab switch issues
     },
   },
 });
@@ -61,12 +61,14 @@ const App = () => {
     // Add logging to help with debugging
     console.log("App initialized");
 
-    // Add Page Visibility API handling to prevent reloads on tab switch
+    // Enhanced Page Visibility API handling
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        console.log("Tab became hidden - pausing expensive operations");
+        console.log("Tab became hidden - maintaining state");
+        // Don't pause operations, just log
       } else {
-        console.log("Tab became visible - resuming operations");
+        console.log("Tab became visible - continuing normally");
+        // Don't trigger any refetches or state changes
       }
     };
 

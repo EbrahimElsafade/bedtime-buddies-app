@@ -8,8 +8,9 @@ const AdminRoute = () => {
   const { isAuthenticated, isLoading, profile, user, isProfileLoaded } = useAuth();
   const location = useLocation();
   const lastStateRef = useRef<string>('');
+  const mountTimeRef = useRef(Date.now());
   
-  // Add comprehensive debugging to help troubleshoot
+  // Add comprehensive debugging but reduce noise
   useEffect(() => {
     const currentState = JSON.stringify({ 
       isAuthenticated, 
@@ -21,8 +22,9 @@ const AdminRoute = () => {
       pathname: location.pathname
     });
     
-    // Only log if state actually changed to reduce noise
-    if (currentState !== lastStateRef.current) {
+    // Only log if state actually changed and it's been a bit since mounting
+    const timeSinceMount = Date.now() - mountTimeRef.current;
+    if (currentState !== lastStateRef.current && timeSinceMount > 100) {
       console.log("AdminRoute - State change:", { 
         isAuthenticated, 
         isLoading, 
@@ -49,8 +51,15 @@ const AdminRoute = () => {
   };
   
   // Show loading state while authentication is being checked
+  // But only show it for a reasonable amount of time
   if (isLoading || !isProfileLoaded) {
-    console.log("AdminRoute - Loading state, reason:", getRedirectReason());
+    const timeSinceMount = Date.now() - mountTimeRef.current;
+    
+    // If it's been loading for more than 5 seconds, something might be wrong
+    if (timeSinceMount > 5000) {
+      console.warn("AdminRoute - Loading for too long, might be stuck");
+    }
+    
     return (
       <div className="container mx-auto p-8">
         <h2 className="text-2xl mb-4">Loading Admin Dashboard...</h2>
@@ -60,19 +69,19 @@ const AdminRoute = () => {
     );
   }
   
-  // Redirect to login if not authenticated - more stable check
+  // Redirect to login if not authenticated
   if (!isAuthenticated || !user) {
     console.log("AdminRoute - Not authenticated, redirecting to login");
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
   
-  // Check if profile exists - more stable check
+  // Check if profile exists
   if (!profile) {
     console.log("AdminRoute - No profile found, redirecting to home");
     return <Navigate to="/" replace />;
   }
   
-  // Redirect to home if not an admin - more stable check
+  // Redirect to home if not an admin
   if (profile.role !== 'admin') {
     console.log("AdminRoute - Not admin, redirecting to home. Role:", profile.role);
     return <Navigate to="/" replace />;
