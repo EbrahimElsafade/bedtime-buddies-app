@@ -2,19 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-
-interface Profile {
-  id: string;
-  parent_name: string;
-  child_name: string | null;
-  preferred_language: string;
-  is_premium: boolean;
-  subscription_tier: string | null;
-  subscription_end: string | null;
-  role: 'user' | 'admin';
-  created_at: string;
-  updated_at: string;
-}
+import { Profile } from '@/types/auth';
 
 export const useProfileManagement = (user: User | null) => {
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -48,11 +36,24 @@ export const useProfileManagement = (user: User | null) => {
       }
 
       console.log("Profile fetched successfully:", data);
-      setProfile(data);
+      
+      // Transform the data to match the Profile type from auth.ts
+      const transformedProfile: Profile = {
+        id: data.id,
+        parent_name: data.parent_name,
+        child_name: data.child_name,
+        preferred_language: data.preferred_language as 'en' | 'ar-eg' | 'ar-fos7a',
+        is_premium: data.is_premium,
+        subscription_tier: data.subscription_tier,
+        subscription_end: data.subscription_end,
+        role: data.role as 'user' | 'admin'
+      };
+      
+      setProfile(transformedProfile);
       setProfileLoaded(true);
       console.log("Profile fetch completed, profileLoaded set to true");
       
-      return data;
+      return transformedProfile;
     } catch (err: any) {
       console.error("Error in fetchUserProfile:", err);
       setError(err);
@@ -64,7 +65,7 @@ export const useProfileManagement = (user: User | null) => {
     }
   }, [profile, profileLoaded]);
 
-  const updateProfile = async (updates: Partial<Profile>) => {
+  const updateProfile = async (updates: Partial<Profile>): Promise<void> => {
     if (!user) throw new Error('No authenticated user');
 
     try {
@@ -80,8 +81,19 @@ export const useProfileManagement = (user: User | null) => {
 
       if (updateError) throw updateError;
 
-      setProfile(data);
-      return data;
+      // Transform the data to match the Profile type from auth.ts
+      const transformedProfile: Profile = {
+        id: data.id,
+        parent_name: data.parent_name,
+        child_name: data.child_name,
+        preferred_language: data.preferred_language as 'en' | 'ar-eg' | 'ar-fos7a',
+        is_premium: data.is_premium,
+        subscription_tier: data.subscription_tier,
+        subscription_end: data.subscription_end,
+        role: data.role as 'user' | 'admin'
+      };
+
+      setProfile(transformedProfile);
     } catch (err: any) {
       setError(err);
       throw err;
