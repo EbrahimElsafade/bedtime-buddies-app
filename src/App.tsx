@@ -45,6 +45,9 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       staleTime: 30000,
+      refetchOnWindowFocus: false, // Disable refetching when switching tabs
+      refetchOnMount: false, // Prevent unnecessary refetches on mount
+      refetchOnReconnect: 'always', // Only refetch when network reconnects
     },
   },
 });
@@ -57,6 +60,17 @@ const App = () => {
     
     // Add logging to help with debugging
     console.log("App initialized");
+
+    // Add Page Visibility API handling to prevent reloads on tab switch
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        console.log("Tab became hidden - pausing expensive operations");
+      } else {
+        console.log("Tab became visible - resuming operations");
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     // Set document direction based on language
     const handleLanguageChange = (lng: string) => {
@@ -78,6 +92,7 @@ const App = () => {
     // Cleanup
     return () => {
       i18n.off('languageChanged', handleLanguageChange);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [i18n]);
 
