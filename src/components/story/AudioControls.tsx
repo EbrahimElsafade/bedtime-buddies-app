@@ -1,50 +1,69 @@
 
-import { useState } from "react";
-import { VolumeX, Volume2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AudioPlayer } from "./AudioPlayer";
 import { Story, StorySection } from "@/types/story";
 
 interface AudioControlsProps {
   story: Story;
   currentSection?: StorySection;
   currentLanguage: string;
+  currentSectionIndex?: number;
+  onSectionChange?: (index: number) => void;
 }
 
-export const AudioControls = ({ story, currentSection, currentLanguage }: AudioControlsProps) => {
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+export const AudioControls = ({ 
+  story, 
+  currentSection, 
+  currentLanguage,
+  currentSectionIndex = 0,
+  onSectionChange
+}: AudioControlsProps) => {
+  // Determine audio source based on mode
+  const getAudioSource = () => {
+    if (story.audio_mode === 'single_story' && story.story_audio) {
+      return {
+        url: story.story_audio,
+        title: `Story: ${typeof story.title === 'string' ? story.title : story.title[currentLanguage] || 'Unknown'}`
+      };
+    } else if (story.audio_mode === 'per_section' && currentSection?.voices?.[currentLanguage]) {
+      return {
+        url: currentSection.voices[currentLanguage],
+        title: `Section ${currentSection.order}`
+      };
+    }
+    return null;
+  };
 
-  // Determine if audio is available
-  const hasAudio = story.audio_mode === 'single_story' 
-    ? !!story.story_audio 
-    : !!(currentSection?.voices?.[currentLanguage]);
+  const audioSource = getAudioSource();
+  
+  if (!audioSource) {
+    return null;
+  }
 
-  const toggleAudio = () => {
-    if (hasAudio) {
-      // In a real app, this would control audio playback
-      setIsAudioPlaying(!isAudioPlaying);
+  const handleNext = () => {
+    if (story.audio_mode === 'per_section' && onSectionChange && currentSectionIndex < story.sections.length - 1) {
+      onSectionChange(currentSectionIndex + 1);
     }
   };
 
-  if (!hasAudio) return null;
+  const handlePrevious = () => {
+    if (story.audio_mode === 'per_section' && onSectionChange && currentSectionIndex > 0) {
+      onSectionChange(currentSectionIndex - 1);
+    }
+  };
+
+  const hasNext = story.audio_mode === 'per_section' && currentSectionIndex < story.sections.length - 1;
+  const hasPrevious = story.audio_mode === 'per_section' && currentSectionIndex > 0;
 
   return (
-    <div className="flex justify-center mb-8">
-      <Button 
-        onClick={toggleAudio} 
-        variant="outline" 
-        className="rounded-full"
-      >
-        {isAudioPlaying ? (
-          <>
-            <VolumeX className="mr-2 h-4 w-4" /> Mute Narration
-          </>
-        ) : (
-          <>
-            <Volume2 className="mr-2 h-4 w-4" /> 
-            Play {story.audio_mode === 'single_story' ? 'Story' : 'Section'} Narration
-          </>
-        )}
-      </Button>
+    <div className="mb-8">
+      <AudioPlayer
+        audioUrl={audioSource.url}
+        title={audioSource.title}
+        onNext={handleNext}
+        onPrevious={handlePrevious}
+        hasNext={hasNext}
+        hasPrevious={hasPrevious}
+      />
     </div>
   );
 };

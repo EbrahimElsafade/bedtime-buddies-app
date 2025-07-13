@@ -1,5 +1,4 @@
 
-import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,24 +9,30 @@ interface StoryContentProps {
   story: Story;
   currentLanguage: string;
   storyTitle: string;
+  currentSectionIndex?: number;
+  onSectionChange?: (index: number) => void;
 }
 
-export const StoryContent = ({ story, currentLanguage, storyTitle }: StoryContentProps) => {
-  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
-
+export const StoryContent = ({ 
+  story, 
+  currentLanguage, 
+  storyTitle,
+  currentSectionIndex = 0,
+  onSectionChange
+}: StoryContentProps) => {
   const currentSection = story.sections[currentSectionIndex];
   const currentText = currentSection?.texts[currentLanguage] || "Content not available in selected language";
   const currentImage = currentSection?.image ? getImageUrl(currentSection.image) : getImageUrl(story.cover_image);
 
   const handleNextSection = () => {
-    if (currentSectionIndex < story.sections.length - 1) {
-      setCurrentSectionIndex(currentSectionIndex + 1);
+    if (currentSectionIndex < story.sections.length - 1 && onSectionChange) {
+      onSectionChange(currentSectionIndex + 1);
     }
   };
   
   const handlePrevSection = () => {
-    if (currentSectionIndex > 0) {
-      setCurrentSectionIndex(currentSectionIndex - 1);
+    if (currentSectionIndex > 0 && onSectionChange) {
+      onSectionChange(currentSectionIndex - 1);
     }
   };
 

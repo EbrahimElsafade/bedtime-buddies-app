@@ -18,6 +18,7 @@ const Story = () => {
   const { isAuthenticated, profile } = useAuth();
   
   const [isFavorite, setIsFavorite] = useState(false);
+  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
 
   const { data: story, isLoading, error } = useStoryData(storyId);
   const { currentLanguage, setCurrentLanguage } = useStoryLanguage(story);
@@ -53,7 +54,7 @@ const Story = () => {
     return null;
   }
 
-  const currentSection = story.sections[0]; // For audio controls
+  const currentSection = story.sections[currentSectionIndex];
   
   const toggleFavorite = () => {
     if (isAuthenticated) {
@@ -92,16 +93,20 @@ const Story = () => {
         
         {canAccessStory ? (
           <>
-            <StoryContent 
-              story={story}
-              currentLanguage={currentLanguage}
-              storyTitle={getStoryTitle()}
-            />
-            
             <AudioControls 
               story={story}
               currentSection={currentSection}
               currentLanguage={currentLanguage}
+              currentSectionIndex={currentSectionIndex}
+              onSectionChange={setCurrentSectionIndex}
+            />
+            
+            <StoryContent 
+              story={story}
+              currentLanguage={currentLanguage}
+              storyTitle={getStoryTitle()}
+              currentSectionIndex={currentSectionIndex}
+              onSectionChange={setCurrentSectionIndex}
             />
           </>
         ) : (
