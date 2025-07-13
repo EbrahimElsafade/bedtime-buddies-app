@@ -41,15 +41,26 @@ export const AudioPlayer = ({
         // Already a full URL
         return audioUrl;
       } else {
+        // Determine the correct folder based on file name pattern
+        let folder = 'story-audio'; // Default folder
+        
+        if (audioUrl.includes('story-voices') || audioUrl.includes('voice-')) {
+          folder = 'story-voices';
+        } else if (audioUrl.includes('story-audio') || audioUrl.includes('audio-')) {
+          folder = 'story-audio';
+        }
+        
         // Generate public URL from Supabase storage
         const { data } = supabase.storage
           .from('admin-content')
-          .getPublicUrl(audioUrl);
+          .getPublicUrl(`${folder}/${audioUrl}`);
         return data.publicUrl;
       }
     };
 
-    setAudioSrc(getAudioUrl());
+    const url = getAudioUrl();
+    console.log('Audio URL generated:', url, 'from original:', audioUrl);
+    setAudioSrc(url);
   }, [audioUrl]);
 
   useEffect(() => {
@@ -80,6 +91,7 @@ export const AudioPlayer = ({
 
     const handleError = (e: Event) => {
       console.error('Audio loading error:', e);
+      console.error('Audio src:', audioSrc);
       setIsLoading(false);
     };
 
