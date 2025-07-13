@@ -27,7 +27,7 @@ export const AudioControls = ({
     } else if (story.audio_mode === 'per_section' && currentSection?.voices?.[currentLanguage]) {
       return {
         url: currentSection.voices[currentLanguage],
-        title: `Section ${currentSection.order}`
+        title: `Section ${currentSection.order + 1}`
       };
     }
     return null;

@@ -4,7 +4,7 @@ import { Play, Pause, Volume2, VolumeX, SkipBack, SkipForward } from "lucide-rea
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Card } from "@/components/ui/card";
-import { getImageUrl } from "@/utils/imageUtils";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AudioPlayerProps {
   audioUrl: string;
@@ -32,8 +32,25 @@ export const AudioPlayer = ({
   const [volume, setVolume] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [audioSrc, setAudioSrc] = useState<string>("");
 
-  const audioSrc = getImageUrl(audioUrl);
+  // Generate public URL for audio file
+  useEffect(() => {
+    const getAudioUrl = () => {
+      if (audioUrl.startsWith('http')) {
+        // Already a full URL
+        return audioUrl;
+      } else {
+        // Generate public URL from Supabase storage
+        const { data } = supabase.storage
+          .from('admin-content')
+          .getPublicUrl(audioUrl);
+        return data.publicUrl;
+      }
+    };
+
+    setAudioSrc(getAudioUrl());
+  }, [audioUrl]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -61,11 +78,17 @@ export const AudioPlayer = ({
       setIsLoading(false);
     };
 
+    const handleError = (e: Event) => {
+      console.error('Audio loading error:', e);
+      setIsLoading(false);
+    };
+
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('ended', handleEnded);
     audio.addEventListener('loadstart', handleLoadStart);
     audio.addEventListener('canplay', handleCanPlay);
+    audio.addEventListener('error', handleError);
 
     return () => {
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
@@ -73,8 +96,9 @@ export const AudioPlayer = ({
       audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('loadstart', handleLoadStart);
       audio.removeEventListener('canplay', handleCanPlay);
+      audio.removeEventListener('error', handleError);
     };
-  }, [onEnded]);
+  }, [onEnded, audioSrc]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -83,7 +107,7 @@ export const AudioPlayer = ({
   }, [volume, isMuted]);
 
   const togglePlay = async () => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || !audioSrc) return;
 
     try {
       if (isPlaying) {
@@ -124,12 +148,23 @@ export const AudioPlayer = ({
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
+  if (!audioSrc) {
+    return (
+      <Card className="p-4 bg-white/90 dark:bg-nightsky-light/90 backdrop-blur-sm border-dream-light/20">
+        <div className="text-center text-gray-500">
+          No audio available
+        </div>
+      </Card>
+    );
+  }
+
   return (
     <Card className="p-4 bg-white/90 dark:bg-nightsky-light/90 backdrop-blur-sm border-dream-light/20">
       <audio 
         ref={audioRef} 
         src={audioSrc}
         preload="metadata"
+        crossOrigin="anonymous"
       />
       
       <div className="space-y-4">
