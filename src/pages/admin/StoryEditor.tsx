@@ -560,7 +560,7 @@ const StoryEditor = () => {
             is_published: storyData.is_published,
             languages: storyData.languages,
             audio_mode: storyData.audio_mode,
-            story_audio: storyAudioUrls
+            story_audio: JSON.stringify(storyAudioUrls)
           })
           .select('id')
           .single();
@@ -580,7 +580,7 @@ const StoryEditor = () => {
             is_published: storyData.is_published,
             languages: storyData.languages,
             audio_mode: storyData.audio_mode,
-            story_audio: storyAudioUrls
+            story_audio: JSON.stringify(storyAudioUrls)
           })
           .eq("id", storyId);
           
