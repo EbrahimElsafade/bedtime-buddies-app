@@ -64,10 +64,21 @@ export const useStoryData = (storyId: string | undefined) => {
         return {} as Record<string, string>;
       })();
 
+      // Transform multilingual story audio
+      const storyAudio = (() => {
+        if (typeof storyData.story_audio === 'string') {
+          return { en: storyData.story_audio };
+        } else if (storyData.story_audio && typeof storyData.story_audio === 'object') {
+          return storyData.story_audio as Record<string, string>;
+        }
+        return null;
+      })();
+
       return {
         ...storyData,
         title,
         description,
+        story_audio: storyAudio,
         audio_mode: (storyData.audio_mode || "per_section") as "per_section" | "single_story",
         sections
       };

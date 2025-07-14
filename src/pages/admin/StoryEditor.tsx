@@ -64,8 +64,8 @@ const StoryEditor = () => {
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(null);
   const [playingAudio, setPlayingAudio] = useState<{ sectionIndex: number; language: string } | null>(null);
-  const [storyAudioFile, setStoryAudioFile] = useState<File | null>(null);
-  const [storyAudioPreview, setStoryAudioPreview] = useState<string | null>(null);
+  const [storyAudioFiles, setStoryAudioFiles] = useState<Record<string, File>>({});
+  const [storyAudioPreviews, setStoryAudioPreviews] = useState<Record<string, string>>({});
   
   // Story form data - Updated to handle multilingual titles and descriptions
   const [storyData, setStoryData] = useState({
@@ -78,7 +78,7 @@ const StoryEditor = () => {
     languages: ["en"],
     cover_image: null as string | null,
     audio_mode: "per_section" as "per_section" | "single_story",
-    story_audio: null as string | null,
+    story_audio: {} as Record<string, string>,
   });
 
   // Story sections
@@ -151,10 +151,15 @@ const StoryEditor = () => {
       setCoverImagePreview(imageUrl);
     }
 
-    // Set story audio preview if exists
-    if (story.story_audio) {
-      const audioUrl = getImageUrl(story.story_audio);
-      setStoryAudioPreview(audioUrl);
+    // Set story audio previews if exists
+    if (story.story_audio && typeof story.story_audio === 'object') {
+      const audioUrls: Record<string, string> = {};
+      Object.entries(story.story_audio as Record<string, string>).forEach(([lang, audioFile]) => {
+        if (audioFile) {
+          audioUrls[lang] = getImageUrl(audioFile);
+        }
+      });
+      setStoryAudioPreviews(audioUrls);
     }
     
     // Format sections for the UI - ensure all sections have proper structure
@@ -184,11 +189,22 @@ const StoryEditor = () => {
       }
       return {} as Record<string, string>;
     })();
+
+    // Handle multilingual story audio
+    const storyAudio = (() => {
+      if (typeof story.story_audio === 'string') {
+        return { en: story.story_audio };
+      } else if (story.story_audio && typeof story.story_audio === 'object') {
+        return story.story_audio as Record<string, string>;
+      }
+      return {} as Record<string, string>;
+    })();
     
     return {
       ...story,
       title,
       description,
+      story_audio: storyAudio,
       audio_mode: (story.audio_mode || "per_section") as "per_section" | "single_story",
       sections: formattedSections
     };
@@ -208,6 +224,7 @@ const StoryEditor = () => {
       // Handle multilingual title and description
       let titleObj = {};
       let descriptionObj = {};
+      let storyAudioObj = {};
       
       if (typeof storyDetails.title === 'string') {
         titleObj = { en: storyDetails.title };
@@ -220,6 +237,12 @@ const StoryEditor = () => {
       } else if (storyDetails.description && typeof storyDetails.description === 'object') {
         descriptionObj = storyDetails.description as Record<string, string>;
       }
+
+      if (typeof storyDetails.story_audio === 'string') {
+        storyAudioObj = { en: storyDetails.story_audio };
+      } else if (storyDetails.story_audio && typeof storyDetails.story_audio === 'object') {
+        storyAudioObj = storyDetails.story_audio as Record<string, string>;
+      }
       
       setStoryData({
         title: titleObj,
@@ -231,7 +254,7 @@ const StoryEditor = () => {
         languages: storyDetails.languages || ["en"],
         cover_image: storyDetails.cover_image,
         audio_mode: (storyDetails.audio_mode || "per_section") as "per_section" | "single_story",
-        story_audio: storyDetails.story_audio,
+        story_audio: storyAudioObj,
       });
       
       if (storyDetails.sections) {
@@ -263,6 +286,7 @@ const StoryEditor = () => {
   useEffect(() => {
     const updatedTitle = { ...storyData.title };
     const updatedDescription = { ...storyData.description };
+    const updatedStoryAudio = { ...storyData.story_audio };
     
     storyData.languages.forEach(lang => {
       if (!updatedTitle[lang]) {
@@ -271,14 +295,19 @@ const StoryEditor = () => {
       if (!updatedDescription[lang]) {
         updatedDescription[lang] = "";
       }
+      if (!updatedStoryAudio[lang]) {
+        updatedStoryAudio[lang] = "";
+      }
     });
     
     if (JSON.stringify(updatedTitle) !== JSON.stringify(storyData.title) || 
-        JSON.stringify(updatedDescription) !== JSON.stringify(storyData.description)) {
+        JSON.stringify(updatedDescription) !== JSON.stringify(storyData.description) ||
+        JSON.stringify(updatedStoryAudio) !== JSON.stringify(storyData.story_audio)) {
       setStoryData(prev => ({
         ...prev,
         title: updatedTitle,
-        description: updatedDescription
+        description: updatedDescription,
+        story_audio: updatedStoryAudio
       }));
     }
   }, [storyData.languages]);
@@ -298,11 +327,11 @@ const StoryEditor = () => {
   };
 
   // Handle story audio file change
-  const handleStoryAudioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleStoryAudioChange = (language: string, e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      setStoryAudioFile(file);
-      setStoryAudioPreview(URL.createObjectURL(file));
+      setStoryAudioFiles(prev => ({ ...prev, [language]: file }));
+      setStoryAudioPreviews(prev => ({ ...prev, [language]: URL.createObjectURL(file) }));
     }
   };
   
@@ -312,12 +341,14 @@ const StoryEditor = () => {
       const updatedLanguages = [...storyData.languages, language];
       const updatedTitle = { ...storyData.title, [language]: "" };
       const updatedDescription = { ...storyData.description, [language]: "" };
+      const updatedStoryAudio = { ...storyData.story_audio, [language]: "" };
       
       setStoryData({
         ...storyData, 
         languages: updatedLanguages,
         title: updatedTitle,
-        description: updatedDescription
+        description: updatedDescription,
+        story_audio: updatedStoryAudio
       });
       
       // Add language fields to all sections
@@ -341,14 +372,17 @@ const StoryEditor = () => {
     const updatedLanguages = storyData.languages.filter(lang => lang !== language);
     const updatedTitle = { ...storyData.title };
     const updatedDescription = { ...storyData.description };
+    const updatedStoryAudio = { ...storyData.story_audio };
     delete updatedTitle[language];
     delete updatedDescription[language];
+    delete updatedStoryAudio[language];
     
     setStoryData({
       ...storyData,
       languages: updatedLanguages,
       title: updatedTitle,
-      description: updatedDescription
+      description: updatedDescription,
+      story_audio: updatedStoryAudio
     });
     
     // Remove language fields from all sections
@@ -365,6 +399,14 @@ const StoryEditor = () => {
       };
     });
     setStorySections(updatedSections);
+
+    // Remove audio files for this language
+    const newStoryAudioFiles = { ...storyAudioFiles };
+    const newStoryAudioPreviews = { ...storyAudioPreviews };
+    delete newStoryAudioFiles[language];
+    delete newStoryAudioPreviews[language];
+    setStoryAudioFiles(newStoryAudioFiles);
+    setStoryAudioPreviews(newStoryAudioPreviews);
   };
 
   // Functions to update multilingual titles and descriptions
@@ -455,7 +497,7 @@ const StoryEditor = () => {
     
     try {
       let coverImageUrl = storyData.cover_image;
-      let storyAudioUrl = storyData.story_audio;
+      let storyAudioUrls = storyData.story_audio;
       
       // Upload cover image if changed
       if (coverImageFile) {
@@ -479,22 +521,28 @@ const StoryEditor = () => {
         console.log('Storing filename in DB:', coverImageUrl);
       }
 
-      // Upload story audio if changed and in single story mode
-      if (storyAudioFile && storyData.audio_mode === 'single_story') {
-        const filename = `story-audio-${Date.now()}-${storyAudioFile.name}`;
+      // Upload story audio files if changed and in single story mode
+      if (storyData.audio_mode === 'single_story' && Object.keys(storyAudioFiles).length > 0) {
+        const newStoryAudioUrls = { ...storyAudioUrls };
         
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from("admin-content")
-          .upload(`story-audio/${filename}`, storyAudioFile, {
-            cacheControl: '3600',
-            upsert: false
-          });
+        for (const [language, audioFile] of Object.entries(storyAudioFiles)) {
+          const filename = `story-audio-${Date.now()}-${language}-${audioFile.name}`;
           
-        if (uploadError) {
-          throw uploadError;
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from("admin-content")
+            .upload(`story-audio/${filename}`, audioFile, {
+              cacheControl: '3600',
+              upsert: false
+            });
+            
+          if (uploadError) {
+            throw uploadError;
+          }
+          
+          newStoryAudioUrls[language] = filename;
         }
         
-        storyAudioUrl = filename;
+        storyAudioUrls = newStoryAudioUrls;
       }
       
       // Create or update the story with multilingual data
@@ -512,7 +560,7 @@ const StoryEditor = () => {
             is_published: storyData.is_published,
             languages: storyData.languages,
             audio_mode: storyData.audio_mode,
-            story_audio: storyAudioUrl
+            story_audio: storyAudioUrls
           })
           .select('id')
           .single();
@@ -532,7 +580,7 @@ const StoryEditor = () => {
             is_published: storyData.is_published,
             languages: storyData.languages,
             audio_mode: storyData.audio_mode,
-            story_audio: storyAudioUrl
+            story_audio: storyAudioUrls
           })
           .eq("id", storyId);
           
@@ -635,6 +683,67 @@ const StoryEditor = () => {
       ) : (
         <form onSubmit={handleSubmit}>
           <div className="grid gap-6 mb-8">
+            {/* Languages Card - Moved to top */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Languages</CardTitle>
+                <CardDescription>Manage available languages for this story</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex flex-wrap gap-2">
+                  {storyData.languages.map(language => {
+                    const langOption = languages?.find(opt => opt.code === language);
+                    return (
+                      <Badge key={language} variant="outline" className="py-2 text-sm">
+                        {langOption?.name || language}
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="h-4 w-4 ml-1"
+                          onClick={() => handleRemoveLanguage(language)}
+                          disabled={storyData.languages.length === 1}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </Badge>
+                    );
+                  })}
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <Select onValueChange={handleAddLanguage}>
+                    <SelectTrigger className="w-[200px]">
+                      <SelectValue placeholder="Add language" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Languages</SelectLabel>
+                        {languagesLoading ? (
+                          <div className="px-2 py-1 text-sm text-muted-foreground">Loading languages...</div>
+                        ) : languages && languages.length > 0 ? (
+                          languages.map(language => (
+                            <SelectItem
+                              key={language.id}
+                              value={language.code}
+                              disabled={storyData.languages.includes(language.code)}
+                            >
+                              {language.name}
+                            </SelectItem>
+                          ))
+                        ) : (
+                          <div className="px-2 py-1 text-sm text-muted-foreground">No languages available</div>
+                        )}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  <Button type="button" variant="outline" size="sm">
+                    <Plus className="h-4 w-4 mr-1" /> Add Language
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* Story Details Card - Updated for multilingual support */}
             <Card>
               <CardHeader>
@@ -823,102 +932,64 @@ const StoryEditor = () => {
                   </span>
                 </div>
 
-                {/* Single Story Audio Upload */}
+                {/* Single Story Audio Upload - Now per language */}
                 {storyData.audio_mode === 'single_story' && (
-                  <div className="space-y-2">
-                    <Label>Story Audio</Label>
-                    <div className="flex items-center gap-4">
-                      {storyAudioPreview ? (
-                        <div className="flex items-center gap-2 p-2 border rounded">
-                          <Volume2 className="h-4 w-4" />
-                          <span className="text-sm">Audio uploaded</span>
-                          <Button
-                            type="button"
-                            size="icon"
-                            variant="ghost"
-                            className="h-6 w-6"
-                            onClick={() => {
-                              setStoryAudioPreview(null);
-                              setStoryAudioFile(null);
-                              setStoryData({ ...storyData, story_audio: null });
-                            }}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="text-sm text-muted-foreground">No audio uploaded</div>
-                      )}
-                      <Input 
-                        type="file"
-                        accept="audio/*"
-                        onChange={handleStoryAudioChange}
-                        className="flex-1"
-                      />
-                    </div>
+                  <div className="space-y-4">
+                    <Label>Story Audio (Per Language)</Label>
+                    <Tabs defaultValue={storyData.languages[0]} className="w-full">
+                      <TabsList>
+                        {storyData.languages.map(lang => {
+                          const langOption = languages?.find(opt => opt.code === lang);
+                          return (
+                            <TabsTrigger key={lang} value={lang}>
+                              {langOption?.name || lang}
+                            </TabsTrigger>
+                          );
+                        })}
+                      </TabsList>
+                      {storyData.languages.map(lang => (
+                        <TabsContent key={lang} value={lang} className="space-y-2">
+                          <div className="flex items-center gap-4">
+                            {storyAudioPreviews[lang] ? (
+                              <div className="flex items-center gap-2 p-2 border rounded">
+                                <Volume2 className="h-4 w-4" />
+                                <span className="text-sm">Audio uploaded ({languages?.find(opt => opt.code === lang)?.name})</span>
+                                <Button
+                                  type="button"
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-6 w-6"
+                                  onClick={() => {
+                                    const newPreviews = { ...storyAudioPreviews };
+                                    const newFiles = { ...storyAudioFiles };
+                                    delete newPreviews[lang];
+                                    delete newFiles[lang];
+                                    setStoryAudioPreviews(newPreviews);
+                                    setStoryAudioFiles(newFiles);
+                                    setStoryData(prev => ({
+                                      ...prev,
+                                      story_audio: { ...prev.story_audio, [lang]: "" }
+                                    }));
+                                  }}
+                                >
+                                  <X className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            ) : (
+                              <div className="text-sm text-muted-foreground">No audio uploaded for {languages?.find(opt => opt.code === lang)?.name}</div>
+                            )}
+                            <Input 
+                              type="file"
+                              accept="audio/*"
+                              onChange={(e) => handleStoryAudioChange(lang, e)}
+                              className="flex-1"
+                            />
+                          </div>
+                        </TabsContent>
+                      ))}
+                    </Tabs>
                   </div>
                 )}
-              </CardContent>
-            </Card>
-            
-            {/* Languages Card */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Languages</CardTitle>
-                <CardDescription>Manage available languages for this story</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex flex-wrap gap-2">
-                  {storyData.languages.map(language => {
-                    const langOption = languages?.find(opt => opt.code === language);
-                    return (
-                      <Badge key={language} variant="outline" className="py-2 text-sm">
-                        {langOption?.name || language}
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-4 w-4 ml-1"
-                          onClick={() => handleRemoveLanguage(language)}
-                          disabled={storyData.languages.length === 1}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      </Badge>
-                    );
-                  })}
-                </div>
-                
-                <div className="flex items-center gap-2">
-                  <Select onValueChange={handleAddLanguage}>
-                    <SelectTrigger className="w-[200px]">
-                      <SelectValue placeholder="Add language" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Languages</SelectLabel>
-                        {languagesLoading ? (
-                          <div className="px-2 py-1 text-sm text-muted-foreground">Loading languages...</div>
-                        ) : languages && languages.length > 0 ? (
-                          languages.map(language => (
-                            <SelectItem
-                              key={language.id}
-                              value={language.code}
-                              disabled={storyData.languages.includes(language.code)}
-                            >
-                              {language.name}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <div className="px-2 py-1 text-sm text-muted-foreground">No languages available</div>
-                        )}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                  <Button type="button" variant="outline" size="sm">
-                    <Plus className="h-4 w-4 mr-1" /> Add Language
-                  </Button>
-                </div>
               </CardContent>
             </Card>
 

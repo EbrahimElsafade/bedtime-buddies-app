@@ -12,7 +12,7 @@ export interface Story {
   created_at: string;
   updated_at: string;
   audio_mode: "per_section" | "single_story";
-  story_audio: string | null;
+  story_audio: Record<string, string> | null; // Changed to support multilingual audio
   sections: StorySection[];
 }
 

@@ -20,10 +20,17 @@ export const AudioControls = ({
   // Determine audio source based on mode
   const getAudioSource = () => {
     if (story.audio_mode === 'single_story' && story.story_audio) {
-      return {
-        url: story.story_audio,
-        title: `Story: ${typeof story.title === 'string' ? story.title : story.title[currentLanguage] || 'Unknown'}`
-      };
+      // Handle multilingual story audio
+      const audioUrl = typeof story.story_audio === 'string' 
+        ? story.story_audio 
+        : story.story_audio[currentLanguage] || story.story_audio[Object.keys(story.story_audio)[0]];
+      
+      if (audioUrl) {
+        return {
+          url: audioUrl,
+          title: `Story: ${typeof story.title === 'string' ? story.title : story.title[currentLanguage] || 'Unknown'}`
+        };
+      }
     } else if (story.audio_mode === 'per_section' && currentSection?.voices?.[currentLanguage]) {
       return {
         url: currentSection.voices[currentLanguage],
