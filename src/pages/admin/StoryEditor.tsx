@@ -151,10 +151,23 @@ const StoryEditor = () => {
       setCoverImagePreview(imageUrl);
     }
 
-    // Set story audio previews if exists
-    if (story.story_audio && typeof story.story_audio === 'object') {
+    // Handle story audio - parse JSON if it's a string
+    let parsedStoryAudio = {};
+    if (story.story_audio) {
+      if (typeof story.story_audio === 'string') {
+        try {
+          parsedStoryAudio = JSON.parse(story.story_audio);
+        } catch (e) {
+          // If parsing fails, treat as single language audio
+          parsedStoryAudio = { en: story.story_audio };
+        }
+      } else {
+        parsedStoryAudio = story.story_audio;
+      }
+      
+      // Set story audio previews
       const audioUrls: Record<string, string> = {};
-      Object.entries(story.story_audio as Record<string, string>).forEach(([lang, audioFile]) => {
+      Object.entries(parsedStoryAudio as Record<string, string>).forEach(([lang, audioFile]) => {
         if (audioFile) {
           audioUrls[lang] = getImageUrl(audioFile);
         }
@@ -190,21 +203,11 @@ const StoryEditor = () => {
       return {} as Record<string, string>;
     })();
 
-    // Handle multilingual story audio
-    const storyAudio = (() => {
-      if (typeof story.story_audio === 'string') {
-        return { en: story.story_audio };
-      } else if (story.story_audio && typeof story.story_audio === 'object') {
-        return story.story_audio as Record<string, string>;
-      }
-      return {} as Record<string, string>;
-    })();
-    
     return {
       ...story,
       title,
       description,
-      story_audio: storyAudio,
+      story_audio: parsedStoryAudio as Record<string, string>,
       audio_mode: (story.audio_mode || "per_section") as "per_section" | "single_story",
       sections: formattedSections
     };
@@ -239,7 +242,11 @@ const StoryEditor = () => {
       }
 
       if (typeof storyDetails.story_audio === 'string') {
-        storyAudioObj = { en: storyDetails.story_audio };
+        try {
+          storyAudioObj = JSON.parse(storyDetails.story_audio);
+        } catch {
+          storyAudioObj = { en: storyDetails.story_audio };
+        }
       } else if (storyDetails.story_audio && typeof storyDetails.story_audio === 'object') {
         storyAudioObj = storyDetails.story_audio as Record<string, string>;
       }
@@ -551,8 +558,8 @@ const StoryEditor = () => {
         const { data: newStory, error: storyError } = await supabase
           .from("stories")
           .insert({
-            title: storyData.title,
-            description: storyData.description,
+            title: JSON.stringify(storyData.title),
+            description: JSON.stringify(storyData.description),
             category: storyData.category,
             cover_image: coverImageUrl,
             duration: storyData.duration,
@@ -571,8 +578,8 @@ const StoryEditor = () => {
         const { error: storyError } = await supabase
           .from("stories")
           .update({
-            title: storyData.title,
-            description: storyData.description,
+            title: JSON.stringify(storyData.title),
+            description: JSON.stringify(storyData.description),
             category: storyData.category,
             cover_image: coverImageUrl,
             duration: storyData.duration,

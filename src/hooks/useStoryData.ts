@@ -48,7 +48,11 @@ export const useStoryData = (storyId: string | undefined) => {
       // Transform multilingual title and description to Record<string, string>
       const title = (() => {
         if (typeof storyData.title === 'string') {
-          return { en: storyData.title };
+          try {
+            return JSON.parse(storyData.title) as Record<string, string>;
+          } catch {
+            return { en: storyData.title };
+          }
         } else if (storyData.title && typeof storyData.title === 'object') {
           return storyData.title as Record<string, string>;
         }
@@ -57,17 +61,26 @@ export const useStoryData = (storyId: string | undefined) => {
 
       const description = (() => {
         if (typeof storyData.description === 'string') {
-          return { en: storyData.description };
+          try {
+            return JSON.parse(storyData.description) as Record<string, string>;
+          } catch {
+            return { en: storyData.description };
+          }
         } else if (storyData.description && typeof storyData.description === 'object') {
           return storyData.description as Record<string, string>;
         }
         return {} as Record<string, string>;
       })();
 
-      // Transform multilingual story audio
+      // Transform multilingual story audio - parse JSON if it's a string
       const storyAudio = (() => {
         if (typeof storyData.story_audio === 'string') {
-          return { en: storyData.story_audio };
+          try {
+            return JSON.parse(storyData.story_audio) as Record<string, string>;
+          } catch {
+            // If parsing fails, treat as single language audio
+            return { en: storyData.story_audio };
+          }
         } else if (storyData.story_audio && typeof storyData.story_audio === 'object') {
           return storyData.story_audio as Record<string, string>;
         }
