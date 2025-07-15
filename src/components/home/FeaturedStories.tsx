@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { ArrowRight, Clock } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
@@ -7,27 +6,12 @@ import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { getImageUrl } from "@/utils/imageUtils";
-import { getMultilingualText } from "@/utils/multilingualUtils";
+import { getMultilingualText, getStoryLanguageCode } from "@/utils/multilingualUtils";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const FeaturedStories = () => {
   const { t } = useTranslation(['misc', 'stories']);
   const { language } = useLanguage();
-
-  // Map website language to story language codes
-  const getStoryLanguageCode = (websiteLanguage: string) => {
-    switch (websiteLanguage) {
-      case 'ar':
-        return 'ar-eg'; // Default to Egyptian Arabic for Arabic website language
-      case 'en':
-        return 'en';
-      case 'fr':
-        return 'fr';
-      default:
-        return 'en';
-    }
-  };
-
   const currentStoryLanguage = getStoryLanguageCode(language);
 
   const { data: featuredStories = [], isLoading } = useQuery({

@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getImageUrl } from "@/utils/imageUtils";
-import { getMultilingualText } from "@/utils/multilingualUtils";
+import { getMultilingualText, getStoryLanguageCode } from "@/utils/multilingualUtils";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const Stories = () => {
@@ -24,21 +23,6 @@ const Stories = () => {
   }, [t]);
 
   const isRTL = i18n.language === 'ar';
-
-  // Map website language to story language codes
-  const getStoryLanguageCode = (websiteLanguage: string) => {
-    switch (websiteLanguage) {
-      case 'ar':
-        return 'ar-eg';
-      case 'en':
-        return 'en';
-      case 'fr':
-        return 'fr';
-      default:
-        return 'en';
-    }
-  };
-
   const currentStoryLanguage = getStoryLanguageCode(language);
 
   const { data: stories = [], isLoading } = useQuery({
