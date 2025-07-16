@@ -1,223 +1,146 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Upload, X, Plus, Trash2 } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { useTranslation } from "react-i18next";
+import { ArrowLeft, Plus, Trash2, Play } from "lucide-react";
 
 interface StoryFormData {
-  title: Record<string, string>;
-  description: Record<string, string>;
+  title: { en: string; ar: string; fr: string };
+  description: { en: string; ar: string; fr: string };
   category: string;
   duration: number;
   is_free: boolean;
   is_published: boolean;
   languages: string[];
   audio_mode: "per_section" | "single_story";
-  cover_image?: string;
-  story_audio?: Record<string, string>;
+  cover_image: string;
+  story_audio: { en: string; ar: string; fr: string } | null;
 }
 
 interface StorySection {
-  id?: string;
+  id: string;
   order: number;
-  texts: Record<string, string>;
-  voices?: Record<string, string>;
+  texts: { en: string; ar: string; fr: string };
+  voices?: { en: string; ar: string; fr: string };
   image?: string;
 }
 
-const StoryEditor = () => {
+export default function StoryEditor() {
   const navigate = useNavigate();
-  const { id } = useParams();
-  const { language } = useLanguage();
-  const { t } = useTranslation(['admin']);
-  const isEditing = !!id;
-
+  const { id: storyId } = useParams();
+  const isEditing = !!storyId;
+  
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<StoryFormData>({
     title: { en: "", ar: "", fr: "" },
     description: { en: "", ar: "", fr: "" },
-    category: "",
+    category: "adventure",
     duration: 5,
     is_free: true,
     is_published: false,
     languages: ["en"],
-    audio_mode: "per_section"
+    audio_mode: "per_section",
+    cover_image: "",
+    story_audio: null,
   });
-
+  
   const [sections, setSections] = useState<StorySection[]>([]);
-  const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
-  const [storyAudioFiles, setStoryAudioFiles] = useState<Record<string, File>>({});
-  const [sectionImageFiles, setSectionImageFiles] = useState<Record<string, File>>({});
-  const [sectionVoiceFiles, setSectionVoiceFiles] = useState<Record<string, Record<string, File>>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [sectionImages, setSectionImages] = useState<Record<string, string>>({});
 
-  // Fetch story details if editing
-  const { data: storyDetails, isLoading } = useQuery({
-    queryKey: ["story-details", id],
+  const { data: existingStory, isLoading } = useQuery({
+    queryKey: ["story-edit", storyId],
     queryFn: async () => {
-      if (!id) return null;
+      if (!storyId) return null;
       
       const { data: story, error: storyError } = await supabase
         .from("stories")
         .select("*")
-        .eq("id", id)
+        .eq("id", storyId)
         .single();
       
       if (storyError) throw storyError;
-
+      
       const { data: storySections, error: sectionsError } = await supabase
         .from("story_sections")
         .select("*")
-        .eq("story_id", id)
-        .order("order", { ascending: true });
+        .eq("story_id", storyId)
+        .order("order");
       
       if (sectionsError) throw sectionsError;
-
-      return {
-        ...story,
-        sections: storySections || []
-      };
-    },
-    enabled: isEditing
-  });
-
-  const { data: categories = [] } = useQuery({
-    queryKey: ["story-categories"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("story_categories")
-        .select("*")
-        .order("name");
       
-      if (error) throw error;
-      return data || [];
-    }
+      return { story, sections: storySections || [] };
+    },
+    enabled: isEditing,
   });
 
   useEffect(() => {
-    if (storyDetails && isEditing) {
-      console.log('StoryEditor - isEditing:', isEditing, 'id:', id, 'storyDetails:', storyDetails);
+    if (existingStory) {
+      const { story, sections: storySections } = existingStory;
       
-      // Parse title and description properly
-      const parseMultilingualField = (field: any): Record<string, string> => {
+      // Parse multilingual fields
+      const parseMultilingualField = (field: any) => {
         if (typeof field === 'string') {
           try {
-            // Try to parse as JSON first
-            const parsed = JSON.parse(field);
-            if (typeof parsed === 'object' && parsed !== null) {
-              return parsed;
-            }
-            // If it's just a string, assume it's English
-            return { en: field, ar: "", fr: "" };
+            return JSON.parse(field);
           } catch {
-            // If parsing fails, treat as English text
             return { en: field, ar: "", fr: "" };
           }
-        } else if (typeof field === 'object' && field !== null) {
-          // Already an object, ensure it has the required keys
-          return {
-            en: field.en || "",
-            ar: field.ar || "",
-            fr: field.fr || ""
-          };
         }
-        // Default fallback
-        return { en: "", ar: "", fr: "" };
-      };
-
-      const parsedTitle = parseMultilingualField(storyDetails.title);
-      const parsedDescription = parseMultilingualField(storyDetails.description);
-
-      // Parse story audio
-      const parseStoryAudio = (audio: any): Record<string, string> | undefined => {
-        if (typeof audio === 'string') {
-          try {
-            return JSON.parse(audio);
-          } catch {
-            return { en: audio };
-          }
-        } else if (typeof audio === 'object' && audio !== null) {
-          return audio;
-        }
-        return undefined;
+        return field || { en: "", ar: "", fr: "" };
       };
 
       setFormData({
-        title: parsedTitle,
-        description: parsedDescription,
-        category: storyDetails.category,
-        duration: storyDetails.duration,
-        is_free: storyDetails.is_free,
-        is_published: storyDetails.is_published,
-        languages: storyDetails.languages || ["en"],
-        audio_mode: (storyDetails.audio_mode as "per_section" | "single_story") || "per_section",
-        cover_image: storyDetails.cover_image,
-        story_audio: parseStoryAudio(storyDetails.story_audio)
+        title: parseMultilingualField(story.title),
+        description: parseMultilingualField(story.description),
+        category: story.category,
+        duration: story.duration,
+        is_free: story.is_free,
+        is_published: story.is_published,
+        languages: story.languages || ["en"],
+        audio_mode: story.audio_mode || "per_section",
+        cover_image: story.cover_image || "",
+        story_audio: story.story_audio ? parseMultilingualField(story.story_audio) : null,
       });
 
-      // Set sections
-      if (storyDetails.sections) {
-        setSections(storyDetails.sections.map((section: any) => ({
-          id: section.id,
-          order: section.order,
-          texts: section.texts || {},
-          voices: section.voices || {},
-          image: section.image
-        })));
-      }
-    }
-  }, [storyDetails, isEditing, id]);
+      const transformedSections = storySections.map((section: any) => ({
+        id: section.id,
+        order: section.order,
+        texts: parseMultilingualField(section.texts),
+        voices: section.voices ? parseMultilingualField(section.voices) : undefined,
+        image: section.image || "",
+      }));
 
-  const uploadFile = async (file: File, bucket: string, path: string): Promise<string> => {
-    const { data, error } = await supabase.storage
-      .from(bucket)
-      .upload(path, file, { upsert: true });
-    
-    if (error) throw error;
-    return data.path;
-  };
+      setSections(transformedSections);
+      
+      // Set section images
+      const imageMap: Record<string, string> = {};
+      transformedSections.forEach((section: StorySection) => {
+        if (section.image) {
+          imageMap[section.id] = section.image;
+        }
+      });
+      setSectionImages(imageMap);
+    }
+  }, [existingStory]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isSubmitting) return;
+    
+    if (!formData.title.en.trim() || !formData.description.en.trim()) {
+      toast.error("Title and description are required");
+      return;
+    }
 
     try {
       setIsSubmitting(true);
-
-      let coverImagePath = formData.cover_image;
-      let storyAudioPaths = formData.story_audio || {};
-
-      // Upload cover image if new file selected
-      if (coverImageFile) {
-        const timestamp = Date.now();
-        const fileName = `cover-${timestamp}-${coverImageFile.name}`;
-        coverImagePath = await uploadFile(coverImageFile, "admin-content", `story-covers/${fileName}`);
-      }
-
-      // Upload story audio files if in single_story mode
-      if (formData.audio_mode === "single_story") {
-        for (const [lang, file] of Object.entries(storyAudioFiles)) {
-          if (file) {
-            const timestamp = Date.now();
-            const fileName = `story-audio-${timestamp}-${lang}-${file.name}`;
-            const path = await uploadFile(file, "admin-content", `story-audio/${fileName}`);
-            storyAudioPaths[lang] = path;
-          }
-        }
-      }
-
-      // Prepare story data - convert story_audio to JSON string for database
+      
       const storyData = {
         title: formData.title,
         description: formData.description,
@@ -227,541 +150,584 @@ const StoryEditor = () => {
         is_published: formData.is_published,
         languages: formData.languages,
         audio_mode: formData.audio_mode,
-        cover_image: coverImagePath,
-        story_audio: Object.keys(storyAudioPaths).length > 0 ? JSON.stringify(storyAudioPaths) : null
+        cover_image: formData.cover_image,
+        story_audio: formData.story_audio ? JSON.stringify(formData.story_audio) : null,
       };
 
-      let storyId = id;
-
-      if (isEditing) {
-        // Update existing story
-        const { error: updateError } = await supabase
+      if (isEditing && storyId) {
+        const { error } = await supabase
           .from("stories")
           .update(storyData)
-          .eq("id", id);
+          .eq("id", storyId);
         
-        if (updateError) throw updateError;
+        if (error) throw error;
+        toast.success("Story updated successfully!");
       } else {
-        // Create new story
-        const { data: newStory, error: insertError } = await supabase
+        const { error } = await supabase
           .from("stories")
-          .insert(storyData)
-          .select()
-          .single();
+          .insert([storyData]);
         
-        if (insertError) throw insertError;
-        storyId = newStory.id;
+        if (error) throw error;
+        toast.success("Story created successfully!");
+        navigate("/admin/stories");
       }
-
-      // Handle sections
-      if (sections.length > 0) {
-        // Delete existing sections if editing
-        if (isEditing) {
-          const { error: deleteError } = await supabase
-            .from("story_sections")
-            .delete()
-            .eq("story_id", storyId);
-          
-          if (deleteError) throw deleteError;
-        }
-
-        // Upload section images and voices
-        const sectionsToInsert = [];
-        
-        for (const section of sections) {
-          let sectionImagePath = section.image;
-          const sectionVoicePaths = { ...section.voices } || {};
-
-          // Upload section image if new file
-          const sectionKey = section.id || `new-${section.order}`;
-          if (sectionImageFiles[sectionKey]) {
-            const timestamp = Date.now();
-            const fileName = `section-${storyId}-${section.order}-${timestamp}-${sectionImageFiles[sectionKey].name}`;
-            sectionImagePath = await uploadFile(sectionImageFiles[sectionKey], "admin-content", `story-sections/${fileName}`);
-          }
-
-          // Upload section voices if per_section mode
-          if (formData.audio_mode === "per_section" && sectionVoiceFiles[sectionKey]) {
-            for (const [lang, file] of Object.entries(sectionVoiceFiles[sectionKey] || {})) {
-              if (file) {
-                const timestamp = Date.now();
-                const fileName = `section-voice-${storyId}-${section.order}-${lang}-${timestamp}-${file.name}`;
-                const path = await uploadFile(file, "admin-content", `story-voices/${fileName}`);
-                sectionVoicePaths[lang] = path;
-              }
-            }
-          }
-
-          sectionsToInsert.push({
-            story_id: storyId,
-            order: section.order,
-            texts: section.texts,
-            voices: sectionVoicePaths,
-            image: sectionImagePath
-          });
-        }
-
-        // Insert sections
-        const { error: sectionsError } = await supabase
-          .from("story_sections")
-          .insert(sectionsToInsert);
-        
-        if (sectionsError) throw sectionsError;
-      }
-
-      toast.success(isEditing ? "Story updated successfully!" : "Story created successfully!");
-      navigate("/admin/stories");
     } catch (error) {
       console.error("Error saving story:", error);
-      toast.error("Failed to save story. Please try again.");
+      toast.error("Failed to save story");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const addSection = () => {
-    const newSection: StorySection = {
-      order: sections.length + 1,
-      texts: formData.languages.reduce((acc, lang) => {
-        acc[lang] = "";
-        return acc;
-      }, {} as Record<string, string>),
-      voices: {}
-    };
-    setSections([...sections, newSection]);
+  const uploadImage = async (file: File, type: 'cover' | 'section', sectionId?: string) => {
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = type === 'cover' 
+        ? `covers/${fileName}` 
+        : `sections/${fileName}`;
+
+      const { data, error } = await supabase.storage
+        .from('story-images')
+        .upload(filePath, file);
+
+      if (error) throw error;
+
+      const { data: urlData } = supabase.storage
+        .from('story-images')
+        .getPublicUrl(filePath);
+
+      if (type === 'cover') {
+        setFormData(prev => ({ ...prev, cover_image: urlData.publicUrl }));
+      } else if (sectionId) {
+        setSectionImages(prev => ({ ...prev, [sectionId]: urlData.publicUrl }));
+      }
+
+      return urlData.publicUrl;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Failed to upload image');
+      return null;
+    }
   };
 
-  const removeSection = (index: number) => {
-    setSections(sections.filter((_, i) => i !== index));
-  };
+  const uploadAudio = async (file: File, type: 'story' | 'section', language: string, sectionId?: string) => {
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}.${fileExt}`;
+      const filePath = type === 'story' 
+        ? `story-audio/${fileName}` 
+        : `section-audio/${fileName}`;
 
-  const updateSection = (index: number, field: keyof StorySection, value: any) => {
-    const updatedSections = [...sections];
-    updatedSections[index] = { ...updatedSections[index], [field]: value };
-    setSections(updatedSections);
-  };
+      const { data, error } = await supabase.storage
+        .from('story-audio')
+        .upload(filePath, file);
 
-  const updateSectionText = (index: number, language: string, text: string) => {
-    const updatedSections = [...sections];
-    updatedSections[index].texts[language] = text;
-    setSections(updatedSections);
+      if (error) throw error;
+
+      const { data: urlData } = supabase.storage
+        .from('story-audio')
+        .getPublicUrl(filePath);
+
+      if (type === 'story') {
+        setFormData(prev => ({
+          ...prev,
+          story_audio: {
+            ...prev.story_audio,
+            [language]: urlData.publicUrl
+          } as { en: string; ar: string; fr: string }
+        }));
+      } else if (sectionId) {
+        setSections(prev => prev.map(section => 
+          section.id === sectionId 
+            ? {
+                ...section,
+                voices: {
+                  ...section.voices,
+                  [language]: urlData.publicUrl
+                } as { en: string; ar: string; fr: string }
+              }
+            : section
+        ));
+      }
+
+      return urlData.publicUrl;
+    } catch (error) {
+      console.error('Error uploading audio:', error);
+      toast.error('Failed to upload audio');
+      return null;
+    }
   };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-dream-DEFAULT mx-auto mb-4"></div>
-          <p>Loading story...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p>Loading story editor...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-6 px-4">
-      <div className="flex items-center gap-4 mb-6">
-        <Button variant="ghost" onClick={() => navigate("/admin/stories")}>
-          <ArrowLeft className="h-4 w-4 mr-2" />
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-6">
+        <Button variant="outline" onClick={() => navigate("/admin/stories")}>
+          <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Stories
         </Button>
-        <h1 className="text-2xl font-bold">
-          {isEditing ? "Edit Story" : "Create New Story"}
-        </h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Basic Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Basic Information</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {/* Multilingual Title */}
-            <div className="space-y-2">
-              <Label>Story Title</Label>
-              <Tabs defaultValue="en" className="w-full">
-                <TabsList>
-                  <TabsTrigger value="en">English</TabsTrigger>
-                  <TabsTrigger value="ar">Arabic</TabsTrigger>
-                  <TabsTrigger value="fr">French</TabsTrigger>
-                </TabsList>
-                <TabsContent value="en">
+      <Card>
+        <CardHeader>
+          <CardTitle>{isEditing ? "Edit Story" : "Create New Story"}</CardTitle>
+          <CardDescription>
+            {isEditing ? "Update the story details below" : "Fill in the details to create a new story"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Title Section */}
+            <div>
+              <Label htmlFor="title" className="text-base font-medium">
+                Title (Required)
+              </Label>
+              <div className="space-y-3 mt-2">
+                <div>
+                  <Label htmlFor="title-en" className="text-sm text-muted-foreground">
+                    English
+                  </Label>
                   <Input
+                    id="title-en"
+                    type="text"
                     value={formData.title.en}
-                    onChange={(e) => setFormData({
-                      ...formData,
-                      title: { ...formData.title, en: e.target.value }
-                    })}
+                    onChange={(e) => setFormData(prev => ({
+                      ...prev,
+                      title: { ...prev.title, en: e.target.value }
+                    }))}
                     placeholder="Enter English title"
                     required
                   />
-                </TabsContent>
-                <TabsContent value="ar">
+                </div>
+                <div>
+                  <Label htmlFor="title-ar" className="text-sm text-muted-foreground">
+                    Arabic
+                  </Label>
                   <Input
+                    id="title-ar"
+                    type="text"
                     value={formData.title.ar}
-                    onChange={(e) => setFormData({
-                      ...formData,
-                      title: { ...formData.title, ar: e.target.value }
-                    })}
+                    onChange={(e) => setFormData(prev => ({
+                      ...prev,
+                      title: { ...prev.title, ar: e.target.value }
+                    }))}
                     placeholder="أدخل العنوان بالعربية"
                     dir="rtl"
                   />
-                </TabsContent>
-                <TabsContent value="fr">
+                </div>
+                <div>
+                  <Label htmlFor="title-fr" className="text-sm text-muted-foreground">
+                    French
+                  </Label>
                   <Input
+                    id="title-fr"
+                    type="text"
                     value={formData.title.fr}
-                    onChange={(e) => setFormData({
-                      ...formData,
-                      title: { ...formData.title, fr: e.target.value }
-                    })}
+                    onChange={(e) => setFormData(prev => ({
+                      ...prev,
+                      title: { ...prev.title, fr: e.target.value }
+                    }))}
                     placeholder="Entrez le titre en français"
                   />
-                </TabsContent>
-              </Tabs>
+                </div>
+              </div>
             </div>
 
-            {/* Multilingual Description */}
-            <div className="space-y-2">
-              <Label>Story Description</Label>
-              <Tabs defaultValue="en" className="w-full">
-                <TabsList>
-                  <TabsTrigger value="en">English</TabsTrigger>
-                  <TabsTrigger value="ar">Arabic</TabsTrigger>
-                  <TabsTrigger value="fr">French</TabsTrigger>
-                </TabsList>
-                <TabsContent value="en">
+            {/* Description Section */}
+            <div>
+              <Label htmlFor="description" className="text-base font-medium">
+                Description (Required)
+              </Label>
+              <div className="space-y-3 mt-2">
+                <div>
+                  <Label htmlFor="description-en" className="text-sm text-muted-foreground">
+                    English
+                  </Label>
                   <Textarea
+                    id="description-en"
                     value={formData.description.en}
-                    onChange={(e) => setFormData({
-                      ...formData,
-                      description: { ...formData.description, en: e.target.value }
-                    })}
+                    onChange={(e) => setFormData(prev => ({
+                      ...prev,
+                      description: { ...prev.description, en: e.target.value }
+                    }))}
                     placeholder="Enter English description"
-                    rows={3}
                     required
                   />
-                </TabsContent>
-                <TabsContent value="ar">
+                </div>
+                <div>
+                  <Label htmlFor="description-ar" className="text-sm text-muted-foreground">
+                    Arabic
+                  </Label>
                   <Textarea
+                    id="description-ar"
                     value={formData.description.ar}
-                    onChange={(e) => setFormData({
-                      ...formData,
-                      description: { ...formData.description, ar: e.target.value }
-                    })}
+                    onChange={(e) => setFormData(prev => ({
+                      ...prev,
+                      description: { ...prev.description, ar: e.target.value }
+                    }))}
                     placeholder="أدخل الوصف بالعربية"
-                    rows={3}
                     dir="rtl"
                   />
-                </TabsContent>
-                <TabsContent value="fr">
+                </div>
+                <div>
+                  <Label htmlFor="description-fr" className="text-sm text-muted-foreground">
+                    French
+                  </Label>
                   <Textarea
+                    id="description-fr"
                     value={formData.description.fr}
-                    onChange={(e) => setFormData({
-                      ...formData,
-                      description: { ...formData.description, fr: e.target.value }
-                    })}
+                    onChange={(e) => setFormData(prev => ({
+                      ...prev,
+                      description: { ...prev.description, fr: e.target.value }
+                    }))}
                     placeholder="Entrez la description en français"
-                    rows={3}
                   />
-                </TabsContent>
-              </Tabs>
+                </div>
+              </div>
             </div>
 
+            {/* Rest of the form fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
+              <div>
                 <Label htmlFor="category">Category</Label>
-                <Select value={formData.category} onValueChange={(value) => setFormData({ ...formData, category: value })}>
+                <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a category" />
+                    <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category.id} value={category.name}>
-                        {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
-                      </SelectItem>
-                    ))}
+                    <SelectItem value="adventure">Adventure</SelectItem>
+                    <SelectItem value="fantasy">Fantasy</SelectItem>
+                    <SelectItem value="educational">Educational</SelectItem>
+                    <SelectItem value="animals">Animals</SelectItem>
+                    <SelectItem value="friendship">Friendship</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <div className="space-y-2">
+              <div>
                 <Label htmlFor="duration">Duration (minutes)</Label>
                 <Input
                   id="duration"
                   type="number"
                   min="1"
                   value={formData.duration}
-                  onChange={(e) => setFormData({ ...formData, duration: parseInt(e.target.value) || 1 })}
-                  required
+                  onChange={(e) => setFormData(prev => ({ ...prev, duration: parseInt(e.target.value) || 0 }))}
+                  placeholder="5"
                 />
               </div>
             </div>
 
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="is_free"
-                  checked={formData.is_free}
-                  onCheckedChange={(checked) => setFormData({ ...formData, is_free: checked })}
-                />
-                <Label htmlFor="is_free">Free Story</Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="is_published"
-                  checked={formData.is_published}
-                  onCheckedChange={(checked) => setFormData({ ...formData, is_published: checked })}
-                />
-                <Label htmlFor="is_published">Published</Label>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Cover Image Upload */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Cover Image</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center gap-4">
-              {formData.cover_image && !coverImageFile && (
-                <div className="relative w-32 h-20 rounded overflow-hidden border border-muted-foreground">
-                  <img src={supabase.storage.from("admin-content").getPublicUrl(formData.cover_image).data.publicUrl} alt="Cover" className="object-cover w-full h-full" />
-                  <button
-                    type="button"
-                    className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1"
-                    onClick={() => setFormData({ ...formData, cover_image: undefined })}
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              )}
-              {coverImageFile && (
-                <div className="relative w-32 h-20 rounded overflow-hidden border border-muted-foreground">
-                  <img src={URL.createObjectURL(coverImageFile)} alt="Cover Preview" className="object-cover w-full h-full" />
-                  <button
-                    type="button"
-                    className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1"
-                    onClick={() => setCoverImageFile(null)}
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
-              )}
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => {
-                  const input = document.createElement("input");
-                  input.type = "file";
-                  input.accept = "image/*";
-                  input.onchange = (e: any) => {
-                    if (e.target.files && e.target.files[0]) {
-                      setCoverImageFile(e.target.files[0]);
+            {/* Cover Image Upload */}
+            <div>
+              <Label>Cover Image</Label>
+              <div className="mt-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      uploadImage(file, 'cover');
                     }
-                  };
-                  input.click();
-                }}
-              >
-                <Upload className="h-4 w-4 mr-2" />
-                Upload Cover Image
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Audio Mode */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Audio Mode</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Select value={formData.audio_mode} onValueChange={(value) => setFormData({ ...formData, audio_mode: value as "per_section" | "single_story" })}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="per_section">Per Section Audio</SelectItem>
-                <SelectItem value="single_story">Single Story Audio</SelectItem>
-              </SelectContent>
-            </Select>
-
-            {formData.audio_mode === "single_story" && (
-              <div className="mt-4 space-y-4">
-                <Label>Upload Story Audio Files</Label>
-                {formData.languages.map((lang) => (
-                  <div key={lang} className="flex items-center gap-4">
-                    <span className="w-16">{lang.toUpperCase()}</span>
-                    <input
-                      type="file"
-                      accept="audio/*"
-                      onChange={(e) => {
-                        if (e.target.files && e.target.files[0]) {
-                          setStoryAudioFiles({ ...storyAudioFiles, [lang]: e.target.files[0] });
-                        }
-                      }}
-                    />
-                    {formData.story_audio && formData.story_audio[lang] && !storyAudioFiles[lang] && (
-                      <audio controls src={supabase.storage.from("admin-content").getPublicUrl(formData.story_audio[lang]).data.publicUrl} />
-                    )}
-                    {storyAudioFiles[lang] && (
-                      <span>{storyAudioFiles[lang].name}</span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Sections */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Story Sections</CardTitle>
-            <Button type="button" variant="outline" size="sm" onClick={addSection}>
-              <Plus className="h-4 w-4 mr-2" />
-              Add Section
-            </Button>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {sections.map((section, index) => (
-              <Card key={section.id || index} className="border border-muted-foreground p-4 rounded">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="font-semibold">Section {section.order}</h3>
-                  <Button type="button" variant="destructive" size="icon" onClick={() => removeSection(index)} aria-label="Remove section">
-                    <Trash2 size={16} />
-                  </Button>
-                </div>
-
-                <Tabs defaultValue={formData.languages[0]} className="w-full">
-                  <TabsList>
-                    {formData.languages.map((lang) => (
-                      <TabsTrigger key={lang} value={lang}>
-                        {lang.toUpperCase()}
-                      </TabsTrigger>
-                    ))}
-                  </TabsList>
-
-                  {formData.languages.map((lang) => (
-                    <TabsContent key={lang} value={lang}>
-                      <Label>Text ({lang.toUpperCase()})</Label>
-                      <Textarea
-                        value={section.texts[lang] || ""}
-                        onChange={(e) => updateSectionText(index, lang, e.target.value)}
-                        rows={3}
-                        className={lang === "ar" ? "dir-rtl" : ""}
-                      />
-                    </TabsContent>
-                  ))}
-                </Tabs>
-
-                {/* Section Image Upload */}
-                <div className="mt-4">
-                  <Label>Section Image</Label>
-                  <div className="flex items-center gap-4">
-                    {section.image && !sectionImageFiles[section.id || `new-${section.order}`] && (
-                      <div className="relative w-32 h-20 rounded overflow-hidden border border-muted-foreground">
-                        <img src={supabase.storage.from("admin-content").getPublicUrl(section.image).data.publicUrl} alt="Section" className="object-cover w-full h-full" />
-                        <button
-                          type="button"
-                          className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1"
-                          onClick={() => updateSection(index, "image", undefined)}
-                        >
-                          <X size={16} />
-                        </button>
-                      </div>
-                    )}
-                    {sectionImageFiles[section.id || `new-${section.order}`] && (
-                      <div className="relative w-32 h-20 rounded overflow-hidden border border-muted-foreground">
-                        <img src={URL.createObjectURL(sectionImageFiles[section.id || `new-${section.order}`])} alt="Section Preview" className="object-cover w-full h-full" />
-                        <button
-                          type="button"
-                          className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1"
-                          onClick={() => {
-                            const newFiles = { ...sectionImageFiles };
-                            delete newFiles[section.id || `new-${section.order}`];
-                            setSectionImageFiles(newFiles);
-                          }}
-                        >
-                          <X size={16} />
-                        </button>
-                      </div>
-                    )}
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => {
-                        const input = document.createElement("input");
-                        input.type = "file";
-                        input.accept = "image/*";
-                        input.onchange = (e: any) => {
-                          if (e.target.files && e.target.files[0]) {
-                            setSectionImageFiles({
-                              ...sectionImageFiles,
-                              [section.id || `new-${section.order}`]: e.target.files[0]
-                            });
-                          }
-                        };
-                        input.click();
-                      }}
-                    >
-                      <Upload className="h-4 w-4 mr-2" />
-                      Upload Image
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Section Voices Upload (only if per_section mode) */}
-                {formData.audio_mode === "per_section" && (
+                  }}
+                  className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
+                />
+                {formData.cover_image && (
                   <div className="mt-4">
-                    <Label>Section Voices</Label>
-                    {formData.languages.map((lang) => (
-                      <div key={lang} className="flex items-center gap-4 mb-2">
-                        <span className="w-16">{lang.toUpperCase()}</span>
+                    <img 
+                      src={formData.cover_image} 
+                      alt="Cover preview" 
+                      className="max-w-xs h-auto rounded-lg border"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Audio Mode Selection */}
+            <div>
+              <Label className="text-base font-medium">Audio Mode</Label>
+              <div className="mt-2 space-y-3">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="per_section"
+                    name="audio_mode"
+                    value="per_section"
+                    checked={formData.audio_mode === "per_section"}
+                    onChange={(e) => setFormData(prev => ({ ...prev, audio_mode: e.target.value as "per_section" | "single_story" }))}
+                  />
+                  <Label htmlFor="per_section">Per Section Audio</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="single_story"
+                    name="audio_mode"
+                    value="single_story"
+                    checked={formData.audio_mode === "single_story"}
+                    onChange={(e) => setFormData(prev => ({ ...prev, audio_mode: e.target.value as "per_section" | "single_story" }))}
+                  />
+                  <Label htmlFor="single_story">Single Story Audio</Label>
+                </div>
+              </div>
+            </div>
+
+            {/* Single Story Audio Upload */}
+            {formData.audio_mode === "single_story" && (
+              <div>
+                <Label className="text-base font-medium">Story Audio Files</Label>
+                <div className="space-y-4 mt-2">
+                  {(['en', 'ar', 'fr'] as const).map((lang) => (
+                    <div key={lang}>
+                      <Label className="text-sm text-muted-foreground">
+                        {lang === 'en' ? 'English' : lang === 'ar' ? 'Arabic' : 'French'} Audio
+                      </Label>
+                      <div className="flex items-center space-x-2 mt-1">
                         <input
                           type="file"
                           accept="audio/*"
                           onChange={(e) => {
-                            if (e.target.files && e.target.files[0]) {
-                              setSectionVoiceFiles({
-                                ...sectionVoiceFiles,
-                                [section.id || `new-${section.order}`]: {
-                                  ...(sectionVoiceFiles[section.id || `new-${section.order}`] || {}),
-                                  [lang]: e.target.files[0]
-                                }
-                              });
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              uploadAudio(file, 'story', lang);
                             }
                           }}
+                          className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-secondary file:text-secondary-foreground hover:file:bg-secondary/80"
                         />
-                        {section.voices && section.voices[lang] && !(sectionVoiceFiles[section.id || `new-${section.order}`]?.[lang]) && (
-                          <audio controls src={supabase.storage.from("admin-content").getPublicUrl(section.voices[lang]).data.publicUrl} />
-                        )}
-                        {sectionVoiceFiles[section.id || `new-${section.order}`]?.[lang] && (
-                          <span>{sectionVoiceFiles[section.id || `new-${section.order}`][lang].name}</span>
+                        {formData.story_audio?.[lang] && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              const audio = new Audio(formData.story_audio![lang]);
+                              audio.play();
+                            }}
+                          >
+                            <Play className="h-4 w-4 mr-1" />
+                            Play
+                          </Button>
                         )}
                       </div>
-                    ))}
-                  </div>
-                )}
-              </Card>
-            ))}
-          </CardContent>
-        </Card>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
-        <div className="flex justify-end space-x-4">
-          <Button type="button" variant="outline" onClick={() => navigate("/admin/stories")}>
-            Cancel
-          </Button>
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Saving..." : (isEditing ? "Update Story" : "Create Story")}
-          </Button>
-        </div>
-      </form>
+            {/* Story Sections */}
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <Label className="text-base font-medium">Story Sections</Label>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    const newSectionId = `section-${Date.now()}`;
+                    setSections(prev => [...prev, {
+                      id: newSectionId,
+                      order: prev.length + 1,
+                      texts: { en: '', ar: '', fr: '' },
+                      voices: formData.audio_mode === "per_section" ? { en: '', ar: '', fr: '' } : undefined,
+                      image: ''
+                    }]);
+                  }}
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Section
+                </Button>
+              </div>
+
+              {sections.map((section, index) => (
+                <Card key={section.id} className="mb-4">
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg">Section {section.order}</CardTitle>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSections(prev => prev.filter(s => s.id !== section.id));
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {/* Section Text */}
+                    <div>
+                      <Label className="text-sm font-medium">Section Text</Label>
+                      <div className="space-y-3 mt-2">
+                        <div>
+                          <Label className="text-xs text-muted-foreground">English</Label>
+                          <Textarea
+                            value={section.texts.en}
+                            onChange={(e) => {
+                              setSections(prev => prev.map(s => 
+                                s.id === section.id 
+                                  ? { ...s, texts: { ...s.texts, en: e.target.value } }
+                                  : s
+                              ));
+                            }}
+                            placeholder="Enter English text"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-xs text-muted-foreground">Arabic</Label>
+                          <Textarea
+                            value={section.texts.ar}
+                            onChange={(e) => {
+                              setSections(prev => prev.map(s => 
+                                s.id === section.id 
+                                  ? { ...s, texts: { ...s.texts, ar: e.target.value } }
+                                  : s
+                              ));
+                            }}
+                            placeholder="أدخل النص بالعربية"
+                            dir="rtl"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-xs text-muted-foreground">French</Label>
+                          <Textarea
+                            value={section.texts.fr}
+                            onChange={(e) => {
+                              setSections(prev => prev.map(s => 
+                                s.id === section.id 
+                                  ? { ...s, texts: { ...s.texts, fr: e.target.value } }
+                                  : s
+                              ));
+                            }}
+                            placeholder="Entrez le texte en français"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Section Image */}
+                    <div>
+                      <Label className="text-sm font-medium">Section Image</Label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            uploadImage(file, 'section', section.id);
+                          }
+                        }}
+                        className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-secondary file:text-secondary-foreground hover:file:bg-secondary/80 mt-1"
+                      />
+                      {sectionImages[section.id] && (
+                        <div className="mt-2">
+                          <img 
+                            src={sectionImages[section.id]} 
+                            alt={`Section ${section.order} preview`} 
+                            className="max-w-xs h-auto rounded-lg border"
+                          />
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Section Audio (only if per_section mode) */}
+                    {formData.audio_mode === "per_section" && section.voices && (
+                      <div>
+                        <Label className="text-sm font-medium">Section Audio</Label>
+                        <div className="space-y-3 mt-2">
+                          {(['en', 'ar', 'fr'] as const).map((lang) => (
+                            <div key={lang}>
+                              <Label className="text-xs text-muted-foreground">
+                                {lang === 'en' ? 'English' : lang === 'ar' ? 'Arabic' : 'French'} Audio
+                              </Label>
+                              <div className="flex items-center space-x-2 mt-1">
+                                <input
+                                  type="file"
+                                  accept="audio/*"
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) {
+                                      uploadAudio(file, 'section', lang, section.id);
+                                    }
+                                  }}
+                                  className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-secondary file:text-secondary-foreground hover:file:bg-secondary/80"
+                                />
+                                {section.voices[lang] && (
+                                  <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => {
+                                      const audio = new Audio(section.voices![lang]);
+                                      audio.play();
+                                    }}
+                                  >
+                                    <Play className="h-4 w-4 mr-1" />
+                                    Play
+                                  </Button>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Story Options */}
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="is_free"
+                  checked={formData.is_free}
+                  onChange={(e) => setFormData(prev => ({ ...prev, is_free: e.target.checked }))}
+                />
+                <Label htmlFor="is_free">Free Story</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="is_published"
+                  checked={formData.is_published}
+                  onChange={(e) => setFormData(prev => ({ ...prev, is_published: e.target.checked }))}
+                />
+                <Label htmlFor="is_published">Published</Label>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="flex justify-end space-x-4">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => navigate("/admin/stories")}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Saving..." : isEditing ? "Update Story" : "Create Story"}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
-};
-
-export default StoryEditor;
+}
