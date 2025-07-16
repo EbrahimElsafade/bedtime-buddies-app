@@ -46,31 +46,33 @@ export const useStoryData = (storyId: string | undefined) => {
       })) || [];
 
       // Transform multilingual title and description to Record<string, string>
-      const title = (() => {
-        if (typeof storyData.title === 'string') {
-          try {
-            return JSON.parse(storyData.title) as Record<string, string>;
-          } catch {
-            return { en: storyData.title };
-          }
-        } else if (storyData.title && typeof storyData.title === 'object') {
-          return storyData.title as Record<string, string>;
+      const parseMultilingualField = (field: any): Record<string, string> => {
+        // If it's already an object (proper JSON), return it
+        if (typeof field === 'object' && field !== null && !Array.isArray(field)) {
+          return field as Record<string, string>;
         }
+        
+        // If it's a string, try to parse it
+        if (typeof field === 'string') {
+          try {
+            const parsed = JSON.parse(field);
+            if (typeof parsed === 'object' && parsed !== null) {
+              return parsed as Record<string, string>;
+            }
+            // If parsing results in a non-object, treat as English
+            return { en: field };
+          } catch {
+            // If parsing fails, treat as English text
+            return { en: field };
+          }
+        }
+        
+        // Default fallback
         return {} as Record<string, string>;
-      })();
+      };
 
-      const description = (() => {
-        if (typeof storyData.description === 'string') {
-          try {
-            return JSON.parse(storyData.description) as Record<string, string>;
-          } catch {
-            return { en: storyData.description };
-          }
-        } else if (storyData.description && typeof storyData.description === 'object') {
-          return storyData.description as Record<string, string>;
-        }
-        return {} as Record<string, string>;
-      })();
+      const title = parseMultilingualField(storyData.title);
+      const description = parseMultilingualField(storyData.description);
 
       // Transform multilingual story audio - parse JSON if it's a string
       const storyAudio = (() => {
