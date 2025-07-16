@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -216,10 +217,10 @@ const StoryEditor = () => {
         }
       }
 
-      // Prepare story data - store as proper JSON objects
+      // Prepare story data - convert story_audio to JSON string for database
       const storyData = {
-        title: formData.title, // Direct object, not stringified
-        description: formData.description, // Direct object, not stringified
+        title: formData.title,
+        description: formData.description,
         category: formData.category,
         duration: formData.duration,
         is_free: formData.is_free,
@@ -227,7 +228,7 @@ const StoryEditor = () => {
         languages: formData.languages,
         audio_mode: formData.audio_mode,
         cover_image: coverImagePath,
-        story_audio: Object.keys(storyAudioPaths).length > 0 ? storyAudioPaths : null
+        story_audio: Object.keys(storyAudioPaths).length > 0 ? JSON.stringify(storyAudioPaths) : null
       };
 
       let storyId = id;
@@ -528,7 +529,7 @@ const StoryEditor = () => {
             <div className="flex items-center gap-4">
               {formData.cover_image && !coverImageFile && (
                 <div className="relative w-32 h-20 rounded overflow-hidden border border-muted-foreground">
-                  <img src={supabase.storage.from("admin-content").getPublicUrl(formData.cover_image).publicUrl} alt="Cover" className="object-cover w-full h-full" />
+                  <img src={supabase.storage.from("admin-content").getPublicUrl(formData.cover_image).data.publicUrl} alt="Cover" className="object-cover w-full h-full" />
                   <button
                     type="button"
                     className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1"
@@ -551,6 +552,7 @@ const StoryEditor = () => {
                 </div>
               )}
               <Button
+                type="button"
                 variant="outline"
                 onClick={() => {
                   const input = document.createElement("input");
@@ -563,8 +565,8 @@ const StoryEditor = () => {
                   };
                   input.click();
                 }}
-                leftIcon={<Upload />}
               >
+                <Upload className="h-4 w-4 mr-2" />
                 Upload Cover Image
               </Button>
             </div>
@@ -603,7 +605,7 @@ const StoryEditor = () => {
                       }}
                     />
                     {formData.story_audio && formData.story_audio[lang] && !storyAudioFiles[lang] && (
-                      <audio controls src={supabase.storage.from("admin-content").getPublicUrl(formData.story_audio[lang]).publicUrl} />
+                      <audio controls src={supabase.storage.from("admin-content").getPublicUrl(formData.story_audio[lang]).data.publicUrl} />
                     )}
                     {storyAudioFiles[lang] && (
                       <span>{storyAudioFiles[lang].name}</span>
@@ -619,7 +621,8 @@ const StoryEditor = () => {
         <Card>
           <CardHeader>
             <CardTitle>Story Sections</CardTitle>
-            <Button variant="outline" size="sm" onClick={addSection} leftIcon={<Plus />}>
+            <Button type="button" variant="outline" size="sm" onClick={addSection}>
+              <Plus className="h-4 w-4 mr-2" />
               Add Section
             </Button>
           </CardHeader>
@@ -628,7 +631,7 @@ const StoryEditor = () => {
               <Card key={section.id || index} className="border border-muted-foreground p-4 rounded">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="font-semibold">Section {section.order}</h3>
-                  <Button variant="destructive" size="icon" onClick={() => removeSection(index)} aria-label="Remove section">
+                  <Button type="button" variant="destructive" size="icon" onClick={() => removeSection(index)} aria-label="Remove section">
                     <Trash2 size={16} />
                   </Button>
                 </div>
@@ -661,7 +664,7 @@ const StoryEditor = () => {
                   <div className="flex items-center gap-4">
                     {section.image && !sectionImageFiles[section.id || `new-${section.order}`] && (
                       <div className="relative w-32 h-20 rounded overflow-hidden border border-muted-foreground">
-                        <img src={supabase.storage.from("admin-content").getPublicUrl(section.image).publicUrl} alt="Section" className="object-cover w-full h-full" />
+                        <img src={supabase.storage.from("admin-content").getPublicUrl(section.image).data.publicUrl} alt="Section" className="object-cover w-full h-full" />
                         <button
                           type="button"
                           className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-1"
@@ -688,6 +691,7 @@ const StoryEditor = () => {
                       </div>
                     )}
                     <Button
+                      type="button"
                       variant="outline"
                       onClick={() => {
                         const input = document.createElement("input");
@@ -703,8 +707,8 @@ const StoryEditor = () => {
                         };
                         input.click();
                       }}
-                      leftIcon={<Upload />}
                     >
+                      <Upload className="h-4 w-4 mr-2" />
                       Upload Image
                     </Button>
                   </div>
@@ -733,7 +737,7 @@ const StoryEditor = () => {
                           }}
                         />
                         {section.voices && section.voices[lang] && !(sectionVoiceFiles[section.id || `new-${section.order}`]?.[lang]) && (
-                          <audio controls src={supabase.storage.from("admin-content").getPublicUrl(section.voices[lang]).publicUrl} />
+                          <audio controls src={supabase.storage.from("admin-content").getPublicUrl(section.voices[lang]).data.publicUrl} />
                         )}
                         {sectionVoiceFiles[section.id || `new-${section.order}`]?.[lang] && (
                           <span>{sectionVoiceFiles[section.id || `new-${section.order}`][lang].name}</span>
