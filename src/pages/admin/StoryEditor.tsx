@@ -69,7 +69,7 @@ const StoryEditor = () => {
   const [storyAudioFiles, setStoryAudioFiles] = useState<Record<string, File>>({});
   const [storyAudioPreviews, setStoryAudioPreviews] = useState<Record<string, string>>({});
   
-  // Story form data - Updated to handle multilingual titles and descriptions
+  // Story form data - Updated to use app language codes for titles and descriptions
   const [storyData, setStoryData] = useState({
     title: {} as Record<string, string>,
     description: {} as Record<string, string>,
@@ -77,11 +77,14 @@ const StoryEditor = () => {
     duration: 5,
     is_free: true,
     is_published: false,
-    languages: ["en"],
+    languages: ["en", "ar-eg"], // Story content languages
     cover_image: null as string | null,
     audio_mode: "per_section" as "per_section" | "single_story",
     story_audio: {} as Record<string, string>,
   });
+
+  // App language codes for titles and descriptions
+  const appLanguages = ["en", "ar", "fr"];
 
   // Story sections
   const [storySections, setStorySections] = useState<StorySectionForm[]>([]);
@@ -277,6 +280,32 @@ const StoryEditor = () => {
     }
   }, [storyDetails, isEditing, id]);
 
+  // Initialize titles and descriptions for app languages when component mounts
+  useEffect(() => {
+    if (!isEditing) {
+      const updatedTitle = { ...storyData.title };
+      const updatedDescription = { ...storyData.description };
+      
+      appLanguages.forEach(lang => {
+        if (!updatedTitle[lang]) {
+          updatedTitle[lang] = "";
+        }
+        if (!updatedDescription[lang]) {
+          updatedDescription[lang] = "";
+        }
+      });
+      
+      if (JSON.stringify(updatedTitle) !== JSON.stringify(storyData.title) || 
+          JSON.stringify(updatedDescription) !== JSON.stringify(storyData.description)) {
+        setStoryData(prev => ({
+          ...prev,
+          title: updatedTitle,
+          description: updatedDescription
+        }));
+      }
+    }
+  }, [isEditing]);
+
   // Initialize sections when languages change
   useEffect(() => {
     if (storySections.length === 0 && storyData.languages.length > 0 && !isEditing) {
@@ -291,31 +320,19 @@ const StoryEditor = () => {
     }
   }, [categories, storyData.category, isEditing]);
   
-  // Initialize title and description for new languages
+  // Initialize story audio for content languages
   useEffect(() => {
-    const updatedTitle = { ...storyData.title };
-    const updatedDescription = { ...storyData.description };
     const updatedStoryAudio = { ...storyData.story_audio };
     
     storyData.languages.forEach(lang => {
-      if (!updatedTitle[lang]) {
-        updatedTitle[lang] = "";
-      }
-      if (!updatedDescription[lang]) {
-        updatedDescription[lang] = "";
-      }
       if (!updatedStoryAudio[lang]) {
         updatedStoryAudio[lang] = "";
       }
     });
     
-    if (JSON.stringify(updatedTitle) !== JSON.stringify(storyData.title) || 
-        JSON.stringify(updatedDescription) !== JSON.stringify(storyData.description) ||
-        JSON.stringify(updatedStoryAudio) !== JSON.stringify(storyData.story_audio)) {
+    if (JSON.stringify(updatedStoryAudio) !== JSON.stringify(storyData.story_audio)) {
       setStoryData(prev => ({
         ...prev,
-        title: updatedTitle,
-        description: updatedDescription,
         story_audio: updatedStoryAudio
       }));
     }
@@ -348,15 +365,11 @@ const StoryEditor = () => {
   const handleAddLanguage = (language: string) => {
     if (!storyData.languages.includes(language)) {
       const updatedLanguages = [...storyData.languages, language];
-      const updatedTitle = { ...storyData.title, [language]: "" };
-      const updatedDescription = { ...storyData.description, [language]: "" };
       const updatedStoryAudio = { ...storyData.story_audio, [language]: "" };
       
       setStoryData({
         ...storyData, 
         languages: updatedLanguages,
-        title: updatedTitle,
-        description: updatedDescription,
         story_audio: updatedStoryAudio
       });
       
@@ -379,18 +392,12 @@ const StoryEditor = () => {
   // Handle removing a language
   const handleRemoveLanguage = (language: string) => {
     const updatedLanguages = storyData.languages.filter(lang => lang !== language);
-    const updatedTitle = { ...storyData.title };
-    const updatedDescription = { ...storyData.description };
     const updatedStoryAudio = { ...storyData.story_audio };
-    delete updatedTitle[language];
-    delete updatedDescription[language];
     delete updatedStoryAudio[language];
     
     setStoryData({
       ...storyData,
       languages: updatedLanguages,
-      title: updatedTitle,
-      description: updatedDescription,
       story_audio: updatedStoryAudio
     });
     
@@ -418,7 +425,7 @@ const StoryEditor = () => {
     setStoryAudioPreviews(newStoryAudioPreviews);
   };
 
-  // Functions to update multilingual titles and descriptions
+  // Functions to update multilingual titles and descriptions using app languages
   const updateStoryTitle = (language: string, value: string) => {
     setStoryData(prev => ({
       ...prev,
@@ -692,11 +699,11 @@ const StoryEditor = () => {
       ) : (
         <form onSubmit={handleSubmit}>
           <div className="grid gap-6 mb-8">
-            {/* Languages Card - Moved to top */}
+            {/* Languages Card - Content Languages */}
             <Card>
               <CardHeader>
-                <CardTitle>Languages</CardTitle>
-                <CardDescription>Manage available languages for this story</CardDescription>
+                <CardTitle>Story Content Languages</CardTitle>
+                <CardDescription>Manage available languages for story content (text and audio)</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex flex-wrap gap-2">
@@ -753,46 +760,47 @@ const StoryEditor = () => {
               </CardContent>
             </Card>
 
-            {/* Story Details Card - Updated for multilingual support with app language labels */}
+            {/* Story Details Card - Updated for app language support */}
             <Card>
               <CardHeader>
                 <CardTitle>Story Details</CardTitle>
-                <CardDescription>Basic information about the story in multiple languages</CardDescription>
+                <CardDescription>Basic information about the story (titles and descriptions use app languages: English, Arabic, French)</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* Multilingual Title and Description - Now using app language for UI labels */}
-                <Tabs defaultValue={storyData.languages[0]} className="w-full">
+                {/* Multilingual Title and Description using app languages */}
+                <Tabs defaultValue="en" className="w-full">
                   <TabsList>
-                    {storyData.languages.map(lang => {
-                      const langOption = languages?.find(opt => opt.code === lang);
-                      return (
-                        <TabsTrigger key={lang} value={lang}>
-                          {langOption?.name || lang}
-                        </TabsTrigger>
-                      );
-                    })}
+                    <TabsTrigger value="en">English</TabsTrigger>
+                    <TabsTrigger value="ar">العربية</TabsTrigger>
+                    <TabsTrigger value="fr">Français</TabsTrigger>
                   </TabsList>
-                  {storyData.languages.map(lang => (
+                  {appLanguages.map(lang => (
                     <TabsContent key={lang} value={lang} className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor={`title-${lang}`}>{t('nav.stories') === 'Stories' ? 'Title' : t('nav.stories') === 'القصص' ? 'العنوان' : 'Titre'}</Label>
+                        <Label htmlFor={`title-${lang}`}>
+                          {lang === 'en' ? 'Title' : lang === 'ar' ? 'العنوان' : 'Titre'}
+                        </Label>
                         <Input
                           id={`title-${lang}`}
-                          placeholder={`Enter story title in ${lang}`}
+                          placeholder={`Enter story title in ${lang === 'en' ? 'English' : lang === 'ar' ? 'Arabic' : 'French'}`}
                           value={storyData.title[lang] || ""}
                           onChange={(e) => updateStoryTitle(lang, e.target.value)}
                           required
+                          dir={lang === 'ar' ? 'rtl' : 'ltr'}
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor={`description-${lang}`}>{t('nav.stories') === 'Stories' ? 'Description' : t('nav.stories') === 'القصص' ? 'الوصف' : 'Description'}</Label>
+                        <Label htmlFor={`description-${lang}`}>
+                          {lang === 'en' ? 'Description' : lang === 'ar' ? 'الوصف' : 'Description'}
+                        </Label>
                         <Textarea
                           id={`description-${lang}`}
-                          placeholder={`Enter story description in ${lang}`}
+                          placeholder={`Enter story description in ${lang === 'en' ? 'English' : lang === 'ar' ? 'Arabic' : 'French'}`}
                           value={storyData.description[lang] || ""}
                           onChange={(e) => updateStoryDescription(lang, e.target.value)}
                           className="min-h-[100px]"
                           required
+                          dir={lang === 'ar' ? 'rtl' : 'ltr'}
                         />
                       </div>
                     </TabsContent>
@@ -1097,19 +1105,20 @@ const StoryEditor = () => {
                                 <TabsContent key={lang} value={lang} className="space-y-4">
                                   {/* Text content - Using app language for UI labels */}
                                   <div className="space-y-2">
-                                    <Label>{t('nav.stories') === 'Stories' ? 'Text Content' : t('nav.stories') === 'القصص' ? 'محتوى النص' : 'Contenu du texte'} ({languages?.find(opt => opt.code === lang)?.name})</Label>
+                                    <Label>Text Content ({languages?.find(opt => opt.code === lang)?.name})</Label>
                                     <Textarea
                                       placeholder={`Enter section text in ${lang}`}
                                       value={section.texts[lang] || ""}
                                       onChange={(e) => updateSectionText(sectionIndex, lang, e.target.value)}
                                       className="min-h-[120px]"
+                                      dir={lang.includes('ar') ? 'rtl' : 'ltr'}
                                     />
                                   </div>
 
                                   {/* Voice upload - only show if in per_section mode */}
                                   {storyData.audio_mode === 'per_section' && (
                                     <div className="space-y-2">
-                                      <Label>{t('nav.stories') === 'Stories' ? 'Voice Audio' : t('nav.stories') === 'القصص' ? 'الصوت' : 'Audio vocal'} ({languages?.find(opt => opt.code === lang)?.name})</Label>
+                                      <Label>Voice Audio ({languages?.find(opt => opt.code === lang)?.name})</Label>
                                       <Input 
                                         type="file"
                                         accept="audio/*"
@@ -1141,7 +1150,7 @@ const StoryEditor = () => {
             </Button>
             <Button
               type="submit"
-              disabled={isSubmitting || Object.values(storyData.title).some(t => !t) || Object.values(storyData.description).some(d => !d)}
+              disabled={isSubmitting || appLanguages.some(lang => !storyData.title[lang]) || appLanguages.some(lang => !storyData.description[lang])}
             >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isEditing ? "Update Story" : "Create Story"}
