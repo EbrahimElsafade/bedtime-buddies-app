@@ -46,6 +46,7 @@ import {
 } from "lucide-react";
 import { getImageUrl } from "@/utils/imageUtils";
 import { Story, StorySection } from "@/types/story";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface StorySectionForm extends Omit<StorySection, 'id'> {
   id?: string;
@@ -59,6 +60,7 @@ const StoryEditor = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEditing = id !== "new" && !!id;
+  const { t } = useLanguage(); // Use app's language context for UI labels
   
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
@@ -751,14 +753,14 @@ const StoryEditor = () => {
               </CardContent>
             </Card>
 
-            {/* Story Details Card - Updated for multilingual support */}
+            {/* Story Details Card - Updated for multilingual support with app language labels */}
             <Card>
               <CardHeader>
                 <CardTitle>Story Details</CardTitle>
                 <CardDescription>Basic information about the story in multiple languages</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* Multilingual Title and Description */}
+                {/* Multilingual Title and Description - Now using app language for UI labels */}
                 <Tabs defaultValue={storyData.languages[0]} className="w-full">
                   <TabsList>
                     {storyData.languages.map(lang => {
@@ -773,7 +775,7 @@ const StoryEditor = () => {
                   {storyData.languages.map(lang => (
                     <TabsContent key={lang} value={lang} className="space-y-4">
                       <div className="space-y-2">
-                        <Label htmlFor={`title-${lang}`}>Title ({languages?.find(opt => opt.code === lang)?.name})</Label>
+                        <Label htmlFor={`title-${lang}`}>{t('nav.stories') === 'Stories' ? 'Title' : t('nav.stories') === 'القصص' ? 'العنوان' : 'Titre'}</Label>
                         <Input
                           id={`title-${lang}`}
                           placeholder={`Enter story title in ${lang}`}
@@ -783,7 +785,7 @@ const StoryEditor = () => {
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor={`description-${lang}`}>Description ({languages?.find(opt => opt.code === lang)?.name})</Label>
+                        <Label htmlFor={`description-${lang}`}>{t('nav.stories') === 'Stories' ? 'Description' : t('nav.stories') === 'القصص' ? 'الوصف' : 'Description'}</Label>
                         <Textarea
                           id={`description-${lang}`}
                           placeholder={`Enter story description in ${lang}`}
@@ -1000,7 +1002,7 @@ const StoryEditor = () => {
               </CardContent>
             </Card>
 
-            {/* Story Sections Card */}
+            {/* Story Sections Card - Use app language for section UI labels too */}
             <Card>
               <CardHeader>
                 <CardTitle>Story Sections</CardTitle>
@@ -1093,9 +1095,9 @@ const StoryEditor = () => {
                               </TabsList>
                               {storyData.languages.map(lang => (
                                 <TabsContent key={lang} value={lang} className="space-y-4">
-                                  {/* Text content */}
+                                  {/* Text content - Using app language for UI labels */}
                                   <div className="space-y-2">
-                                    <Label>Text Content ({languages?.find(opt => opt.code === lang)?.name})</Label>
+                                    <Label>{t('nav.stories') === 'Stories' ? 'Text Content' : t('nav.stories') === 'القصص' ? 'محتوى النص' : 'Contenu du texte'} ({languages?.find(opt => opt.code === lang)?.name})</Label>
                                     <Textarea
                                       placeholder={`Enter section text in ${lang}`}
                                       value={section.texts[lang] || ""}
@@ -1107,7 +1109,7 @@ const StoryEditor = () => {
                                   {/* Voice upload - only show if in per_section mode */}
                                   {storyData.audio_mode === 'per_section' && (
                                     <div className="space-y-2">
-                                      <Label>Voice Audio ({languages?.find(opt => opt.code === lang)?.name})</Label>
+                                      <Label>{t('nav.stories') === 'Stories' ? 'Voice Audio' : t('nav.stories') === 'القصص' ? 'الصوت' : 'Audio vocal'} ({languages?.find(opt => opt.code === lang)?.name})</Label>
                                       <Input 
                                         type="file"
                                         accept="audio/*"
