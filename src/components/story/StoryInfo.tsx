@@ -1,5 +1,6 @@
+
 import { Story } from "@/types/story";
-import { getMultilingualText, getAppLanguageCode } from "@/utils/multilingualUtils";
+import { getMultilingualText } from "@/utils/multilingualUtils";
 
 interface StoryInfoProps {
   story: Story;
@@ -7,15 +8,12 @@ interface StoryInfoProps {
 }
 
 export const StoryInfo = ({ story, currentLanguage }: StoryInfoProps) => {
-  // Use app language code for titles and descriptions
-  const appLanguageCode = getAppLanguageCode(currentLanguage);
-  
   const getStoryTitle = () => {
-    return getMultilingualText(story.title, appLanguageCode, 'en') || 'Untitled Story';
+    return getMultilingualText(story.title, currentLanguage, 'en') || 'Untitled Story';
   };
 
   const getStoryDescription = () => {
-    return getMultilingualText(story.description, appLanguageCode, 'en') || 'No description available';
+    return getMultilingualText(story.description, currentLanguage, 'en') || 'No description available';
   };
 
   return (

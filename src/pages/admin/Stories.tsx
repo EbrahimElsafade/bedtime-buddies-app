@@ -4,8 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { getMultilingualText, getAppLanguageCode } from "@/utils/multilingualUtils";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { getMultilingualText } from "@/utils/multilingualUtils";
 import {
   Table,
   TableBody,
@@ -60,14 +59,10 @@ type Story = {
 
 const Stories = () => {
   const navigate = useNavigate();
-  const { language } = useLanguage();
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
   const [sortField, setSortField] = useState<keyof Story>("created_at");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
-
-  // Get the current app language code for titles
-  const currentAppLanguage = getAppLanguageCode(language);
 
   const fetchStories = async () => {
     const { data, error } = await supabase.from("stories").select("*");
@@ -94,7 +89,7 @@ const Stories = () => {
 
   const filteredStories = stories
     .filter((story) => {
-      const storyTitle = getMultilingualText(story.title, currentAppLanguage, 'en');
+      const storyTitle = getMultilingualText(story.title, 'en', 'en');
       const matchesSearch = storyTitle
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
@@ -114,8 +109,8 @@ const Stories = () => {
       
       // Handle multilingual title sorting
       if (sortField === "title") {
-        const aTitle = getMultilingualText(a.title, currentAppLanguage, 'en');
-        const bTitle = getMultilingualText(b.title, currentAppLanguage, 'en');
+        const aTitle = getMultilingualText(a.title, 'en', 'en');
+        const bTitle = getMultilingualText(b.title, 'en', 'en');
         return sortDirection === "asc"
           ? aTitle.localeCompare(bTitle)
           : bTitle.localeCompare(aTitle);
@@ -302,7 +297,7 @@ const Stories = () => {
                   filteredStories.map((story) => (
                     <TableRow key={story.id}>
                       <TableCell className="font-medium">
-                        {getMultilingualText(story.title, currentAppLanguage, 'en')}
+                        {getMultilingualText(story.title, 'en', 'en')}
                       </TableCell>
                       <TableCell>
                         {story.category.charAt(0).toUpperCase() + story.category.slice(1)}

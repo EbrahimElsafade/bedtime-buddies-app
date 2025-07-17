@@ -1,34 +1,6 @@
 
 import { Json } from "@/integrations/supabase/types";
 
-// Map website language codes to story language codes (for content)
-export const getStoryLanguageCode = (websiteLanguage: string): string => {
-  switch (websiteLanguage) {
-    case 'ar':
-      return 'ar-eg'; // Map Arabic website language to Egyptian Arabic story language
-    case 'en':
-      return 'en';
-    case 'fr':
-      return 'fr';
-    default:
-      return 'en';
-  }
-};
-
-// Map website language codes to app language codes (for titles/descriptions)
-export const getAppLanguageCode = (websiteLanguage: string): string => {
-  switch (websiteLanguage) {
-    case 'ar':
-      return 'ar'; // Use 'ar' for Arabic titles/descriptions
-    case 'en':
-      return 'en';
-    case 'fr':
-      return 'fr';
-    default:
-      return 'en';
-  }
-};
-
 export const getMultilingualText = (
   textObj: Json | string | undefined,
   preferredLanguage: string = 'en',

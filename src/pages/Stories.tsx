@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getImageUrl } from "@/utils/imageUtils";
-import { getMultilingualText, getAppLanguageCode } from "@/utils/multilingualUtils";
+import { getMultilingualText } from "@/utils/multilingualUtils";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const Stories = () => {
@@ -24,7 +24,22 @@ const Stories = () => {
   }, [t]);
 
   const isRTL = i18n.language === 'ar';
-  const currentAppLanguage = getAppLanguageCode(language);
+
+  // Map website language to story language codes
+  const getStoryLanguageCode = (websiteLanguage: string) => {
+    switch (websiteLanguage) {
+      case 'ar':
+        return 'ar-eg';
+      case 'en':
+        return 'en';
+      case 'fr':
+        return 'fr';
+      default:
+        return 'en';
+    }
+  };
+
+  const currentStoryLanguage = getStoryLanguageCode(language);
 
   const { data: stories = [], isLoading } = useQuery({
     queryKey: ["stories", language],
@@ -62,8 +77,8 @@ const Stories = () => {
   });
 
   const filteredStories = stories.filter(story => {
-    const storyTitle = getMultilingualText(story.title, currentAppLanguage, 'en');
-    const storyDescription = getMultilingualText(story.description, currentAppLanguage, 'en');
+    const storyTitle = getMultilingualText(story.title, currentStoryLanguage, 'en');
+    const storyDescription = getMultilingualText(story.description, currentStoryLanguage, 'en');
     
     const matchesSearch = searchTerm === "" || 
       storyTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -111,6 +126,7 @@ const Stories = () => {
           </p>
         </div>
 
+        {/* Search and Filter Section */}
         <div className="mb-4 md:mb-6 lg:mb-8 space-y-3 md:space-y-4">
           <div className="relative max-w-md mx-auto">
             <Search className={`absolute top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground ${isRTL ? 'right-3' : 'left-3'}`} />
@@ -146,6 +162,7 @@ const Stories = () => {
           </div>
         </div>
 
+        {/* Stories Grid */}
         {filteredStories.length === 0 ? (
           <div className="text-center py-8 md:py-12">
             <p className="text-muted-foreground text-sm md:text-base">
@@ -159,8 +176,8 @@ const Stories = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {filteredStories.map((story) => {
               const imageUrl = getImageUrl(story.cover_image);
-              const storyTitle = getMultilingualText(story.title, currentAppLanguage, 'en');
-              const storyDescription = getMultilingualText(story.description, currentAppLanguage, 'en');
+              const storyTitle = getMultilingualText(story.title, currentStoryLanguage, 'en');
+              const storyDescription = getMultilingualText(story.description, currentStoryLanguage, 'en');
               
               return (
                 <Link key={story.id} to={`/stories/${story.id}`}>
