@@ -104,7 +104,7 @@ export default function StoryEditor() {
         is_free: story.is_free,
         is_published: story.is_published,
         languages: story.languages || ["en"],
-        audio_mode: story.audio_mode || "per_section",
+        audio_mode: (story.audio_mode === "single_story" ? "single_story" : "per_section") as "per_section" | "single_story",
         cover_image: story.cover_image || "",
         story_audio: story.story_audio ? parseMultilingualField(story.story_audio) : null,
       });
