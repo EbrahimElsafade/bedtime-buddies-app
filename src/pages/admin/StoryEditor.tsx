@@ -555,56 +555,55 @@ export default function StoryEditor() {
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {/* Section Text with Tabs */}
-                    <div>
-                      <Label className="text-sm font-medium mb-3 block">Section Text</Label>
-                      <Tabs defaultValue="en" className="w-full">
-                        <TabsList className="grid w-full grid-cols-3">
-                          <TabsTrigger value="en">English</TabsTrigger>
-                          <TabsTrigger value="ar">العربية</TabsTrigger>
-                          <TabsTrigger value="fr">Français</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="en" className="mt-4">
-                          <Textarea
-                            value={section.texts.en}
-                            onChange={(e) => {
-                              setSections(prev => prev.map(s => 
-                                s.id === section.id 
-                                  ? { ...s, texts: { ...s.texts, en: e.target.value } }
-                                  : s
-                              ));
-                            }}
-                            placeholder="Enter English text"
-                          />
-                        </TabsContent>
-                        <TabsContent value="ar" className="mt-4">
-                          <Textarea
-                            value={section.texts.ar}
-                            onChange={(e) => {
-                              setSections(prev => prev.map(s => 
-                                s.id === section.id 
-                                  ? { ...s, texts: { ...s.texts, ar: e.target.value } }
-                                  : s
-                              ));
-                            }}
-                            placeholder="أدخل النص بالعربية"
-                            dir="rtl"
-                          />
-                        </TabsContent>
-                        <TabsContent value="fr" className="mt-4">
-                          <Textarea
-                            value={section.texts.fr}
-                            onChange={(e) => {
-                              setSections(prev => prev.map(s => 
-                                s.id === section.id 
-                                  ? { ...s, texts: { ...s.texts, fr: e.target.value } }
-                                  : s
-                              ));
-                            }}
-                            placeholder="Entrez le texte en français"
-                          />
-                        </TabsContent>
-                      </Tabs>
+                    {/* Section Text */}
+                    <div className="space-y-3">
+                      <Label className="text-sm font-medium">Section Text</Label>
+                      
+                      <div>
+                        <Label className="text-xs text-muted-foreground">English</Label>
+                        <Textarea
+                          value={section.texts.en}
+                          onChange={(e) => {
+                            setSections(prev => prev.map(s => 
+                              s.id === section.id 
+                                ? { ...s, texts: { ...s.texts, en: e.target.value } }
+                                : s
+                            ));
+                          }}
+                          placeholder="Enter English text"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-xs text-muted-foreground">Arabic</Label>
+                        <Textarea
+                          value={section.texts.ar}
+                          onChange={(e) => {
+                            setSections(prev => prev.map(s => 
+                              s.id === section.id 
+                                ? { ...s, texts: { ...s.texts, ar: e.target.value } }
+                                : s
+                            ));
+                          }}
+                          placeholder="أدخل النص بالعربية"
+                          dir="rtl"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-xs text-muted-foreground">French</Label>
+                        <Textarea
+                          value={section.texts.fr}
+                          onChange={(e) => {
+                            setSections(prev => prev.map(s => 
+                              s.id === section.id 
+                                ? { ...s, texts: { ...s.texts, fr: e.target.value } }
+                                : s
+                            ));
+                          }}
+                          placeholder="Entrez le texte en français"
+                        />
+                      </div>
                     </div>
 
                     {/* Section Image */}
@@ -632,7 +631,7 @@ export default function StoryEditor() {
                       )}
                     </div>
 
-                    {/* Section Audio (only if per_section mode) */}
+                    {/* Section Audio */}
                     {formData.audio_mode === "per_section" && section.voices && (
                       <div>
                         <Label className="text-sm font-medium">Section Audio</Label>
