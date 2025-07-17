@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -42,6 +41,7 @@ import {
   Trash2,
   Eye,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type Story = {
   id: string;
@@ -64,6 +64,8 @@ const Stories = () => {
   const [sortField, setSortField] = useState<keyof Story>("created_at");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
 
+  const { i18n } = useTranslation();
+
   const fetchStories = async () => {
     const { data, error } = await supabase.from("stories").select("*");
     if (error) {
@@ -73,7 +75,11 @@ const Stories = () => {
     return data as Story[];
   };
 
-  const { data: stories = [], isLoading, refetch } = useQuery({
+  const {
+    data: stories = [],
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["admin-stories"],
     queryFn: fetchStories,
   });
@@ -89,67 +95,69 @@ const Stories = () => {
 
   const filteredStories = stories
     .filter((story) => {
-      const storyTitle = getMultilingualText(story.title, 'en', 'en');
+      const storyTitle = getMultilingualText(story.title, "en", "en");
       const matchesSearch = storyTitle
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
-        
+
       if (filter === "all") return matchesSearch;
       if (filter === "published") return matchesSearch && story.is_published;
       if (filter === "draft") return matchesSearch && !story.is_published;
-      
+
       return matchesSearch;
     })
     .sort((a, b) => {
       const aValue = a[sortField];
       const bValue = b[sortField];
-      
+
       if (aValue === null) return sortDirection === "asc" ? -1 : 1;
       if (bValue === null) return sortDirection === "asc" ? 1 : -1;
-      
+
       // Handle multilingual title sorting
       if (sortField === "title") {
-        const aTitle = getMultilingualText(a.title, 'en', 'en');
-        const bTitle = getMultilingualText(b.title, 'en', 'en');
+        const aTitle = getMultilingualText(a.title, "en", "en");
+        const bTitle = getMultilingualText(b.title, "en", "en");
         return sortDirection === "asc"
           ? aTitle.localeCompare(bTitle)
           : bTitle.localeCompare(aTitle);
       }
-      
+
       if (typeof aValue === "string" && typeof bValue === "string") {
         return sortDirection === "asc"
           ? aValue.localeCompare(bValue)
           : bValue.localeCompare(aValue);
       }
-      
+
       if (typeof aValue === "boolean" && typeof bValue === "boolean") {
         return sortDirection === "asc"
           ? Number(aValue) - Number(bValue)
           : Number(bValue) - Number(aValue);
       }
-      
+
       if (typeof aValue === "number" && typeof bValue === "number") {
-        return sortDirection === "asc"
-          ? aValue - bValue
-          : bValue - aValue;
+        return sortDirection === "asc" ? aValue - bValue : bValue - aValue;
       }
-      
+
       if (Array.isArray(aValue) && Array.isArray(bValue)) {
         return sortDirection === "asc"
           ? aValue.length - bValue.length
           : bValue.length - aValue.length;
       }
-      
+
       return 0;
     });
 
   const deleteStory = async (id: string) => {
-    if (confirm("Are you sure you want to delete this story? This action cannot be undone.")) {
+    if (
+      confirm(
+        "Are you sure you want to delete this story? This action cannot be undone."
+      )
+    ) {
       try {
         const { error } = await supabase.from("stories").delete().eq("id", id);
-        
+
         if (error) throw error;
-        
+
         toast.success("Story deleted successfully");
         refetch();
       } catch (error) {
@@ -165,10 +173,12 @@ const Stories = () => {
         .from("stories")
         .update({ is_published: !story.is_published })
         .eq("id", story.id);
-        
+
       if (error) throw error;
-      
-      toast.success(`Story ${story.is_published ? "unpublished" : "published"} successfully`);
+
+      toast.success(
+        `Story ${story.is_published ? "unpublished" : "published"} successfully`
+      );
       refetch();
     } catch (error) {
       console.error("Error updating story status:", error);
@@ -182,9 +192,7 @@ const Stories = () => {
         <div className="flex justify-between items-start">
           <div>
             <h1 className="text-3xl font-bold">Stories</h1>
-            <p className="text-muted-foreground">
-              Manage all bedtime stories
-            </p>
+            <p className="text-muted-foreground">Manage all bedtime stories</p>
           </div>
           <Button onClick={() => navigate("/admin/stories/new")}>
             <PlusCircle className="mr-2 h-4 w-4" />
@@ -192,12 +200,13 @@ const Stories = () => {
           </Button>
         </div>
       </header>
-      
+
       <Card>
         <CardHeader>
           <CardTitle className="text-xl">All Stories</CardTitle>
           <CardDescription>
-            Total: {stories.length} stories | Published: {stories.filter(s => s.is_published).length} stories
+            Total: {stories.length} stories | Published:{" "}
+            {stories.filter((s) => s.is_published).length} stories
           </CardDescription>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-4">
             <div className="relative flex-1 w-full">
@@ -247,37 +256,54 @@ const Stories = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead onClick={() => toggleSort("title")} className="cursor-pointer">
+                  <TableHead
+                    onClick={() => toggleSort("title")}
+                    className="cursor-pointer"
+                  >
                     Title
                     {sortField === "title" && (
                       <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                     )}
                   </TableHead>
-                  <TableHead onClick={() => toggleSort("category")} className="cursor-pointer">
+                  <TableHead
+                    onClick={() => toggleSort("category")}
+                    className="cursor-pointer"
+                  >
                     Category
                     {sortField === "category" && (
                       <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                     )}
                   </TableHead>
-                  <TableHead onClick={() => toggleSort("is_free")} className="cursor-pointer">
+                  <TableHead
+                    onClick={() => toggleSort("is_free")}
+                    className="cursor-pointer"
+                  >
                     Type
                     {sortField === "is_free" && (
                       <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                     )}
                   </TableHead>
-                  <TableHead onClick={() => toggleSort("languages")} className="cursor-pointer hidden md:table-cell">
+                  <TableHead
+                    onClick={() => toggleSort("languages")}
+                    className="cursor-pointer hidden md:table-cell"
+                  >
                     Languages
                     {sortField === "languages" && (
                       <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                     )}
                   </TableHead>
-                  <TableHead onClick={() => toggleSort("is_published")} className="cursor-pointer">
+                  <TableHead
+                    onClick={() => toggleSort("is_published")}
+                    className="cursor-pointer"
+                  >
                     Status
                     {sortField === "is_published" && (
                       <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                     )}
                   </TableHead>
-                  <TableHead className="w-[100px] text-right">Actions</TableHead>
+                  <TableHead className="w-[100px] text-right">
+                    Actions
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -297,18 +323,25 @@ const Stories = () => {
                   filteredStories.map((story) => (
                     <TableRow key={story.id}>
                       <TableCell className="font-medium">
-                        {getMultilingualText(story.title, 'en', 'en')}
+                        {getMultilingualText(story.title, i18n.language, "en")}
                       </TableCell>
                       <TableCell>
-                        {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
+                        {story.category.charAt(0).toUpperCase() +
+                          story.category.slice(1)}
                       </TableCell>
                       <TableCell>
                         {story.is_free ? (
-                          <Badge variant="default" className="bg-dream-DEFAULT hover:bg-dream-dark">
+                          <Badge
+                            variant="default"
+                            className="bg-dream-DEFAULT hover:bg-dream-dark"
+                          >
                             Free
                           </Badge>
                         ) : (
-                          <Badge variant="default" className="bg-moon-DEFAULT hover:bg-moon-dark">
+                          <Badge
+                            variant="default"
+                            className="bg-moon-DEFAULT hover:bg-moon-dark"
+                          >
                             Premium
                           </Badge>
                         )}
@@ -322,7 +355,10 @@ const Stories = () => {
                       </TableCell>
                       <TableCell>
                         {story.is_published ? (
-                          <Badge variant="default" className="bg-green-600 hover:bg-green-700">
+                          <Badge
+                            variant="default"
+                            className="bg-green-600 hover:bg-green-700"
+                          >
                             Published
                           </Badge>
                         ) : (
@@ -353,12 +389,15 @@ const Stories = () => {
                               </Link>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => togglePublishStatus(story)}>
-                              {story.is_published ? "Unpublish" : "Publish"} Story
+                            <DropdownMenuItem
+                              onClick={() => togglePublishStatus(story)}
+                            >
+                              {story.is_published ? "Unpublish" : "Publish"}{" "}
+                              Story
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem 
-                              className="text-red-600" 
+                            <DropdownMenuItem
+                              className="text-red-600"
                               onClick={() => deleteStory(story.id)}
                             >
                               <Trash2 className="mr-2 h-4 w-4" /> Delete

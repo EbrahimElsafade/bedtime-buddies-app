@@ -1,26 +1,34 @@
-
 import { Story } from "@/types/story";
 import { getMultilingualText } from "@/utils/multilingualUtils";
+import { useTranslation } from "react-i18next";
 
 interface StoryInfoProps {
   story: Story;
-  currentLanguage: string;
 }
 
-export const StoryInfo = ({ story, currentLanguage }: StoryInfoProps) => {
+export const StoryInfo = ({ story }: StoryInfoProps) => {
+  const { i18n } = useTranslation();
+
   const getStoryTitle = () => {
-    return getMultilingualText(story.title, currentLanguage, 'en') || 'Untitled Story';
+    return (
+      getMultilingualText(story.title, i18n.language, "en") || "Untitled Story"
+    );
   };
 
   const getStoryDescription = () => {
-    return getMultilingualText(story.description, currentLanguage, 'en') || 'No description available';
+    return (
+      getMultilingualText(story.description, i18n.language, "en") ||
+      "No description available"
+    );
   };
 
   return (
     <div className="mb-8">
-      <h1 className="text-3xl md:text-4xl font-bubbly mb-2">{getStoryTitle()}</h1>
+      <h1 className="text-3xl md:text-4xl font-bubbly mb-2">
+        {getStoryTitle()}
+      </h1>
       <p className="text-muted-foreground mb-4">{getStoryDescription()}</p>
-      
+
       <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
         <span className="px-2 py-1 bg-secondary/50 rounded-full">
           {story.duration} mins
@@ -38,7 +46,9 @@ export const StoryInfo = ({ story, currentLanguage }: StoryInfoProps) => {
           </span>
         )}
         <span className="px-2 py-1 bg-secondary/50 rounded-full">
-          {story.audio_mode === 'single_story' ? 'Single Audio' : 'Section Audio'}
+          {story.audio_mode === "single_story"
+            ? "Single Audio"
+            : "Section Audio"}
         </span>
       </div>
     </div>
