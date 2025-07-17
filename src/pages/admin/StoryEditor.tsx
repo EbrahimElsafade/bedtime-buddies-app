@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Plus, Trash2, Play } from "lucide-react";
 
 interface StoryFormData {
@@ -288,18 +289,19 @@ export default function StoryEditor() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Title Section */}
+            {/* Title Section with Tabs */}
             <div>
-              <Label htmlFor="title" className="text-base font-medium">
+              <Label className="text-base font-medium mb-3 block">
                 Title (Required)
               </Label>
-              <div className="space-y-3 mt-2">
-                <div>
-                  <Label htmlFor="title-en" className="text-sm text-muted-foreground">
-                    English
-                  </Label>
+              <Tabs defaultValue="en" className="w-full">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="en">English</TabsTrigger>
+                  <TabsTrigger value="ar">العربية</TabsTrigger>
+                  <TabsTrigger value="fr">Français</TabsTrigger>
+                </TabsList>
+                <TabsContent value="en" className="mt-4">
                   <Input
-                    id="title-en"
                     type="text"
                     value={formData.title.en}
                     onChange={(e) => setFormData(prev => ({
@@ -309,13 +311,9 @@ export default function StoryEditor() {
                     placeholder="Enter English title"
                     required
                   />
-                </div>
-                <div>
-                  <Label htmlFor="title-ar" className="text-sm text-muted-foreground">
-                    Arabic
-                  </Label>
+                </TabsContent>
+                <TabsContent value="ar" className="mt-4">
                   <Input
-                    id="title-ar"
                     type="text"
                     value={formData.title.ar}
                     onChange={(e) => setFormData(prev => ({
@@ -325,13 +323,9 @@ export default function StoryEditor() {
                     placeholder="أدخل العنوان بالعربية"
                     dir="rtl"
                   />
-                </div>
-                <div>
-                  <Label htmlFor="title-fr" className="text-sm text-muted-foreground">
-                    French
-                  </Label>
+                </TabsContent>
+                <TabsContent value="fr" className="mt-4">
                   <Input
-                    id="title-fr"
                     type="text"
                     value={formData.title.fr}
                     onChange={(e) => setFormData(prev => ({
@@ -340,22 +334,23 @@ export default function StoryEditor() {
                     }))}
                     placeholder="Entrez le titre en français"
                   />
-                </div>
-              </div>
+                </TabsContent>
+              </Tabs>
             </div>
 
-            {/* Description Section */}
+            {/* Description Section with Tabs */}
             <div>
-              <Label htmlFor="description" className="text-base font-medium">
+              <Label className="text-base font-medium mb-3 block">
                 Description (Required)
               </Label>
-              <div className="space-y-3 mt-2">
-                <div>
-                  <Label htmlFor="description-en" className="text-sm text-muted-foreground">
-                    English
-                  </Label>
+              <Tabs defaultValue="en" className="w-full">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="en">English</TabsTrigger>
+                  <TabsTrigger value="ar">العربية</TabsTrigger>
+                  <TabsTrigger value="fr">Français</TabsTrigger>
+                </TabsList>
+                <TabsContent value="en" className="mt-4">
                   <Textarea
-                    id="description-en"
                     value={formData.description.en}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
@@ -364,13 +359,9 @@ export default function StoryEditor() {
                     placeholder="Enter English description"
                     required
                   />
-                </div>
-                <div>
-                  <Label htmlFor="description-ar" className="text-sm text-muted-foreground">
-                    Arabic
-                  </Label>
+                </TabsContent>
+                <TabsContent value="ar" className="mt-4">
                   <Textarea
-                    id="description-ar"
                     value={formData.description.ar}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
@@ -379,13 +370,9 @@ export default function StoryEditor() {
                     placeholder="أدخل الوصف بالعربية"
                     dir="rtl"
                   />
-                </div>
-                <div>
-                  <Label htmlFor="description-fr" className="text-sm text-muted-foreground">
-                    French
-                  </Label>
+                </TabsContent>
+                <TabsContent value="fr" className="mt-4">
                   <Textarea
-                    id="description-fr"
                     value={formData.description.fr}
                     onChange={(e) => setFormData(prev => ({
                       ...prev,
@@ -393,8 +380,8 @@ export default function StoryEditor() {
                     }))}
                     placeholder="Entrez la description en français"
                   />
-                </div>
-              </div>
+                </TabsContent>
+              </Tabs>
             </div>
 
             {/* Rest of the form fields */}
@@ -568,12 +555,16 @@ export default function StoryEditor() {
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    {/* Section Text */}
+                    {/* Section Text with Tabs */}
                     <div>
-                      <Label className="text-sm font-medium">Section Text</Label>
-                      <div className="space-y-3 mt-2">
-                        <div>
-                          <Label className="text-xs text-muted-foreground">English</Label>
+                      <Label className="text-sm font-medium mb-3 block">Section Text</Label>
+                      <Tabs defaultValue="en" className="w-full">
+                        <TabsList className="grid w-full grid-cols-3">
+                          <TabsTrigger value="en">English</TabsTrigger>
+                          <TabsTrigger value="ar">العربية</TabsTrigger>
+                          <TabsTrigger value="fr">Français</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="en" className="mt-4">
                           <Textarea
                             value={section.texts.en}
                             onChange={(e) => {
@@ -585,9 +576,8 @@ export default function StoryEditor() {
                             }}
                             placeholder="Enter English text"
                           />
-                        </div>
-                        <div>
-                          <Label className="text-xs text-muted-foreground">Arabic</Label>
+                        </TabsContent>
+                        <TabsContent value="ar" className="mt-4">
                           <Textarea
                             value={section.texts.ar}
                             onChange={(e) => {
@@ -600,9 +590,8 @@ export default function StoryEditor() {
                             placeholder="أدخل النص بالعربية"
                             dir="rtl"
                           />
-                        </div>
-                        <div>
-                          <Label className="text-xs text-muted-foreground">French</Label>
+                        </TabsContent>
+                        <TabsContent value="fr" className="mt-4">
                           <Textarea
                             value={section.texts.fr}
                             onChange={(e) => {
@@ -614,8 +603,8 @@ export default function StoryEditor() {
                             }}
                             placeholder="Entrez le texte en français"
                           />
-                        </div>
-                      </div>
+                        </TabsContent>
+                      </Tabs>
                     </div>
 
                     {/* Section Image */}
