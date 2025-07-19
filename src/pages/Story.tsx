@@ -92,7 +92,7 @@ const Story = () => {
         <LanguageSelector
           languages={story.languages}
           currentLanguage={currentLanguage}
-          onLanguageChange={(value) => setCurrentLanguage(value as any)}
+          onLanguageChange={(value) => setCurrentLanguage(value as "en" | "ar-eg" | "ar-fos7a")}
         />
 
         <StoryInfo
