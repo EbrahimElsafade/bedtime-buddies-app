@@ -90,9 +90,10 @@ export const AudioPlayer = ({
     const handleEnded = () => {
       if (hasNext) {
         onNext?.();
+      } else {
+        setIsPlaying(false);
+        onEnded?.();
       }
-      setIsPlaying(false);
-      onEnded?.();
     };
 
     const handleLoadStart = () => {
