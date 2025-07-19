@@ -208,7 +208,7 @@ const Stories = () => {
                         <img
                           src={imageUrl}
                           alt={storyTitle}
-                          className="w-full h-full object-cover"
+                          className="w-full h-56 object-fill"
                           onError={(e) => {
                             console.log(
                               "Story image failed to load:",
