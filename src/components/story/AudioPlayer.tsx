@@ -15,7 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 interface AudioPlayerProps {
   audioUrl: string;
   onEnded?: () => void;
-  title: string;
+  // title: string;
   onNext?: () => void;
   onPrevious?: () => void;
   hasNext?: boolean;
@@ -26,7 +26,7 @@ interface AudioPlayerProps {
 export const AudioPlayer = ({
   audioUrl,
   onEnded,
-  title,
+  // title,
   onNext,
   onPrevious,
   hasNext = false,
@@ -125,7 +125,7 @@ export const AudioPlayer = ({
       audio.removeEventListener("canplay", handleCanPlay);
       audio.removeEventListener("error", handleError);
     };
-  }, [onEnded, audioSrc]);
+  }, [onEnded, audioSrc, hasNext, onNext]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -249,7 +249,8 @@ export const AudioPlayer = ({
           </div>
 
           <h3 className="font-medium text-sm text-gray-700 dark:text-gray-300">
-            {title}
+            {/* {title} */}
+            autoplay
           </h3>
         </div>
       </div>
