@@ -86,7 +86,7 @@ export const AudioControls = ({
     <div>
       <AudioPlayer
         audioUrl={audioSource.url}
-        title={audioSource.title}
+        // title={audioSource.title}
         onNext={handleNext}
         onPrevious={handlePrevious}
         hasNext={hasNext}
