@@ -21,14 +21,20 @@ export const TextHighlight = ({ text, isPlaying, onReset }: TextHighlightProps) 
 
     const interval = setInterval(() => {
       setCurrentWordIndex(prev => {
-        if (prev >= words.length - 1) {
+        // Find next non-space word
+        let nextIndex = prev + 1;
+        while (nextIndex < words.length && /^\s+$/.test(words[nextIndex])) {
+          nextIndex++;
+        }
+        
+        if (nextIndex >= words.length) {
           clearInterval(interval);
           onReset?.();
           return 0;
         }
-        return prev + 1;
+        return nextIndex;
       });
-    }, 250); // Move highlight every 0.25 seconds
+    }, 750); // Move highlight every 0.75 seconds
 
     return () => clearInterval(interval);
   }, [isPlaying, words.length, onReset]);
@@ -44,7 +50,7 @@ export const TextHighlight = ({ text, isPlaying, onReset }: TextHighlightProps) 
         <span
           key={index}
           className={`${
-            index === currentWordIndex && isPlaying
+            index === currentWordIndex && isPlaying && !/^\s+$/.test(word)
               ? "bg-yellow-200 dark:bg-yellow-800 rounded px-1 transition-colors duration-200"
               : ""
           }`}
