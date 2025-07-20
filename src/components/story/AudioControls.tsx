@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Play, Pause, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,6 +14,7 @@ interface AudioControlsProps {
   currentSectionIndex: number;
   currentSectionDir: "rtl" | "ltr";
   onSectionChange?: (index: number) => void;
+  onPlayingChange?: (isPlaying: boolean) => void;
 }
 
 export const AudioControls = ({
@@ -24,6 +24,7 @@ export const AudioControls = ({
   currentSectionIndex,
   currentSectionDir,
   onSectionChange,
+  onPlayingChange,
 }: AudioControlsProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -31,6 +32,11 @@ export const AudioControls = ({
   const [volume, setVolume] = useState(1);
   const [isAutoplay, setIsAutoplay] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+
+  // Notify parent component when playing state changes
+  useEffect(() => {
+    onPlayingChange?.(isPlaying);
+  }, [isPlaying, onPlayingChange]);
 
   useEffect(() => {
     const audio = audioRef.current;

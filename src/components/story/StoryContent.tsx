@@ -1,9 +1,12 @@
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Story } from "@/types/story";
 import { getImageUrl } from "@/utils/imageUtils";
 import { AudioControls } from "./AudioControls";
+import { TextHighlight } from "./TextHighlight";
+import { useState } from "react";
 
 interface StoryContentProps {
   story: Story;
@@ -22,6 +25,8 @@ export const StoryContent = ({
   currentSectionIndex = 0,
   onSectionChange,
 }: StoryContentProps) => {
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  
   const currentSection = story.sections[currentSectionIndex];
   const currentText =
     currentSection?.texts[currentLanguage] ||
@@ -69,11 +74,12 @@ export const StoryContent = ({
         </div>
 
         {/* Story Section Text */}
-        <div className="w-full  p-4 md:p-6 flex flex-col">
+        <div className="w-full p-4 md:p-6 flex flex-col">
           <div className="flex-grow">
-            <p className="text-lg md:text-3xl leading-relaxed pb-4">
-              {currentText}
-            </p>
+            <TextHighlight 
+              text={currentText} 
+              isPlaying={isAudioPlaying}
+            />
           </div>
 
           <AudioControls
@@ -83,6 +89,7 @@ export const StoryContent = ({
             currentSectionIndex={currentSectionIndex}
             currentSectionDir={currentSectionDir}
             onSectionChange={onSectionChange}
+            onPlayingChange={setIsAudioPlaying}
           />
 
           {/* Section Navigation - only show if not in single story audio mode or if no sections */}
