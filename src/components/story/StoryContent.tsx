@@ -26,6 +26,7 @@ export const StoryContent = ({
   const currentText =
     currentSection?.texts[currentLanguage] ||
     "Content not available in selected language";
+
   const currentImage = currentSection?.image
     ? getImageUrl(currentSection.image)
     : getImageUrl(story.cover_image);
@@ -43,7 +44,10 @@ export const StoryContent = ({
   };
 
   return (
-    <Card dir={currentSectionDir} className="overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm mb-4 md:mb-6">
+    <Card
+      dir={currentSectionDir}
+      className="overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm mb-4 md:mb-6"
+    >
       <div className="grid">
         {/* Story Section Image */}
         <div className="w-full">
@@ -67,7 +71,7 @@ export const StoryContent = ({
         {/* Story Section Text */}
         <div className="w-full  p-4 md:p-6 flex flex-col">
           <div className="flex-grow">
-            <p className="text-base md:text-lg leading-relaxed">
+            <p className="text-lg md:text-3xl leading-relaxed pb-4">
               {currentText}
             </p>
           </div>
