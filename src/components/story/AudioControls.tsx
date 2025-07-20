@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { Play, Pause, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -65,13 +66,13 @@ export const AudioControls = ({
     };
   }, [isAutoplay, onSectionChange, currentSectionIndex, story.sections.length]);
 
-  const getAudioUrl = () => {
-    if (story.audio_mode === "single_story" && story.audio_file) {
-      return getAudioUrl(story.audio_file);
+  const getAudioUrlForCurrentSection = () => {
+    if (story.audio_mode === "single_story" && story.story_audio) {
+      return getAudioUrl(story.story_audio[currentLanguage] || null);
     }
     
-    if (currentSection?.audio_files?.[currentLanguage]) {
-      return getAudioUrl(currentSection.audio_files[currentLanguage]);
+    if (currentSection?.voices?.[currentLanguage]) {
+      return getAudioUrl(currentSection.voices[currentLanguage]);
     }
     
     return null;
@@ -109,7 +110,7 @@ export const AudioControls = ({
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
-  const audioUrl = getAudioUrl();
+  const audioUrl = getAudioUrlForCurrentSection();
 
   if (!audioUrl) return null;
 
