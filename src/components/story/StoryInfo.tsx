@@ -29,10 +29,8 @@ export const StoryInfo = ({
 
   return (
     <div className="mb-4" dir={currentSectionDir}>
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl md:text-4xl font-bubbly mb-2">
-          {getStoryTitle()}
-        </h1>
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-2">
+        <h1 className="text-3xl md:text-4xl font-bubbly">{getStoryTitle()}</h1>
 
         <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
           <span className="px-2 py-1 bg-secondary/50 rounded-full">
