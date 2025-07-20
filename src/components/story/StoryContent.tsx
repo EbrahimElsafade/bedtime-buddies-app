@@ -82,6 +82,7 @@ export const StoryContent = ({
             currentLanguage={currentLanguage}
             currentSectionIndex={currentSectionIndex}
             currentSectionDir={currentSectionDir}
+            onSectionChange={onSectionChange}
           />
 
           {/* Section Navigation - only show if not in single story audio mode or if no sections */}

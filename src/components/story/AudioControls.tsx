@@ -1,12 +1,18 @@
-import { AudioPlayer } from "./AudioPlayer";
+import { useState, useRef, useEffect } from "react";
+import { Play, Pause, Volume2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { Card } from "@/components/ui/card";
 import { Story, StorySection } from "@/types/story";
+import { getAudioUrl } from "@/utils/imageUtils";
+import { AutoplayToggle } from "./AutoplayToggle";
 
 interface AudioControlsProps {
   story: Story;
   currentSection?: StorySection;
   currentLanguage: string;
+  currentSectionIndex: number;
   currentSectionDir: "rtl" | "ltr";
-  currentSectionIndex?: number;
   onSectionChange?: (index: number) => void;
 }
 
@@ -14,85 +20,156 @@ export const AudioControls = ({
   story,
   currentSection,
   currentLanguage,
-  currentSectionIndex = 0,
-  onSectionChange,
+  currentSectionIndex,
   currentSectionDir,
+  onSectionChange,
 }: AudioControlsProps) => {
-  // Determine audio source based on mode
-  const getAudioSource = () => {
-    if (story.audio_mode === "single_story" && story.story_audio) {
-      // Handle multilingual story audio
-      const audioUrl =
-        typeof story.story_audio === "string"
-          ? story.story_audio
-          : story.story_audio[currentLanguage] ||
-            story.story_audio[Object.keys(story.story_audio)[0]];
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [volume, setVolume] = useState(1);
+  const [isAutoplay, setIsAutoplay] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null);
 
-      if (audioUrl) {
-        return {
-          url: audioUrl,
-          title: `Story: ${
-            typeof story.title === "string"
-              ? story.title
-              : story.title[currentLanguage] || "Unknown"
-          }`,
-        };
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
+    const handleLoadedMetadata = () => setDuration(audio.duration);
+    const handleEnded = () => {
+      setIsPlaying(false);
+      
+      // Autoplay logic: move to next section if autoplay is enabled
+      if (isAutoplay && onSectionChange && currentSectionIndex < story.sections.length - 1) {
+        const nextIndex = currentSectionIndex + 1;
+        onSectionChange(nextIndex);
+        // Small delay to ensure section change is processed before playing
+        setTimeout(() => {
+          if (audioRef.current) {
+            audioRef.current.play();
+            setIsPlaying(true);
+          }
+        }, 100);
       }
-    } else if (
-      story.audio_mode === "per_section" &&
-      currentSection?.voices?.[currentLanguage]
-    ) {
-      return {
-        url: currentSection.voices[currentLanguage],
-        title: `Section ${currentSection.order}`,
-      };
+    };
+
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+    audio.addEventListener("ended", handleEnded);
+
+    return () => {
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      audio.removeEventListener("ended", handleEnded);
+    };
+  }, [isAutoplay, onSectionChange, currentSectionIndex, story.sections.length]);
+
+  const getAudioUrl = () => {
+    if (story.audio_mode === "single_story" && story.audio_file) {
+      return getAudioUrl(story.audio_file);
     }
+    
+    if (currentSection?.audio_files?.[currentLanguage]) {
+      return getAudioUrl(currentSection.audio_files[currentLanguage]);
+    }
+    
     return null;
   };
 
-  const audioSource = getAudioSource();
+  const togglePlayPause = () => {
+    if (!audioRef.current) return;
 
-  if (!audioSource) {
-    return null;
-  }
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
 
-  const handleNext = () => {
-    if (
-      story.audio_mode === "per_section" &&
-      onSectionChange &&
-      currentSectionIndex < story.sections.length - 1
-    ) {
-      onSectionChange(currentSectionIndex + 1);
+  const handleSeek = (value: number[]) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = value[0];
+      setCurrentTime(value[0]);
     }
   };
 
-  const handlePrevious = () => {
-    if (
-      story.audio_mode === "per_section" &&
-      onSectionChange &&
-      currentSectionIndex > 0
-    ) {
-      onSectionChange(currentSectionIndex - 1);
+  const handleVolumeChange = (value: number[]) => {
+    const newVolume = value[0];
+    setVolume(newVolume);
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume;
     }
   };
 
-  const hasNext =
-    story.audio_mode === "per_section" &&
-    currentSectionIndex < story.sections.length - 1;
-  const hasPrevious =
-    story.audio_mode === "per_section" && currentSectionIndex > 0;
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
+  const audioUrl = getAudioUrl();
+
+  if (!audioUrl) return null;
 
   return (
-    <div>
-      <AudioPlayer
-        audioUrl={audioSource.url}
-        // title={audioSource.title}
-        onNext={handleNext}
-        onPrevious={handlePrevious}
-        hasNext={hasNext}
-        hasPrevious={hasPrevious}
-        currentSectionDir={currentSectionDir}
+    <Card className="p-4 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+      <audio
+        ref={audioRef}
+        src={audioUrl}
+        preload="metadata"
       />
-    </div>
+      
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={togglePlayPause}
+              className="h-10 w-10"
+            >
+              {isPlaying ? (
+                <Pause className="h-5 w-5" />
+              ) : (
+                <Play className="h-5 w-5" />
+              )}
+            </Button>
+            
+            <div className="text-sm text-muted-foreground">
+              {formatTime(currentTime)} / {formatTime(duration)}
+            </div>
+          </div>
+
+          <AutoplayToggle
+            isAutoplay={isAutoplay}
+            onAutoplayChange={setIsAutoplay}
+            currentSectionDir={currentSectionDir}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Slider
+            value={[currentTime]}
+            max={duration}
+            step={1}
+            onValueChange={handleSeek}
+            className="w-full"
+          />
+          
+          <div className="flex items-center space-x-2">
+            <Volume2 className="h-4 w-4" />
+            <Slider
+              value={[volume]}
+              max={1}
+              step={0.1}
+              onValueChange={handleVolumeChange}
+              className="w-24"
+            />
+          </div>
+        </div>
+      </div>
+    </Card>
   );
 };
