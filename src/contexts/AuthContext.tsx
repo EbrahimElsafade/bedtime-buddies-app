@@ -6,8 +6,23 @@ import { useProfileManagement } from '@/hooks/useProfileManagement';
 import { AuthContextType } from '@/types/auth';
 import { logger } from '@/utils/logger';
 
-// Create the context with undefined as initial value
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// Create the context with a default value to prevent undefined context errors
+const defaultContextValue: AuthContextType = {
+  user: null,
+  profile: null,
+  isAuthenticated: false,
+  isLoading: true,
+  isProfileLoaded: false,
+  login: async () => { throw new Error('AuthProvider not initialized') },
+  loginWithGoogle: async () => { throw new Error('AuthProvider not initialized') },
+  loginWithApple: async () => { throw new Error('AuthProvider not initialized') },
+  register: async () => { throw new Error('AuthProvider not initialized') },
+  logout: async () => { throw new Error('AuthProvider not initialized') },
+  resetPassword: async () => { throw new Error('AuthProvider not initialized') },
+  updateProfile: async () => { throw new Error('AuthProvider not initialized') }
+};
+
+const AuthContext = createContext<AuthContextType>(defaultContextValue);
 
 // Debounce function to prevent rapid auth state changes
 const debounce = (func: Function, wait: number) => {
@@ -178,33 +193,38 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     logger.debug("Auth state update:", logData);
   }, [user, profile, authLoading, profileLoading, profileLoaded, isLoading, session]);
 
+  // Create the context value
+  const contextValue: AuthContextType = {
+    user,
+    profile,
+    isAuthenticated: !!user,
+    isLoading,
+    isProfileLoaded: profileLoaded,
+    login,
+    loginWithGoogle,
+    loginWithApple,
+    register,
+    logout,
+    resetPassword,
+    updateProfile
+  };
+
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        profile,
-        isAuthenticated: !!user,
-        isLoading,
-        isProfileLoaded: profileLoaded,
-        login,
-        loginWithGoogle,
-        loginWithApple,
-        register,
-        logout,
-        resetPassword,
-        updateProfile
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Export the useAuth hook
+// Export the useAuth hook with better error handling
 export const useAuth = () => {
   const context = useContext(AuthContext);
+  
+  // Add additional safety check
   if (context === undefined) {
+    logger.error('useAuth called outside of AuthProvider context');
     throw new Error('useAuth must be used within an AuthProvider');
   }
+  
   return context;
 };
