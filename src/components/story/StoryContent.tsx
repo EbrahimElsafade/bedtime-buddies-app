@@ -1,20 +1,19 @@
-
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Story } from "@/types/story";
-import { getImageUrl } from "@/utils/imageUtils";
-import { AudioControls } from "./AudioControls";
-import { TextHighlight } from "./TextHighlight";
-import { useState } from "react";
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { Story } from '@/types/story'
+import { getImageUrl } from '@/utils/imageUtils'
+import { AudioControls } from './AudioControls'
+import { TextHighlight } from './TextHighlight'
+import { useState } from 'react'
 
 interface StoryContentProps {
-  story: Story;
-  currentLanguage: string;
-  currentSectionDir: "rtl" | "ltr";
-  storyTitle: string;
-  currentSectionIndex?: number;
-  onSectionChange?: (index: number) => void;
+  story: Story
+  currentLanguage: string
+  currentSectionDir: 'rtl' | 'ltr'
+  storyTitle: string
+  currentSectionIndex?: number
+  onSectionChange?: (index: number) => void
 }
 
 export const StoryContent = ({
@@ -25,33 +24,33 @@ export const StoryContent = ({
   currentSectionIndex = 0,
   onSectionChange,
 }: StoryContentProps) => {
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
-  
-  const currentSection = story.sections[currentSectionIndex];
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false)
+
+  const currentSection = story.sections[currentSectionIndex]
   const currentText =
     currentSection?.texts[currentLanguage] ||
-    "Content not available in selected language";
+    'Content not available in selected language'
 
   const currentImage = currentSection?.image
     ? getImageUrl(currentSection.image)
-    : getImageUrl(story.cover_image);
+    : getImageUrl(story.cover_image)
 
   const handleNextSection = () => {
     if (currentSectionIndex < story.sections.length - 1 && onSectionChange) {
-      onSectionChange(currentSectionIndex + 1);
+      onSectionChange(currentSectionIndex + 1)
     }
-  };
+  }
 
   const handlePrevSection = () => {
     if (currentSectionIndex > 0 && onSectionChange) {
-      onSectionChange(currentSectionIndex - 1);
+      onSectionChange(currentSectionIndex - 1)
     }
-  };
+  }
 
   return (
     <Card
       dir={currentSectionDir}
-      className="overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm mb-4 md:mb-6"
+      className="mb-4 overflow-hidden border-dream-light/20 bg-white/70 backdrop-blur-sm dark:bg-nightsky-light/70 md:mb-6"
     >
       <div className="grid">
         {/* Story Section Image */}
@@ -60,26 +59,23 @@ export const StoryContent = ({
             <img
               src={currentImage}
               alt={storyTitle}
-              className="w-full h-64 md:h-full object-cover aspect-square md:aspect-auto"
-              onError={(e) => {
-                console.log("Image failed to load:", currentImage);
-                e.currentTarget.style.display = "none";
+              className="aspect-square h-64 w-full object-cover md:aspect-auto md:h-full"
+              onError={e => {
+                console.log('Image failed to load:', currentImage)
+                e.currentTarget.style.display = 'none'
               }}
             />
           ) : (
-            <div className="w-full h-64 md:h-full bg-gray-200 flex items-center justify-center aspect-square md:aspect-auto">
+            <div className="flex aspect-square h-64 w-full items-center justify-center bg-gray-200 md:aspect-auto md:h-full">
               <span className="text-gray-500">No Image</span>
             </div>
           )}
         </div>
 
         {/* Story Section Text */}
-        <div className="w-full p-4 md:p-6 flex flex-col">
+        <div className="flex w-full flex-col p-4 md:p-6">
           <div className="flex-grow">
-            <TextHighlight 
-              text={currentText} 
-              isPlaying={isAudioPlaying}
-            />
+            <TextHighlight text={currentText} isPlaying={isAudioPlaying} />
           </div>
 
           <AudioControls
@@ -93,9 +89,9 @@ export const StoryContent = ({
           />
 
           {/* Section Navigation - only show if not in single story audio mode or if no sections */}
-          {(story.audio_mode !== "single_story" ||
+          {(story.audio_mode !== 'single_story' ||
             story.sections.length > 1) && (
-            <div className="flex justify-between items-center mt-auto">
+            <div className="mt-auto flex items-center justify-between">
               <Button
                 variant="ghost"
                 size="icon"
@@ -104,10 +100,16 @@ export const StoryContent = ({
                 aria-label="Previous section"
                 className="h-8 w-8 md:h-10 md:w-10"
               >
-                <ChevronLeft className="rtl:rotate-180 h-4 w-4 md:h-5 md:w-5" />
+                <ChevronLeft
+                  className={
+                    currentSectionDir === 'rtl'
+                      ? 'h-4 w-4 rotate-180 md:h-5 md:w-5'
+                      : 'h-4 w-4 md:h-5 md:w-5'
+                  }
+                />
               </Button>
 
-              <span className="text-xs md:text-sm text-muted-foreground px-2">
+              <span className="px-2 text-xs text-muted-foreground md:text-sm">
                 {currentSectionIndex + 1} / {story.sections.length || 1}
               </span>
 
@@ -119,12 +121,18 @@ export const StoryContent = ({
                 aria-label="Next section"
                 className="h-8 w-8 md:h-10 md:w-10"
               >
-                <ChevronRight className="rtl:rotate-180 h-4 w-4 md:h-5 md:w-5" />
+                <ChevronRight
+                  className={
+                    currentSectionDir === 'rtl'
+                      ? 'h-4 w-4 rotate-180 md:h-5 md:w-5'
+                      : 'h-4 w-4 md:h-5 md:w-5'
+                  }
+                />
               </Button>
             </div>
           )}
         </div>
       </div>
     </Card>
-  );
-};
+  )
+}
