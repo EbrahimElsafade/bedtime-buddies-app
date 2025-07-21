@@ -1,11 +1,10 @@
-
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+import { Switch } from '@/components/ui/switch'
+import { Label } from '@/components/ui/label'
 
 interface AutoplayToggleProps {
-  isAutoplay: boolean;
-  onAutoplayChange: (enabled: boolean) => void;
-  currentSectionDir: "rtl" | "ltr";
+  isAutoplay: boolean
+  onAutoplayChange: (enabled: boolean) => void
+  currentSectionDir: 'rtl' | 'ltr'
 }
 
 export const AutoplayToggle = ({
@@ -14,7 +13,10 @@ export const AutoplayToggle = ({
   currentSectionDir,
 }: AutoplayToggleProps) => {
   return (
-    <div className="flex items-center space-x-2 rtl:space-x-reverse" dir={currentSectionDir}>
+    <div
+      className="flex items-center space-x-2 rtl:space-x-reverse"
+      dir={currentSectionDir}
+    >
       <Switch
         id="autoplay"
         checked={isAutoplay}
@@ -24,5 +26,5 @@ export const AutoplayToggle = ({
         Autoplay
       </Label>
     </div>
-  );
-};
+  )
+}
