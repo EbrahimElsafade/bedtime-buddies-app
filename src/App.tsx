@@ -118,6 +118,8 @@ const App = () => {
                 <Route path="/subscription" element={<Subscription />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                {/* Add specific 404 route */}
+                <Route path="/404" element={<NotFound />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
               

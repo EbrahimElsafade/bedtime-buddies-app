@@ -1,3 +1,4 @@
+
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -47,13 +48,10 @@ const AdminRoute = () => {
         redirectReason: getRedirectReason(),
       })
       lastStateRef.current = currentState
-
-      
     }
   }, [isAuthenticated, isLoading, profile, user, location, isProfileLoaded])
 
   // Show loading state while authentication is being checked
-  // But only show it for a reasonable amount of time
   if (isLoading || !isProfileLoaded) {
     const timeSinceMount = Date.now() - mountTimeRef.current
 
@@ -77,19 +75,19 @@ const AdminRoute = () => {
     return <Navigate to="/login" replace state={{ from: location }} />
   }
 
-  // Check if profile exists
+  // Check if profile exists and redirect to 404 if no profile
   if (!profile) {
-    console.log('AdminRoute - No profile found, redirecting to home')
-    return <Navigate to="/" replace />
+    console.log('AdminRoute - No profile found, redirecting to 404')
+    return <Navigate to="/404" replace />
   }
 
-  // Redirect to home if not an admin
+  // Redirect to 404 if not an admin (unauthorized user)
   if (profile.role !== 'admin') {
     console.log(
-      'AdminRoute - Not admin, redirecting to home. Role:',
+      'AdminRoute - Not admin, redirecting to 404. Role:',
       profile.role,
     )
-    return <Navigate to="/" replace />
+    return <Navigate to="/404" replace />
   }
 
   // Render the child routes if user is an admin
