@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { logger } from '@/utils/logger';
 
 // Helper function to handle auth operations with retry logic
 const withRetry = async <T>(operation: () => Promise<T>, maxRetries = 2): Promise<T> => {
@@ -13,7 +14,7 @@ const withRetry = async <T>(operation: () => Promise<T>, maxRetries = 2): Promis
       return await operation();
     } catch (error: any) {
       lastError = error;
-      console.log(`Auth operation attempt ${attempt + 1} failed:`, error.message);
+      logger.debug(`Auth operation attempt ${attempt + 1} failed:`, error.message);
       
       if (attempt < maxRetries) {
         // Wait before retrying
@@ -47,12 +48,12 @@ export const useAuthOperations = () => {
       if (data && data.user) {
         setUser(data.user);
         setSession(data.session);
-        console.log("Login successful, session established");
+        logger.info("Login successful, session established");
       }
       
       toast.success('Logged in successfully');
     } catch (error: any) {
-      console.error('Login error:', error.message);
+      logger.error('Login error:', error.message);
       toast.error(error.message || 'Failed to sign in');
       throw error;
     } finally {
@@ -73,7 +74,7 @@ export const useAuthOperations = () => {
         throw error;
       }
     } catch (error: any) {
-      console.error('Google login error:', error.message);
+      logger.error('Google login error:', error.message);
       toast.error(error.message || 'Failed to sign in with Google');
       throw error;
     }
@@ -92,7 +93,7 @@ export const useAuthOperations = () => {
         throw error;
       }
     } catch (error: any) {
-      console.error('Apple login error:', error.message);
+      logger.error('Apple login error:', error.message);
       toast.error(error.message || 'Failed to sign in with Apple');
       throw error;
     }
@@ -130,12 +131,12 @@ export const useAuthOperations = () => {
       if (data && data.user) {
         setUser(data.user);
         setSession(data.session);
-        console.log("Registration successful, session established");
+        logger.info("Registration successful, session established");
       }
       
       toast.success('Registration successful! Please check your email to verify your account.');
     } catch (error: any) {
-      console.error('Registration error:', error.message);
+      logger.error('Registration error:', error.message);
       toast.error(error.message || 'Failed to register');
       throw error;
     } finally {
@@ -154,10 +155,10 @@ export const useAuthOperations = () => {
       // Clear user and session state
       setUser(null);
       setSession(null);
-      console.log("Logout successful, session cleared");
+      logger.info("Logout successful, session cleared");
       toast.success('Logged out successfully');
     } catch (error: any) {
-      console.error('Logout error:', error.message);
+      logger.error('Logout error:', error.message);
       toast.error('Failed to sign out');
     } finally {
       setIsLoading(false);
@@ -178,7 +179,7 @@ export const useAuthOperations = () => {
       
       toast.success('Password reset instructions sent to your email');
     } catch (error: any) {
-      console.error('Password reset error:', error.message);
+      logger.error('Password reset error:', error.message);
       toast.error(error.message || 'Failed to send reset password instructions');
       throw error;
     }

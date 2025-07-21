@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { Profile } from '@/types/auth';
+import { logger } from '@/utils/logger';
 
 export const useProfileManagement = (user: User | null) => {
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -13,7 +14,7 @@ export const useProfileManagement = (user: User | null) => {
   const fetchUserProfile = useCallback(async (userId: string, skipIfLoaded = false) => {
     // Skip fetching if profile is already loaded and skipIfLoaded is true
     if (skipIfLoaded && profileLoaded && profile) {
-      console.log("Profile already loaded, skipping fetch");
+      logger.debug("Profile already loaded, skipping fetch");
       return profile;
     }
 
@@ -21,8 +22,7 @@ export const useProfileManagement = (user: User | null) => {
       setIsLoading(true);
       setError(null);
       
-      console.log("Starting to fetch profile for user:", userId);
-      console.log("Querying profiles table for user:", userId);
+      logger.debug("Starting to fetch profile for user:", userId);
       
       const { data, error: profileError } = await supabase
         .from('profiles')
@@ -31,11 +31,11 @@ export const useProfileManagement = (user: User | null) => {
         .single();
 
       if (profileError) {
-        console.error("Profile fetch error:", profileError);
+        logger.error("Profile fetch error:", profileError);
         throw profileError;
       }
 
-      console.log("Profile fetched successfully:", data);
+      logger.debug("Profile fetched successfully:", data);
       
       // Transform the data to match the Profile type from auth.ts
       const transformedProfile: Profile = {
@@ -51,11 +51,11 @@ export const useProfileManagement = (user: User | null) => {
       
       setProfile(transformedProfile);
       setProfileLoaded(true);
-      console.log("Profile fetch completed, profileLoaded set to true");
+      logger.debug("Profile fetch completed, profileLoaded set to true");
       
       return transformedProfile;
     } catch (err: any) {
-      console.error("Error in fetchUserProfile:", err);
+      logger.error("Error in fetchUserProfile:", err);
       setError(err);
       setProfile(null);
       setProfileLoaded(true); // Still set to true to prevent infinite loading
@@ -105,13 +105,13 @@ export const useProfileManagement = (user: User | null) => {
   // Effect to fetch profile when user changes, but avoid refetch on tab switches
   useEffect(() => {
     if (user?.id) {
-      console.log("useProfileManagement effect triggered, user:", user.id);
+      logger.debug("useProfileManagement effect triggered, user:", user.id);
       
       // Only fetch if we don't have a profile loaded yet
       if (!profileLoaded) {
         fetchUserProfile(user.id);
       } else {
-        console.log("Profile already loaded, skipping fetch");
+        logger.debug("Profile already loaded, skipping fetch");
       }
     } else if (!user) {
       // Clear profile when user logs out

@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuthOperations } from '@/hooks/useAuth';
 import { useProfileManagement } from '@/hooks/useProfileManagement';
 import { AuthContextType } from '@/types/auth';
+import { logger } from '@/utils/logger';
 
 // Create the context with undefined as initial value
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -53,7 +54,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Simplified auth state handler without complex ref management
   const handleAuthStateChange = useCallback(
     debounce(async (event: string, currentSession: any) => {
-      // console.log('Processing auth state change:', event, currentSession?.user?.email);
+      logger.debug('Processing auth state change:', event, currentSession?.user?.email);
       
       if (currentSession) {
         setSession(currentSession);
@@ -63,7 +64,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
           sessionStorage.setItem('supabase.auth.session', JSON.stringify(currentSession));
         } catch (error) {
-          console.warn('Failed to store session in sessionStorage:', error);
+          logger.warn('Failed to store session in sessionStorage:', error);
         }
       } else {
         setSession(null);
@@ -74,7 +75,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
           sessionStorage.removeItem('supabase.auth.session');
         } catch (error) {
-          console.warn('Failed to clear session from sessionStorage:', error);
+          logger.warn('Failed to clear session from sessionStorage:', error);
         }
       }
       
@@ -85,7 +86,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 
   useEffect(() => {
-    // console.log("Setting up auth state listener");
+    logger.debug("Setting up auth state listener");
     let isMounted = true;
     let subscription: any;
     
@@ -99,11 +100,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // Only process important events
             const importantEvents = ['SIGNED_IN', 'SIGNED_OUT', 'INITIAL_SESSION'];
             if (!importantEvents.includes(event)) {
-              console.log('Ignoring auth event:', event);
+              logger.debug('Ignoring auth event:', event);
               return;
             }
             
-            // console.log('Processing important auth event:', event, !!currentSession);
+            logger.debug('Processing important auth event:', event, !!currentSession);
             handleAuthStateChange(event, currentSession);
           }
         );
@@ -123,7 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const storedSession = sessionStorage.getItem('supabase.auth.session');
             if (storedSession) {
               const parsedSession = JSON.parse(storedSession);
-              console.log("Attempting to restore session from sessionStorage");
+              logger.debug("Attempting to restore session from sessionStorage");
               
               // Validate the stored session is still valid
               if (parsedSession.expires_at && new Date(parsedSession.expires_at * 1000) > new Date()) {
@@ -131,11 +132,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               }
             }
           } catch (error) {
-            console.warn('Failed to restore session from sessionStorage:', error);
+            logger.warn('Failed to restore session from sessionStorage:', error);
           }
         }
         
-        // console.log("Initial session check:", !!sessionToUse);
+        logger.debug("Initial session check:", !!sessionToUse);
         
         if (sessionToUse) {
           setSession(sessionToUse);
@@ -145,7 +146,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // Always set auth loading to false after initial session check
         setAuthLoading(false);
       } catch (error) {
-        console.error('Error setting up auth listener:', error);
+        logger.error('Error setting up auth listener:', error);
         setAuthLoading(false);
       }
     };
@@ -174,7 +175,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       sessionValid: !!session && session.expires_at && new Date(session.expires_at * 1000) > new Date()
     };
     
-    // console.log("Auth state update:", logData);
+    logger.debug("Auth state update:", logData);
   }, [user, profile, authLoading, profileLoading, profileLoaded, isLoading, session]);
 
   return (

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
@@ -10,6 +11,7 @@ import { StoryContent } from '@/components/story/StoryContent'
 import { AudioControls } from '@/components/story/AudioControls'
 import { PremiumMessage } from '@/components/story/PremiumMessage'
 import { getMultilingualText } from '@/utils/multilingualUtils'
+import { logger } from '@/utils/logger'
 
 const Story = () => {
   const { storyId } = useParams<{ storyId: string }>()
@@ -33,6 +35,7 @@ const Story = () => {
 
   useEffect(() => {
     if (error || (!isLoading && !story)) {
+      logger.warn('Story not found or error occurred, redirecting to stories page')
       navigate('/stories', { replace: true })
     }
   }, [error, story, isLoading, navigate])
