@@ -53,7 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Simplified auth state handler without complex ref management
   const handleAuthStateChange = useCallback(
     debounce(async (event: string, currentSession: any) => {
-      console.log('Processing auth state change:', event, currentSession?.user?.email);
+      // console.log('Processing auth state change:', event, currentSession?.user?.email);
       
       if (currentSession) {
         setSession(currentSession);
@@ -85,7 +85,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 
   useEffect(() => {
-    console.log("Setting up auth state listener");
+    // console.log("Setting up auth state listener");
     let isMounted = true;
     let subscription: any;
     
@@ -103,7 +103,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               return;
             }
             
-            console.log('Processing important auth event:', event, !!currentSession);
+            // console.log('Processing important auth event:', event, !!currentSession);
             handleAuthStateChange(event, currentSession);
           }
         );
@@ -135,7 +135,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         }
         
-        console.log("Initial session check:", !!sessionToUse);
+        // console.log("Initial session check:", !!sessionToUse);
         
         if (sessionToUse) {
           setSession(sessionToUse);
@@ -174,7 +174,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       sessionValid: !!session && session.expires_at && new Date(session.expires_at * 1000) > new Date()
     };
     
-    console.log("Auth state update:", logData);
+    // console.log("Auth state update:", logData);
   }, [user, profile, authLoading, profileLoading, profileLoaded, isLoading, session]);
 
   return (
