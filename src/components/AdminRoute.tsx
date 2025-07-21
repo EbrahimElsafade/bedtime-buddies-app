@@ -51,8 +51,27 @@ const AdminRoute = () => {
     }
   }, [isAuthenticated, isLoading, profile, user, location, isProfileLoaded])
 
-  // Show loading state while authentication is being checked
-  if (isLoading || !isProfileLoaded) {
+  // Early redirect for unauthenticated users - don't show loading
+  if (!isLoading && !isAuthenticated) {
+    console.log('AdminRoute - Not authenticated, redirecting to login')
+    return <Navigate to="/login" replace state={{ from: location }} />
+  }
+
+  // Early redirect for authenticated users without profiles or non-admin users
+  if (!isLoading && isAuthenticated && isProfileLoaded) {
+    if (!profile) {
+      console.log('AdminRoute - No profile found, redirecting to 404')
+      return <Navigate to="/404" replace />
+    }
+
+    if (profile.role !== 'admin') {
+      console.log('AdminRoute - Not admin, redirecting to 404. Role:', profile.role)
+      return <Navigate to="/404" replace />
+    }
+  }
+
+  // Show loading state only while we're still determining auth/profile status
+  if (isLoading || (isAuthenticated && !isProfileLoaded)) {
     const timeSinceMount = Date.now() - mountTimeRef.current
 
     // If it's been loading for more than 5 seconds, something might be wrong
@@ -67,27 +86,6 @@ const AdminRoute = () => {
         <Skeleton className="h-64 w-full" />
       </div>
     )
-  }
-
-  // Redirect to login if not authenticated
-  if (!isAuthenticated || !user) {
-    console.log('AdminRoute - Not authenticated, redirecting to login')
-    return <Navigate to="/login" replace state={{ from: location }} />
-  }
-
-  // Check if profile exists and redirect to 404 if no profile
-  if (!profile) {
-    console.log('AdminRoute - No profile found, redirecting to 404')
-    return <Navigate to="/404" replace />
-  }
-
-  // Redirect to 404 if not an admin (unauthorized user)
-  if (profile.role !== 'admin') {
-    console.log(
-      'AdminRoute - Not admin, redirecting to 404. Role:',
-      profile.role,
-    )
-    return <Navigate to="/404" replace />
   }
 
   // Render the child routes if user is an admin
