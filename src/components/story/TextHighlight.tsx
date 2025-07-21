@@ -15,7 +15,7 @@ export const TextHighlight = ({ text, isPlaying, onReset }: TextHighlightProps) 
   
   useEffect(() => {
     if (!isPlaying) {
-      setCurrentWordIndex(0);
+      // setCurrentWordIndex(0);
       return;
     }
 
@@ -30,14 +30,14 @@ export const TextHighlight = ({ text, isPlaying, onReset }: TextHighlightProps) 
         if (nextIndex >= words.length) {
           clearInterval(interval);
           onReset?.();
-          return 0;
+          return prev;
         }
         return nextIndex;
       });
-    }, 750); // Move highlight every 0.75 seconds
+    }, 800); // Move highlight every 0.75 seconds
 
     return () => clearInterval(interval);
-  }, [isPlaying, words.length, onReset]);
+  }, [isPlaying, words.length, onReset, words]);
 
   // Reset when text changes
   useEffect(() => {
