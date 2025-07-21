@@ -59,7 +59,7 @@ const App = () => {
     setInitialDirection();
     
     // Add logging to help with debugging
-    console.log("App initialized");
+    // console.log("App initialized");
 
     // Enhanced Page Visibility API handling
     const handleVisibilityChange = () => {
