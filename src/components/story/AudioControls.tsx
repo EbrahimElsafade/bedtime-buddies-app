@@ -121,7 +121,7 @@ export const AudioControls = ({
   if (!audioUrl) return null;
 
   return (
-    <Card className="p-4 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+    <div className="p-4">
       <audio
         ref={audioRef}
         src={audioUrl}
@@ -156,7 +156,7 @@ export const AudioControls = ({
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-4">
           <Slider
             value={[currentTime]}
             max={duration}
@@ -165,7 +165,7 @@ export const AudioControls = ({
             className="w-full"
           />
           
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-4 space-x-2">
             <Volume2 className="h-4 w-4" />
             <Slider
               value={[volume]}
@@ -177,6 +177,6 @@ export const AudioControls = ({
           </div>
         </div>
       </div>
-    </Card>
+    </div>
   );
 };
