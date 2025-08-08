@@ -15,12 +15,12 @@ type PlanType = 'monthly' | 'quarterly' | 'yearly' | 'lifetime';
 const Subscription = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const { t } = useTranslation(['subscription', 'misc']);
+  const { t } = useTranslation('subscription');
   const [selectedPlan, setSelectedPlan] = useState<PlanType>('quarterly');
   const [isGift, setIsGift] = useState(false);
   
   useEffect(() => {
-    document.title = `${t('misc:layout.appName')} - ${t('title')}`;
+    document.title = `Bedtime Stories - ${t('title')}`;
   }, [t]);
   
   const planIds: PlanType[] = ['monthly', 'quarterly', 'yearly', 'lifetime'];
@@ -37,7 +37,7 @@ const Subscription = () => {
     }
     
     setTimeout(() => {
-      toast.success(t('misc:button.subscribeNow'));
+      toast.success(t('subscribeNow'));
     }, 1500);
   };
   
@@ -90,7 +90,7 @@ const Subscription = () => {
                 </CardHeader>
                 <CardContent className="pt-6">
                   <ul className="space-y-2">
-                    {t(`plans.${planId}.features`, { returnObjects: true }).map((feature: string, index: number) => (
+                    {Object.values(t(`plans.${planId}.features`, { returnObjects: true }) as string[]).map((feature: string, index: number) => (
                       <li key={index} className="flex items-start">
                         <Check className="h-5 w-5 text-dream-DEFAULT mr-2 mt-0.5" />
                         <span>{feature}</span>
