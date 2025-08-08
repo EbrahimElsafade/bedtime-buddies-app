@@ -14,5 +14,12 @@
     "religious": "Religieuses",
     "developmental": "Éducatives",
     "entertainment": "Divertissement"
-  }
+  },
+  "allStories": "Parcourir la Collection",
+  "browseCollection": "Découvrez des histoires incroyables de notre collection",
+  "searchStories": "Rechercher des histoires...",
+  "allCategories": "Toutes les Catégories",
+  "noStoriesFound": "Aucune histoire trouvée correspondant à votre recherche",
+  "noStoriesAvailable": "Aucune histoire disponible pour le moment",
+  "backToStories": "Retour aux Histoires"
 }

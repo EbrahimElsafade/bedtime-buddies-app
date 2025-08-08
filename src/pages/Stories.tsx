@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
@@ -21,14 +22,11 @@ import { useLanguage } from '@/contexts/LanguageContext'
 const Stories = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
-  const { t, i18n } = useTranslation(['common', 'stories'])
+  const { t, i18n } = useTranslation(['stories', 'misc'])
   const { language } = useLanguage()
 
   useEffect(() => {
-    document.title = `${t('layout.appName', { ns: 'common' })} - ${t(
-      'stories',
-      { ns: 'navigation' },
-    )}`
+    document.title = `${t('layout.appName', { ns: 'misc' })} - ${t('allStories')}`
   }, [t])
 
   const isRTL = i18n.language === 'ar'
@@ -98,7 +96,7 @@ const Stories = () => {
         <div className="container mx-auto max-w-6xl">
           <div className="mb-4 text-center md:mb-6 lg:mb-8">
             <h1 className="from-dream-DEFAULT mb-2 bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold leading-tight text-transparent md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
-              {t('stories:allStories')}
+              {t('allStories')}
             </h1>
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
@@ -125,10 +123,10 @@ const Stories = () => {
       <div className="container mx-auto max-w-6xl">
         <div className="mb-4 text-center md:mb-6 lg:mb-8">
           <h1 className="from-dream-DEFAULT mb-2 bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold leading-tight text-transparent md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
-            {t('stories:allStories')}
+            {t('allStories')}
           </h1>
           <p className="mx-auto max-w-2xl px-2 text-xs text-muted-foreground md:text-sm lg:text-base">
-            {t('stories:browseCollection')}
+            {t('browseCollection')}
           </p>
         </div>
 
@@ -142,7 +140,7 @@ const Stories = () => {
             />
             <Input
               type="text"
-              placeholder={t('stories:searchStories')}
+              placeholder={t('searchStories')}
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
               className={`w-full ${
@@ -158,7 +156,7 @@ const Stories = () => {
               onClick={() => setSelectedCategory('all')}
               className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
             >
-              {t('stories:allCategories')}
+              {t('allCategories')}
             </Button>
             {categories.map(category => (
               <Button
@@ -170,7 +168,7 @@ const Stories = () => {
                 onClick={() => setSelectedCategory(category.name)}
                 className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
               >
-                {category.name.charAt(0).toUpperCase() + category.name.slice(1)}
+                {t(`category.${category.name}`, { defaultValue: category.name.charAt(0).toUpperCase() + category.name.slice(1) })}
               </Button>
             ))}
           </div>
@@ -181,8 +179,8 @@ const Stories = () => {
           <div className="py-8 text-center md:py-12">
             <p className="text-sm text-muted-foreground md:text-base">
               {searchTerm || selectedCategory !== 'all'
-                ? t('stories:noStoriesFound')
-                : t('stories:noStoriesAvailable')}
+                ? t('noStoriesFound')
+                : t('noStoriesAvailable')}
             </p>
           </div>
         ) : (
@@ -226,11 +224,11 @@ const Stories = () => {
                       )}
                       {story.is_free ? (
                         <div className="absolute right-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-white shadow-lg">
-                          {t('misc:free.tag')}
+                          {t('free.tag', { ns: 'misc' })}
                         </div>
                       ) : (
                         <div className="absolute right-2 top-2 rounded-full border-2 border-white bg-yellow-500 px-3 py-1.5 text-xs font-bold text-black shadow-lg">
-                          {t('misc:premium.tag')}
+                          {t('premium.tag', { ns: 'misc' })}
                         </div>
                       )}
                     </div>
@@ -245,13 +243,12 @@ const Stories = () => {
                               variant="secondary"
                               className="text-dream-DEFAULT bg-dream-light/30 text-xs"
                             >
-                              {story.category.charAt(0).toUpperCase() +
-                                story.category.slice(1)}
+                              {t(`category.${story.category}`, { defaultValue: story.category.charAt(0).toUpperCase() + story.category.slice(1) })}
                             </Badge>
                             <div className="text-dream-DEFAULT flex items-center text-xs">
                               <Clock className="mr-1 h-3 w-3" />
                               <span>
-                                {story.duration} {t('misc:duration')}
+                                {t('duration', { duration: story.duration })}
                               </span>
                             </div>
                           </div>

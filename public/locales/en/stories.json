@@ -14,5 +14,12 @@
     "religious": "Religious",
     "developmental": "Educational",
     "entertainment": "Entertainment"
-  }
+  },
+  "allStories": "Browse Collection",
+  "browseCollection": "Discover amazing stories from our collection",
+  "searchStories": "Search stories...",
+  "allCategories": "All Categories",
+  "noStoriesFound": "No stories found matching your search",
+  "noStoriesAvailable": "No stories available at the moment",
+  "backToStories": "Back to Stories"
 }

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -5,7 +6,7 @@ import { toast } from "sonner";
 import { useTranslation } from 'react-i18next';
 
 const HangmanGame = () => {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const [currentWord, setCurrentWord] = useState('');
   const [guessedLetters, setGuessedLetters] = useState<string[]>([]);
   const [wrongGuesses, setWrongGuesses] = useState(0);
@@ -25,6 +26,7 @@ const HangmanGame = () => {
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   const maxWrongGuesses = 6;
+  const isRTL = i18n.language === 'ar';
 
   const initializeGame = () => {
     const randomWord = words[Math.floor(Math.random() * words.length)];
@@ -118,7 +120,7 @@ const HangmanGame = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-2">
+    <div className="w-full max-w-4xl mx-auto px-2" dir={isRTL ? 'rtl' : 'ltr'}>
       <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
         <CardHeader className="text-center px-4 py-4">
           <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent">
@@ -146,7 +148,7 @@ const HangmanGame = () => {
 
               <div className="text-center mt-2 mb-4">
                 <div className="text-xs md:text-sm font-semibold text-gray-600 dark:text-gray-300">
-                  HANGMAN GAME
+                  {t('games.hangman.title').toUpperCase()}
                 </div>
               </div>
 

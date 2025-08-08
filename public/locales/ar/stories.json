@@ -14,5 +14,12 @@
     "religious": "دينية",
     "developmental": "تعليمية",
     "entertainment": "ترفيهية"
-  }
+  },
+  "allStories": "تصفح المجموعة",
+  "browseCollection": "اكتشف قصص رائعة من مجموعتنا",
+  "searchStories": "البحث في القصص...",
+  "allCategories": "جميع الفئات",
+  "noStoriesFound": "لم يتم العثور على قصص تطابق بحثك",
+  "noStoriesAvailable": "لا توجد قصص متاحة في الوقت الحالي",
+  "backToStories": "العودة للقصص"
 }

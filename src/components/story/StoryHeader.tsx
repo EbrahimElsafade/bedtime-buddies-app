@@ -2,6 +2,7 @@
 import { ChevronLeft, Heart, Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface StoryHeaderProps {
   onBackClick: () => void;
@@ -10,10 +11,12 @@ interface StoryHeaderProps {
 }
 
 export const StoryHeader = ({ onBackClick, isFavorite, onToggleFavorite }: StoryHeaderProps) => {
+  const { t } = useTranslation('stories');
+
   return (
     <div className="mb-6 flex flex-wrap justify-between items-center">
       <Button variant="ghost" onClick={onBackClick} className="mb-4 px-2">
-        <ChevronLeft className="rtl:rotate-180 me-1 h-4 w-4" /> Back to Stories
+        <ChevronLeft className="rtl:rotate-180 me-1 h-4 w-4" /> {t('backToStories')}
       </Button>
       
       <div className="flex items-center space-x-2">
