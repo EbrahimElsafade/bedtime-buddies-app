@@ -68,15 +68,9 @@ const StoryEditor = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
-  const [coverImagePreview, setCoverImagePreview] = useState<string | null>(
-    null
-  );
-  const [storyAudioFiles, setStoryAudioFiles] = useState<Record<string, File>>(
-    {}
-  );
-  const [storyAudioPreviews, setStoryAudioPreviews] = useState<
-    Record<string, string>
-  >({});
+  const [coverImagePreview, setCoverImagePreview] = useState<string | null>(null);
+  const [storyAudioFiles, setStoryAudioFiles] = useState<Record<string, File>>({});
+  const [storyAudioPreviews, setStoryAudioPreviews] = useState<Record<string, string>>({});
 
   // Story form data - Updated to handle multilingual titles and descriptions with fixed languages
   const [storyData, setStoryData] = useState({
@@ -124,147 +118,78 @@ const StoryEditor = () => {
   });
 
   // Fetch story data if editing
-  const fetchStory = async (): Promise<Story | null> => {
-    if (!isEditing || !id) return null;
-
-    console.log("Fetching story for ID:", id);
-
-    // Fetch story details
-    const { data: story, error: storyError } = await supabase
-      .from("stories")
-      .select("*")
-      .eq("id", id)
-      .single();
-
-    if (storyError) {
-      console.error("Story fetch error:", storyError);
-      toast.error("Failed to fetch story details");
-      throw storyError;
-    }
-
-    // Fetch story sections
-    const { data: sections, error: sectionsError } = await supabase
-      .from("story_sections")
-      .select("*")
-      .eq("story_id", id)
-      .order("order", { ascending: true });
-
-    if (sectionsError) {
-      console.error("Sections fetch error:", sectionsError);
-      toast.error("Failed to fetch story sections");
-      throw sectionsError;
-    }
-
-    console.log("Story cover_image from DB:", story.cover_image);
-    if (story.cover_image) {
-      const imageUrl = getImageUrl(story.cover_image);
-      console.log("Setting preview image URL:", imageUrl);
-      setCoverImagePreview(imageUrl);
-    }
-
-    // Handle story audio - parse JSON if it's a string
-    let parsedStoryAudio = {};
-    if (story.story_audio) {
-      if (typeof story.story_audio === "string") {
-        try {
-          parsedStoryAudio = JSON.parse(story.story_audio);
-        } catch (e) {
-          // If parsing fails, treat as single language audio
-          parsedStoryAudio = { en: story.story_audio };
-        }
-      } else {
-        parsedStoryAudio = story.story_audio;
-      }
-
-      // Set story audio previews
-      const audioUrls: Record<string, string> = {};
-      Object.entries(parsedStoryAudio as Record<string, string>).forEach(
-        ([lang, audioFile]) => {
-          if (audioFile) {
-            audioUrls[lang] = getImageUrl(audioFile);
-          }
-        }
-      );
-      setStoryAudioPreviews(audioUrls);
-    }
-
-    // Format sections for the UI - ensure all sections have proper structure
-    const formattedSections: StorySection[] = sections.map((section) => ({
-      id: section.id,
-      order: section.order,
-      texts: section.texts as Record<string, string>,
-      voices: section.voices as Record<string, string> | undefined,
-      image: section.image || undefined,
-    }));
-
-    // Transform multilingual title and description to Record<string, string>
-    const title = (() => {
-      if (typeof story.title === "string") {
-        return { en: story.title, ar: "", fr: "" };
-      } else if (story.title && typeof story.title === "object") {
-        const existingTitle = story.title as Record<string, string>;
-        return {
-          en: existingTitle.en || "",
-          ar: existingTitle.ar || "",
-          fr: existingTitle.fr || "",
-        };
-      }
-      return { en: "", ar: "", fr: "" };
-    })();
-
-    const description = (() => {
-      if (typeof story.description === "string") {
-        return { en: story.description, ar: "", fr: "" };
-      } else if (story.description && typeof story.description === "object") {
-        const existingDescription = story.description as Record<string, string>;
-        return {
-          en: existingDescription.en || "",
-          ar: existingDescription.ar || "",
-          fr: existingDescription.fr || "",
-        };
-      }
-      return { en: "", ar: "", fr: "" };
-    })();
-
-    return {
-      ...story,
-      title,
-      description,
-      story_audio: parsedStoryAudio as Record<string, string>,
-      audio_mode: (story.audio_mode || "per_section") as
-        | "per_section"
-        | "single_story",
-      sections: formattedSections,
-    };
-  };
-
   const { data: storyDetails, isLoading } = useQuery({
     queryKey: ["admin-story", id],
-    queryFn: fetchStory,
+    queryFn: async () => {
+      if (!isEditing || !id) return null;
+
+      console.log("Fetching story for ID:", id);
+
+      // Fetch story details
+      const { data: story, error: storyError } = await supabase
+        .from("stories")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (storyError) {
+        console.error("Story fetch error:", storyError);
+        toast.error("Failed to fetch story details");
+        throw storyError;
+      }
+
+      // Fetch story sections
+      const { data: sections, error: sectionsError } = await supabase
+        .from("story_sections")
+        .select("*")
+        .eq("story_id", id)
+        .order("order", { ascending: true });
+
+      if (sectionsError) {
+        console.error("Sections fetch error:", sectionsError);
+        toast.error("Failed to fetch story sections");
+        throw sectionsError;
+      }
+
+      console.log("Fetched story sections:", sections);
+
+      return {
+        story,
+        sections: sections || []
+      };
+    },
     enabled: isEditing && !!id && id !== "new",
     staleTime: Infinity,
   });
 
   useEffect(() => {
-    console.log(
-      "StoryEditor - isEditing:",
-      isEditing,
-      "id:",
-      id,
-      "storyDetails:",
-      storyDetails
-    );
+    console.log("StoryEditor - isEditing:", isEditing, "id:", id, "storyDetails:", storyDetails);
 
     if (storyDetails) {
+      const { story, sections } = storyDetails;
+
+      // Handle cover image preview
+      if (story.cover_image) {
+        const imageUrl = getImageUrl(story.cover_image);
+        console.log("Setting preview image URL:", imageUrl);
+        setCoverImagePreview(imageUrl);
+      }
+
       // Handle multilingual title and description with fixed languages
       let titleObj = { en: "", ar: "", fr: "" };
       let descriptionObj = { en: "", ar: "", fr: "" };
       let storyAudioObj = {};
 
-      if (typeof storyDetails.title === "string") {
-        titleObj = { en: storyDetails.title, ar: "", fr: "" };
-      } else if (storyDetails.title && typeof storyDetails.title === "object") {
-        const existingTitle = storyDetails.title as Record<string, string>;
+      // Parse title
+      if (typeof story.title === 'string') {
+        try {
+          const parsed = JSON.parse(story.title);
+          titleObj = { en: parsed.en || "", ar: parsed.ar || "", fr: parsed.fr || "" };
+        } catch {
+          titleObj = { en: story.title, ar: "", fr: "" };
+        }
+      } else if (story.title && typeof story.title === 'object') {
+        const existingTitle = story.title as Record<string, string>;
         titleObj = {
           en: existingTitle.en || "",
           ar: existingTitle.ar || "",
@@ -272,16 +197,16 @@ const StoryEditor = () => {
         };
       }
 
-      if (typeof storyDetails.description === "string") {
-        descriptionObj = { en: storyDetails.description, ar: "", fr: "" };
-      } else if (
-        storyDetails.description &&
-        typeof storyDetails.description === "object"
-      ) {
-        const existingDescription = storyDetails.description as Record<
-          string,
-          string
-        >;
+      // Parse description
+      if (typeof story.description === 'string') {
+        try {
+          const parsed = JSON.parse(story.description);
+          descriptionObj = { en: parsed.en || "", ar: parsed.ar || "", fr: parsed.fr || "" };
+        } catch {
+          descriptionObj = { en: story.description, ar: "", fr: "" };
+        }
+      } else if (story.description && typeof story.description === 'object') {
+        const existingDescription = story.description as Record<string, string>;
         descriptionObj = {
           en: existingDescription.en || "",
           ar: existingDescription.ar || "",
@@ -289,77 +214,113 @@ const StoryEditor = () => {
         };
       }
 
-      if (typeof storyDetails.story_audio === "string") {
+      // Parse story audio
+      if (typeof story.story_audio === 'string') {
         try {
-          storyAudioObj = JSON.parse(storyDetails.story_audio);
+          storyAudioObj = JSON.parse(story.story_audio);
         } catch {
-          storyAudioObj = { en: storyDetails.story_audio };
+          storyAudioObj = { en: story.story_audio };
         }
-      } else if (
-        storyDetails.story_audio &&
-        typeof storyDetails.story_audio === "object"
-      ) {
-        storyAudioObj = storyDetails.story_audio as Record<string, string>;
+      } else if (story.story_audio && typeof story.story_audio === 'object') {
+        storyAudioObj = story.story_audio as Record<string, string>;
+      }
+
+      // Set story audio previews
+      if (storyAudioObj && Object.keys(storyAudioObj).length > 0) {
+        const audioUrls: Record<string, string> = {};
+        Object.entries(storyAudioObj as Record<string, string>).forEach(
+          ([lang, audioFile]) => {
+            if (audioFile) {
+              audioUrls[lang] = getImageUrl(audioFile);
+            }
+          }
+        );
+        setStoryAudioPreviews(audioUrls);
       }
 
       setStoryData({
         title: titleObj,
         description: descriptionObj,
-        category: storyDetails.category || "",
-        duration: storyDetails.duration || 5,
-        is_free: storyDetails.is_free,
-        is_published: storyDetails.is_published,
-        languages: storyDetails.languages || ["en"],
-        cover_image: storyDetails.cover_image,
-        audio_mode: (storyDetails.audio_mode || "per_section") as
-          | "per_section"
-          | "single_story",
+        category: story.category || "",
+        duration: story.duration || 5,
+        is_free: story.is_free,
+        is_published: story.is_published,
+        languages: story.languages || ["en"],
+        cover_image: story.cover_image,
+        audio_mode: (story.audio_mode || "per_section") as "per_section" | "single_story",
         story_audio: storyAudioObj,
       });
 
-      if (storyDetails.sections) {
-        // Convert StorySection[] to StorySectionForm[] for editing
-        const sectionsForForm: StorySectionForm[] = storyDetails.sections.map(
-          (section) => ({
-            ...section,
+      // Process sections for the form
+      if (sections && sections.length > 0) {
+        console.log("Processing sections:", sections);
+        const sectionsForForm: StorySectionForm[] = sections.map((section) => {
+          console.log("Processing section:", section);
+          
+          // Parse texts
+          let texts = {};
+          if (typeof section.texts === 'string') {
+            try {
+              texts = JSON.parse(section.texts);
+            } catch {
+              texts = { en: section.texts };
+            }
+          } else if (section.texts && typeof section.texts === 'object') {
+            texts = section.texts;
+          }
+
+          // Parse voices
+          let voices = {};
+          if (typeof section.voices === 'string') {
+            try {
+              voices = JSON.parse(section.voices);
+            } catch {
+              voices = { en: section.voices };
+            }
+          } else if (section.voices && typeof section.voices === 'object') {
+            voices = section.voices;
+          }
+
+          // Set up voice previews
+          const voicePreviews: Record<string, string> = {};
+          if (voices && typeof voices === 'object') {
+            Object.entries(voices as Record<string, string>).forEach(([lang, voiceFile]) => {
+              if (voiceFile) {
+                voicePreviews[lang] = getImageUrl(voiceFile);
+              }
+            });
+          }
+
+          return {
+            id: section.id,
+            order: section.order,
+            texts: texts as Record<string, string>,
+            voices: voices as Record<string, string>,
+            image: section.image || undefined,
             imagePreview: section.image ? getImageUrl(section.image) : null,
-            voicePreviews: section.voices
-              ? Object.entries(section.voices).reduce(
-                  (acc, [lang, voiceFile]) => {
-                    if (voiceFile) {
-                      acc[lang] = getImageUrl(voiceFile);
-                    }
-                    return acc;
-                  },
-                  {} as Record<string, string>
-                )
-              : {},
-          })
-        );
+            voicePreviews,
+          };
+        });
+        
+        console.log("Setting sections for form:", sectionsForForm);
         setStorySections(sectionsForForm);
+      } else {
+        console.log("No sections found, initializing empty sections");
+        setStorySections([]);
       }
     }
   }, [storyDetails, isEditing, id]);
 
   // Initialize sections when languages change
   useEffect(() => {
-    if (
-      storySections.length === 0 &&
-      storyData.languages.length > 0 &&
-      !isEditing
-    ) {
+    if (storySections.length === 0 && storyData.languages.length > 0 && !isEditing) {
       addNewSection();
     }
   }, [storyData.languages, isEditing]);
 
   // Set default category when categories are loaded and no category is set
   useEffect(() => {
-    if (
-      categories &&
-      categories.length > 0 &&
-      !storyData.category &&
-      !isEditing
-    ) {
+    if (categories && categories.length > 0 && !storyData.category && !isEditing) {
       setStoryData((prev) => ({ ...prev, category: categories[0].name }));
     }
   }, [categories, storyData.category, isEditing]);
@@ -374,10 +335,7 @@ const StoryEditor = () => {
       }
     });
 
-    if (
-      JSON.stringify(updatedStoryAudio) !==
-      JSON.stringify(storyData.story_audio)
-    ) {
+    if (JSON.stringify(updatedStoryAudio) !== JSON.stringify(storyData.story_audio)) {
       setStoryData((prev) => ({
         ...prev,
         story_audio: updatedStoryAudio,
@@ -454,9 +412,7 @@ const StoryEditor = () => {
 
   // Handle removing a language
   const handleRemoveLanguage = (language: string) => {
-    const updatedLanguages = storyData.languages.filter(
-      (lang) => lang !== language
-    );
+    const updatedLanguages = storyData.languages.filter((lang) => lang !== language);
     const updatedStoryAudio = { ...storyData.story_audio };
     delete updatedStoryAudio[language];
 
@@ -539,20 +495,13 @@ const StoryEditor = () => {
     setStorySections(reorderedSections);
   };
 
-  const updateSectionText = (
-    sectionIndex: number,
-    language: string,
-    text: string
-  ) => {
+  const updateSectionText = (sectionIndex: number, language: string, text: string) => {
     const updatedSections = [...storySections];
     updatedSections[sectionIndex].texts[language] = text;
     setStorySections(updatedSections);
   };
 
-  const handleSectionImageChange = (
-    sectionIndex: number,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleSectionImageChange = (sectionIndex: number, e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const updatedSections = [...storySections];
@@ -563,11 +512,7 @@ const StoryEditor = () => {
   };
 
   // Improved section voice file handling
-  const handleSectionVoiceChange = (
-    sectionIndex: number,
-    language: string,
-    file: File
-  ) => {
+  const handleSectionVoiceChange = (sectionIndex: number, language: string, file: File) => {
     const updatedSections = [...storySections];
     if (!updatedSections[sectionIndex].voiceFiles) {
       updatedSections[sectionIndex].voiceFiles = {};
@@ -576,8 +521,7 @@ const StoryEditor = () => {
       updatedSections[sectionIndex].voicePreviews = {};
     }
     updatedSections[sectionIndex].voiceFiles![language] = file;
-    updatedSections[sectionIndex].voicePreviews![language] =
-      URL.createObjectURL(file);
+    updatedSections[sectionIndex].voicePreviews![language] = URL.createObjectURL(file);
     setStorySections(updatedSections);
   };
 
@@ -608,12 +552,7 @@ const StoryEditor = () => {
 
       // Upload cover image if changed
       if (coverImageFile) {
-        console.log(
-          "Uploading image file:",
-          coverImageFile.name,
-          "Size:",
-          coverImageFile.size
-        );
+        console.log("Uploading image file:", coverImageFile.name, "Size:", coverImageFile.size);
         const filename = `cover-${Date.now()}-${coverImageFile.name}`;
 
         const { data: uploadData, error: uploadError } = await supabase.storage
@@ -634,24 +573,18 @@ const StoryEditor = () => {
       }
 
       // Upload story audio files if changed and in single story mode
-      if (
-        storyData.audio_mode === "single_story" &&
-        Object.keys(storyAudioFiles).length > 0
-      ) {
+      if (storyData.audio_mode === "single_story" && Object.keys(storyAudioFiles).length > 0) {
         const newStoryAudioUrls = { ...storyAudioUrls };
 
         for (const [language, audioFile] of Object.entries(storyAudioFiles)) {
-          const filename = `story-audio-${Date.now()}-${language}-${
-            audioFile.name
-          }`;
+          const filename = `story-audio-${Date.now()}-${language}-${audioFile.name}`;
 
-          const { data: uploadData, error: uploadError } =
-            await supabase.storage
-              .from("admin-content")
-              .upload(`story-audio/${filename}`, audioFile, {
-                cacheControl: "3600",
-                upsert: false,
-              });
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from("admin-content")
+            .upload(`story-audio/${filename}`, audioFile, {
+              cacheControl: "3600",
+              upsert: false,
+            });
 
           if (uploadError) {
             throw uploadError;
@@ -721,17 +654,14 @@ const StoryEditor = () => {
         // Upload section image if it's a file
         let sectionImageUrl = null;
         if (section.imageFile) {
-          const filename = `section-${storyId}-${section.order}-${Date.now()}-${
-            section.imageFile.name
-          }`;
+          const filename = `section-${storyId}-${section.order}-${Date.now()}-${section.imageFile.name}`;
 
-          const { data: uploadData, error: uploadError } =
-            await supabase.storage
-              .from("admin-content")
-              .upload(`story-sections/${filename}`, section.imageFile, {
-                cacheControl: "3600",
-                upsert: false,
-              });
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from("admin-content")
+            .upload(`story-sections/${filename}`, section.imageFile, {
+              cacheControl: "3600",
+              upsert: false,
+            });
 
           if (uploadError) throw uploadError;
           sectionImageUrl = filename;
@@ -742,20 +672,15 @@ const StoryEditor = () => {
         // Upload voice files only if in per_section mode
         const voiceUrls: Record<string, string> = { ...section.voices };
         if (storyData.audio_mode === "per_section" && section.voiceFiles) {
-          for (const [language, voiceFile] of Object.entries(
-            section.voiceFiles
-          )) {
-            const filename = `voice-${storyId}-${
-              section.order
-            }-${language}-${Date.now()}-${voiceFile.name}`;
+          for (const [language, voiceFile] of Object.entries(section.voiceFiles)) {
+            const filename = `voice-${storyId}-${section.order}-${language}-${Date.now()}-${voiceFile.name}`;
 
-            const { data: uploadData, error: uploadError } =
-              await supabase.storage
-                .from("admin-content")
-                .upload(`story-voices/${filename}`, voiceFile, {
-                  cacheControl: "3600",
-                  upsert: false,
-                });
+            const { data: uploadData, error: uploadError } = await supabase.storage
+              .from("admin-content")
+              .upload(`story-voices/${filename}`, voiceFile, {
+                cacheControl: "3600",
+                upsert: false,
+              });
 
             if (uploadError) throw uploadError;
             voiceUrls[language] = filename;
@@ -780,9 +705,7 @@ const StoryEditor = () => {
       navigate("/admin/stories");
     } catch (error: any) {
       console.error("Error saving story:", error);
-      toast.error(
-        `Failed to ${isEditing ? "update" : "create"} story: ${error.message}`
-      );
+      toast.error(`Failed to ${isEditing ? "update" : "create"} story: ${error.message}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -842,16 +765,12 @@ const StoryEditor = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="description-en">
-                        Description (English)
-                      </Label>
+                      <Label htmlFor="description-en">Description (English)</Label>
                       <Textarea
                         id="description-en"
                         placeholder="Enter story description in English"
                         value={storyData.description.en || ""}
-                        onChange={(e) =>
-                          updateStoryDescription("en", e.target.value)
-                        }
+                        onChange={(e) => updateStoryDescription("en", e.target.value)}
                         className="min-h-[100px]"
                         required
                       />
@@ -871,16 +790,12 @@ const StoryEditor = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="description-ar">
-                        Description (Arabic)
-                      </Label>
+                      <Label htmlFor="description-ar">Description (Arabic)</Label>
                       <Textarea
                         id="description-ar"
                         placeholder="Enter story description in Arabic"
                         value={storyData.description.ar || ""}
-                        onChange={(e) =>
-                          updateStoryDescription("ar", e.target.value)
-                        }
+                        onChange={(e) => updateStoryDescription("ar", e.target.value)}
                         className="min-h-[100px] text-right"
                         dir="rtl"
                       />
@@ -898,16 +813,12 @@ const StoryEditor = () => {
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="description-fr">
-                        Description (French)
-                      </Label>
+                      <Label htmlFor="description-fr">Description (French)</Label>
                       <Textarea
                         id="description-fr"
                         placeholder="Enter story description in French"
                         value={storyData.description.fr || ""}
-                        onChange={(e) =>
-                          updateStoryDescription("fr", e.target.value)
-                        }
+                        onChange={(e) => updateStoryDescription("fr", e.target.value)}
                         className="min-h-[100px]"
                       />
                     </div>
@@ -935,10 +846,7 @@ const StoryEditor = () => {
                             </div>
                           ) : categories && categories.length > 0 ? (
                             categories.map((category) => (
-                              <SelectItem
-                                key={category.id}
-                                value={category.name}
-                              >
+                              <SelectItem key={category.id} value={category.name}>
                                 {category.name}
                               </SelectItem>
                             ))
@@ -963,15 +871,6 @@ const StoryEditor = () => {
                             src={coverImagePreview}
                             alt="Cover preview"
                             className="w-full h-full object-cover"
-                            onLoad={() =>
-                              console.log("Preview image loaded successfully")
-                            }
-                            onError={(e) => {
-                              console.log(
-                                "Preview image failed to load:",
-                                coverImagePreview
-                              );
-                            }}
                           />
                           <Button
                             type="button"
@@ -1063,15 +962,9 @@ const StoryEditor = () => {
               <CardContent className="space-y-4">
                 <div className="flex flex-wrap gap-2">
                   {storyData.languages.map((language) => {
-                    const langOption = languages?.find(
-                      (opt) => opt.code === language
-                    );
+                    const langOption = languages?.find((opt) => opt.code === language);
                     return (
-                      <Badge
-                        key={language}
-                        variant="outline"
-                        className="py-2 text-sm"
-                      >
+                      <Badge key={language} variant="outline" className="py-2 text-sm">
                         {langOption?.name || language}
                         <Button
                           type="button"
@@ -1105,9 +998,7 @@ const StoryEditor = () => {
                             <SelectItem
                               key={language.id}
                               value={language.code}
-                              disabled={storyData.languages.includes(
-                                language.code
-                              )}
+                              disabled={storyData.languages.includes(language.code)}
                             >
                               {language.name}
                             </SelectItem>
@@ -1138,15 +1029,11 @@ const StoryEditor = () => {
               <CardContent className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <Label
-                      htmlFor="audio-mode"
-                      className="text-base font-medium"
-                    >
+                    <Label htmlFor="audio-mode" className="text-base font-medium">
                       Audio Mode
                     </Label>
                     <p className="text-sm text-muted-foreground">
-                      Choose between single audio for the whole story or
-                      separate audio for each section
+                      Choose between single audio for the whole story or separate audio for each section
                     </p>
                   </div>
                   <Switch
@@ -1174,15 +1061,10 @@ const StoryEditor = () => {
                 {storyData.audio_mode === "single_story" && (
                   <div className="space-y-4">
                     <Label>Story Audio (Per Language)</Label>
-                    <Tabs
-                      defaultValue={storyData.languages[0]}
-                      className="w-full"
-                    >
+                    <Tabs defaultValue={storyData.languages[0]} className="w-full">
                       <TabsList>
                         {storyData.languages.map((lang) => {
-                          const langOption = languages?.find(
-                            (opt) => opt.code === lang
-                          );
+                          const langOption = languages?.find((opt) => opt.code === lang);
                           return (
                             <TabsTrigger key={lang} value={lang}>
                               {langOption?.name || lang}
@@ -1191,9 +1073,7 @@ const StoryEditor = () => {
                         })}
                       </TabsList>
                       {storyData.languages.map((lang) => {
-                        const langOption = languages?.find(
-                          (opt) => opt.code === lang
-                        );
+                        const langOption = languages?.find((opt) => opt.code === lang);
                         return (
                           <TabsContent key={lang} value={lang}>
                             <StoryAudioUpload
@@ -1235,15 +1115,10 @@ const StoryEditor = () => {
                 ) : (
                   <Accordion type="multiple" className="space-y-4">
                     {storySections.map((section, sectionIndex) => (
-                      <AccordionItem
-                        key={sectionIndex}
-                        value={`section-${sectionIndex}`}
-                      >
+                      <AccordionItem key={sectionIndex} value={`section-${sectionIndex}`}>
                         <AccordionTrigger className="hover:no-underline">
                           <div className="flex items-center justify-between w-full mr-4">
-                            <span className="font-medium">
-                              Section {section.order}
-                            </span>
+                            <span className="font-medium">Section {section.order}</span>
                             <Button
                               type="button"
                               variant="destructive"
@@ -1276,15 +1151,9 @@ const StoryEditor = () => {
                                       variant="destructive"
                                       className="absolute top-1 right-1 h-6 w-6"
                                       onClick={() => {
-                                        const updatedSections = [
-                                          ...storySections,
-                                        ];
-                                        updatedSections[
-                                          sectionIndex
-                                        ].imageFile = null;
-                                        updatedSections[
-                                          sectionIndex
-                                        ].imagePreview = null;
+                                        const updatedSections = [...storySections];
+                                        updatedSections[sectionIndex].imageFile = null;
+                                        updatedSections[sectionIndex].imagePreview = null;
                                         setStorySections(updatedSections);
                                       }}
                                     >
@@ -1302,24 +1171,17 @@ const StoryEditor = () => {
                                 <Input
                                   type="file"
                                   accept="image/*"
-                                  onChange={(e) =>
-                                    handleSectionImageChange(sectionIndex, e)
-                                  }
+                                  onChange={(e) => handleSectionImageChange(sectionIndex, e)}
                                   className="flex-1"
                                 />
                               </div>
                             </div>
 
                             {/* Language-specific content */}
-                            <Tabs
-                              defaultValue={storyData.languages[0]}
-                              className="w-full"
-                            >
+                            <Tabs defaultValue={storyData.languages[0]} className="w-full">
                               <TabsList>
                                 {storyData.languages.map((lang) => {
-                                  const langOption = languages?.find(
-                                    (opt) => opt.code === lang
-                                  );
+                                  const langOption = languages?.find((opt) => opt.code === lang);
                                   return (
                                     <TabsTrigger key={lang} value={lang}>
                                       {langOption?.name || lang}
@@ -1328,29 +1190,17 @@ const StoryEditor = () => {
                                 })}
                               </TabsList>
                               {storyData.languages.map((lang) => {
-                                const langOption = languages?.find(
-                                  (opt) => opt.code === lang
-                                );
+                                const langOption = languages?.find((opt) => opt.code === lang);
                                 return (
-                                  <TabsContent
-                                    key={lang}
-                                    value={lang}
-                                    className="space-y-4"
-                                  >
+                                  <TabsContent key={lang} value={lang} className="space-y-4">
                                     {/* Text content */}
                                     <div className="space-y-2">
-                                      <Label>
-                                        Text Content ({langOption?.name || lang})
-                                      </Label>
+                                      <Label>Text Content ({langOption?.name || lang})</Label>
                                       <Textarea
                                         placeholder={`Enter section text in ${lang}`}
                                         value={section.texts[lang] || ""}
                                         onChange={(e) =>
-                                          updateSectionText(
-                                            sectionIndex,
-                                            lang,
-                                            e.target.value
-                                          )
+                                          updateSectionText(sectionIndex, lang, e.target.value)
                                         }
                                         className="min-h-[120px]"
                                       />
@@ -1392,13 +1242,8 @@ const StoryEditor = () => {
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              disabled={isSubmitting || !storyData.title.en}
-            >
-              {isSubmitting && (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              )}
+            <Button type="submit" disabled={isSubmitting || !storyData.title.en}>
+              {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isEditing ? "Update Story" : "Create Story"}
             </Button>
           </div>
