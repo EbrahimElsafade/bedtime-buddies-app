@@ -1,3 +1,4 @@
+
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -25,6 +26,8 @@ export const StoryContent = ({
   onSectionChange,
 }: StoryContentProps) => {
   const [isAudioPlaying, setIsAudioPlaying] = useState(false)
+  const [audioCurrentTime, setAudioCurrentTime] = useState(0)
+  const [audioDuration, setAudioDuration] = useState(0)
 
   const currentSection = story.sections[currentSectionIndex]
   const currentText =
@@ -45,6 +48,11 @@ export const StoryContent = ({
     if (currentSectionIndex > 0 && onSectionChange) {
       onSectionChange(currentSectionIndex - 1)
     }
+  }
+
+  const handleAudioTimeUpdate = (currentTime: number, duration: number) => {
+    setAudioCurrentTime(currentTime)
+    setAudioDuration(duration)
   }
 
   return (
@@ -75,7 +83,12 @@ export const StoryContent = ({
         {/* Story Section Text */}
         <div className="flex w-full flex-col p-4 md:p-6">
           <div className="flex-grow">
-            <TextHighlight text={currentText} isPlaying={isAudioPlaying} />
+            <TextHighlight 
+              text={currentText} 
+              isPlaying={isAudioPlaying}
+              currentTime={audioCurrentTime}
+              duration={audioDuration}
+            />
           </div>
 
           <AudioControls
@@ -86,6 +99,7 @@ export const StoryContent = ({
             currentSectionDir={currentSectionDir}
             onSectionChange={onSectionChange}
             onPlayingChange={setIsAudioPlaying}
+            onAudioTimeUpdate={handleAudioTimeUpdate}
           />
 
           {/* Section Navigation - only show if not in single story audio mode or if no sections */}

@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { Play, Pause, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ interface AudioControlsProps {
   currentSectionDir: "rtl" | "ltr";
   onSectionChange?: (index: number) => void;
   onPlayingChange?: (isPlaying: boolean) => void;
+  onAudioTimeUpdate?: (currentTime: number, duration: number) => void;
 }
 
 export const AudioControls = ({
@@ -25,6 +27,7 @@ export const AudioControls = ({
   currentSectionDir,
   onSectionChange,
   onPlayingChange,
+  onAudioTimeUpdate,
 }: AudioControlsProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -38,12 +41,23 @@ export const AudioControls = ({
     onPlayingChange?.(isPlaying);
   }, [isPlaying, onPlayingChange]);
 
+  // Notify parent component when audio time updates
+  useEffect(() => {
+    onAudioTimeUpdate?.(currentTime, duration);
+  }, [currentTime, duration, onAudioTimeUpdate]);
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
-    const handleLoadedMetadata = () => setDuration(audio.duration);
+    const handleTimeUpdate = () => {
+      setCurrentTime(audio.currentTime);
+    };
+    
+    const handleLoadedMetadata = () => {
+      setDuration(audio.duration);
+    };
+    
     const handleEnded = () => {
       setIsPlaying(false);
       
@@ -71,6 +85,12 @@ export const AudioControls = ({
       audio.removeEventListener("ended", handleEnded);
     };
   }, [isAutoplay, onSectionChange, currentSectionIndex, story.sections.length]);
+
+  // Reset time when section changes
+  useEffect(() => {
+    setCurrentTime(0);
+    setIsPlaying(false);
+  }, [currentSectionIndex, currentLanguage]);
 
   const getAudioUrlForCurrentSection = () => {
     if (story.audio_mode === "single_story" && story.story_audio) {
