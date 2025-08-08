@@ -40,12 +40,11 @@ import {
   Loader2,
   X,
   Image,
-  Volume2,
-  Play,
-  Pause,
 } from "lucide-react";
 import { getImageUrl } from "@/utils/imageUtils";
 import { Story, StorySection } from "@/types/story";
+import { VoiceFileUpload } from "@/components/admin/VoiceFileUpload";
+import { StoryAudioUpload } from "@/components/admin/StoryAudioUpload";
 
 interface StorySectionForm extends Omit<StorySection, "id"> {
   id?: string;
@@ -72,10 +71,6 @@ const StoryEditor = () => {
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(
     null
   );
-  const [playingAudio, setPlayingAudio] = useState<{
-    sectionIndex: number;
-    language: string;
-  } | null>(null);
   const [storyAudioFiles, setStoryAudioFiles] = useState<Record<string, File>>(
     {}
   );
@@ -328,6 +323,17 @@ const StoryEditor = () => {
           (section) => ({
             ...section,
             imagePreview: section.image ? getImageUrl(section.image) : null,
+            voicePreviews: section.voices
+              ? Object.entries(section.voices).reduce(
+                  (acc, [lang, voiceFile]) => {
+                    if (voiceFile) {
+                      acc[lang] = getImageUrl(voiceFile);
+                    }
+                    return acc;
+                  },
+                  {} as Record<string, string>
+                )
+              : {},
           })
         );
         setStorySections(sectionsForForm);
@@ -393,19 +399,29 @@ const StoryEditor = () => {
     }
   };
 
-  // Handle story audio file change
-  const handleStoryAudioChange = (
-    language: string,
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setStoryAudioFiles((prev) => ({ ...prev, [language]: file }));
-      setStoryAudioPreviews((prev) => ({
-        ...prev,
-        [language]: URL.createObjectURL(file),
-      }));
-    }
+  // Improved story audio file handling
+  const handleStoryAudioChange = (language: string, file: File) => {
+    setStoryAudioFiles((prev) => ({ ...prev, [language]: file }));
+    setStoryAudioPreviews((prev) => ({
+      ...prev,
+      [language]: URL.createObjectURL(file),
+    }));
+  };
+
+  const handleRemoveStoryAudio = (language: string) => {
+    const newStoryAudioFiles = { ...storyAudioFiles };
+    const newStoryAudioPreviews = { ...storyAudioPreviews };
+    delete newStoryAudioFiles[language];
+    delete newStoryAudioPreviews[language];
+    setStoryAudioFiles(newStoryAudioFiles);
+    setStoryAudioPreviews(newStoryAudioPreviews);
+    setStoryData((prev) => ({
+      ...prev,
+      story_audio: {
+        ...prev.story_audio,
+        [language]: "",
+      },
+    }));
   };
 
   // Handle adding a new language
@@ -546,25 +562,39 @@ const StoryEditor = () => {
     }
   };
 
+  // Improved section voice file handling
   const handleSectionVoiceChange = (
     sectionIndex: number,
     language: string,
-    e: React.ChangeEvent<HTMLInputElement>
+    file: File
   ) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      const updatedSections = [...storySections];
-      if (!updatedSections[sectionIndex].voiceFiles) {
-        updatedSections[sectionIndex].voiceFiles = {};
-      }
-      if (!updatedSections[sectionIndex].voicePreviews) {
-        updatedSections[sectionIndex].voicePreviews = {};
-      }
-      updatedSections[sectionIndex].voiceFiles![language] = file;
-      updatedSections[sectionIndex].voicePreviews![language] =
-        URL.createObjectURL(file);
-      setStorySections(updatedSections);
+    const updatedSections = [...storySections];
+    if (!updatedSections[sectionIndex].voiceFiles) {
+      updatedSections[sectionIndex].voiceFiles = {};
     }
+    if (!updatedSections[sectionIndex].voicePreviews) {
+      updatedSections[sectionIndex].voicePreviews = {};
+    }
+    updatedSections[sectionIndex].voiceFiles![language] = file;
+    updatedSections[sectionIndex].voicePreviews![language] =
+      URL.createObjectURL(file);
+    setStorySections(updatedSections);
+  };
+
+  const handleRemoveSectionVoice = (sectionIndex: number, language: string) => {
+    const updatedSections = [...storySections];
+    if (updatedSections[sectionIndex].voiceFiles) {
+      delete updatedSections[sectionIndex].voiceFiles![language];
+    }
+    if (updatedSections[sectionIndex].voicePreviews) {
+      delete updatedSections[sectionIndex].voicePreviews![language];
+    }
+    // Clear the voices field for this language
+    updatedSections[sectionIndex].voices = {
+      ...updatedSections[sectionIndex].voices,
+      [language]: "",
+    };
+    setStorySections(updatedSections);
   };
 
   // Handle save/submit
@@ -1140,7 +1170,7 @@ const StoryEditor = () => {
                   </span>
                 </div>
 
-                {/* Single Story Audio Upload - Now per language */}
+                {/* Single Story Audio Upload - Now per language using new component */}
                 {storyData.audio_mode === "single_story" && (
                   <div className="space-y-4">
                     <Label>Story Audio (Per Language)</Label>
@@ -1160,68 +1190,24 @@ const StoryEditor = () => {
                           );
                         })}
                       </TabsList>
-                      {storyData.languages.map((lang) => (
-                        <TabsContent
-                          key={lang}
-                          value={lang}
-                          className="space-y-2"
-                        >
-                          <div className="flex items-center gap-4">
-                            {storyAudioPreviews[lang] ? (
-                              <div className="flex items-center gap-2 p-2 border rounded">
-                                <Volume2 className="h-4 w-4" />
-                                <span className="text-sm">
-                                  Audio uploaded (
-                                  {
-                                    languages?.find((opt) => opt.code === lang)
-                                      ?.name
-                                  }
-                                  )
-                                </span>
-                                <Button
-                                  type="button"
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-6 w-6"
-                                  onClick={() => {
-                                    const newPreviews = {
-                                      ...storyAudioPreviews,
-                                    };
-                                    const newFiles = { ...storyAudioFiles };
-                                    delete newPreviews[lang];
-                                    delete newFiles[lang];
-                                    setStoryAudioPreviews(newPreviews);
-                                    setStoryAudioFiles(newFiles);
-                                    setStoryData((prev) => ({
-                                      ...prev,
-                                      story_audio: {
-                                        ...prev.story_audio,
-                                        [lang]: "",
-                                      },
-                                    }));
-                                  }}
-                                >
-                                  <X className="h-3 w-3" />
-                                </Button>
-                              </div>
-                            ) : (
-                              <div className="text-sm text-muted-foreground">
-                                No audio uploaded for{" "}
-                                {
-                                  languages?.find((opt) => opt.code === lang)
-                                    ?.name
-                                }
-                              </div>
-                            )}
-                            <Input
-                              type="file"
-                              accept="audio/*"
-                              onChange={(e) => handleStoryAudioChange(lang, e)}
-                              className="flex-1"
+                      {storyData.languages.map((lang) => {
+                        const langOption = languages?.find(
+                          (opt) => opt.code === lang
+                        );
+                        return (
+                          <TabsContent key={lang} value={lang}>
+                            <StoryAudioUpload
+                              language={lang}
+                              languageName={langOption?.name || lang}
+                              storyAudioFiles={storyAudioFiles}
+                              storyAudioPreviews={storyAudioPreviews}
+                              existingStoryAudio={storyData.story_audio}
+                              onStoryAudioChange={handleStoryAudioChange}
+                              onRemoveStoryAudio={handleRemoveStoryAudio}
                             />
-                          </div>
-                        </TabsContent>
-                      ))}
+                          </TabsContent>
+                        );
+                      })}
                     </Tabs>
                   </div>
                 )}
@@ -1341,64 +1327,51 @@ const StoryEditor = () => {
                                   );
                                 })}
                               </TabsList>
-                              {storyData.languages.map((lang) => (
-                                <TabsContent
-                                  key={lang}
-                                  value={lang}
-                                  className="space-y-4"
-                                >
-                                  {/* Text content */}
-                                  <div className="space-y-2">
-                                    <Label>
-                                      Text Content (
-                                      {
-                                        languages?.find(
-                                          (opt) => opt.code === lang
-                                        )?.name
-                                      }
-                                      )
-                                    </Label>
-                                    <Textarea
-                                      placeholder={`Enter section text in ${lang}`}
-                                      value={section.texts[lang] || ""}
-                                      onChange={(e) =>
-                                        updateSectionText(
-                                          sectionIndex,
-                                          lang,
-                                          e.target.value
-                                        )
-                                      }
-                                      className="min-h-[120px]"
-                                    />
-                                  </div>
-
-                                  {/* Voice upload - only show if in per_section mode */}
-                                  {storyData.audio_mode === "per_section" && (
+                              {storyData.languages.map((lang) => {
+                                const langOption = languages?.find(
+                                  (opt) => opt.code === lang
+                                );
+                                return (
+                                  <TabsContent
+                                    key={lang}
+                                    value={lang}
+                                    className="space-y-4"
+                                  >
+                                    {/* Text content */}
                                     <div className="space-y-2">
                                       <Label>
-                                        Voice Audio (
-                                        {
-                                          languages?.find(
-                                            (opt) => opt.code === lang
-                                          )?.name
-                                        }
-                                        )
+                                        Text Content ({langOption?.name || lang})
                                       </Label>
-                                      <Input
-                                        type="file"
-                                        accept="audio/*"
+                                      <Textarea
+                                        placeholder={`Enter section text in ${lang}`}
+                                        value={section.texts[lang] || ""}
                                         onChange={(e) =>
-                                          handleSectionVoiceChange(
+                                          updateSectionText(
                                             sectionIndex,
                                             lang,
-                                            e
+                                            e.target.value
                                           )
                                         }
+                                        className="min-h-[120px]"
                                       />
                                     </div>
-                                  )}
-                                </TabsContent>
-                              ))}
+
+                                    {/* Voice upload - only show if in per_section mode, now using new component */}
+                                    {storyData.audio_mode === "per_section" && (
+                                      <VoiceFileUpload
+                                        language={lang}
+                                        languageName={langOption?.name || lang}
+                                        sectionIndex={sectionIndex}
+                                        voiceFiles={section.voiceFiles}
+                                        voicePreviews={section.voicePreviews}
+                                        existingVoiceUrls={section.voices}
+                                        onVoiceFileChange={handleSectionVoiceChange}
+                                        onRemoveVoiceFile={handleRemoveSectionVoice}
+                                      />
+                                    )}
+                                  </TabsContent>
+                                );
+                              })}
                             </Tabs>
                           </div>
                         </AccordionContent>
