@@ -42,6 +42,14 @@ export const AudioPlayer = ({
   const [isLoading, setIsLoading] = useState(true);
   const [audioSrc, setAudioSrc] = useState<string>("");
 
+  // Pause audio when audioUrl changes (language change)
+  useEffect(() => {
+    if (audioRef.current && isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+  }, [audioUrl]);
+
   // Generate public URL for audio file
   useEffect(() => {
     const getAudioUrl = () => {
