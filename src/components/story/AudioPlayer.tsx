@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import {
   Play,
@@ -49,6 +48,9 @@ export const AudioPlayer = ({
       audioRef.current.pause();
       setIsPlaying(false);
       setCurrentTime(0);
+      // Force a re-render by resetting duration temporarily
+      setDuration(0);
+      setIsLoading(true);
     }
   }, [audioUrl]);
 
@@ -98,16 +100,17 @@ export const AudioPlayer = ({
     };
 
     const handleEnded = () => {
+      setIsPlaying(false);
       if (hasNext) {
         onNext?.();
       } else {
-        setIsPlaying(false);
         onEnded?.();
       }
     };
 
     const handleLoadStart = () => {
       setIsLoading(true);
+      setIsPlaying(false); // Ensure play state is reset on new load
     };
 
     const handleCanPlay = () => {
@@ -118,6 +121,7 @@ export const AudioPlayer = ({
       console.error("Audio loading error:", e);
       console.error("Audio src:", audioSrc);
       setIsLoading(false);
+      setIsPlaying(false);
     };
 
     const handlePlay = () => {
@@ -161,10 +165,8 @@ export const AudioPlayer = ({
     try {
       if (isPlaying) {
         audioRef.current.pause();
-        setIsPlaying(false);
       } else {
         await audioRef.current.play();
-        setIsPlaying(true);
       }
     } catch (error) {
       console.error("Error playing audio:", error);
