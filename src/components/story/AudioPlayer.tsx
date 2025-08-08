@@ -44,9 +44,10 @@ export const AudioPlayer = ({
 
   // Pause audio when audioUrl changes (language change)
   useEffect(() => {
-    if (audioRef.current && isPlaying) {
+    if (audioRef.current) {
       audioRef.current.pause();
       setIsPlaying(false);
+      setCurrentTime(0);
     }
   }, [audioUrl]);
 
@@ -118,12 +119,22 @@ export const AudioPlayer = ({
       setIsLoading(false);
     };
 
+    const handlePlay = () => {
+      setIsPlaying(true);
+    };
+
+    const handlePause = () => {
+      setIsPlaying(false);
+    };
+
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
     audio.addEventListener("timeupdate", handleTimeUpdate);
     audio.addEventListener("ended", handleEnded);
     audio.addEventListener("loadstart", handleLoadStart);
     audio.addEventListener("canplay", handleCanPlay);
     audio.addEventListener("error", handleError);
+    audio.addEventListener("play", handlePlay);
+    audio.addEventListener("pause", handlePause);
 
     return () => {
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
@@ -132,6 +143,8 @@ export const AudioPlayer = ({
       audio.removeEventListener("loadstart", handleLoadStart);
       audio.removeEventListener("canplay", handleCanPlay);
       audio.removeEventListener("error", handleError);
+      audio.removeEventListener("play", handlePlay);
+      audio.removeEventListener("pause", handlePause);
     };
   }, [onEnded, audioSrc, hasNext, onNext]);
 
