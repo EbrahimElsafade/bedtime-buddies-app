@@ -21,6 +21,7 @@ export const AutoplayToggle = ({
         id="autoplay"
         checked={isAutoplay}
         onCheckedChange={onAutoplayChange}
+        dir={currentSectionDir}
       />
       <Label htmlFor="autoplay" className="text-sm font-medium">
         Autoplay
