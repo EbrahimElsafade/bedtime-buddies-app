@@ -35,7 +35,7 @@ const EntertainmentStories = () => {
                     <img 
                       src={story.coverImage} 
                       alt={story.title} 
-                      className="w-full h-72 object-cover"
+                      className="w-full h-full object-cover"
                     />
                     {story.isFree ? (
                       <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">

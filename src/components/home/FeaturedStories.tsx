@@ -114,13 +114,13 @@ const FeaturedStories = () => {
             
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card h-80 md:h-96 lg:h-[25rem] overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow flex flex-col pb-4">
+                <Card className="story-card h-80 md:h-96 lg:h-[25rem] overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow grid pb-4">
                   <div className="aspect-[3/2] relative">
                     {imageUrl ? (
                       <img 
                         src={imageUrl}
                         alt={storyTitle} 
-                        className="w-full h-72 object-cover"
+                        className="w-full h-full object-cover"
                         onError={(e) => {
                           console.log('Featured story image failed to load:', story.cover_image);
                           e.currentTarget.style.display = 'none';

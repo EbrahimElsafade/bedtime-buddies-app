@@ -78,7 +78,7 @@ const FreeStory = () => {
                 <img 
                   src={coverImage} 
                   alt={storyTitle} 
-                  className="w-full h-72 object-cover"
+                  className="w-full h-full object-cover"
                 />
               </div>
               <div className="md:w-2/3 p-6">

@@ -33,7 +33,7 @@ const FeaturedCourses = () => {
                 <img 
                   src={course.coverImage} 
                   alt={course.title} 
-                  className="w-full h-72 object-cover"
+                  className="w-full h-full object-cover"
                 />
                 {course.isFree ? (
                   <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">

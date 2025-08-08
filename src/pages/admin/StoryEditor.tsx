@@ -870,7 +870,7 @@ const StoryEditor = () => {
                           <img
                             src={coverImagePreview}
                             alt="Cover preview"
-                            className="w-full h-72 object-cover"
+                            className="w-full h-full object-cover"
                           />
                           <Button
                             type="button"
@@ -1143,7 +1143,7 @@ const StoryEditor = () => {
                                     <img
                                       src={section.imagePreview}
                                       alt="Section preview"
-                                      className="w-full h-72 object-cover"
+                                      className="w-full h-full object-cover"
                                     />
                                     <Button
                                       type="button"
