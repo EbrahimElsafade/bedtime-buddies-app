@@ -1,0 +1,79 @@
+
+{
+  "title": "Choisissez Votre Plan",
+  "subtitle": "Débloquez un accès illimité à toutes les histoires et fonctionnalités avec nos plans premium. Choisissez l'option qui convient le mieux à vous et votre famille.",
+  "plans": {
+    "monthly": {
+      "name": "Mensuel",
+      "description": "Parfait pour essayer nos fonctionnalités premium",
+      "features": [
+        "Accès illimité à toutes les histoires",
+        "Expérience sans publicité",
+        "Nouvelles histoires chaque semaine",
+        "Télécharger les histoires hors ligne",
+        "Accès à toutes les langues"
+      ]
+    },
+    "quarterly": {
+      "name": "Trimestriel", 
+      "description": "Économisez 20% avec la facturation trimestrielle",
+      "features": [
+        "Accès illimité à toutes les histoires",
+        "Expérience sans publicité",
+        "Nouvelles histoires chaque semaine", 
+        "Télécharger les histoires hors ligne",
+        "Accès à toutes les langues",
+        "Accès prioritaire aux nouvelles fonctionnalités"
+      ]
+    },
+    "yearly": {
+      "name": "Annuel",
+      "description": "Meilleure valeur, économisez plus de 30%",
+      "features": [
+        "Accès illimité à toutes les histoires",
+        "Expérience sans publicité",
+        "Nouvelles histoires chaque semaine",
+        "Télécharger les histoires hors ligne",
+        "Accès à toutes les langues", 
+        "Accès prioritaire aux nouvelles fonctionnalités",
+        "Option d'envoi en cadeau"
+      ]
+    },
+    "lifetime": {
+      "name": "À vie",
+      "description": "Paiement unique pour un accès à vie",
+      "features": [
+        "Accès illimité à toutes les histoires pour toujours",
+        "Expérience sans publicité",
+        "Nouvelles histoires chaque semaine",
+        "Télécharger les histoires hors ligne",
+        "Accès à toutes les langues",
+        "Accès prioritaire aux nouvelles fonctionnalités", 
+        "Badge spécial membre à vie"
+      ]
+    }
+  },
+  "mostPopular": "Plus Populaire",
+  "subscribeNow": "S'abonner Maintenant", 
+  "sendAsGift": "Envoyer en cadeau",
+  "giftDescription": "Ajoutez un message personnalisé et envoyez cet abonnement en cadeau",
+  "faq": {
+    "title": "Questions Fréquemment Posées",
+    "included": {
+      "question": "Qu'est-ce qui est inclus dans l'abonnement premium ?",
+      "answer": "Les abonnés premium ont accès illimité à toute notre bibliothèque d'histoires, dans toutes les langues disponibles. Vous profiterez également d'une expérience sans publicité, de la possibilité de télécharger des histoires pour une écoute hors ligne, et d'un accès prioritaire aux nouvelles fonctionnalités."
+    },
+    "cancel": {
+      "question": "Puis-je annuler mon abonnement à tout moment ?",
+      "answer": "Oui, vous pouvez annuler votre abonnement à tout moment. Votre accès restera jusqu'à la fin de votre cycle de facturation actuel."
+    },
+    "gift": {
+      "question": "Comment fonctionne la fonction \"Envoyer en cadeau\" ?",
+      "answer": "Lorsque vous sélectionnez \"Envoyer en cadeau\", vous pourrez saisir l'adresse e-mail du destinataire et ajouter un message personnalisé. Il recevra un e-mail avec des instructions sur la façon d'activer son abonnement. Cette option n'est disponible que pour les plans annuels."
+    },
+    "lifetime": {
+      "question": "Que se passe-t-il après mon abonnement à vie ?",
+      "answer": "L'abonnement à vie vous donne un accès illimité à tout le contenu actuel et futur sur Histoires du Coucher pour toujours, sans paiements supplémentaires requis."
+    }
+  }
+}

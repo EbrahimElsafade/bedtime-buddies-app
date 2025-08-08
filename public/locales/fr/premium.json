@@ -1,0 +1,12 @@
+
+{
+  "message": {
+    "title": "Histoire Premium",
+    "description": "Ceci est une histoire premium. Abonnez-vous à notre plan premium pour débloquer cette histoire et bien d'autres !",
+    "subscriptionButton": "Voir les Plans d'Abonnement",
+    "loginButton": "Se Connecter"
+  },
+  "tag": "PREMIUM",
+  "unlock": "Débloquer les Fonctionnalités Premium",
+  "upgrade": "Passer à Premium"
+}

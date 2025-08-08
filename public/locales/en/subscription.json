@@ -1,0 +1,79 @@
+
+{
+  "title": "Choose Your Plan",
+  "subtitle": "Unlock unlimited access to all stories and features with our premium plans. Choose the option that works best for you and your family.",
+  "plans": {
+    "monthly": {
+      "name": "Monthly",
+      "description": "Perfect for trying out our premium features",
+      "features": [
+        "Unlimited access to all stories",
+        "Ad-free experience",
+        "New stories weekly",
+        "Download stories for offline use",
+        "Access to all languages"
+      ]
+    },
+    "quarterly": {
+      "name": "Quarterly",
+      "description": "Save 20% with quarterly billing",
+      "features": [
+        "Unlimited access to all stories",
+        "Ad-free experience", 
+        "New stories weekly",
+        "Download stories for offline use",
+        "Access to all languages",
+        "Priority access to new features"
+      ]
+    },
+    "yearly": {
+      "name": "Yearly",
+      "description": "Best value, save over 30%",
+      "features": [
+        "Unlimited access to all stories",
+        "Ad-free experience",
+        "New stories weekly", 
+        "Download stories for offline use",
+        "Access to all languages",
+        "Priority access to new features",
+        "Send as a gift option"
+      ]
+    },
+    "lifetime": {
+      "name": "Lifetime",
+      "description": "One-time payment for lifetime access",
+      "features": [
+        "Unlimited access to all stories forever",
+        "Ad-free experience",
+        "New stories weekly",
+        "Download stories for offline use", 
+        "Access to all languages",
+        "Priority access to new features",
+        "Special lifetime member badge"
+      ]
+    }
+  },
+  "mostPopular": "Most Popular",
+  "subscribeNow": "Subscribe Now",
+  "sendAsGift": "Send as a gift",
+  "giftDescription": "Add a personalized message and send this subscription as a gift",
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "included": {
+      "question": "What's included in the premium subscription?",
+      "answer": "Premium subscribers get unlimited access to our entire library of stories, in all available languages. You'll also enjoy ad-free experience, ability to download stories for offline listening, and priority access to new features."
+    },
+    "cancel": {
+      "question": "Can I cancel my subscription anytime?",
+      "answer": "Yes, you can cancel your subscription at any time. Your access will remain until the end of your current billing cycle."
+    },
+    "gift": {
+      "question": "How does the \"Send as a Gift\" feature work?",
+      "answer": "When you select \"Send as a Gift,\" you'll be able to enter the recipient's email address and add a personalized message. They'll receive an email with instructions on how to activate their subscription. This option is only available for yearly plans."
+    },
+    "lifetime": {
+      "question": "What happens after my lifetime subscription?",
+      "answer": "The lifetime subscription gives you unlimited access to all current and future content on Bedtime Stories forever, with no additional payments required."
+    }
+  }
+}
