@@ -31,7 +31,7 @@ const EntertainmentStories = () => {
             <Link key={story.id} to={`/stories/${story.id}`}>
               <Card className="story-card overflow-hidden border-moon-light/50 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow">
                 <div className="flex flex-col md:flex-row">
-                  <div className="w-full md:w-1/3 aspect-[3/2] md:aspect-auto relative">
+                  <div className="w-full md:w-1/3 h-48 md:h-48 relative overflow-hidden">
                     <img 
                       src={story.coverImage} 
                       alt={story.title} 

@@ -74,7 +74,7 @@ const FreeStory = () => {
         <Link to={`/stories/${freeStory.id}`}>
           <Card className="story-card overflow-hidden border-2 border-moon-light/50 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow">
             <div className="md:flex">
-              <div className="md:w-1/3 h-72 md:h-72 relative">
+              <div className="md:w-1/3 h-64 md:h-64 relative overflow-hidden">
                 <img 
                   src={coverImage} 
                   alt={storyTitle} 

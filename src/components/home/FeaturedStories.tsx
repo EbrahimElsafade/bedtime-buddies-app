@@ -69,7 +69,7 @@ const FeaturedStories = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {[1, 2, 3].map((i) => (
               <Card key={i} className="story-card h-80 md:h-96 lg:h-[25rem] overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm animate-pulse pb-4">
-                <div className="aspect-[3/2] bg-gray-200"></div>
+                <div className="h-40 md:h-48 bg-gray-200"></div>
                 <CardHeader className="pb-2 px-3 md:px-6">
                   <div className="h-5 md:h-6 bg-gray-200 rounded mb-2"></div>
                   <div className="h-3 md:h-4 bg-gray-200 rounded mb-1"></div>
@@ -115,7 +115,7 @@ const FeaturedStories = () => {
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
                 <Card className="story-card h-80 md:h-96 lg:h-[25rem] overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow flex flex-col pb-4">
-                  <div className="aspect-[3/2] relative">
+                  <div className="h-40 md:h-48 relative overflow-hidden">
                     {imageUrl ? (
                       <img 
                         src={imageUrl}
