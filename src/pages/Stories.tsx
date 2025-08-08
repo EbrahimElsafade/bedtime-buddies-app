@@ -202,7 +202,7 @@ const Stories = () => {
 
               return (
                 <Link key={story.id} to={`/stories/${story.id}`}>
-                  <Card className="story-card flex h-80 min-w-80 max-w-96 cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/70 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/70 md:h-96">
+                  <Card className="story-card flex h-80 bg-red-500 min-w-80 max-w-96 cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/70 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/70 md:h-96">
                     <div className="relative h-56">
                       {imageUrl ? (
                         <img

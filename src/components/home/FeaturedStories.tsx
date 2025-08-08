@@ -120,7 +120,7 @@ const FeaturedStories = () => {
                       <img 
                         src={imageUrl}
                         alt={storyTitle} 
-                        className="w-full h-full object-cover"
+                        className="w-full h-72 object-cover"
                         onError={(e) => {
                           console.log('Featured story image failed to load:', story.cover_image);
                           e.currentTarget.style.display = 'none';
