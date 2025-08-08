@@ -33,6 +33,16 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   ArrowLeft,
   Plus,
   Trash2,
@@ -67,6 +77,9 @@ const StoryEditor = () => {
   const isEditing = id !== "new" && !!id;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [showLeaveDialog, setShowLeaveDialog] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<(() => void) | null>(null);
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null);
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(null);
   const [storyAudioFiles, setStoryAudioFiles] = useState<Record<string, File>>({});
@@ -89,6 +102,43 @@ const StoryEditor = () => {
   // Story sections
   const [storySections, setStorySections] = useState<StorySectionForm[]>([]);
 
+  // Custom hook for handling unsaved changes warning
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedChanges]);
+
+  // Handle navigation with unsaved changes
+  const handleNavigation = (navigationFn: () => void) => {
+    if (hasUnsavedChanges) {
+      setPendingNavigation(() => navigationFn);
+      setShowLeaveDialog(true);
+    } else {
+      navigationFn();
+    }
+  };
+
+  const confirmNavigation = () => {
+    setShowLeaveDialog(false);
+    setHasUnsavedChanges(false);
+    if (pendingNavigation) {
+      pendingNavigation();
+    }
+    setPendingNavigation(null);
+  };
+
+  const cancelNavigation = () => {
+    setShowLeaveDialog(false);
+    setPendingNavigation(null);
+  };
+
   // Fetch categories from database
   const { data: categories, isLoading: categoriesLoading } = useQuery({
     queryKey: ["story-categories"],
@@ -101,6 +151,8 @@ const StoryEditor = () => {
       if (error) throw error;
       return data;
     },
+    staleTime: 0, // Always fetch fresh data
+    gcTime: 0, // Don't cache data
   });
 
   // Fetch languages from database
@@ -115,15 +167,17 @@ const StoryEditor = () => {
       if (error) throw error;
       return data;
     },
+    staleTime: 0, // Always fetch fresh data
+    gcTime: 0, // Don't cache data
   });
 
-  // Fetch story data if editing
+  // Fetch story data if editing - Always fetch fresh data
   const { data: storyDetails, isLoading } = useQuery({
-    queryKey: ["admin-story", id],
+    queryKey: ["admin-story", id, Date.now()], // Add timestamp to force fresh fetch
     queryFn: async () => {
       if (!isEditing || !id) return null;
 
-      console.log("Fetching story for ID:", id);
+      console.log("Fetching fresh story data for ID:", id);
 
       // Fetch story details
       const { data: story, error: storyError } = await supabase
@@ -151,7 +205,7 @@ const StoryEditor = () => {
         throw sectionsError;
       }
 
-      console.log("Fetched story sections:", sections);
+      console.log("Fetched fresh story sections:", sections);
 
       return {
         story,
@@ -159,7 +213,10 @@ const StoryEditor = () => {
       };
     },
     enabled: isEditing && !!id && id !== "new",
-    staleTime: Infinity,
+    staleTime: 0, // Always fetch fresh data
+    gcTime: 0, // Don't cache data
+    refetchOnMount: 'always', // Always refetch when component mounts
+    refetchOnWindowFocus: false, // Don't refetch on window focus
   });
 
   useEffect(() => {
@@ -343,6 +400,34 @@ const StoryEditor = () => {
     }
   }, [storyData.languages]);
 
+  // Updated handlers to set hasUnsavedChanges
+  const updateStoryData = (updates: Partial<typeof storyData>) => {
+    setStoryData(prev => ({ ...prev, ...updates }));
+    setHasUnsavedChanges(true);
+  };
+
+  const updateStoryTitle = (language: string, value: string) => {
+    setStoryData((prev) => ({
+      ...prev,
+      title: {
+        ...prev.title,
+        [language]: value,
+      },
+    }));
+    setHasUnsavedChanges(true);
+  };
+
+  const updateStoryDescription = (language: string, value: string) => {
+    setStoryData((prev) => ({
+      ...prev,
+      description: {
+        ...prev.description,
+        [language]: value,
+      },
+    }));
+    setHasUnsavedChanges(true);
+  };
+
   // Handle file input change for cover image
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -354,6 +439,7 @@ const StoryEditor = () => {
       const objectUrl = URL.createObjectURL(file);
       console.log("Created preview URL:", objectUrl);
       setCoverImagePreview(objectUrl);
+      setHasUnsavedChanges(true);
     }
   };
 
@@ -364,6 +450,7 @@ const StoryEditor = () => {
       ...prev,
       [language]: URL.createObjectURL(file),
     }));
+    setHasUnsavedChanges(true);
   };
 
   const handleRemoveStoryAudio = (language: string) => {
@@ -380,6 +467,7 @@ const StoryEditor = () => {
         [language]: "",
       },
     }));
+    setHasUnsavedChanges(true);
   };
 
   // Handle adding a new language
@@ -407,6 +495,7 @@ const StoryEditor = () => {
         },
       }));
       setStorySections(updatedSections);
+      setHasUnsavedChanges(true);
     }
   };
 
@@ -444,27 +533,7 @@ const StoryEditor = () => {
     delete newStoryAudioPreviews[language];
     setStoryAudioFiles(newStoryAudioFiles);
     setStoryAudioPreviews(newStoryAudioPreviews);
-  };
-
-  // Functions to update multilingual titles and descriptions
-  const updateStoryTitle = (language: string, value: string) => {
-    setStoryData((prev) => ({
-      ...prev,
-      title: {
-        ...prev.title,
-        [language]: value,
-      },
-    }));
-  };
-
-  const updateStoryDescription = (language: string, value: string) => {
-    setStoryData((prev) => ({
-      ...prev,
-      description: {
-        ...prev.description,
-        [language]: value,
-      },
-    }));
+    setHasUnsavedChanges(true);
   };
 
   // Section management functions
@@ -483,6 +552,7 @@ const StoryEditor = () => {
     };
 
     setStorySections([...storySections, newSection]);
+    setHasUnsavedChanges(true);
   };
 
   const deleteSection = (index: number) => {
@@ -493,12 +563,14 @@ const StoryEditor = () => {
       order: idx + 1,
     }));
     setStorySections(reorderedSections);
+    setHasUnsavedChanges(true);
   };
 
   const updateSectionText = (sectionIndex: number, language: string, text: string) => {
     const updatedSections = [...storySections];
     updatedSections[sectionIndex].texts[language] = text;
     setStorySections(updatedSections);
+    setHasUnsavedChanges(true);
   };
 
   const handleSectionImageChange = (sectionIndex: number, e: React.ChangeEvent<HTMLInputElement>) => {
@@ -508,6 +580,7 @@ const StoryEditor = () => {
       updatedSections[sectionIndex].imageFile = file;
       updatedSections[sectionIndex].imagePreview = URL.createObjectURL(file);
       setStorySections(updatedSections);
+      setHasUnsavedChanges(true);
     }
   };
 
@@ -523,6 +596,7 @@ const StoryEditor = () => {
     updatedSections[sectionIndex].voiceFiles![language] = file;
     updatedSections[sectionIndex].voicePreviews![language] = URL.createObjectURL(file);
     setStorySections(updatedSections);
+    setHasUnsavedChanges(true);
   };
 
   const handleRemoveSectionVoice = (sectionIndex: number, language: string) => {
@@ -539,6 +613,7 @@ const StoryEditor = () => {
       [language]: "",
     };
     setStorySections(updatedSections);
+    setHasUnsavedChanges(true);
   };
 
   // Handle save/submit
@@ -702,6 +777,7 @@ const StoryEditor = () => {
       }
 
       toast.success(`Story ${isEditing ? "updated" : "created"} successfully!`);
+      setHasUnsavedChanges(false); // Reset unsaved changes flag
       navigate("/admin/stories");
     } catch (error: any) {
       console.error("Error saving story:", error);
@@ -713,12 +789,27 @@ const StoryEditor = () => {
 
   return (
     <div>
+      <AlertDialog open={showLeaveDialog} onOpenChange={setShowLeaveDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Unsaved Changes</AlertDialogTitle>
+            <AlertDialogDescription>
+              You have unsaved changes. Are you sure you want to leave? Your changes will be lost.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={cancelNavigation}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmNavigation}>Leave</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <header className="mb-8">
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate("/admin/stories")}
+            onClick={() => handleNavigation(() => navigate("/admin/stories"))}
           >
             <ArrowLeft className="h-5 w-5" />
           </Button>
@@ -731,7 +822,7 @@ const StoryEditor = () => {
       {isEditing && isLoading ? (
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-          <span className="ml-2 text-lg">Loading story details...</span>
+          <span className="ml-2 text-lg">Loading fresh story data...</span>
         </div>
       ) : (
         <form onSubmit={handleSubmit}>
@@ -1237,7 +1328,7 @@ const StoryEditor = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={() => navigate("/admin/stories")}
+              onClick={() => handleNavigation(() => navigate("/admin/stories"))}
               disabled={isSubmitting}
             >
               Cancel
