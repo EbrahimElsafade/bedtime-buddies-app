@@ -42,18 +42,6 @@ export const AudioPlayer = ({
   const [isLoading, setIsLoading] = useState(true);
   const [audioSrc, setAudioSrc] = useState<string>("");
 
-  // Pause audio when audioUrl changes (language change)
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      setIsPlaying(false);
-      setCurrentTime(0);
-      // Force a re-render by resetting duration temporarily
-      setDuration(0);
-      setIsLoading(true);
-    }
-  }, [audioUrl]);
-
   // Generate public URL for audio file
   useEffect(() => {
     const getAudioUrl = () => {
@@ -88,7 +76,7 @@ export const AudioPlayer = ({
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio || !audioSrc) return;
+    if (!audio) return;
 
     const handleLoadedMetadata = () => {
       setDuration(audio.duration);
@@ -100,17 +88,16 @@ export const AudioPlayer = ({
     };
 
     const handleEnded = () => {
-      setIsPlaying(false);
       if (hasNext) {
         onNext?.();
       } else {
+        setIsPlaying(false);
         onEnded?.();
       }
     };
 
     const handleLoadStart = () => {
       setIsLoading(true);
-      setIsPlaying(false); // Ensure play state is reset on new load
     };
 
     const handleCanPlay = () => {
@@ -121,15 +108,6 @@ export const AudioPlayer = ({
       console.error("Audio loading error:", e);
       console.error("Audio src:", audioSrc);
       setIsLoading(false);
-      setIsPlaying(false);
-    };
-
-    const handlePlay = () => {
-      setIsPlaying(true);
-    };
-
-    const handlePause = () => {
-      setIsPlaying(false);
     };
 
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
@@ -138,8 +116,6 @@ export const AudioPlayer = ({
     audio.addEventListener("loadstart", handleLoadStart);
     audio.addEventListener("canplay", handleCanPlay);
     audio.addEventListener("error", handleError);
-    audio.addEventListener("play", handlePlay);
-    audio.addEventListener("pause", handlePause);
 
     return () => {
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
@@ -148,8 +124,6 @@ export const AudioPlayer = ({
       audio.removeEventListener("loadstart", handleLoadStart);
       audio.removeEventListener("canplay", handleCanPlay);
       audio.removeEventListener("error", handleError);
-      audio.removeEventListener("play", handlePlay);
-      audio.removeEventListener("pause", handlePause);
     };
   }, [onEnded, audioSrc, hasNext, onNext]);
 
@@ -165,8 +139,10 @@ export const AudioPlayer = ({
     try {
       if (isPlaying) {
         audioRef.current.pause();
+        setIsPlaying(false);
       } else {
         await audioRef.current.play();
+        setIsPlaying(true);
       }
     } catch (error) {
       console.error("Error playing audio:", error);
