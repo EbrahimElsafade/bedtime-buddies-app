@@ -38,6 +38,13 @@ export const StoryContent = ({
     ? getImageUrl(currentSection.image)
     : getImageUrl(story.cover_image)
 
+  // Determine direction based on current story language, not global language
+  const getDirectionFromLanguage = (language: string): 'rtl' | 'ltr' => {
+    return language.startsWith('ar') ? 'rtl' : 'ltr'
+  }
+
+  const storyDirection = getDirectionFromLanguage(currentLanguage)
+
   const handleNextSection = () => {
     if (currentSectionIndex < story.sections.length - 1 && onSectionChange) {
       onSectionChange(currentSectionIndex + 1)
@@ -57,7 +64,7 @@ export const StoryContent = ({
 
   return (
     <Card
-      dir={currentSectionDir}
+      dir={storyDirection}
       className="mb-4 overflow-hidden border-dream-light/20 bg-white/70 backdrop-blur-sm dark:bg-nightsky-light/70 md:mb-6"
     >
       <div className="grid">
@@ -96,7 +103,7 @@ export const StoryContent = ({
             currentSection={currentSection}
             currentLanguage={currentLanguage}
             currentSectionIndex={currentSectionIndex}
-            currentSectionDir={currentSectionDir}
+            currentSectionDir={storyDirection}
             onSectionChange={onSectionChange}
             onPlayingChange={setIsAudioPlaying}
             onAudioTimeUpdate={handleAudioTimeUpdate}
@@ -116,7 +123,7 @@ export const StoryContent = ({
               >
                 <ChevronLeft
                   className={
-                    currentSectionDir === 'rtl'
+                    storyDirection === 'rtl'
                       ? 'h-4 w-4 rotate-180 md:h-5 md:w-5'
                       : 'h-4 w-4 md:h-5 md:w-5'
                   }
@@ -137,7 +144,7 @@ export const StoryContent = ({
               >
                 <ChevronRight
                   className={
-                    currentSectionDir === 'rtl'
+                    storyDirection === 'rtl'
                       ? 'h-4 w-4 rotate-180 md:h-5 md:w-5'
                       : 'h-4 w-4 md:h-5 md:w-5'
                   }
