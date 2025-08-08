@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import {
   Play,
@@ -85,7 +86,7 @@ export const AudioPlayer = ({
 
   useEffect(() => {
     const audio = audioRef.current;
-    if (!audio) return;
+    if (!audio || !audioSrc) return;
 
     const handleLoadedMetadata = () => {
       setDuration(audio.duration);
