@@ -63,16 +63,16 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Wonder World custom colors - bright and playful
+				// Wonder World custom colors - vibrant purples and complementary colors
 				wonder: {
 					DEFAULT: '#0EA5E9', // Bright blue - main brand color
 					light: '#38BDF8', // Light blue
 					dark: '#0284C7', // Dark blue
 				},
-				magic: {
-					DEFAULT: '#10B981', // Emerald green for magic/nature elements
-					light: '#34D399', // Light green
-					dark: '#059669', // Dark green
+				dream: {
+					DEFAULT: '#8B5CF6', // Purple for dreams/creativity - replacing magic
+					light: '#A78BFA', // Light purple
+					dark: '#7C3AED', // Dark purple
 				},
 				joy: {
 					DEFAULT: '#F59E0B', // Warm orange for joy/excitement
@@ -83,6 +83,11 @@ export default {
 					DEFAULT: '#8B5CF6', // Purple for adventure/creativity
 					light: '#A78BFA', // Light purple
 					dark: '#7C3AED', // Dark purple
+				},
+				moon: {
+					DEFAULT: '#C084FC', // Soft purple for calm/moon elements - replacing green
+					light: '#DDD6FE', // Very light purple
+					dark: '#9333EA', // Dark purple
 				},
 				sunshine: {
 					DEFAULT: '#EAB308', // Bright yellow for sunshine/happiness
@@ -123,6 +128,11 @@ export default {
 				'wiggle': {
 					'0%, 100%': { transform: 'rotate(-3deg)' },
 					'50%': { transform: 'rotate(3deg)' }
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+					'33%': { transform: 'translateY(-10px) rotate(1deg)' },
+					'66%': { transform: 'translateY(-5px) rotate(-1deg)' }
 				}
 			},
 			animation: {
@@ -130,7 +140,8 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'bounce-gentle': 'bounce-gentle 3s ease-in-out infinite',
 				'sparkle': 'sparkle 2s ease-in-out infinite',
-				'wiggle': 'wiggle 1s ease-in-out infinite'
+				'wiggle': 'wiggle 1s ease-in-out infinite',
+				'float': 'float 6s ease-in-out infinite'
 			},
 			fontFamily: {
 				'bubbly': ['Bubblegum Sans', 'cursive'],
