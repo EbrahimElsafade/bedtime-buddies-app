@@ -1,39 +1,35 @@
 
-import { useEffect } from "react";
-import { useLocation, Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
+import { Home, Book } from "lucide-react";
 
 const NotFound = () => {
-  const location = useLocation();
-  const { t } = useTranslation(['notFound', 'misc']);
-
-  useEffect(() => {
-    document.title = `${t('misc:layout.appName')} - ${t('title')}`;
-    console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname
-    );
-  }, [location.pathname, t]);
+  const { t } = useTranslation('notFound');
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center bg-gradient-to-b from-transparent to-dream-light/10 px-4 py-12">
-      <div className="text-center max-w-md">
-        <div className="w-32 h-32 bg-dream-light rounded-full mx-auto flex items-center justify-center mb-6">
-          <span className="text-6xl">😴</span>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center space-y-6 px-4">
+        <div className="space-y-4">
+          <h1 className="text-6xl font-bold text-dream-DEFAULT">404</h1>
+          <h2 className="text-2xl font-semibold text-foreground">
+            {t('title')}
+          </h2>
+          <p className="text-muted-foreground max-w-md mx-auto">
+            {t('message')}
+          </p>
         </div>
-        <h1 className="text-4xl md:text-5xl font-bubbly mb-4">{t('title')}</h1>
-        <p className="text-xl text-muted-foreground mb-8">
-          {t('message')}
-        </p>
+        
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/">
-            <Button className="bg-dream-DEFAULT hover:bg-dream-dark">
+            <Button className="w-full sm:w-auto">
+              <Home className="w-4 h-4 mr-2" />
               {t('returnHome')}
             </Button>
           </Link>
           <Link to="/stories">
-            <Button variant="outline">
+            <Button variant="outline" className="w-full sm:w-auto">
+              <Book className="w-4 h-4 mr-2" />
               {t('browseStories')}
             </Button>
           </Link>

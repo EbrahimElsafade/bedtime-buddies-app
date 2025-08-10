@@ -6,7 +6,9 @@
     "startCourse": "Commencer le Cours",
     "lessons": "{{count}} leçons",
     "title": "Cours en Vedette",
-    "years": "ans"
+    "years": "ans",
+    "description": "Découvrez nos cours éducatifs conçus pour les enfants",
+    "noCourses": "Aucun cours disponible pour le moment"
   },
   "subscription": {
     "title": "S'abonner pour le Contenu Premium",
@@ -124,6 +126,7 @@
     "tryAgain": "Réessayer"
   },
   "duration": "min",
+  "loading": "Chargement...",
   "subscribe": {
     "title": "S'abonner pour le Contenu Premium",
     "subtitle": "Débloquez toutes les histoires, jeux et cours avec notre abonnement premium",

@@ -6,7 +6,9 @@
     "startCourse": "Start Course",
     "lessons": "{{count}} lessons",
     "title": "Featured Courses",
-    "years": "years"
+    "years": "years",
+    "description": "Discover our educational courses designed for children",
+    "noCourses": "No courses available at the moment"
   },
   "subscription": {
     "title": "Subscribe for Premium Content",
@@ -119,13 +121,14 @@
     "startFreeTrial": "Start Free Trial",
     "watchDemo": "Watch Demo",
     "subscribeNow": "Subscribe Now",
-    "maybelater": "Maybe Later",
+    "maybelar": "Maybe Later",
     "goBack": "Go Back",
     "tryAgain": "Try Again"
   },
   "duration": "min",
+  "loading": "Loading...",
   "subscribe": {
-    "title": "Subscribe for Premium Content", 
+    "title": "Subscribe for Premium Content",
     "subtitle": "Unlock all stories, games, and courses with our premium subscription",
     "button": "Subscribe Now"
   }
