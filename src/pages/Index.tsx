@@ -50,7 +50,7 @@ const Index = () => {
   });
 
   useEffect(() => {
-    document.title = "Wonder World - Kids Stories, Games & Courses";
+    document.title = "Bedtime Stories - Soothing Stories for Kids";
   }, []);
 
   // Handle RTL layout for Arabic

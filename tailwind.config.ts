@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -62,36 +63,26 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Wonder World custom colors - vibrant purples and complementary colors
-				wonder: {
-					DEFAULT: '#0EA5E9', // Bright blue - main brand color
-					light: '#38BDF8', // Light blue
-					dark: '#0284C7', // Dark blue
-				},
-				magic: {
-					DEFAULT: '#10B981', // Green for magic/nature
-					light: '#34D399', // Light green
-					dark: '#059669', // Dark green
-				},
-				joy: {
-					DEFAULT: '#F59E0B', // Warm orange for joy/excitement
-					light: '#FBBF24', // Light orange
-					dark: '#D97706', // Dark orange
-				},
-				adventure: {
-					DEFAULT: '#8B5CF6', // Purple for adventure/creativity
-					light: '#A78BFA', // Light purple
-					dark: '#7C3AED', // Dark purple
+				// Bedtime Stories custom colors
+				nightsky: {
+					DEFAULT: '#1A1F2C', // Dark blue/purple for night sky background
+					light: '#2D3748', // Slightly lighter night sky
+					accent: '#8B5CF6', // Purple accent for stars/elements
 				},
 				dream: {
-					DEFAULT: '#8B5CF6', // Purple for dreams/creativity
+					DEFAULT: '#8B5CF6', // Main purple
 					light: '#A78BFA', // Light purple
 					dark: '#7C3AED', // Dark purple
 				},
-				sunshine: {
-					DEFAULT: '#EAB308', // Bright yellow for sunshine/happiness
-					light: '#FACC15', // Light yellow
-					dark: '#CA8A04', // Dark yellow
+				moon: {
+					DEFAULT: '#F5D77B', // Soft yellow for moon
+					light: '#FDE68A', // Light yellow
+					dark: '#F59E0B', // Dark yellow/orange
+				},
+				cloud: {
+					DEFAULT: '#E2E8F0', // Soft blue-gray for clouds
+					light: '#F8FAFC', // Light cloud color
+					dark: '#CBD5E1', // Darker cloud color
 				}
 			},
 			borderRadius: {
@@ -116,31 +107,20 @@ export default {
 						height: '0'
 					}
 				},
-				'bounce-gentle': {
-					'0%, 100%': { transform: 'translateY(0)' },
-					'50%': { transform: 'translateY(-8px)' }
-				},
-				'sparkle': {
-					'0%, 100%': { opacity: '1', transform: 'scale(1)' },
-					'50%': { opacity: '0.7', transform: 'scale(1.1)' }
-				},
-				'wiggle': {
-					'0%, 100%': { transform: 'rotate(-3deg)' },
-					'50%': { transform: 'rotate(3deg)' }
-				},
 				'float': {
-					'0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
-					'33%': { transform: 'translateY(-10px) rotate(1deg)' },
-					'66%': { transform: 'translateY(-5px) rotate(-1deg)' }
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' }
+				},
+				'twinkle': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.5' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'bounce-gentle': 'bounce-gentle 3s ease-in-out infinite',
-				'sparkle': 'sparkle 2s ease-in-out infinite',
-				'wiggle': 'wiggle 1s ease-in-out infinite',
-				'float': 'float 6s ease-in-out infinite'
+				'float': 'float 6s ease-in-out infinite',
+				'twinkle': 'twinkle 4s ease-in-out infinite'
 			},
 			fontFamily: {
 				'bubbly': ['Bubblegum Sans', 'cursive'],
