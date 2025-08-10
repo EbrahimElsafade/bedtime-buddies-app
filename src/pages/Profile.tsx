@@ -9,10 +9,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Profile = () => {
   const navigate = useNavigate();
   const { user, profile, isAuthenticated, isLoading, updateProfile, logout } = useAuth();
+  const { t } = useTranslation('auth');
   
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -122,11 +124,11 @@ const Profile = () => {
   return (
     <div className="py-12 px-4">
       <div className="container mx-auto max-w-3xl">
-        <h1 className="text-3xl md:text-4xl font-bubbly mb-6">My Profile</h1>
+        <h1 className="text-3xl md:text-4xl font-bubbly mb-6">{t('profile')}</h1>
         
         <Tabs defaultValue="profile" className="mb-8">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="profile">Profile</TabsTrigger>
+            <TabsTrigger value="profile">{t('profile')}</TabsTrigger>
             <TabsTrigger value="favorites">Favorites</TabsTrigger>
             <TabsTrigger value="subscription">Subscription</TabsTrigger>
           </TabsList>
@@ -156,7 +158,7 @@ const Profile = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">{t('email')}</Label>
                     <Input
                       id="email"
                       value={email}
@@ -234,7 +236,7 @@ const Profile = () => {
                 ) : (
                   <>
                     <Button variant="outline" onClick={handleLogout}>
-                      Log Out
+                      {t('logout')}
                     </Button>
                     <Button onClick={() => setIsEditing(true)}>
                       Edit Profile
