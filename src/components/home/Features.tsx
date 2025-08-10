@@ -16,7 +16,7 @@ const Features = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           <div className="bg-white/70 dark:bg-card/70 p-4 md:p-6 rounded-xl backdrop-blur-sm border border-wonder-light/20">
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-dream-light/30 flex items-center justify-center mb-3 md:mb-4">
+            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-adventure-light/30 flex items-center justify-center mb-3 md:mb-4">
               <span className="text-xl md:text-2xl">📚</span>
             </div>
             <h3 className="text-lg md:text-xl font-bubbly mb-2 text-wonder-DEFAULT">{t('soothing.title')}</h3>
@@ -26,7 +26,7 @@ const Features = () => {
           </div>
 
           <div className="bg-white/70 dark:bg-card/70 p-4 md:p-6 rounded-xl backdrop-blur-sm border border-wonder-light/20">
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-moon-light/30 flex items-center justify-center mb-3 md:mb-4">
+            <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-magic-light/30 flex items-center justify-center mb-3 md:mb-4">
               <span className="text-xl md:text-2xl">🌎</span>
             </div>
             <h3 className="text-lg md:text-xl font-bubbly mb-2 text-wonder-DEFAULT">{t('languages.title')}</h3>

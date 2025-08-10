@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -69,10 +68,10 @@ export default {
 					light: '#38BDF8', // Light blue
 					dark: '#0284C7', // Dark blue
 				},
-				dream: {
-					DEFAULT: '#8B5CF6', // Purple for dreams/creativity - replacing magic
-					light: '#A78BFA', // Light purple
-					dark: '#7C3AED', // Dark purple
+				magic: {
+					DEFAULT: '#10B981', // Green for magic/nature
+					light: '#34D399', // Light green
+					dark: '#059669', // Dark green
 				},
 				joy: {
 					DEFAULT: '#F59E0B', // Warm orange for joy/excitement
@@ -84,10 +83,10 @@ export default {
 					light: '#A78BFA', // Light purple
 					dark: '#7C3AED', // Dark purple
 				},
-				moon: {
-					DEFAULT: '#C084FC', // Soft purple for calm/moon elements - replacing green
-					light: '#DDD6FE', // Very light purple
-					dark: '#9333EA', // Dark purple
+				dream: {
+					DEFAULT: '#8B5CF6', // Purple for dreams/creativity
+					light: '#A78BFA', // Light purple
+					dark: '#7C3AED', // Dark purple
 				},
 				sunshine: {
 					DEFAULT: '#EAB308', // Bright yellow for sunshine/happiness
