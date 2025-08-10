@@ -1,5 +1,5 @@
 
-import { Baby, Star, Rocket, BookOpen, Cake, Heart, Crown, Zap, Sparkles, Music, Gift, Balloon } from "lucide-react";
+import { Baby, Star, Rocket, BookOpen, Cake, Heart, Crown, Zap, Sparkles, Music, Gift, CircleDot } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const FunElements = () => {
@@ -44,7 +44,7 @@ const FunElements = () => {
         <Gift className="h-8 w-8 text-dream-light opacity-70" />
       </div>
       <div className="absolute top-[82%] left-[35%] animate-float" style={{ animationDelay: "1.9s" }}>
-        <Balloon className="h-9 w-9 text-moon-light opacity-60" />
+        <CircleDot className="h-9 w-9 text-moon-light opacity-60" />
       </div>
       
       {/* Third layer - Small twinkling stars */}
