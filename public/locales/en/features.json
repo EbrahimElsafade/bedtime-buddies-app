@@ -1,26 +1,26 @@
 
 {
-  "title": "Why Choose Our Stories?",
-  "subtitle": "Discover the magic of our carefully crafted bedtime stories",
+  "title": "Why Choose Wonder World?",
+  "subtitle": "Discover the magic of our carefully crafted entertainment and learning content",
   "interactive": {
     "title": "Interactive Stories",
     "description": "Engaging narratives that respond to your child's choices"
   },
   "multilingual": {
     "title": "Multiple Languages",
-    "description": "Stories available in Arabic, English, and French"
+    "description": "Content available in Arabic, English, and French"
   },
   "educational": {
     "title": "Educational Content",
-    "description": "Learn while having fun with age-appropriate lessons"
+    "description": "Learn while having fun with age-appropriate lessons and activities"
   },
   "peaceful": {
-    "title": "Peaceful Sleep",
-    "description": "Specially designed to help children relax and fall asleep"
+    "title": "Safe Entertainment",
+    "description": "Carefully curated content designed for children's wellbeing"
   },
   "soothing": {
-    "title": "Soothing Stories",
-    "desc": "Carefully designed to help your child relax and drift into peaceful sleep"
+    "title": "Engaging Stories",
+    "desc": "Carefully designed to captivate your child's imagination and curiosity"
   },
   "languages": {
     "title": "Multiple Languages",
@@ -28,6 +28,6 @@
   },
   "games": {
     "title": "Interactive Games",
-    "desc": "Fun educational games that complement our stories"
+    "desc": "Fun educational games that complement our stories and courses"
   }
 }

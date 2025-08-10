@@ -1,26 +1,26 @@
 
 {
-  "title": "Pourquoi Choisir Nos Histoires ?",
-  "subtitle": "Découvrez la magie de nos histoires du coucher soigneusement créées",
+  "title": "Pourquoi Choisir Wonder World ?",
+  "subtitle": "Découvrez la magie de notre contenu de divertissement et d'apprentissage soigneusement créé",
   "interactive": {
     "title": "Histoires Interactives",
     "description": "Récits captivants qui répondent aux choix de votre enfant"
   },
   "multilingual": {
     "title": "Plusieurs Langues",
-    "description": "Histoires disponibles en arabe, anglais et français"
+    "description": "Contenu disponible en arabe, anglais et français"
   },
   "educational": {
     "title": "Contenu Éducatif",
-    "description": "Apprendre en s'amusant avec des leçons adaptées à l'âge"
+    "description": "Apprendre en s'amusant avec des leçons et activités adaptées à l'âge"
   },
   "peaceful": {
-    "title": "Sommeil Paisible",
-    "description": "Spécialement conçues pour aider les enfants à se détendre et s'endormir"
+    "title": "Divertissement Sûr",
+    "description": "Contenu soigneusement sélectionné conçu pour le bien-être des enfants"
   },
   "soothing": {
-    "title": "Histoires Apaisantes",
-    "desc": "Soigneusement conçues pour aider votre enfant à se détendre et s'endormir paisiblement"
+    "title": "Histoires Captivantes",
+    "desc": "Soigneusement conçues pour captiver l'imagination et la curiosité de votre enfant"
   },
   "languages": {
     "title": "Plusieurs Langues",
@@ -28,6 +28,6 @@
   },
   "games": {
     "title": "Jeux Interactifs",
-    "desc": "Jeux éducatifs amusants qui complètent nos histoires"
+    "desc": "Jeux éducatifs amusants qui complètent nos histoires et cours"
   }
 }
