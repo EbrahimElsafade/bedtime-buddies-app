@@ -10,11 +10,11 @@
   },
   "subscription": {
     "title": "S'abonner pour le Contenu Premium",
-    "description": "Débloquez toutes les histoires, jeux et cours avec notre abonnement premium",
+    "description": "Débloquez toutes les histoires et fonctionnalités avec notre abonnement premium",
     "cta": "S'abonner Maintenant"
   },
   "footer": {
-    "description": "Créer des expériences magiques de divertissement et d'apprentissage pour les enfants du monde entier",
+    "description": "Créer des expériences magiques du coucher pour les enfants du monde entier",
     "company": "Entreprise",
     "about": "À Propos",
     "contact": "Contact",
@@ -28,7 +28,7 @@
     "rights": "Tous droits réservés"
   },
   "layout": {
-    "appName": "Wonder World",
+    "appName": "HistoiresDeRêve",
     "subscribe": "S'abonner",
     "copyright": "Tous droits réservés"
   },
@@ -39,8 +39,8 @@
   },
   "games": {
     "title": "Jeux Interactifs",
-    "description": "Jeux amusants et éducatifs pour que les enfants s'amusent et apprennent.",
-    "comingSoon": "Plus de Jeux Bientôt"
+    "description": "Bientôt disponible ! Jeux amusants et éducatifs pour les enfants.",
+    "comingSoon": "Bientôt Disponible"
   },
   "notFound": {
     "title": "Page Non Trouvée",
@@ -55,7 +55,7 @@
       "title": "Gratuit",
       "price": "0€",
       "features": [
-        "Accès limité au contenu",
+        "Accès limité aux histoires",
         "Fonctionnalités de base",
         "Support communautaire"
       ]
@@ -64,7 +64,7 @@
       "title": "Premium",
       "price": "9,99€",
       "features": [
-        "Accès illimité au contenu",
+        "Accès illimité aux histoires",
         "Toutes les fonctionnalités premium",
         "Support prioritaire",
         "Téléchargements hors ligne"
@@ -87,7 +87,7 @@
     "special": "Offre Spéciale !",
     "limitedTime": "Offre Limitée",
     "unlock": "Débloquez les Fonctionnalités Premium",
-    "feature1": "Accès illimité à tout le contenu",
+    "feature1": "Accès illimité à toutes les histoires",
     "feature2": "Expérience sans publicité",
     "feature3": "Téléchargements hors ligne",
     "month": "mois",
@@ -96,8 +96,8 @@
     "later": "Plus Tard"
   },
   "free": {
-    "story": "Contenu Gratuit du Jour",
-    "viewAll": "Voir Tout le Contenu",
+    "story": "Histoire Gratuite du Jour",
+    "viewAll": "Voir Toutes les Histoires",
     "tag": "GRATUIT"
   },
   "popular": {
@@ -126,7 +126,7 @@
   "duration": "min",
   "subscribe": {
     "title": "S'abonner pour le Contenu Premium",
-    "subtitle": "Débloquez toutes les histoires, jeux et cours avec notre abonnement premium",
+    "subtitle": "Débloquez toutes les histoires et fonctionnalités avec notre abonnement premium",
     "button": "S'abonner Maintenant"
   }
 }

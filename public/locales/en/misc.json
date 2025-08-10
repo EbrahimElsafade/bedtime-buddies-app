@@ -10,11 +10,11 @@
   },
   "subscription": {
     "title": "Subscribe for Premium Content",
-    "description": "Unlock all stories, games, and courses with our premium subscription",
+    "description": "Unlock all stories and features with our premium subscription",
     "cta": "Subscribe Now"
   },
   "footer": {
-    "description": "Creating magical entertainment and learning experiences for children worldwide",
+    "description": "Creating magical bedtime experiences for children worldwide",
     "company": "Company",
     "about": "About Us",
     "contact": "Contact",
@@ -28,7 +28,7 @@
     "rights": "All rights reserved"
   },
   "layout": {
-    "appName": "Wonder World",
+    "appName": "DreamStories",
     "subscribe": "Subscribe",
     "copyright": "All rights reserved"
   },
@@ -39,8 +39,8 @@
   },
   "games": {
     "title": "Interactive Games",
-    "description": "Fun and educational games for children to enjoy and learn.",
-    "comingSoon": "More Games Coming Soon"
+    "description": "Coming soon! Fun and educational games for children.",
+    "comingSoon": "Coming Soon"
   },
   "notFound": {
     "title": "Page Not Found",
@@ -55,7 +55,7 @@
       "title": "Free",
       "price": "$0",
       "features": [
-        "Limited content access",
+        "Limited stories access",
         "Basic features",
         "Community support"
       ]
@@ -64,7 +64,7 @@
       "title": "Premium",
       "price": "$9.99",
       "features": [
-        "Unlimited content access",
+        "Unlimited stories access",
         "All premium features",
         "Priority support",
         "Offline downloads"
@@ -87,7 +87,7 @@
     "special": "Special Offer!",
     "limitedTime": "Limited Time Only",
     "unlock": "Unlock Premium Features",
-    "feature1": "Unlimited access to all content",
+    "feature1": "Unlimited access to all stories",
     "feature2": "Ad-free experience",
     "feature3": "Offline downloads",
     "month": "month",
@@ -96,8 +96,8 @@
     "later": "Maybe Later"
   },
   "free": {
-    "story": "Free Content of the Day",
-    "viewAll": "View All Content",
+    "story": "Free Story of the Day",
+    "viewAll": "View All Stories",
     "tag": "FREE"
   },
   "popular": {
@@ -126,7 +126,7 @@
   "duration": "min",
   "subscribe": {
     "title": "Subscribe for Premium Content", 
-    "subtitle": "Unlock all stories, games, and courses with our premium subscription",
+    "subtitle": "Unlock all stories and features with our premium subscription",
     "button": "Subscribe Now"
   }
 }

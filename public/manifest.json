@@ -1,8 +1,8 @@
 
 {
-  "name": "Wonder World - Kids Entertainment",
-  "short_name": "Wonder World",
-  "description": "Interactive stories, educational games, and engaging courses for children",
+  "name": "Bedtime Stories",
+  "short_name": "Bedtime Stories",
+  "description": "Delightful and calming bedtime storytelling experience",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#1A1F2C",
