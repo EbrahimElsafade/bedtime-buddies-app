@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -124,7 +123,8 @@ export default {
 			},
 			fontFamily: {
 				'bubbly': ['Bubblegum Sans', 'cursive'],
-				'rounded': ['Varela Round', 'sans-serif']
+				'rounded': ['Varela Round', 'sans-serif'],
+				'cairo': ['Cairo', 'sans-serif']
 			}
 		}
 	},

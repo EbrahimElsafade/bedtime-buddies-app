@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Varela+Round&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Varela+Round&family=Cairo:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -91,6 +91,12 @@
     text-align: right;
   }
   
+  /* Apply Cairo font for Arabic content */
+  html[lang="ar"] body,
+  html[lang="ar"] * {
+    font-family: 'Cairo', sans-serif !important;
+  }
+  
   /* RTL adjustments */
   html[dir="rtl"] .ml-1, html[dir="rtl"] .ml-2, html[dir="rtl"] .ml-3, html[dir="rtl"] .ml-4 {
     margin-left: 0;
@@ -110,7 +116,7 @@
 
   /* Arabic font improvements */
   .font-arabic {
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: 'Cairo', system-ui, -apple-system, sans-serif;
     font-weight: 500;
   }
 
