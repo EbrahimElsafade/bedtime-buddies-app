@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Edit2, Check, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -32,6 +32,13 @@ const StoryOptions = () => {
   const [newCategory, setNewCategory] = useState("");
   const [newLanguageCode, setNewLanguageCode] = useState("");
   const [newLanguageName, setNewLanguageName] = useState("");
+  
+  // Edit states
+  const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
+  const [editingCategoryName, setEditingCategoryName] = useState("");
+  const [editingLanguageId, setEditingLanguageId] = useState<string | null>(null);
+  const [editingLanguageCode, setEditingLanguageCode] = useState("");
+  const [editingLanguageName, setEditingLanguageName] = useState("");
 
   // Fetch categories
   const { data: categories = [], isLoading: categoriesLoading } = useQuery({
@@ -83,6 +90,30 @@ const StoryOptions = () => {
     }
   });
 
+  // Update category mutation
+  const updateCategoryMutation = useMutation({
+    mutationFn: async ({ id, name }: { id: string; name: string }) => {
+      const { data, error } = await (supabase as any)
+        .from('story_categories')
+        .update({ name })
+        .eq('id', id)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['story-categories'] });
+      setEditingCategoryId(null);
+      setEditingCategoryName("");
+      toast({
+        title: "Category Updated",
+        description: `Category '${data.name}' has been updated successfully`,
+      });
+    }
+  });
+
   // Remove category mutation
   const removeCategoryMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -126,6 +157,31 @@ const StoryOptions = () => {
     }
   });
 
+  // Update language mutation
+  const updateLanguageMutation = useMutation({
+    mutationFn: async ({ id, code, name }: { id: string; code: string; name: string }) => {
+      const { data, error } = await (supabase as any)
+        .from('story_languages')
+        .update({ code, name })
+        .eq('id', id)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['story-languages'] });
+      setEditingLanguageId(null);
+      setEditingLanguageCode("");
+      setEditingLanguageName("");
+      toast({
+        title: "Language Updated",
+        description: `Language '${data.name}' has been updated successfully`,
+      });
+    }
+  });
+
   // Remove language mutation
   const removeLanguageMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -152,6 +208,25 @@ const StoryOptions = () => {
     }
   };
 
+  const startEditCategory = (category: StoryCategory) => {
+    setEditingCategoryId(category.id);
+    setEditingCategoryName(category.name);
+  };
+
+  const saveEditCategory = () => {
+    if (editingCategoryId && editingCategoryName.trim()) {
+      updateCategoryMutation.mutate({
+        id: editingCategoryId,
+        name: editingCategoryName.trim()
+      });
+    }
+  };
+
+  const cancelEditCategory = () => {
+    setEditingCategoryId(null);
+    setEditingCategoryName("");
+  };
+
   const removeCategory = (id: string) => {
     removeCategoryMutation.mutate(id);
   };
@@ -164,6 +239,28 @@ const StoryOptions = () => {
         name: newLanguageName.trim() 
       });
     }
+  };
+
+  const startEditLanguage = (language: StoryLanguage) => {
+    setEditingLanguageId(language.id);
+    setEditingLanguageCode(language.code);
+    setEditingLanguageName(language.name);
+  };
+
+  const saveEditLanguage = () => {
+    if (editingLanguageId && editingLanguageCode.trim() && editingLanguageName.trim()) {
+      updateLanguageMutation.mutate({
+        id: editingLanguageId,
+        code: editingLanguageCode.trim(),
+        name: editingLanguageName.trim()
+      });
+    }
+  };
+
+  const cancelEditLanguage = () => {
+    setEditingLanguageId(null);
+    setEditingLanguageCode("");
+    setEditingLanguageName("");
   };
 
   const removeLanguage = (id: string) => {
@@ -212,18 +309,56 @@ const StoryOptions = () => {
             ) : (
               <div className="flex flex-wrap gap-2">
                 {categories.map((category) => (
-                  <Badge key={category.id} variant="secondary" className="flex items-center gap-1">
-                    {category.name}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-4 w-4 p-0 hover:bg-destructive hover:text-destructive-foreground"
-                      onClick={() => removeCategory(category.id)}
-                      disabled={removeCategoryMutation.isPending}
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  </Badge>
+                  <div key={category.id}>
+                    {editingCategoryId === category.id ? (
+                      <div className="flex items-center gap-2 p-2 border rounded-md bg-white">
+                        <Input
+                          value={editingCategoryName}
+                          onChange={(e) => setEditingCategoryName(e.target.value)}
+                          className="h-6 text-sm"
+                          onKeyPress={(e) => e.key === 'Enter' && saveEditCategory()}
+                        />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                          onClick={saveEditCategory}
+                          disabled={updateCategoryMutation.isPending}
+                        >
+                          <Check className="h-3 w-3 text-green-600" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                          onClick={cancelEditCategory}
+                        >
+                          <X className="h-3 w-3 text-red-600" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <Badge variant="secondary" className="flex items-center gap-1">
+                        {category.name}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-4 w-4 p-0 hover:bg-blue-500 hover:text-white"
+                          onClick={() => startEditCategory(category)}
+                        >
+                          <Edit2 className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-4 w-4 p-0 hover:bg-destructive hover:text-destructive-foreground"
+                          onClick={() => removeCategory(category.id)}
+                          disabled={removeCategoryMutation.isPending}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </Badge>
+                    )}
+                  </div>
                 ))}
               </div>
             )}
@@ -269,18 +404,63 @@ const StoryOptions = () => {
             ) : (
               <div className="flex flex-wrap gap-2">
                 {languages.map((language) => (
-                  <Badge key={language.id} variant="secondary" className="flex items-center gap-1">
-                    {language.name} ({language.code})
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-4 w-4 p-0 hover:bg-destructive hover:text-destructive-foreground"
-                      onClick={() => removeLanguage(language.id)}
-                      disabled={removeLanguageMutation.isPending}
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  </Badge>
+                  <div key={language.id}>
+                    {editingLanguageId === language.id ? (
+                      <div className="flex items-center gap-2 p-2 border rounded-md bg-white">
+                        <Input
+                          value={editingLanguageCode}
+                          onChange={(e) => setEditingLanguageCode(e.target.value)}
+                          className="h-6 text-sm w-16"
+                          placeholder="Code"
+                        />
+                        <Input
+                          value={editingLanguageName}
+                          onChange={(e) => setEditingLanguageName(e.target.value)}
+                          className="h-6 text-sm"
+                          placeholder="Name"
+                          onKeyPress={(e) => e.key === 'Enter' && saveEditLanguage()}
+                        />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                          onClick={saveEditLanguage}
+                          disabled={updateLanguageMutation.isPending}
+                        >
+                          <Check className="h-3 w-3 text-green-600" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 w-6 p-0"
+                          onClick={cancelEditLanguage}
+                        >
+                          <X className="h-3 w-3 text-red-600" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <Badge variant="secondary" className="flex items-center gap-1">
+                        {language.name} ({language.code})
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-4 w-4 p-0 hover:bg-blue-500 hover:text-white"
+                          onClick={() => startEditLanguage(language)}
+                        >
+                          <Edit2 className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-4 w-4 p-0 hover:bg-destructive hover:text-destructive-foreground"
+                          onClick={() => removeLanguage(language.id)}
+                          disabled={removeLanguageMutation.isPending}
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </Badge>
+                    )}
+                  </div>
                 ))}
               </div>
             )}
