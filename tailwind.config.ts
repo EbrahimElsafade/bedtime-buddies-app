@@ -63,26 +63,31 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Bedtime Stories custom colors
-				nightsky: {
-					DEFAULT: '#1A1F2C', // Dark blue/purple for night sky background
-					light: '#2D3748', // Slightly lighter night sky
-					accent: '#8B5CF6', // Purple accent for stars/elements
+				// Wonder World custom colors - bright and playful
+				wonder: {
+					DEFAULT: '#0EA5E9', // Bright blue - main brand color
+					light: '#38BDF8', // Light blue
+					dark: '#0284C7', // Dark blue
 				},
-				dream: {
-					DEFAULT: '#8B5CF6', // Main purple
+				magic: {
+					DEFAULT: '#10B981', // Emerald green for magic/nature elements
+					light: '#34D399', // Light green
+					dark: '#059669', // Dark green
+				},
+				joy: {
+					DEFAULT: '#F59E0B', // Warm orange for joy/excitement
+					light: '#FBBF24', // Light orange
+					dark: '#D97706', // Dark orange
+				},
+				adventure: {
+					DEFAULT: '#8B5CF6', // Purple for adventure/creativity
 					light: '#A78BFA', // Light purple
 					dark: '#7C3AED', // Dark purple
 				},
-				moon: {
-					DEFAULT: '#F5D77B', // Soft yellow for moon
-					light: '#FDE68A', // Light yellow
-					dark: '#F59E0B', // Dark yellow/orange
-				},
-				cloud: {
-					DEFAULT: '#E2E8F0', // Soft blue-gray for clouds
-					light: '#F8FAFC', // Light cloud color
-					dark: '#CBD5E1', // Darker cloud color
+				sunshine: {
+					DEFAULT: '#EAB308', // Bright yellow for sunshine/happiness
+					light: '#FACC15', // Light yellow
+					dark: '#CA8A04', // Dark yellow
 				}
 			},
 			borderRadius: {
@@ -107,20 +112,25 @@ export default {
 						height: '0'
 					}
 				},
-				'float': {
+				'bounce-gentle': {
 					'0%, 100%': { transform: 'translateY(0)' },
-					'50%': { transform: 'translateY(-10px)' }
+					'50%': { transform: 'translateY(-8px)' }
 				},
-				'twinkle': {
-					'0%, 100%': { opacity: '1' },
-					'50%': { opacity: '0.5' }
+				'sparkle': {
+					'0%, 100%': { opacity: '1', transform: 'scale(1)' },
+					'50%': { opacity: '0.7', transform: 'scale(1.1)' }
+				},
+				'wiggle': {
+					'0%, 100%': { transform: 'rotate(-3deg)' },
+					'50%': { transform: 'rotate(3deg)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'float': 'float 6s ease-in-out infinite',
-				'twinkle': 'twinkle 4s ease-in-out infinite'
+				'bounce-gentle': 'bounce-gentle 3s ease-in-out infinite',
+				'sparkle': 'sparkle 2s ease-in-out infinite',
+				'wiggle': 'wiggle 1s ease-in-out infinite'
 			},
 			fontFamily: {
 				'bubbly': ['Bubblegum Sans', 'cursive'],
