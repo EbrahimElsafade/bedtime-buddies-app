@@ -81,7 +81,7 @@ const Layout = () => {
   const allNavItems = [
     { name: t('navigation:home'), path: '/', icon: Home, key: 'home' },
     { name: t('navigation:stories'), path: '/stories', icon: Book, key: 'stories' },
-    { name: t('navigation:courses'), path: '/courses', icon: Layers, key: 'courses' },
+    { name: t('nav.courses'), path: '/courses', icon: Layers, key: 'courses' },
     { name: t('navigation:games'), path: '/games', icon: BookOpen, key: 'games' },
     { name: t('navigation:profile'), path: isAuthenticated ? '/profile' : '/login', icon: User, key: 'profile' }
   ];

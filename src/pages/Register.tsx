@@ -8,12 +8,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { useTranslation } from "react-i18next";
 
 const Register = () => {
   const navigate = useNavigate();
   const { register: signUp, loginWithGoogle, loginWithApple, isAuthenticated, isLoading } = useAuth();
-  const { t } = useTranslation('auth');
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -105,7 +103,7 @@ const Register = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="email">{t('email')}</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
                       type="email"
@@ -117,7 +115,7 @@ const Register = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="password">{t('password')}</Label>
+                    <Label htmlFor="password">Password</Label>
                     <Input
                       id="password"
                       type="password"
@@ -250,9 +248,9 @@ const Register = () => {
           </CardContent>
           <CardFooter className="text-center">
             <p className="text-sm text-muted-foreground">
-              {t('hasAccount')}{" "}
+              Already have an account?{" "}
               <Link to="/login" className="text-dream-DEFAULT hover:underline">
-                {t('signIn')}
+                Sign in
               </Link>
             </p>
           </CardFooter>

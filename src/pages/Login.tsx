@@ -8,12 +8,10 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { useTranslation } from "react-i18next";
 
 const Login = () => {
   const navigate = useNavigate();
   const { login, loginWithGoogle, loginWithApple, isAuthenticated, isLoading, resetPassword } = useAuth();
-  const { t } = useTranslation('auth');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -98,7 +96,7 @@ const Login = () => {
               <form onSubmit={handleResetPassword}>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="resetEmail">{t('email')}</Label>
+                    <Label htmlFor="resetEmail">Email</Label>
                     <Input
                       id="resetEmail"
                       type="email"
@@ -155,7 +153,7 @@ const Login = () => {
             <form onSubmit={handleSubmit}>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">{t('email')}</Label>
+                  <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
                     type="email"
@@ -166,13 +164,13 @@ const Login = () => {
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="password">{t('password')}</Label>
+                    <Label htmlFor="password">Password</Label>
                     <button
                       type="button"
                       onClick={() => setIsResetting(true)}
                       className="text-xs text-dream-DEFAULT hover:underline"
                     >
-                      {t('forgotPassword')}
+                      Forgot password?
                     </button>
                   </div>
                   <Input
@@ -196,10 +194,10 @@ const Login = () => {
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {t('signingIn')}...
+                      Signing in...
                     </>
                   ) : (
-                    t('signIn')
+                    "Sign In"
                   )}
                 </Button>
               </div>
@@ -239,9 +237,9 @@ const Login = () => {
           </CardContent>
           <CardFooter className="text-center">
             <p className="text-sm text-muted-foreground">
-              {t('noAccount')}{" "}
+              Don't have an account?{" "}
               <Link to="/register" className="text-dream-DEFAULT hover:underline">
-                {t('signUp')}
+                Sign up
               </Link>
             </p>
           </CardFooter>
