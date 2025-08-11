@@ -8,7 +8,7 @@
   "entertainment": "Histoires de Divertissement",
   "viewAll": "Voir Toutes les Histoires",
   "readNow": "Lire Maintenant",
-  "duration": "{{duration}} min",
+  "duration": "min",
   "category": {
     "sleeping": "Coucher",
     "religious": "Religieuses",

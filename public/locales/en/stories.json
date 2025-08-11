@@ -8,7 +8,7 @@
   "entertainment": "Entertainment Stories",
   "viewAll": "View All Stories",
   "readNow": "Read Now",
-  "duration": "{{duration}} min",
+  "duration": "min",
   "category": {
     "sleeping": "Bedtime",
     "religious": "Religious",
