@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Clock, Users } from "lucide-react";
+import { BookOpen, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getMultilingualText } from "@/utils/multilingualUtils";
@@ -19,7 +19,10 @@ const Courses = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("courses")
-        .select("*")
+        .select(`
+          *,
+          course_lessons(count)
+        `)
         .eq("is_published", true)
         .order("created_at", { ascending: false });
       
@@ -54,6 +57,7 @@ const Courses = () => {
           {courses.map((course) => {
             const title = getMultilingualText(course.title, language);
             const description = getMultilingualText(course.description, language);
+            const lessonCount = course.course_lessons?.[0]?.count || 0;
             
             return (
               <Card key={course.id} className="overflow-hidden hover:shadow-lg transition-shadow">
@@ -77,11 +81,7 @@ const Courses = () => {
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
                       <BookOpen className="h-4 w-4" />
-                      <span>{t('misc:courses.lessons', { count: course.lesson_count || 0 })}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
-                      <span>{course.duration || 30} {t('misc:duration')}</span>
+                      <span>{t('misc:courses.lessons', { count: lessonCount })}</span>
                     </div>
                   </div>
                 </CardHeader>
