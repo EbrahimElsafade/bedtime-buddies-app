@@ -1,169 +1,213 @@
-
-import { Link } from "react-router-dom";
-import { ArrowRight, Clock } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { useTranslation } from "react-i18next";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { getImageUrl } from "@/utils/imageUtils";
-import { getMultilingualText } from "@/utils/multilingualUtils";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { Link } from 'react-router-dom'
+import { ArrowRight, Clock } from 'lucide-react'
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { useTranslation } from 'react-i18next'
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '@/integrations/supabase/client'
+import { getImageUrl } from '@/utils/imageUtils'
+import { getMultilingualText } from '@/utils/multilingualUtils'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 const PopularStories = () => {
-  const { t } = useTranslation(['misc', 'stories']);
-  const { language } = useLanguage();
+  const { t } = useTranslation(['misc', 'stories'])
+  const { language } = useLanguage()
 
   // Map website language to story language codes
   const getStoryLanguageCode = (websiteLanguage: string) => {
     switch (websiteLanguage) {
       case 'ar':
-        return 'ar-eg'; // Default to Egyptian Arabic for Arabic website language
+        return 'ar-eg' // Default to Egyptian Arabic for Arabic website language
       case 'en':
-        return 'en';
+        return 'en'
       case 'fr':
-        return 'fr';
+        return 'fr'
       default:
-        return 'en';
+        return 'en'
     }
-  };
+  }
 
-  const currentStoryLanguage = getStoryLanguageCode(language);
+  const currentStoryLanguage = getStoryLanguageCode(language)
 
   const { data: popularStories = [], isLoading } = useQuery({
-    queryKey: ["popular-stories", language],
+    queryKey: ['popular-stories', language],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("stories")
-        .select("*")
-        .eq("is_published", true)
+        .from('stories')
+        .select('*')
+        .eq('is_published', true)
         .limit(3)
-        .order("created_at", { ascending: false });
-      
-      if (error) {
-        console.error("Error fetching popular stories:", error);
-        throw error;
-      }
-      
-      return data || [];
-    }
-  });
+        .order('created_at', { ascending: false })
 
-  const handleViewAllClick = (e) => {
-    console.log("View All Stories button clicked in PopularStories");
+      if (error) {
+        console.error('Error fetching popular stories:', error)
+        throw error
+      }
+
+      return data || []
+    },
+  })
+
+  const handleViewAllClick = e => {
+    console.log('View All Stories button clicked in PopularStories')
     // Don't prevent default - let Link handle navigation
-  };
+  }
 
   if (isLoading) {
     return (
-      <section className="py-12 px-4 relative overflow-hidden">
+      <section className="relative overflow-hidden px-4 py-12">
         <div className="container mx-auto">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl md:text-3xl font-bubbly text-dream-DEFAULT">{t('stories:popular')}</h2>
-            <Link to="/stories" className="text-dream-DEFAULT hover:text-dream-dark text-sm font-medium flex items-center">
-              {t('misc:free.viewAll')} <ArrowRight className="rtl:rotate-180 ms-1 h-4 w-4" />
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-dream-DEFAULT font-bubbly text-2xl md:text-3xl">
+              {t('stories:popular')}
+            </h2>
+            <Link
+              to="/stories"
+              className="text-dream-DEFAULT flex items-center text-sm font-medium hover:text-dream-dark"
+            >
+              {t('misc:free.viewAll')}{' '}
+              <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <Card key={i} className="story-card h-[25rem] overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm animate-pulse pb-4">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {[1, 2, 3].map(i => (
+              <Card
+                key={i}
+                className="story-card h-[25rem] animate-pulse overflow-hidden border-dream-light/20 bg-white/70 pb-4 backdrop-blur-sm dark:bg-nightsky-light/70"
+              >
                 <div className="h-48 bg-gray-200"></div>
                 <CardHeader className="pb-2">
-                  <div className="h-6 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-1"></div>
-                  <div className="h-4 bg-gray-200 rounded"></div>
+                  <div className="mb-2 h-6 rounded bg-gray-200"></div>
+                  <div className="mb-1 h-4 rounded bg-gray-200"></div>
+                  <div className="h-4 rounded bg-gray-200"></div>
                 </CardHeader>
               </Card>
             ))}
           </div>
         </div>
       </section>
-    );
+    )
   }
 
   return (
-    <section className="py-12 px-4 relative overflow-hidden">
+    <section className="relative overflow-hidden px-4 py-12">
       <div className="container mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl md:text-3xl font-bubbly text-dream-DEFAULT">{t('stories:popular')}</h2>
-          <Link 
-            to="/stories" 
-            className="text-dream-DEFAULT hover:text-dream-dark text-sm font-medium flex items-center"
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-dream-DEFAULT font-bubbly text-2xl md:text-3xl">
+            {t('stories:popular')}
+          </h2>
+          <Link
+            to="/stories"
+            className="text-dream-DEFAULT flex items-center text-sm font-medium hover:text-dream-dark"
             onClick={handleViewAllClick}
           >
-            {t('misc:free.viewAll')} <ArrowRight className="rtl:rotate-180 ms-1 h-4 w-4" />
+            {t('misc:free.viewAll')}{' '}
+            <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
           </Link>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {popularStories.map((story) => {
-            const imageUrl = getImageUrl(story.cover_image);
-            const storyTitle = getMultilingualText(story.title, currentStoryLanguage, 'en');
-            const storyDescription = getMultilingualText(story.description, currentStoryLanguage, 'en');
-            
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {popularStories.map(story => {
+            const imageUrl = getImageUrl(story.cover_image)
+            const storyTitle = getMultilingualText(
+              story.title,
+              currentStoryLanguage,
+              'en',
+            )
+            const storyDescription = getMultilingualText(
+              story.description,
+              currentStoryLanguage,
+              'en',
+            )
+
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card relative z-50 h-[25rem] overflow-hidden border-dream-light/20 bg-white/10 dark:bg-nightsky-light/10 backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow flex flex-col pb-4">
-                  <div className="h-48 relative overflow-hidden">
+                <Card className="story-card relative z-20 flex h-[25rem] cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/10">
+                  <div className="relative h-48 overflow-hidden">
                     {imageUrl ? (
-                      <img 
+                      <img
                         src={imageUrl}
-                        alt={storyTitle} 
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          console.log('Popular story image failed to load:', story.cover_image);
-                          e.currentTarget.style.display = 'none';
+                        alt={storyTitle}
+                        className="h-full w-full object-cover"
+                        onError={e => {
+                          console.log(
+                            'Popular story image failed to load:',
+                            story.cover_image,
+                          )
+                          e.currentTarget.style.display = 'none'
                         }}
                       />
                     ) : (
-                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                      <div className="flex h-full w-full items-center justify-center bg-gray-200">
                         <span className="text-gray-500">No Image</span>
                       </div>
                     )}
                     {story.is_free ? (
-                      <div className="absolute top-2 end-2 bg-green-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white">
+                      <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-white shadow-lg">
                         {t('misc:free.tag')}
                       </div>
                     ) : (
-                      <div className="absolute top-2 end-2 bg-yellow-500 text-black text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-white">
+                      <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-yellow-500 px-3 py-1.5 text-xs font-bold text-black shadow-lg">
                         {t('misc:premium.tag')}
                       </div>
                     )}
                   </div>
-                  <div className="flex flex-col flex-1">
-                    <CardHeader className="pb-2 flex-1">
-                      <div className="flex justify-between items-start mb-2">
-                        <CardTitle className="text-lg text-dream-DEFAULT line-clamp-2 flex-1">{storyTitle}</CardTitle>
-                        <div className="flex items-center gap-2 ml-2">
-                          <Badge variant="secondary" className="bg-dream-light/30 text-dream-DEFAULT text-xs">
-                            {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
+                  <div className="flex flex-1 flex-col">
+                    <CardHeader className="flex-1 pb-2">
+                      <div className="mb-2 flex items-start justify-between">
+                        <CardTitle className="text-dream-DEFAULT line-clamp-2 flex-1 text-lg">
+                          {storyTitle}
+                        </CardTitle>
+                        <div className="ml-2 flex items-center gap-2">
+                          <Badge
+                            variant="secondary"
+                            className="text-dream-DEFAULT bg-dream-light/30 text-xs"
+                          >
+                            {story.category.charAt(0).toUpperCase() +
+                              story.category.slice(1)}
                           </Badge>
-                          <div className="flex items-center text-xs text-dream-DEFAULT">
-                            <Clock className="h-3 w-3 mr-1" />
-                            <span>{story.duration} {t('misc:duration')}</span>
+                          <div className="text-dream-DEFAULT flex items-center gap-1 text-xs">
+                            <Clock className="h-3 w-3" />
+                            <span>
+                              {story.duration} {t('misc:duration')}
+                            </span>
                           </div>
                         </div>
                       </div>
-                      <CardDescription className="line-clamp-2 text-dream-DEFAULT dark:text-foreground text-sm leading-relaxed">
+                      <CardDescription className="text-dream-DEFAULT line-clamp-2 text-sm leading-relaxed dark:text-foreground">
                         {storyDescription}
                       </CardDescription>
                     </CardHeader>
                   </div>
                 </Card>
               </Link>
-            );
+            )
           })}
         </div>
       </div>
-      
+
       {/* Fun decorative elements specific to this section */}
       <div className="absolute bottom-4 left-0 w-full">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="opacity-10">
-          <path fill="#8B5CF6" fillOpacity="1" d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,261.3C960,256,1056,224,1152,218.7C1248,213,1344,235,1392,245.3L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1440 320"
+          className="opacity-10"
+        >
+          <path
+            fill="#8B5CF6"
+            fillOpacity="1"
+            d="M0,224L48,213.3C96,203,192,181,288,181.3C384,181,480,203,576,224C672,245,768,267,864,261.3C960,256,1056,224,1152,218.7C1248,213,1344,235,1392,245.3L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+          ></path>
         </svg>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default PopularStories;
+export default PopularStories
