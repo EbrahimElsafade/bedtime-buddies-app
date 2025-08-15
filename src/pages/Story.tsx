@@ -101,6 +101,7 @@ const Story = () => {
           story={story}
           currentLanguageKey={currentLanguageKey}
           currentSectionDir={currentStoryDir}
+          currentLanguage={currentLanguage}
         />
 
         {canAccessStory ? (
