@@ -27,9 +27,9 @@ const withRetry = async <T>(operation: () => Promise<T>, maxRetries = 2): Promis
 };
 
 export const useAuthOperations = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [user, setUser] = React.useState<User | null>(null);
+  const [session, setSession] = React.useState<Session | null>(null);
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
