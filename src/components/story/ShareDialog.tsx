@@ -85,7 +85,7 @@ export const ShareDialog = ({ storyTitle, storyDescription }: ShareDialogProps) 
           <div className="grid grid-cols-2 gap-3">
             <FacebookShareButton
               url={shareUrl}
-              quote={shareTitle}
+              hashtag="#bedtimestories"
               className="w-full"
             >
               <div className="flex items-center justify-center space-x-2 p-2 rounded-md border hover:bg-muted transition-colors w-full">
@@ -97,6 +97,7 @@ export const ShareDialog = ({ storyTitle, storyDescription }: ShareDialogProps) 
             <TwitterShareButton
               url={shareUrl}
               title={shareTitle}
+              hashtags={["bedtimestories", "stories"]}
               className="w-full"
             >
               <div className="flex items-center justify-center space-x-2 p-2 rounded-md border hover:bg-muted transition-colors w-full">
