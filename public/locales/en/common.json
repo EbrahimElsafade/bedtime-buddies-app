@@ -1,8 +1,82 @@
-
 {
+  "games": {
+    "title": "Fun Games",
+    "subtitle": "Enjoy these fun and educational games designed for children and families.",
+    "ticTacToe": {
+      "title": "Tic Tac Toe",
+      "description": "Classic strategy game for two players",
+      "won": "wins!",
+      "draw": "It's a draw!",
+      "winner": "Winner:",
+      "nextPlayer": "Next player:",
+      "newGame": "New Game",
+      "selectGameMode": "Select Game Mode:",
+      "playerVsPlayer": "Player vs Player",
+      "playWithFriend": "Play with a friend",
+      "playerVsComputer": "Player vs Computer",
+      "challengeAI": "Challenge the AI",
+      "vsComputer": "vs Computer",
+      "vsPlayer": "vs Player",
+      "yourTurn": "Your turn (✖️)",
+      "computerThinking": "Computer thinking... (⭕)",
+      "backToMenu": "Back to Menu"
+    },
+    "snake": {
+      "title": "Snake Game",
+      "description": "Guide the snake to eat food and grow longer",
+      "gameOver": "Game Over!",
+      "score": "Score:",
+      "highScore": "High Score:",
+      "newHighScore": "New High Score!",
+      "playAgain": "Play Again",
+      "startGame": "Start Game"
+    },
+    "rockPaperScissors": {
+      "title": "Rock Paper Scissors",
+      "description": "Choose your weapon and battle the computer!",
+      "rock": "Rock",
+      "paper": "Paper",
+      "scissors": "Scissors",
+      "youWin": "You Win!",
+      "computerWins": "Computer Wins!",
+      "tie": "It's a Tie!",
+      "resetGame": "Reset Game"
+    },
+    "hangman": {
+      "title": "Hangman",
+      "description": "Guess the word before the drawing is complete!",
+      "hint": "Hint:",
+      "incorrectGuesses": "Incorrect guesses:",
+      "newGame": "New Game",
+      "gameOver": "Game Over!",
+      "youWin": "You Win!",
+      "youLose": "You Lose!",
+      "hints": {
+        "rainbow": "Colorful light display in the sky during rain.",
+        "butterfly": "Beautiful insect with colorful wings.",
+        "elephant": "Large animal with a trunk.",
+        "chocolate": "Sweet treat loved by many.",
+        "airplane": "Flying vehicle in the sky.",
+        "computer": "Electronic device for work and play.",
+        "birthday": "Special day that comes once a year.",
+        "mountain": "Very tall natural formation."
+      }
+    },
+    "memory": {
+      "title": "Memory Game",
+      "description": "Match all the pairs of cards to win!",
+      "testYourMemory": "Test Your Memory!",
+      "clickToFlip": "Click on cards to flip them and find matching pairs. Try to complete the game in as few moves as possible!",
+      "startGame": "Start Game",
+      "moves": "Moves:",
+      "congratulations": "Congratulations!",
+      "gameCompleted": "You completed the game in {moves} moves!",
+      "playAgain": "Play Again"
+    }
+  },
   "pwa": {
-    "installApp": "Install App",
-    "installAppDescription": "Add Wonder World to your home screen for quick access and offline reading.",
+    "installApp": "Install Wonder World",
+    "installAppDescription": "Get quick access to stories, games, and courses right from your home screen!",
     "install": "Install",
     "later": "Later"
   }
