@@ -12,3 +12,4 @@
 - share button plugin
 - manifest.json for pwa
 - optionally (the profile page)
+- snake game

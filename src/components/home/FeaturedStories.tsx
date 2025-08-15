@@ -16,7 +16,7 @@ import { getMultilingualText } from '@/utils/multilingualUtils'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 const FeaturedStories = () => {
-  const { t } = useTranslation(['misc', 'stories'])
+  const { t, i18n } = useTranslation(['misc', 'stories'])
   const { language } = useLanguage()
 
   // Map website language to story language codes
@@ -129,17 +129,17 @@ const FeaturedStories = () => {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
+        <div className="grid relative z-40 grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
           {featuredStories.map(story => {
             const imageUrl = getImageUrl(story.cover_image)
             const storyTitle = getMultilingualText(
               story.title,
-              currentStoryLanguage,
+              i18n.language,
               'en',
             )
             const storyDescription = getMultilingualText(
               story.description,
-              currentStoryLanguage,
+              i18n.language,
               'en',
             )
 
@@ -186,8 +186,11 @@ const FeaturedStories = () => {
                             variant="secondary"
                             className="text-dream-DEFAULT bg-dream-light/30 text-xs"
                           >
-                            {story.category.charAt(0).toUpperCase() +
-                              story.category.slice(1)}
+                            {t(`stories:category.${story.category}`, {
+                              defaultValue:
+                                story.category.charAt(0).toUpperCase() +
+                                story.category.slice(1),
+                            })}
                           </Badge>
                           <div className="text-dream-DEFAULT flex items-center gap-1 text-xs">
                             <Clock className="h-3 w-3" />
