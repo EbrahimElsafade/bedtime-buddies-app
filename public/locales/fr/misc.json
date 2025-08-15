@@ -128,5 +128,9 @@
     "title": "S'abonner pour le Contenu Premium",
     "subtitle": "Débloquez toutes les histoires, jeux et cours avec notre abonnement premium",
     "button": "S'abonner Maintenant"
-  }
+  },
+  "installApp": "Installer Wonder World",
+  "installAppDescription": "Accédez rapidement aux histoires, jeux et cours directement depuis votre écran d'accueil !",
+  "install": "Installer",
+  "later": "Plus Tard"
 }

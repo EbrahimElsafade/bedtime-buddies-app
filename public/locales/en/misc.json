@@ -128,5 +128,9 @@
     "title": "Subscribe for Premium Content", 
     "subtitle": "Unlock all stories, games, and courses with our premium subscription",
     "button": "Subscribe Now"
-  }
+  },
+  "installApp": "Install Wonder World",
+  "installAppDescription": "Get quick access to stories, games, and courses right from your home screen!",
+  "install": "Install",
+  "later": "Later"
 }
