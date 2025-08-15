@@ -73,5 +73,11 @@
       "gameCompleted": "Vous avez terminé le jeu en {moves} coups!",
       "playAgain": "Rejouer"
     }
+  },
+  "pwa": {
+    "installApp": "Installer Wonder World",
+    "installAppDescription": "Accédez rapidement aux histoires, jeux et parcours directement depuis votre écran d'accueil !",
+    "install": "Installer",
+    "later": "Plus tard"
   }
 }

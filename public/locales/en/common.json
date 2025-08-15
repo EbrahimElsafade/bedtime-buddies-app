@@ -73,5 +73,11 @@
       "gameCompleted": "You completed the game in {moves} moves!",
       "playAgain": "Play Again"
     }
+  },
+  "pwa": {
+    "installApp": "Install Wonder World",
+    "installAppDescription": "Get quick access to stories, games, and courses right from your home screen!",
+    "install": "Install",
+    "later": "Later"
   }
 }
