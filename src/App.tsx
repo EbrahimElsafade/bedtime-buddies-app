@@ -8,6 +8,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import Layout from "./components/Layout";
 import AdminLayout from "./components/AdminLayout";
 import AdminRoute from "./components/AdminRoute";
+import PWAInstallPrompt from "./components/PWAInstallPrompt";
 import Index from "./pages/Index";
 import Stories from "./pages/Stories";
 import Story from "./pages/Story";
@@ -105,6 +106,7 @@ const App = () => {
           <TooltipProvider>
             <Toaster />
             <Sonner />
+            <PWAInstallPrompt />
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<Layout />}>

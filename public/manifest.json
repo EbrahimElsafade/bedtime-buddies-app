@@ -1,13 +1,17 @@
 
 {
-  "name": "Wonder World",
+  "name": "Wonder World - Kids Entertainment",
   "short_name": "Wonder World",
-  "description": "Interactive stories, exciting games, and engaging courses for children",
+  "description": "Interactive stories, exciting games, and engaging courses for children. Fun learning and safe entertainment for kids.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#1A1F2C",
   "theme_color": "#8B5CF6",
   "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "ar",
+  "dir": "rtl",
+  "categories": ["entertainment", "education", "kids"],
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
@@ -20,6 +24,32 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Stories",
+      "short_name": "Stories",
+      "description": "Browse interactive stories",
+      "url": "/stories",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Games",
+      "short_name": "Games",
+      "description": "Play fun games",
+      "url": "/games",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
   ]
 }
