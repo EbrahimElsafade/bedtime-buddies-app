@@ -107,7 +107,7 @@ export const ShareDialog = ({ storyTitle, storyDescription }: ShareDialogProps) 
               hashtags={["bedtimestories", "stories"]}
               className="w-full"
             >
-              <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-[#1DA1F2] hover:bg-[#1a91da] transition-colors w-full text-white">
+              <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-[#1DA1F2]/80 hover:bg-[#1DA1F2] transition-colors w-full text-white">
                 <TwitterIcon size={24} round />
                 <span className="font-medium">Twitter</span>
               </div>
@@ -118,7 +118,7 @@ export const ShareDialog = ({ storyTitle, storyDescription }: ShareDialogProps) 
               hashtag="#bedtimestories"
               className="w-full"
             >
-              <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-[#1877F2] hover:bg-[#166fe5] transition-colors w-full text-white">
+              <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-[#1877F2]/80 hover:bg-[#1877F2] transition-colors w-full text-white">
                 <FacebookIcon size={24} round />
                 <span className="font-medium">Facebook</span>
               </div>
@@ -129,7 +129,7 @@ export const ShareDialog = ({ storyTitle, storyDescription }: ShareDialogProps) 
               title={shareTitle}
               className="w-full"
             >
-              <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-[#0088CC] hover:bg-[#007bb8] transition-colors w-full text-white">
+              <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-[#0088CC]/80 hover:bg-[#0088CC] transition-colors w-full text-white">
                 <TelegramIcon size={24} round />
                 <span className="font-medium">Telegram</span>
               </div>
@@ -141,7 +141,7 @@ export const ShareDialog = ({ storyTitle, storyDescription }: ShareDialogProps) 
               separator=" - "
               className="w-full"
             >
-              <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-[#25D366] hover:bg-[#22c55e] transition-colors w-full text-white">
+              <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-[#25D366]/80 hover:bg-[#25D366] transition-colors w-full text-white">
                 <WhatsappIcon size={24} round />
                 <span className="font-medium">WhatsApp</span>
               </div>
