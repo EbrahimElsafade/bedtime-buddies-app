@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -104,7 +104,7 @@ export const useAuthOperations = () => {
     password: string, 
     parentName: string, 
     childName?: string, 
-    preferredLanguage: 'en' | 'ar-eg' | 'ar-fos7a' | 'fr'= 'ar-fos7a'
+    preferredLanguage: 'en' | 'ar-eg' | 'ar-fos7a' | 'fr' = 'ar-fos7a'
   ) => {
     setIsLoading(true);
     try {
