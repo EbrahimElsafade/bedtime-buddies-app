@@ -72,11 +72,18 @@ const Story = () => {
   const canAccessStory =
     story.is_free || (isAuthenticated && profile?.is_premium)
 
-  // Get title for current language
+  // Get title and description for current language
   const getStoryTitle = () => {
     return (
       getMultilingualText(story.title, currentLanguage, 'en') ||
       'Untitled Story'
+    )
+  }
+
+  const getStoryDescription = () => {
+    return (
+      getMultilingualText(story.description, currentLanguage, 'en') ||
+      'Discover wonderful bedtime stories on Wonder World!'
     )
   }
 
@@ -87,6 +94,8 @@ const Story = () => {
           onBackClick={() => navigate('/stories')}
           isFavorite={isFavorite}
           onToggleFavorite={toggleFavorite}
+          storyTitle={getStoryTitle()}
+          storyDescription={getStoryDescription()}
         />
 
         <LanguageSelector

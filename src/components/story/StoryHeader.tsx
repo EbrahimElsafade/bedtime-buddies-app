@@ -1,16 +1,25 @@
 
-import { ChevronLeft, Heart, Share } from "lucide-react";
+import { ChevronLeft, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { ShareDialog } from "./ShareDialog";
 
 interface StoryHeaderProps {
   onBackClick: () => void;
   isFavorite: boolean;
   onToggleFavorite: () => void;
+  storyTitle: string;
+  storyDescription?: string;
 }
 
-export const StoryHeader = ({ onBackClick, isFavorite, onToggleFavorite }: StoryHeaderProps) => {
+export const StoryHeader = ({ 
+  onBackClick, 
+  isFavorite, 
+  onToggleFavorite, 
+  storyTitle, 
+  storyDescription 
+}: StoryHeaderProps) => {
   const { t } = useTranslation('stories');
 
   return (
@@ -30,14 +39,10 @@ export const StoryHeader = ({ onBackClick, isFavorite, onToggleFavorite }: Story
           <Heart className={cn("h-5 w-5", isFavorite && "fill-red-500")} />
         </Button>
         
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="rounded-full"
-          aria-label="Share story"
-        >
-          <Share className="h-5 w-5" />
-        </Button>
+        <ShareDialog 
+          storyTitle={storyTitle}
+          storyDescription={storyDescription}
+        />
       </div>
     </div>
   );
