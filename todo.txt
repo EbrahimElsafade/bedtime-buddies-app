@@ -1,15 +1,15 @@
+- change the app identity ✔️
 - fontFamily in arabic like cairo ✔️
 - duration ✔️
 - story card the space between the clock icon and the time ✔️
 - card not clickable popular story card ✔️
-- change the app identity ✔️
 - stories page space ✔️
 - change the hangman game name in arabic ✔️
 - english , فصحي , French ,مصري ✔️
 - categories translate to arabic ✔️
 - fix the footer ✔️
+- share button plugin ✔️
 - auto-play and medea player 
-- share button plugin
 - manifest.json for pwa
 - optionally (the profile page)
 - snake game

@@ -69,10 +69,7 @@ export const ShareDialog = ({
 
         <div className="space-y-6 pt-2">
           {/* URL Input with Copy Button */}
-          <div className="flex items-center gap-2 rounded-lg bg-muted p-3">
-            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-primary">
-              <Share className="h-4 w-4 text-primary-foreground" />
-            </div>
+          <div dir='ltr' className="flex items-center gap-2 rounded-lg bg-muted p-3">
             <input
               className="flex-1 border-none bg-transparent font-mono text-sm text-muted-foreground outline-none"
               value={shareUrl}
