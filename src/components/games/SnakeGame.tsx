@@ -133,7 +133,7 @@ const SnakeGame = () => {
 
   if (gameState === 'menu') {
     return (
-      <Card dir='ltr' className="overflow-hidden border-dream-light/20 bg-white/80 dark:bg-nightsky-light/80 backdrop-blur-sm shadow-xl">
+      <Card className="overflow-hidden border-dream-light/20 bg-white/80 dark:bg-nightsky-light/80 backdrop-blur-sm shadow-xl">
         <CardHeader className="text-center bg-gradient-to-br from-dream-light/10 to-purple-100/50 dark:from-nightsky/50 dark:to-nightsky-light/30">
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text  ">
             {t('games.snake.title')}
@@ -202,7 +202,7 @@ const SnakeGame = () => {
   }
 
   return (
-    <Card className="overflow-hidden border-dream-light/20 bg-white/80 dark:bg-nightsky-light/80 backdrop-blur-sm shadow-xl">
+    <Card className="overflow-hidden border-dream-light/20 bg-white/80 dark:bg-nightsky-light/80 backdrop-blur-sm shadow-xl" dir="ltr">
       <CardHeader className="bg-gradient-to-br from-dream-light/10 to-purple-100/50 dark:from-nightsky/50 dark:to-nightsky-light/30">
         <div className="flex justify-between items-center">
           <div className="bg-gradient-to-r from-dream-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-lg px-4 py-2 border border-dream-light/20 dark:border-nightsky-light/30">
@@ -216,7 +216,7 @@ const SnakeGame = () => {
         </div>
       </CardHeader>
       
-      <CardContent className="p-6">
+      <CardContent className="p-6" dir="ltr">
         <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 dark:from-nightsky dark:to-nightsky-light rounded-lg p-4 mb-6 border-2 border-gray-300 dark:border-nightsky-light/50 shadow-inner">
           <div 
             className="w-full h-full max-w-[min(70vw,70vh)] max-h-[min(70vw,70vh)] bg-white/90 dark:bg-nightsky-light/50 grid gap-0 mx-auto border border-gray-200 dark:border-nightsky-light/30 rounded shadow-sm"
@@ -250,8 +250,8 @@ const SnakeGame = () => {
           </div>
         </div>
 
-        {/* Mobile Controls */}
-        <div className="md:hidden grid grid-cols-3 gap-2 max-w-48 mx-auto">
+        {/* Mobile Controls - Fixed LTR */}
+        <div className="md:hidden grid grid-cols-3 gap-2 max-w-48 mx-auto" dir="ltr">
           <div></div>
           <button
             onClick={() => handleDirectionChange({ x: 0, y: -1 })}
