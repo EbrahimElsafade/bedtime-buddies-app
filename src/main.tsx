@@ -1,4 +1,3 @@
-
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
@@ -18,41 +17,25 @@ if ('serviceWorker' in navigator) {
         scope: '/'
       });
       
-      console.log('SW registered successfully:', registration);
-      
       // Listen for updates
       registration.addEventListener('updatefound', () => {
-        console.log('New service worker available');
+        // Handle updates if needed
       });
       
-      // Check if there's an active service worker
-      if (registration.active) {
-        console.log('Service worker is active');
-      }
-      
     } catch (error) {
-      console.error('SW registration failed:', error);
+      // Handle registration error silently
     }
   });
 
   // Listen for service worker messages
   navigator.serviceWorker.addEventListener('message', (event) => {
-    console.log('Received message from service worker:', event.data);
+    // Handle messages if needed
   });
 }
 
-// Debug PWA installability
-window.addEventListener('beforeinstallprompt', (e) => {
-  console.log('beforeinstallprompt event fired - PWA is installable!');
-});
-
-window.addEventListener('appinstalled', () => {
-  console.log('PWA was installed successfully');
-});
-
-// Check if app is running as PWA
+// Check if app is running as PWA (keep for functionality, but remove logs)
 if (window.matchMedia('(display-mode: standalone)').matches) {
-  console.log('App is running as PWA');
+  // App is running as PWA
 } else {
-  console.log('App is running in browser');
+  // App is running in browser
 }

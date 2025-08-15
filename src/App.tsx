@@ -58,18 +58,13 @@ const App = () => {
 
   useEffect(() => {
     setInitialDirection();
-    
-    // Add logging to help with debugging
-    // console.log("App initialized");
 
     // Enhanced Page Visibility API handling
     const handleVisibilityChange = () => {
       if (document.hidden) {
-        console.log("Tab became hidden - maintaining state");
-        // Don't pause operations, just log
+        // Tab became hidden - maintain state silently
       } else {
-        console.log("Tab became visible - continuing normally");
-        // Don't trigger any refetches or state changes
+        // Tab became visible - continue normally
       }
     };
 

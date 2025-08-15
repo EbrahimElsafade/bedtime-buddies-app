@@ -26,7 +26,6 @@ const PWAInstallPrompt = () => {
     const isInWebAppiOS = (window.navigator as any).standalone === true;
     
     if (isStandalone || isInWebAppiOS) {
-      console.log('App is already installed');
       setIsInstalled(true);
       return;
     }
@@ -34,24 +33,20 @@ const PWAInstallPrompt = () => {
     // Check if user has already dismissed the prompt
     const hasPromptBeenDismissed = localStorage.getItem('pwa-prompt-dismissed');
     if (hasPromptBeenDismissed) {
-      console.log('PWA prompt was previously dismissed');
       return;
     }
 
     const handleBeforeInstallPrompt = (e: Event) => {
-      console.log('beforeinstallprompt event caught!');
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       
       // Show our custom prompt after a delay
       setTimeout(() => {
-        console.log('Showing PWA install prompt');
         setShowPrompt(true);
       }, 3000); // Reduced to 3 seconds for testing
     };
 
     const handleAppInstalled = () => {
-      console.log('App was installed');
       setIsInstalled(true);
       setShowPrompt(false);
       setDeferredPrompt(null);
@@ -61,12 +56,6 @@ const PWAInstallPrompt = () => {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     window.addEventListener('appinstalled', handleAppInstalled);
 
-    // Debug: Check PWA criteria
-    console.log('PWA Debug Info:');
-    console.log('- Service Worker supported:', 'serviceWorker' in navigator);
-    console.log('- HTTPS or localhost:', location.protocol === 'https:' || location.hostname === 'localhost');
-    console.log('- Manifest linked:', document.querySelector('link[rel="manifest"]') !== null);
-
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleAppInstalled);
@@ -75,7 +64,6 @@ const PWAInstallPrompt = () => {
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) {
-      console.log('No deferred prompt available');
       return;
     }
 
@@ -83,15 +71,9 @@ const PWAInstallPrompt = () => {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       
-      console.log('Install prompt result:', outcome);
-      
-      if (outcome === 'accepted') {
-        console.log('User accepted the install prompt');
-      } else {
-        console.log('User dismissed the install prompt');
-      }
+      // Optional: Add success/failure handling here if needed
     } catch (error) {
-      console.error('Error during install prompt:', error);
+      // Handle error silently or with user-friendly message
     }
     
     setDeferredPrompt(null);
@@ -99,7 +81,6 @@ const PWAInstallPrompt = () => {
   };
 
   const handleDismiss = () => {
-    console.log('User dismissed PWA prompt');
     setShowPrompt(false);
     localStorage.setItem('pwa-prompt-dismissed', 'true');
   };
