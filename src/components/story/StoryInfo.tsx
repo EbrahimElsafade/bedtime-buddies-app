@@ -1,11 +1,12 @@
-import { Story } from "@/types/story";
-import { getMultilingualText } from "@/utils/multilingualUtils";
-import { useTranslation } from "react-i18next";
+import { useLanguage } from '@/contexts/LanguageContext'
+import { Story } from '@/types/story'
+import { getMultilingualText } from '@/utils/multilingualUtils'
+import { useTranslation } from 'react-i18next'
 
 interface StoryInfoProps {
-  story: Story;
-  currentLanguageKey: string;
-  currentSectionDir: "rtl" | "ltr";
+  story: Story
+  currentLanguageKey: string
+  currentSectionDir: 'rtl' | 'ltr'
 }
 
 export const StoryInfo = ({
@@ -13,47 +14,49 @@ export const StoryInfo = ({
   currentLanguageKey,
   currentSectionDir,
 }: StoryInfoProps) => {
-  const getStoryTitle = () => {
-    return (
-      getMultilingualText(story.title, currentLanguageKey, "en") ||
-      "Untitled Story"
-    );
-  };
+  const { t } = useTranslation('stories')
 
-  const getStoryDescription = () => {
+  const getStoryText = (
+    field: keyof Story,
+    fallback: string = ''
+  ): string => {
     return (
-      getMultilingualText(story.description, currentLanguageKey, "en") ||
-      "No description available"
-    );
-  };
+      getMultilingualText(
+        story[field] as Record<string, string>,
+        currentLanguageKey,
+        'en'
+      ) || fallback
+    )
+  }
 
   return (
     <div className="mb-4" dir={currentSectionDir}>
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-2">
-        <h1 className="text-3xl md:text-4xl font-bubbly">{getStoryTitle()}</h1>
+      <div className="mb-2 flex flex-col items-center justify-between gap-4 sm:flex-row">
+        <h1 className="font-bubbly text-3xl md:text-4xl">{getStoryText('title', 'Untitled Story')}</h1>
 
         <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-          <span className="px-2 py-1 bg-secondary/50 rounded-full">
-            {story.duration} mins
+          <span className="rounded-full bg-secondary/50 px-2 py-1">
+            {story.duration} {t('duration')}
           </span>
-          <span className="px-2 py-1 bg-secondary/50 rounded-full">
-            {story.category.charAt(0).toUpperCase() + story.category.slice(1)}
+          <span className="rounded-full bg-secondary/50 px-2 py-1">
+            {/* {story.category.charAt(0).toUpperCase() + story.category.slice(1)} */}
+            {t(`category.${story.category}`)}
           </span>
           {story.is_free ? (
-            <span className="px-2 py-1 bg-dream-DEFAULT/20 text-dream-DEFAULT rounded-full font-medium">
-              Free
+            <span className="bg-dream-DEFAULT/20 text-dream-DEFAULT rounded-full px-2 py-1 font-medium">
+              {t('type.free')}
             </span>
           ) : (
-            <span className="px-2 py-1 bg-moon-DEFAULT/20 text-moon-dark rounded-full font-medium">
-              Premium
+            <span className="bg-moon-DEFAULT/20 rounded-full px-2 py-1 font-medium text-moon-dark">
+              {t('type.premium')}
             </span>
           )}
         </div>
       </div>
 
-      <p className="text-muted-foreground mb-4 text-start">
-        {getStoryDescription()}
+      <p className="mb-4 text-start text-muted-foreground">
+        {getStoryText('description', 'No description available')}
       </p>
     </div>
-  );
-};
+  )
+}

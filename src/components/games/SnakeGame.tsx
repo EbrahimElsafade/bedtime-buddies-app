@@ -133,9 +133,9 @@ const SnakeGame = () => {
 
   if (gameState === 'menu') {
     return (
-      <Card className="overflow-hidden border-dream-light/20 bg-white/80 dark:bg-nightsky-light/80 backdrop-blur-sm shadow-xl">
+      <Card dir='ltr' className="overflow-hidden border-dream-light/20 bg-white/80 dark:bg-nightsky-light/80 backdrop-blur-sm shadow-xl">
         <CardHeader className="text-center bg-gradient-to-br from-dream-light/10 to-purple-100/50 dark:from-nightsky/50 dark:to-nightsky-light/30">
-          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent">
+          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text  ">
             {t('games.snake.title')}
           </CardTitle>
           <CardDescription className="text-gray-600 dark:text-gray-300">
@@ -152,7 +152,7 @@ const SnakeGame = () => {
             )}
           </div>
         </CardContent>
-        <CardFooter className="p-6">
+        <CardFooter className="p-6" >
           <Button 
             onClick={resetGame}
             className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-dream-DEFAULT to-dream-dark hover:from-dream-light hover:to-dream-DEFAULT text-white shadow-lg hover:shadow-xl transition-all duration-300"

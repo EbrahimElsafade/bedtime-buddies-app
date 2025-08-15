@@ -104,7 +104,7 @@ export const useAuthOperations = () => {
     password: string, 
     parentName: string, 
     childName?: string, 
-    preferredLanguage: 'en' | 'ar-eg' | 'ar-fos7a' = 'ar-eg'
+    preferredLanguage: 'en' | 'ar-eg' | 'ar-fos7a' | 'fr'= 'ar-fos7a'
   ) => {
     setIsLoading(true);
     try {

@@ -83,7 +83,7 @@ const RockPaperScissorsGame = () => {
   return (
     <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm max-w-4xl mx-auto">
       <CardHeader className="text-center px-4 md:px-6">
-        <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent">
+        <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text  ">
           {t('games.rockPaperScissors.title')}
         </CardTitle>
         <CardDescription className="text-sm md:text-base">{t('games.rockPaperScissors.description')}</CardDescription>
@@ -132,7 +132,7 @@ const RockPaperScissorsGame = () => {
 
             {result && !isPlaying && (
               <div className="text-center mb-4 md:mb-6">
-                <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent animate-pulse">
+                <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text   animate-pulse">
                   {result}
                 </div>
               </div>

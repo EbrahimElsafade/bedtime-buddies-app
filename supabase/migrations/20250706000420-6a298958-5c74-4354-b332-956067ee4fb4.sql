@@ -27,8 +27,9 @@ ON CONFLICT (name) DO NOTHING;
 -- Insert some default languages
 INSERT INTO public.story_languages (code, name) VALUES
   ('en', 'English'),
-  ('ar-eg', 'Arabic (Egyptian)'),
-  ('ar-fos7a', 'Arabic (Fos7a)')
+  ('ar-eg', 'مصري'),
+  ('ar-fos7a', 'فصحى'),
+  ('fr', 'Français')
 ON CONFLICT (code) DO NOTHING;
 
 -- Enable RLS on both tables

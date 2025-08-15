@@ -88,8 +88,9 @@ const FreeStory = () => {
                   <span className="mr-4">{freeStory.duration} {t('stories:duration')}</span>
                   <span>{freeStory.languages.map((lang: string) => {
                     if (lang === 'en') return 'English';
-                    if (lang === 'ar-eg') return 'Arabic (Egyptian)';
-                    if (lang === 'ar-fos7a') return 'Arabic (Fos7a)';
+                    if (lang === 'ar-eg') return 'مصري';
+                    if (lang === 'ar-fos7a') return 'فصحى';
+                    if (lang === 'fr') return 'français';
                     return '';
                   }).join(', ')}</span>
                 </div>

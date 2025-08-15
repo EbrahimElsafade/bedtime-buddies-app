@@ -1,4 +1,3 @@
-
 {
   "games": {
     "title": "Jeux Amusants",
@@ -51,7 +50,17 @@
       "newGame": "Nouvelle Partie",
       "gameOver": "Jeu Terminé!",
       "youWin": "Vous Gagnez!",
-      "youLose": "Vous Perdez!"
+      "youLose": "Vous Perdez!",
+      "hints": {
+        "rainbow": "Jeu de lumières colorées dans le ciel sous la pluie.",
+        "butterfly": "Bel insecte aux ailes colorées.",
+        "elephant": "Grand animal avec une trompe.",
+        "chocolate": "Douceur appréciée de tous.",
+        "airplane": "Véhicule volant dans le ciel.",
+        "computer": "Appareil électronique pour travailler et jouer.",
+        "birthday": "Journée spéciale qui n'arrive qu'une fois par an.",
+        "mountain": "Formation naturelle très haute."
+      }
     },
     "memory": {
       "title": "Jeu de Mémoire",

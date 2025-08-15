@@ -1,4 +1,3 @@
-
 {
   "featured": {
     "title": "القصص المميزة"
@@ -10,10 +9,14 @@
   "readNow": "اقرأ الآن",
   "duration": "دقيقة",
   "category": {
-    "sleeping": "وقت النوم",
-    "religious": "دينية",
-    "developmental": "تعليمية",
-    "entertainment": "ترفيهية"
+    "daily": "يومي",
+    "food": "طعام",
+    "jobs": "وظائف",
+    "religion": "دينية"
+  },
+  "type": {
+    "free": "مجاني",
+    "premium": "مميز"
   },
   "allStories": "تصفح المجموعة",
   "browseCollection": "اكتشف قصص رائعة من مجموعتنا",

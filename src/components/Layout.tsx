@@ -266,7 +266,7 @@ const Layout = () => {
       {/* Footer */}
       <footer className="py-6 border-t border-purple-900/20 bg-white/10 dark:bg-nightsky/50 hidden md:block">
         <div className="container mx-auto px-4 text-center">
-          <div className="flex justify-center space-x-6 mb-4">
+          <div className="flex justify-center gap-4 mb-4">
             {navItems.slice(0, 4).map((item) => (
               <Link
                 key={item.path}

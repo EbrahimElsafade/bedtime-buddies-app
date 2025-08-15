@@ -1,4 +1,3 @@
-
 {
   "featured": {
     "title": "Featured Stories"
@@ -10,10 +9,14 @@
   "readNow": "Read Now",
   "duration": "min",
   "category": {
-    "sleeping": "Bedtime",
-    "religious": "Religious",
-    "developmental": "Educational",
-    "entertainment": "Entertainment"
+    "daily": "daily",
+    "food": "food",
+    "jobs": "jobs",
+    "religion": "religion"
+  },
+  "type": {
+    "free": "Free",
+    "premium": "Premium"
   },
   "allStories": "Browse Collection",
   "browseCollection": "Discover amazing stories from our collection",

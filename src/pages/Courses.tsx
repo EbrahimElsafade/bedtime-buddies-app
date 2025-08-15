@@ -218,7 +218,7 @@ const Courses = () => {
                     <CardContent className="px-3 pb-2 md:px-6">
                       <div className="text-dream-DEFAULT flex items-center justify-between text-xs dark:text-foreground md:text-sm">
                         <div className="flex items-center">
-                          <BookOpen className="mr-1 h-3 w-3 md:h-4 md:w-4" />
+                          <BookOpen className="mx-1 h-3 w-3 md:h-4 md:w-4" />
                           <span>
                             {course.lessons} {t('courses.lessons')}
                           </span>

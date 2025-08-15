@@ -278,7 +278,7 @@ const Course = () => {
                                   {video.title}
                                 </h4>
                                 <div className="flex items-center mt-1 text-xs text-dream-DEFAULT/70">
-                                  <Clock className="mr-1 h-3 w-3" />
+                                  <Clock className="mx-1 h-3 w-3" />
                                   <span>{video.duration} {t('duration')}</span>
                                 </div>
                               </div>

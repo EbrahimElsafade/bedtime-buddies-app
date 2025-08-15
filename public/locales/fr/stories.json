@@ -1,4 +1,3 @@
-
 {
   "featured": {
     "title": "Histoires en Vedette"
@@ -10,10 +9,14 @@
   "readNow": "Lire Maintenant",
   "duration": "min",
   "category": {
-    "sleeping": "Coucher",
-    "religious": "Religieuses",
-    "developmental": "Éducatives",
-    "entertainment": "Divertissement"
+    "daily": "quotidien",
+    "food": "nourriture",
+    "jobs": "emplois",
+    "religion": "religion"
+  },
+  "type": {
+    "free": "gratuite",
+    "premium": "prime"
   },
   "allStories": "Parcourir la Collection",
   "browseCollection": "Découvrez des histoires incroyables de notre collection",

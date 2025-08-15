@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
@@ -35,7 +34,9 @@ const Story = () => {
 
   useEffect(() => {
     if (error || (!isLoading && !story)) {
-      logger.warn('Story not found or error occurred, redirecting to stories page')
+      logger.warn(
+        'Story not found or error occurred, redirecting to stories page',
+      )
       navigate('/stories', { replace: true })
     }
   }, [error, story, isLoading, navigate])
@@ -92,7 +93,7 @@ const Story = () => {
           languages={story.languages}
           currentLanguage={currentLanguage}
           onLanguageChange={value =>
-            setCurrentLanguage(value as 'en' | 'ar-eg' | 'ar-fos7a')
+            setCurrentLanguage(value as 'en' | 'ar-eg' | 'ar-fos7a' | 'fr')
           }
         />
 

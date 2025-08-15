@@ -95,7 +95,7 @@ const Stories = () => {
       >
         <div className="container mx-auto max-w-6xl">
           <div className="mb-4 text-center md:mb-6 lg:mb-8">
-            <h1 className="from-dream-DEFAULT mb-2 bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold leading-tight text-transparent md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
+            <h1 className="from-dream-DEFAULT mb-2 bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold leading-tight   md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
               {t('allStories')}
             </h1>
           </div>
@@ -122,7 +122,7 @@ const Stories = () => {
     >
       <div className="container mx-auto max-w-6xl">
         <div className="mb-4 text-center md:mb-6 lg:mb-8">
-          <h1 className="from-dream-DEFAULT mb-2 bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold leading-tight text-transparent md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
+          <h1 className="from-dream-DEFAULT mb-2 bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold leading-tight   md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
             {t('allStories')}
           </h1>
           <p className="mx-auto max-w-2xl px-2 text-xs text-muted-foreground md:text-sm lg:text-base">
@@ -246,7 +246,7 @@ const Stories = () => {
                               {t(`category.${story.category}`, { defaultValue: story.category.charAt(0).toUpperCase() + story.category.slice(1) })}
                             </Badge>
                             <div className="text-dream-DEFAULT flex items-center text-xs">
-                              <Clock className="mr-1 h-3 w-3" />
+                              <Clock className="mx-1 h-3 w-3" />
                               <span>
                                 {t('duration', { duration: story.duration })}
                               </span>

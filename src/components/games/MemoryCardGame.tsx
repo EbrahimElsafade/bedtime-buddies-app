@@ -133,7 +133,7 @@ const MemoryCardGame = () => {
       <div className="w-full max-w-2xl mx-auto px-2">
         <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
           <CardHeader className="text-center px-4 py-6">
-            <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent">
+            <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text  ">
               {t('games.memory.title')}
             </CardTitle>
             <CardDescription className="text-sm md:text-base">{t('games.memory.description')}</CardDescription>
@@ -164,7 +164,7 @@ const MemoryCardGame = () => {
     <div className="w-full max-w-2xl mx-auto px-2">
       <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
         <CardHeader className="text-center px-4 py-4">
-          <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text text-transparent">
+          <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text  ">
             {t('games.memory.title')}
           </CardTitle>
           <CardDescription className="text-sm md:text-base">{t('games.memory.description')}</CardDescription>

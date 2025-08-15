@@ -17,7 +17,7 @@ const Profile = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [childName, setChildName] = useState("");
-  const [language, setLanguage] = useState<"en" | "ar-eg" | "ar-fos7a">("ar-eg");
+  const [language, setLanguage] = useState<"en" | "ar-eg" | "ar-fos7a" | "fr">("ar-fos7a");
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   
@@ -190,16 +190,18 @@ const Profile = () => {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="en">English</SelectItem>
-                          <SelectItem value="ar-eg">Arabic (Egyptian)</SelectItem>
-                          <SelectItem value="ar-fos7a">Arabic (Fos7a)</SelectItem>
+                          <SelectItem value="ar-eg">مصري</SelectItem>
+                          <SelectItem value="ar-fos7a">فصحى</SelectItem>
+                          <SelectItem value="fr">français</SelectItem>
                         </SelectContent>
                       </Select>
                     ) : (
                       <Input 
                         value={
                           language === "en" ? "English" : 
-                          language === "ar-eg" ? "Arabic (Egyptian)" : 
-                          "Arabic (Fos7a)"
+                          language === "ar-eg" ? "مصري" : 
+                          language === "fr" ? "français" :
+                          "فصحى"
                         } 
                         disabled 
                       />
