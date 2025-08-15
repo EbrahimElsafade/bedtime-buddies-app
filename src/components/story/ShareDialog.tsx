@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import {
   Dialog,
@@ -26,14 +25,18 @@ interface ShareDialogProps {
   storyDescription?: string
 }
 
-export const ShareDialog = ({ storyTitle, storyDescription }: ShareDialogProps) => {
+export const ShareDialog = ({
+  storyTitle,
+  storyDescription,
+}: ShareDialogProps) => {
   const { t } = useTranslation('stories')
   const [copied, setCopied] = useState(false)
   const [open, setOpen] = useState(false)
 
   const shareUrl = window.location.href
   const shareTitle = `Check out this amazing story: ${storyTitle}`
-  const shareDescription = storyDescription || 'Discover wonderful bedtime stories on Wonder World!'
+  const shareDescription =
+    storyDescription || 'Discover wonderful bedtime stories on Wonder World!'
 
   const copyToClipboard = async () => {
     try {
@@ -48,36 +51,30 @@ export const ShareDialog = ({ storyTitle, storyDescription }: ShareDialogProps) 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size="icon" 
+        <Button
+          variant="ghost"
+          size="icon"
           className="rounded-full"
           aria-label="Share story"
         >
           <Share className="h-5 w-5" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md bg-card border-border">
+      <DialogContent className="border-border bg-card sm:max-w-md">
         <DialogHeader className="relative">
-          <DialogTitle className="text-center text-lg font-semibold">Share this story</DialogTitle>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="absolute right-0 top-0 h-6 w-6"
-            onClick={() => setOpen(false)}
-          >
-            <X className="h-4 w-4" />
-          </Button>
+          <DialogTitle className="text-center text-lg font-semibold">
+            Share this story
+          </DialogTitle>
         </DialogHeader>
-        
+
         <div className="space-y-6 pt-2">
           {/* URL Input with Copy Button */}
-          <div className="flex items-center gap-2 p-3 bg-muted rounded-lg">
-            <div className="flex items-center justify-center w-8 h-8 bg-primary rounded-md flex-shrink-0">
+          <div className="flex items-center gap-2 rounded-lg bg-muted p-3">
+            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md bg-primary">
               <Share className="h-4 w-4 text-primary-foreground" />
             </div>
             <input
-              className="flex-1 bg-transparent text-sm font-mono text-muted-foreground border-none outline-none"
+              className="flex-1 border-none bg-transparent font-mono text-sm text-muted-foreground outline-none"
               value={shareUrl}
               readOnly
             />
@@ -85,29 +82,29 @@ export const ShareDialog = ({ storyTitle, storyDescription }: ShareDialogProps) 
               type="button"
               size="sm"
               variant="secondary"
-              className="px-3 h-8"
+              className="h-8 px-3"
               onClick={copyToClipboard}
             >
               {copied ? (
                 <Check className="h-4 w-4" />
               ) : (
                 <>
-                  <Copy className="h-4 w-4 mr-1" />
+                  <Copy className="mr-1 h-4 w-4" />
                   COPY
                 </>
               )}
             </Button>
           </div>
-          
+
           {/* Social Share Buttons */}
           <div className="grid grid-cols-2 gap-3">
             <TwitterShareButton
               url={shareUrl}
               title={shareTitle}
-              hashtags={["bedtimestories", "stories"]}
+              hashtags={['bedtimestories', 'stories']}
               className="w-full"
             >
-              <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-[#1DA1F2]/80 hover:bg-[#1DA1F2] transition-colors w-full text-white">
+              <div className="flex w-full items-center justify-center gap-3 rounded-lg bg-[#1DA1F2]/60 p-4 text-white transition-colors hover:bg-[#1DA1F2]">
                 <TwitterIcon size={24} round />
                 <span className="font-medium">Twitter</span>
               </div>
@@ -118,7 +115,7 @@ export const ShareDialog = ({ storyTitle, storyDescription }: ShareDialogProps) 
               hashtag="#bedtimestories"
               className="w-full"
             >
-              <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-[#1877F2]/80 hover:bg-[#1877F2] transition-colors w-full text-white">
+              <div className="flex w-full items-center justify-center gap-3 rounded-lg bg-[#1877F2]/60 p-4 text-white transition-colors hover:bg-[#1877F2]">
                 <FacebookIcon size={24} round />
                 <span className="font-medium">Facebook</span>
               </div>
@@ -129,7 +126,7 @@ export const ShareDialog = ({ storyTitle, storyDescription }: ShareDialogProps) 
               title={shareTitle}
               className="w-full"
             >
-              <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-[#0088CC]/80 hover:bg-[#0088CC] transition-colors w-full text-white">
+              <div className="flex w-full items-center justify-center gap-3 rounded-lg bg-[#0088CC]/60 p-4 text-white transition-colors hover:bg-[#0088CC]">
                 <TelegramIcon size={24} round />
                 <span className="font-medium">Telegram</span>
               </div>
@@ -141,7 +138,7 @@ export const ShareDialog = ({ storyTitle, storyDescription }: ShareDialogProps) 
               separator=" - "
               className="w-full"
             >
-              <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-[#25D366]/80 hover:bg-[#25D366] transition-colors w-full text-white">
+              <div className="flex w-full items-center justify-center gap-3 rounded-lg bg-[#25D366]/60 p-4 text-white transition-colors hover:bg-[#25D366]">
                 <WhatsappIcon size={24} round />
                 <span className="font-medium">WhatsApp</span>
               </div>
