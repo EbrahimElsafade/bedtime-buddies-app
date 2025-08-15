@@ -4,9 +4,7 @@ const urlsToCache = [
   '/',
   '/manifest.json',
   '/favicon.ico',
-  '/placeholder.svg',
-  '/static/js/bundle.js',
-  '/static/css/main.css'
+  '/placeholder.svg'
 ];
 
 // Install event - cache resources
@@ -14,13 +12,11 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        return cache.addAll(urlsToCache.map(url => new Request(url, {cache: 'reload'})));
-      })
-      .catch((error) => {
-        // Handle cache error silently for non-critical resources
+        return cache.addAll(urlsToCache).catch(() => {
+          // Silently handle cache errors for non-critical resources
+        });
       })
   );
-  // Force the waiting service worker to become the active service worker
   self.skipWaiting();
 });
 
@@ -36,7 +32,6 @@ self.addEventListener('activate', (event) => {
         })
       );
     }).then(() => {
-      // Ensure the new service worker takes control immediately
       return self.clients.claim();
     })
   );
@@ -44,33 +39,41 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') {
+  // Skip non-GET requests and chrome-extension URLs
+  if (event.request.method !== 'GET' || event.request.url.startsWith('chrome-extension://')) {
+    return;
+  }
+
+  // Skip URLs that are not same-origin or HTTPS
+  if (!event.request.url.startsWith(self.location.origin) && !event.request.url.startsWith('https://')) {
     return;
   }
 
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
-        // Return cached version or fetch from network
         if (response) {
           return response;
         }
         
-        // For network requests, try to fetch and cache
         return fetch(event.request).then((response) => {
           // Check if we received a valid response
           if (!response || response.status !== 200 || response.type !== 'basic') {
             return response;
           }
 
-          // Clone the response for caching
-          const responseToCache = response.clone();
-          
-          caches.open(CACHE_NAME)
-            .then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
+          // Only cache GET requests from same origin
+          if (event.request.method === 'GET' && event.request.url.startsWith(self.location.origin)) {
+            const responseToCache = response.clone();
+            
+            caches.open(CACHE_NAME)
+              .then((cache) => {
+                cache.put(event.request, responseToCache);
+              })
+              .catch(() => {
+                // Silently handle cache errors
+              });
+          }
 
           return response;
         });

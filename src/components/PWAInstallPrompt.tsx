@@ -45,12 +45,10 @@ const PWAInstallPrompt = () => {
       
       if (hasServiceWorker && isHTTPS && hasManifest) {
         setCanInstall(true);
-        // Show prompt earlier if all requirements are met
+        // Show prompt after a delay if requirements are met
         setTimeout(() => {
-          if (!deferredPrompt) {
-            setShowPrompt(true); // Show even without beforeinstallprompt event
-          }
-        }, 2000);
+          setShowPrompt(true);
+        }, 3000);
       }
     };
 
@@ -82,7 +80,7 @@ const PWAInstallPrompt = () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
-  }, [deferredPrompt]);
+  }, []);
 
   const handleInstallClick = async () => {
     if (deferredPrompt) {
@@ -103,13 +101,16 @@ const PWAInstallPrompt = () => {
       // Provide manual installation instructions
       const isMobileChrome = /Chrome/.test(navigator.userAgent) && /Mobile/.test(navigator.userAgent);
       const isDesktopChrome = /Chrome/.test(navigator.userAgent) && !/Mobile/.test(navigator.userAgent);
+      const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);
       
       if (isMobileChrome) {
         alert('To install: Tap the menu (⋮) → "Add to Home screen"');
       } else if (isDesktopChrome) {
         alert('To install: Click the install icon (⊞) in the address bar or menu → "Install Wonder World"');
+      } else if (isSafari) {
+        alert('To install: Tap the Share button → "Add to Home Screen"');
       } else {
-        alert('To install this app, use Chrome browser and look for the install option in the menu.');
+        alert('To install this app, use Chrome or Safari browser and look for the install option in the menu.');
       }
       
       setShowPrompt(false);
@@ -121,8 +122,8 @@ const PWAInstallPrompt = () => {
     localStorage.setItem('pwa-prompt-dismissed', 'true');
   };
 
-  // Show if not installed and can install or prompt is available
-  if (isInstalled || (!showPrompt && !canInstall)) {
+  // Show if not installed, can install, and prompt should be shown
+  if (isInstalled || !canInstall || !showPrompt) {
     return null;
   }
 
