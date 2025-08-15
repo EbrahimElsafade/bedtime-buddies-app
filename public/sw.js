@@ -3,8 +3,10 @@ const CACHE_NAME = 'wonder-world-v1';
 const urlsToCache = [
   '/',
   '/manifest.json',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png'
+  '/favicon.ico',
+  '/placeholder.svg',
+  '/static/js/bundle.js',
+  '/static/css/main.css'
 ];
 
 // Install event - cache resources
@@ -12,10 +14,10 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        return cache.addAll(urlsToCache);
+        return cache.addAll(urlsToCache.map(url => new Request(url, {cache: 'reload'})));
       })
       .catch((error) => {
-        // Handle cache error silently
+        // Handle cache error silently for non-critical resources
       })
   );
   // Force the waiting service worker to become the active service worker
@@ -42,6 +44,11 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
       .then((response) => {
@@ -49,7 +56,24 @@ self.addEventListener('fetch', (event) => {
         if (response) {
           return response;
         }
-        return fetch(event.request);
+        
+        // For network requests, try to fetch and cache
+        return fetch(event.request).then((response) => {
+          // Check if we received a valid response
+          if (!response || response.status !== 200 || response.type !== 'basic') {
+            return response;
+          }
+
+          // Clone the response for caching
+          const responseToCache = response.clone();
+          
+          caches.open(CACHE_NAME)
+            .then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+
+          return response;
+        });
       })
       .catch(() => {
         // Fallback for navigation requests when offline

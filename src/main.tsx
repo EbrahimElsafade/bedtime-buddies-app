@@ -1,3 +1,4 @@
+
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
@@ -17,9 +18,24 @@ if ('serviceWorker' in navigator) {
         scope: '/'
       });
       
+      // Check if service worker is ready
+      if (registration.active) {
+        // Service worker is active and ready
+      }
+      
       // Listen for updates
       registration.addEventListener('updatefound', () => {
-        // Handle updates if needed
+        const newWorker = registration.installing;
+        if (newWorker) {
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed') {
+              if (navigator.serviceWorker.controller) {
+                // New content is available, refresh needed
+                window.location.reload();
+              }
+            }
+          });
+        }
       });
       
     } catch (error) {
@@ -29,13 +45,17 @@ if ('serviceWorker' in navigator) {
 
   // Listen for service worker messages
   navigator.serviceWorker.addEventListener('message', (event) => {
-    // Handle messages if needed
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+      window.location.reload();
+    }
   });
 }
 
-// Check if app is running as PWA (keep for functionality, but remove logs)
-if (window.matchMedia('(display-mode: standalone)').matches) {
-  // App is running as PWA
-} else {
-  // App is running in browser
+// Check if app is running as PWA
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+const isInWebAppiOS = (window.navigator as any).standalone === true;
+
+if (isStandalone || isInWebAppiOS) {
+  // App is running as PWA - add any PWA-specific initialization here
+  document.body.classList.add('pwa-mode');
 }

@@ -19,6 +19,7 @@ const PWAInstallPrompt = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
+  const [canInstall, setCanInstall] = useState(false);
 
   useEffect(() => {
     // Check if app is already installed
@@ -36,14 +37,32 @@ const PWAInstallPrompt = () => {
       return;
     }
 
+    // Check PWA requirements
+    const checkPWARequirements = () => {
+      const hasServiceWorker = 'serviceWorker' in navigator;
+      const isHTTPS = location.protocol === 'https:' || location.hostname === 'localhost';
+      const hasManifest = document.querySelector('link[rel="manifest"]') !== null;
+      
+      if (hasServiceWorker && isHTTPS && hasManifest) {
+        setCanInstall(true);
+        // Show prompt earlier if all requirements are met
+        setTimeout(() => {
+          if (!deferredPrompt) {
+            setShowPrompt(true); // Show even without beforeinstallprompt event
+          }
+        }, 2000);
+      }
+    };
+
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
+      setCanInstall(true);
       
-      // Show our custom prompt after a delay
+      // Show our custom prompt
       setTimeout(() => {
         setShowPrompt(true);
-      }, 3000); // Reduced to 3 seconds for testing
+      }, 1000);
     };
 
     const handleAppInstalled = () => {
@@ -53,6 +72,9 @@ const PWAInstallPrompt = () => {
       localStorage.removeItem('pwa-prompt-dismissed');
     };
 
+    // Check requirements immediately
+    checkPWARequirements();
+
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     window.addEventListener('appinstalled', handleAppInstalled);
 
@@ -60,24 +82,38 @@ const PWAInstallPrompt = () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
-  }, []);
+  }, [deferredPrompt]);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) {
-      return;
-    }
-
-    try {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
+    if (deferredPrompt) {
+      try {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        
+        if (outcome === 'accepted') {
+          setIsInstalled(true);
+        }
+      } catch (error) {
+        // Handle error silently
+      }
       
-      // Optional: Add success/failure handling here if needed
-    } catch (error) {
-      // Handle error silently or with user-friendly message
+      setDeferredPrompt(null);
+      setShowPrompt(false);
+    } else {
+      // Provide manual installation instructions
+      const isMobileChrome = /Chrome/.test(navigator.userAgent) && /Mobile/.test(navigator.userAgent);
+      const isDesktopChrome = /Chrome/.test(navigator.userAgent) && !/Mobile/.test(navigator.userAgent);
+      
+      if (isMobileChrome) {
+        alert('To install: Tap the menu (⋮) → "Add to Home screen"');
+      } else if (isDesktopChrome) {
+        alert('To install: Click the install icon (⊞) in the address bar or menu → "Install Wonder World"');
+      } else {
+        alert('To install this app, use Chrome browser and look for the install option in the menu.');
+      }
+      
+      setShowPrompt(false);
     }
-    
-    setDeferredPrompt(null);
-    setShowPrompt(false);
   };
 
   const handleDismiss = () => {
@@ -85,8 +121,8 @@ const PWAInstallPrompt = () => {
     localStorage.setItem('pwa-prompt-dismissed', 'true');
   };
 
-  // Don't show if already installed or no prompt available
-  if (isInstalled || !showPrompt || !deferredPrompt) {
+  // Show if not installed and can install or prompt is available
+  if (isInstalled || (!showPrompt && !canInstall)) {
     return null;
   }
 
