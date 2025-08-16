@@ -15,7 +15,7 @@ const SubscribeBanner = () => {
             {t('subscribe.subtitle')}
           </p>
           <Link to="/subscription">
-            <Button size="lg" variant="outline" className="rounded-full border-white text-black dark:text-white bg-transparent hover:bg-white hover:text-dream-DEFAULT">
+            <Button size="lg" variant="outline" className="rounded-full border-white text-black dark:text-white bg-transparent hover:bg-white hover:text-black dark:hover:text-black">
               {t('subscribe.button')}
             </Button>
           </Link>
