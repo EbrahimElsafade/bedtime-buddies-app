@@ -13,7 +13,7 @@ export const AutoplayToggle = ({
   onAutoplayChange,
   currentSectionDir,
 }: AutoplayToggleProps) => {
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
 
   const setSwitchDir = () => {
@@ -24,18 +24,19 @@ export const AutoplayToggle = ({
 
   return (
     <div
-      className="flex items-center space-x-2 rtl:space-x-reverse"
+      className="flex items-center gap-4"
       dir={currentSectionDir}
     >
+      <Label htmlFor="autoplay" className="text-sm font-medium">
+        {t('stories.auto-play')}
+      </Label>
+
       <Switch
         id="autoplay"
         checked={isAutoplay}
         onCheckedChange={onAutoplayChange}
         dir={setSwitchDir()}
       />
-      <Label htmlFor="autoplay" className="text-sm font-medium">
-        Autoplay
-      </Label>
     </div>
   )
 }

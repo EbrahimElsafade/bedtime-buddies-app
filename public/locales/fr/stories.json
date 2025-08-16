@@ -24,5 +24,6 @@
   "allCategories": "Toutes les Catégories",
   "noStoriesFound": "Aucune histoire trouvée correspondant à votre recherche",
   "noStoriesAvailable": "Aucune histoire disponible pour le moment",
-  "backToStories": "Retour aux Histoires"
+  "backToStories": "Retour aux Histoires",
+  "auto-play": "lecture automatique"
 }

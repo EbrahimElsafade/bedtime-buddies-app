@@ -144,17 +144,28 @@ export const AudioControls = ({
   if (!audioUrl) return null
 
   return (
-    <div className="p-4">
+    <div>
       <audio ref={audioRef} src={audioUrl} preload="metadata" />
 
       <div className="space-y-4">
+        <Slider
+          value={[currentTime]}
+          max={duration}
+          dir={currentSectionDir}
+          step={1}
+          onValueChange={handleSeek}
+          className="w-full [&>span]:h-1 [&>span]:rounded-none [&>span]:last:[&>span]:-mt-1.5 [&>span]:last:[&>span]:hidden [&>span]:hover:h-2 [&>span]:last:[&>span]:hover:block"
+        />
+      </div>
+
+      <div className=" ">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Button
               variant="ghost"
               size="icon"
               onClick={togglePlayPause}
-              className="h-10 w-10"
+              className="h-10 w-10 rounded-full text-white hover:translate-y-0 hover:bg-transparent/10"
             >
               {isPlaying ? (
                 <Pause className="h-5 w-5" />
@@ -163,36 +174,27 @@ export const AudioControls = ({
               )}
             </Button>
 
-            <div className="text-sm text-muted-foreground">
+            <div className="flex items-center text-white gap-4 space-x-2">
+              <Volume2 className="h-4 w-4" />
+              <Slider
+                value={[volume]}
+                max={1}
+                step={0.1}
+                onValueChange={handleVolumeChange}
+                className="w-24"
+              />
+            </div>
+
+            <div className="text-sm text-white">
               {formatTime(currentTime)} / {formatTime(duration)}
             </div>
           </div>
 
-          <AutoplayToggle
-            isAutoplay={isAutoplay}
-            onAutoplayChange={setIsAutoplay}
-            currentSectionDir={currentSectionDir}
-          />
-        </div>
-
-        <div className="space-y-4">
-          <Slider
-            value={[currentTime]}
-            max={duration}
-            dir={currentSectionDir}
-            step={1}
-            onValueChange={handleSeek}
-            className="w-full"
-          />
-
-          <div className="flex items-center gap-4 space-x-2">
-            <Volume2 className="h-4 w-4" />
-            <Slider
-              value={[volume]}
-              max={1}
-              step={0.1}
-              onValueChange={handleVolumeChange}
-              className="w-24"
+          <div className='px-4 text-white'>
+            <AutoplayToggle
+              isAutoplay={isAutoplay}
+              onAutoplayChange={setIsAutoplay}
+              currentSectionDir={currentSectionDir}
             />
           </div>
         </div>

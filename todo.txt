@@ -10,6 +10,11 @@
 - fix the footer ✔️
 - share button plugin ✔️
 - change the app identity ✔️
-- manifest.json for pwa
+- manifest.json for pwa ✔️
 - auto-play and medea player 
 - optionally (the profile page)
+
+baby blue ans claud white
+dark blue
+add more svg in the hero section and some color in the header
+optionally (animate the images of the story)

@@ -1,4 +1,3 @@
-
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -69,7 +68,7 @@ export const StoryContent = ({
     >
       <div className="grid">
         {/* Story Section Image */}
-        <div className="w-full">
+        <div className="relative w-full">
           {currentImage ? (
             <img
               src={currentImage}
@@ -81,24 +80,38 @@ export const StoryContent = ({
               }}
             />
           ) : (
+            // here we gonna set the controls
             <div className="flex aspect-square h-64 w-full items-center justify-center bg-gray-200 md:aspect-auto md:h-full">
               <span className="text-gray-500">No Image</span>
             </div>
           )}
+
+          <div className="absolute bottom-0 w-full bg-red-500 bg-transparent/50">
+            <AudioControls
+              story={story}
+              currentSection={currentSection}
+              currentLanguage={currentLanguage}
+              currentSectionIndex={currentSectionIndex}
+              currentSectionDir={storyDirection}
+              onSectionChange={onSectionChange}
+              onPlayingChange={setIsAudioPlaying}
+              onAudioTimeUpdate={handleAudioTimeUpdate}
+            />
+          </div>
         </div>
 
         {/* Story Section Text */}
         <div className="flex w-full flex-col p-4 md:p-6">
           <div className="flex-grow">
-            <TextHighlight 
-              text={currentText} 
+            <TextHighlight
+              text={currentText}
               isPlaying={isAudioPlaying}
               currentTime={audioCurrentTime}
               duration={audioDuration}
             />
           </div>
 
-          <AudioControls
+          {/* <AudioControls
             story={story}
             currentSection={currentSection}
             currentLanguage={currentLanguage}
@@ -107,7 +120,7 @@ export const StoryContent = ({
             onSectionChange={onSectionChange}
             onPlayingChange={setIsAudioPlaying}
             onAudioTimeUpdate={handleAudioTimeUpdate}
-          />
+          /> */}
 
           {/* Section Navigation - only show if not in single story audio mode or if no sections */}
           {(story.audio_mode !== 'single_story' ||

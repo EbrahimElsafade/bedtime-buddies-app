@@ -24,5 +24,6 @@
   "allCategories": "جميع الفئات",
   "noStoriesFound": "لم يتم العثور على قصص تطابق بحثك",
   "noStoriesAvailable": "لا توجد قصص متاحة في الوقت الحالي",
-  "backToStories": "العودة للقصص"
+  "backToStories": "العودة للقصص",
+  "auto-play": "تشغيل تلقائي"
 }
