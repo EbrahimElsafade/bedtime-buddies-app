@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -50,7 +51,7 @@ const PWAInstallPrompt = () => {
         // Show prompt after a delay if requirements are met
         setTimeout(() => {
           setShowPrompt(true)
-        }, 3000)
+        }, 2000)
       }
     }
 
@@ -59,10 +60,10 @@ const PWAInstallPrompt = () => {
       setDeferredPrompt(e as BeforeInstallPromptEvent)
       setCanInstall(true)
 
-      // Show our custom prompt
+      // Show our custom prompt immediately when browser allows it
       setTimeout(() => {
         setShowPrompt(true)
-      }, 1000)
+      }, 500)
     }
 
     const handleAppInstalled = () => {
@@ -90,44 +91,25 @@ const PWAInstallPrompt = () => {
   const handleInstallClick = async () => {
     if (deferredPrompt) {
       try {
-        deferredPrompt.prompt()
+        // Automatically trigger the browser's install prompt
+        await deferredPrompt.prompt()
         const { outcome } = await deferredPrompt.userChoice
 
         if (outcome === 'accepted') {
           setIsInstalled(true)
         }
       } catch (error) {
-        // Handle error silently
+        // If automatic prompt fails, hide our prompt
+        console.log('Install prompt failed')
       }
 
       setDeferredPrompt(null)
       setShowPrompt(false)
     } else {
-      // Provide manual installation instructions
-      const isMobileChrome =
-        /Chrome/.test(navigator.userAgent) && /Mobile/.test(navigator.userAgent)
-      const isDesktopChrome =
-        /Chrome/.test(navigator.userAgent) &&
-        !/Mobile/.test(navigator.userAgent)
-      const isSafari =
-        /Safari/.test(navigator.userAgent) &&
-        !/Chrome/.test(navigator.userAgent)
-
-      if (isMobileChrome) {
-        alert('To install: Tap the menu (⋮) → "Add to Home screen"')
-      } else if (isDesktopChrome) {
-        alert(
-          'To install: Click the install icon (⊞) in the address bar or menu → "Install Wonder World"',
-        )
-      } else if (isSafari) {
-        alert('To install: Tap the Share button → "Add to Home Screen"')
-      } else {
-        alert(
-          'To install this app, use Chrome or Safari browser and look for the install option in the menu.',
-        )
-      }
-
+      // For browsers that don't support the install prompt
+      // Just hide the prompt - no instructions
       setShowPrompt(false)
+      localStorage.setItem('pwa-prompt-dismissed', 'true')
     }
   }
 
