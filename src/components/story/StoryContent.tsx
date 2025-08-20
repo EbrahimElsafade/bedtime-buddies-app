@@ -1,3 +1,4 @@
+
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -6,6 +7,7 @@ import { getImageUrl } from '@/utils/imageUtils'
 import { AudioControls } from './AudioControls'
 import { TextHighlight } from './TextHighlight'
 import { useState } from 'react'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 interface StoryContentProps {
   story: Story
@@ -27,6 +29,7 @@ export const StoryContent = ({
   const [isAudioPlaying, setIsAudioPlaying] = useState(false)
   const [audioCurrentTime, setAudioCurrentTime] = useState(0)
   const [audioDuration, setAudioDuration] = useState(0)
+  const isMobile = useIsMobile()
 
   const currentSection = story.sections[currentSectionIndex]
   const currentText =
@@ -66,27 +69,45 @@ export const StoryContent = ({
       dir={storyDirection}
       className="mb-4 overflow-hidden border-dream-light/20 bg-white/70 backdrop-blur-sm dark:bg-nightsky-light/70 md:mb-6"
     >
-      <div className="grid">
+      <div className="flex flex-col">
         {/* Story Section Image */}
         <div className="relative w-full">
           {currentImage ? (
             <img
               src={currentImage}
               alt={storyTitle}
-              className="aspect-square h-64 w-full object-cover md:aspect-auto md:h-full"
+              className="aspect-square h-64 w-full object-cover sm:h-80 md:aspect-auto md:h-96"
               onError={e => {
                 console.log('Image failed to load:', currentImage)
                 e.currentTarget.style.display = 'none'
               }}
             />
           ) : (
-            // here we gonna set the controls
-            <div className="flex aspect-square h-64 w-full items-center justify-center bg-gray-200 md:aspect-auto md:h-full">
+            <div className="flex aspect-square h-64 w-full items-center justify-center bg-gray-200 sm:h-80 md:aspect-auto md:h-96">
               <span className="text-gray-500">No Image</span>
             </div>
           )}
 
-          <div className="absolute bottom-0 w-full bg-red-500 bg-transparent/50">
+          {/* Audio Controls - Desktop overlay */}
+          {!isMobile && (
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+              <AudioControls
+                story={story}
+                currentSection={currentSection}
+                currentLanguage={currentLanguage}
+                currentSectionIndex={currentSectionIndex}
+                currentSectionDir={storyDirection}
+                onSectionChange={onSectionChange}
+                onPlayingChange={setIsAudioPlaying}
+                onAudioTimeUpdate={handleAudioTimeUpdate}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Audio Controls - Mobile/Tablet below image */}
+        {isMobile && (
+          <div className="bg-gradient-to-r from-dream-dark to-dream-light p-4">
             <AudioControls
               story={story}
               currentSection={currentSection}
@@ -98,7 +119,7 @@ export const StoryContent = ({
               onAudioTimeUpdate={handleAudioTimeUpdate}
             />
           </div>
-        </div>
+        )}
 
         {/* Story Section Text */}
         <div className="flex w-full flex-col p-4 md:p-6">
@@ -111,39 +132,28 @@ export const StoryContent = ({
             />
           </div>
 
-          {/* <AudioControls
-            story={story}
-            currentSection={currentSection}
-            currentLanguage={currentLanguage}
-            currentSectionIndex={currentSectionIndex}
-            currentSectionDir={storyDirection}
-            onSectionChange={onSectionChange}
-            onPlayingChange={setIsAudioPlaying}
-            onAudioTimeUpdate={handleAudioTimeUpdate}
-          /> */}
-
           {/* Section Navigation - only show if not in single story audio mode or if no sections */}
           {(story.audio_mode !== 'single_story' ||
             story.sections.length > 1) && (
-            <div className="mt-auto flex items-center justify-between">
+            <div className="mt-4 flex items-center justify-between border-t border-gray-200 pt-4">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={handlePrevSection}
                 disabled={currentSectionIndex === 0}
                 aria-label="Previous section"
-                className="h-8 w-8 md:h-10 md:w-10"
+                className="h-10 w-10 rounded-full"
               >
                 <ChevronLeft
                   className={
                     storyDirection === 'rtl'
-                      ? 'h-4 w-4 rotate-180 md:h-5 md:w-5'
-                      : 'h-4 w-4 md:h-5 md:w-5'
+                      ? 'h-5 w-5 rotate-180'
+                      : 'h-5 w-5'
                   }
                 />
               </Button>
 
-              <span className="px-2 text-xs text-muted-foreground md:text-sm">
+              <span className="px-4 text-sm font-medium text-muted-foreground">
                 {currentSectionIndex + 1} / {story.sections.length || 1}
               </span>
 
@@ -153,13 +163,13 @@ export const StoryContent = ({
                 onClick={handleNextSection}
                 disabled={currentSectionIndex === story.sections.length - 1}
                 aria-label="Next section"
-                className="h-8 w-8 md:h-10 md:w-10"
+                className="h-10 w-10 rounded-full"
               >
                 <ChevronRight
                   className={
                     storyDirection === 'rtl'
-                      ? 'h-4 w-4 rotate-180 md:h-5 md:w-5'
-                      : 'h-4 w-4 md:h-5 md:w-5'
+                      ? 'h-5 w-5 rotate-180'
+                      : 'h-5 w-5'
                   }
                 />
               </Button>

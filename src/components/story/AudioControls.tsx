@@ -2,10 +2,10 @@ import { useState, useRef, useEffect } from 'react'
 import { Play, Pause, Volume2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
-import { Card } from '@/components/ui/card'
 import { Story, StorySection } from '@/types/story'
 import { getAudioUrl } from '@/utils/imageUtils'
 import { AutoplayToggle } from './AutoplayToggle'
+import { useIsMobile } from '@/hooks/use-mobile'
 
 interface AudioControlsProps {
   story: Story
@@ -34,6 +34,7 @@ export const AudioControls = ({
   const [volume, setVolume] = useState(1)
   const [isAutoplay, setIsAutoplay] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
+  const isMobile = useIsMobile()
 
   // Notify parent component when playing state changes
   useEffect(() => {
@@ -60,7 +61,6 @@ export const AudioControls = ({
     const handleEnded = () => {
       setIsPlaying(false)
 
-      // Autoplay logic: move to next section if autoplay is enabled
       if (
         isAutoplay &&
         onSectionChange &&
@@ -68,7 +68,6 @@ export const AudioControls = ({
       ) {
         const nextIndex = currentSectionIndex + 1
         onSectionChange(nextIndex)
-        // Small delay to ensure section change is processed before playing
         setTimeout(() => {
           if (audioRef.current) {
             audioRef.current.play()
@@ -144,37 +143,48 @@ export const AudioControls = ({
   if (!audioUrl) return null
 
   return (
-    <div>
+    <div className="w-full">
       <audio ref={audioRef} src={audioUrl} preload="metadata" />
 
-      <div className="space-y-4">
+      {/* Progress Bar */}
+      <div className="mb-4">
         <Slider
           value={[currentTime]}
           max={duration}
           dir={currentSectionDir}
           step={1}
           onValueChange={handleSeek}
-          className="w-full [&>span]:h-1 [&>span]:rounded-none [&>span]:last:[&>span]:-mt-1.5 [&>span]:last:[&>span]:hidden [&>span]:hover:h-2 [&>span]:last:[&>span]:hover:block"
+          className="w-full"
         />
+        {/* Time Display - Mobile */}
+        {isMobile && (
+          <div className="mt-2 flex justify-between text-xs text-white/80">
+            <span>{formatTime(currentTime)}</span>
+            <span>{formatTime(duration)}</span>
+          </div>
+        )}
       </div>
 
-      <div className=" ">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={togglePlayPause}
-              className="h-10 w-10 rounded-full text-white hover:translate-y-0 hover:bg-transparent/10"
-            >
-              {isPlaying ? (
-                <Pause className="h-5 w-5" />
-              ) : (
-                <Play className="h-5 w-5" />
-              )}
-            </Button>
+      {/* Controls */}
+      <div className={`flex items-center ${isMobile ? 'flex-col gap-4' : 'justify-between'}`}>
+        <div className={`flex items-center ${isMobile ? 'w-full justify-center' : ''} gap-4`}>
+          {/* Play/Pause Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={togglePlayPause}
+            className="h-12 w-12 rounded-full bg-white/20 text-white hover:bg-white/30"
+          >
+            {isPlaying ? (
+              <Pause className="h-6 w-6" />
+            ) : (
+              <Play className="h-6 w-6" />
+            )}
+          </Button>
 
-            <div className="flex items-center text-white gap-4 space-x-2">
+          {/* Volume Control */}
+          {!isMobile && (
+            <div className="flex items-center gap-2 text-white">
               <Volume2 className="h-4 w-4" />
               <Slider
                 value={[volume]}
@@ -184,19 +194,37 @@ export const AudioControls = ({
                 className="w-24"
               />
             </div>
+          )}
 
+          {/* Time Display - Desktop */}
+          {!isMobile && (
             <div className="text-sm text-white">
               {formatTime(currentTime)} / {formatTime(duration)}
             </div>
-          </div>
+          )}
+        </div>
 
-          <div className='px-4 text-white'>
-            <AutoplayToggle
-              isAutoplay={isAutoplay}
-              onAutoplayChange={setIsAutoplay}
-              currentSectionDir={currentSectionDir}
+        {/* Mobile Volume Controls */}
+        {isMobile && (
+          <div className="flex w-full items-center justify-center gap-2 text-white">
+            <Volume2 className="h-4 w-4" />
+            <Slider
+              value={[volume]}
+              max={1}
+              step={0.1}
+              onValueChange={handleVolumeChange}
+              className="flex-1 max-w-48"
             />
           </div>
+        )}
+
+        {/* Autoplay Toggle */}
+        <div className={`${isMobile ? 'w-full flex justify-center' : ''}`}>
+          <AutoplayToggle
+            isAutoplay={isAutoplay}
+            onAutoplayChange={setIsAutoplay}
+            currentSectionDir={currentSectionDir}
+          />
         </div>
       </div>
     </div>
