@@ -77,7 +77,7 @@ const PopularStories = () => {
             {[1, 2, 3].map(i => (
               <Card
                 key={i}
-                className="story-card h-[25rem] animate-pulse overflow-hidden border-dream-light/20 bg-white/70 pb-4 backdrop-blur-sm dark:bg-nightsky-light/70"
+                className="story-card h-[25rem] w-full animate-pulse overflow-hidden border-dream-light/20 bg-white/70 pb-4 backdrop-blur-sm dark:bg-nightsky-light/70"
               >
                 <div className="h-48 bg-gray-200"></div>
                 <CardHeader className="pb-2">
@@ -126,7 +126,7 @@ const PopularStories = () => {
 
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card relative z-20 flex h-[25rem] cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/10">
+                <Card className="story-card relative z-20 w-full flex h-[25rem] cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/10">
                   <div className="relative h-48 overflow-hidden">
                     {imageUrl ? (
                       <img
