@@ -174,7 +174,7 @@ export const AudioControls = ({
               )}
             </Button>
 
-            <div className="flex items-center text-white gap-4 space-x-2">
+            <div className="hidden items-center gap-4 space-x-2 text-white sm:flex">
               <Volume2 className="h-4 w-4" />
               <Slider
                 value={[volume]}
@@ -190,7 +190,7 @@ export const AudioControls = ({
             </div>
           </div>
 
-          <div className='px-4 text-white'>
+          <div className="px-4 text-white">
             <AutoplayToggle
               isAutoplay={isAutoplay}
               onAutoplayChange={setIsAutoplay}
