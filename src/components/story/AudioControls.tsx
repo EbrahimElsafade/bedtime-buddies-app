@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from 'react'
 import { Play, Pause, Volume2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
-import { Card } from '@/components/ui/card'
 import { Story, StorySection } from '@/types/story'
 import { getAudioUrl } from '@/utils/imageUtils'
 import { AutoplayToggle } from './AutoplayToggle'
@@ -194,7 +193,6 @@ export const AudioControls = ({
             <AutoplayToggle
               isAutoplay={isAutoplay}
               onAutoplayChange={setIsAutoplay}
-              currentSectionDir={currentSectionDir}
             />
           </div>
         </div>
