@@ -1,4 +1,5 @@
-import { Switch } from '@/components/ui/switch'
+
+import { Toggle } from '@/components/ui/toggle'
 import { Label } from '@/components/ui/label'
 import { useTranslation } from 'react-i18next'
 
@@ -16,7 +17,7 @@ export const AutoplayToggle = ({
   const { t, i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
 
-  const setSwitchDir = () => {
+  const setToggleDir = () => {
     if (isRTL) {
       if (currentSectionDir === 'ltr') return 'rtl'
     } else return currentSectionDir
@@ -31,12 +32,16 @@ export const AutoplayToggle = ({
         {t('stories.auto-play')}
       </Label>
 
-      <Switch
+      <Toggle
         id="autoplay"
-        checked={isAutoplay}
-        onCheckedChange={onAutoplayChange}
-        dir={setSwitchDir()}
-      />
+        pressed={isAutoplay}
+        onPressedChange={onAutoplayChange}
+        dir={setToggleDir()}
+        variant="outline"
+        size="sm"
+      >
+        Auto
+      </Toggle>
     </div>
   )
 }
