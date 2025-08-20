@@ -174,7 +174,7 @@ export const AudioControls = ({
               )}
             </Button>
 
-            <div className="hidden items-center gap-4 space-x-2 text-white sm:flex">
+            <div className="flex items-center text-white gap-4 space-x-2">
               <Volume2 className="h-4 w-4" />
               <Slider
                 value={[volume]}
