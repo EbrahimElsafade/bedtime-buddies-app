@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -18,9 +17,9 @@ const PWAInstallPrompt = () => {
   const { t } = useTranslation('common')
   const [deferredPrompt, setDeferredPrompt] =
     useState<BeforeInstallPromptEvent | null>(null)
-  const [showPrompt, setShowPrompt] = useState(false)
+  const [showPrompt, setShowPrompt] = useState(true) // Always show for UI editing
   const [isInstalled, setIsInstalled] = useState(false)
-  const [canInstall, setCanInstall] = useState(false)
+  const [canInstall, setCanInstall] = useState(true) // Always allow for UI editing
 
   useEffect(() => {
     // Check if app is already installed
@@ -114,11 +113,6 @@ const PWAInstallPrompt = () => {
   const handleDismiss = () => {
     setShowPrompt(false)
     localStorage.setItem('pwa-prompt-dismissed', 'true')
-  }
-
-  // Show if not installed, can install, and prompt should be shown
-  if (isInstalled || !canInstall || !showPrompt) {
-    return null
   }
 
   return (
