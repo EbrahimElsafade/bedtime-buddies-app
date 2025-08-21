@@ -21,8 +21,16 @@ const PWAInstallPrompt = () => {
   const [showPrompt, setShowPrompt] = useState(false)
   const [isInstalled, setIsInstalled] = useState(false)
   const [canInstall, setCanInstall] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
+    // Detect mobile device
+    const checkMobile = () => {
+      const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera
+      setIsMobile(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase()))
+    }
+    checkMobile()
+
     // Check if app is already installed
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
     const isInWebAppiOS = (window.navigator as any).standalone === true
@@ -51,7 +59,7 @@ const PWAInstallPrompt = () => {
         // Show prompt after a delay if requirements are met
         setTimeout(() => {
           setShowPrompt(true)
-        }, 2000)
+        }, 3000)
       }
     }
 
@@ -63,7 +71,7 @@ const PWAInstallPrompt = () => {
       // Show our custom prompt immediately when browser allows it
       setTimeout(() => {
         setShowPrompt(true)
-      }, 500)
+      }, 1000)
     }
 
     const handleAppInstalled = () => {
@@ -104,8 +112,25 @@ const PWAInstallPrompt = () => {
 
       setDeferredPrompt(null)
       setShowPrompt(false)
+    } else if (isMobile) {
+      // For mobile browsers that don't support the install prompt, show instructions
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+      const isAndroid = /Android/.test(navigator.userAgent)
+      
+      let instructions = ''
+      if (isIOS) {
+        instructions = 'To install: Tap the Share button and select "Add to Home Screen"'
+      } else if (isAndroid) {
+        instructions = 'To install: Tap the menu (⋮) and select "Add to Home screen" or "Install app"'
+      } else {
+        instructions = 'To install: Use your browser menu to add this app to your home screen'
+      }
+      
+      alert(instructions)
+      setShowPrompt(false)
+      localStorage.setItem('pwa-prompt-dismissed', 'true')
     } else {
-      // For browsers that don't support the install prompt
+      // For desktop browsers that don't support the install prompt
       setShowPrompt(false)
       localStorage.setItem('pwa-prompt-dismissed', 'true')
     }
@@ -122,29 +147,29 @@ const PWAInstallPrompt = () => {
   }
 
   return (
-    <div className="fixed bottom-4 start-4 end-4 z-50 md:start-auto md:end-4 md:max-w-sm">
+    <div className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-sm sm:inset-x-auto sm:right-4 sm:left-auto">
       <Card className="border-dream-light/30 bg-white/95 shadow-xl backdrop-blur-sm dark:bg-nightsky-light/95">
-        <CardContent className="p-4">
-          <div className="flex items-start gap-3">
-            <div className="rounded-lg bg-gradient-to-br from-dream-light/20 to-purple-100/50 p-2">
-              <Smartphone className="text-dream-DEFAULT h-6 w-6" />
+        <CardContent className="p-3 sm:p-4">
+          <div className="flex items-start gap-2 sm:gap-3">
+            <div className="flex-shrink-0 rounded-lg bg-gradient-to-br from-dream-light/20 to-purple-100/50 p-1.5 sm:p-2">
+              <Smartphone className="h-5 w-5 text-dream-DEFAULT sm:h-6 sm:w-6" />
             </div>
 
-            <div className="flex-1">
-              <h3 className="mb-1 font-semibold text-gray-900 dark:text-white">
+            <div className="min-w-0 flex-1">
+              <h3 className="mb-1 text-sm font-semibold text-gray-900 dark:text-white sm:text-base">
                 {t('pwa.installApp')}
               </h3>
-              <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">
+              <p className="mb-2 text-xs text-gray-600 dark:text-gray-300 sm:mb-3 sm:text-sm">
                 {t('pwa.installAppDescription')}
               </p>
 
-              <div className="flex gap-2">
+              <div className="flex gap-1.5 sm:gap-2">
                 <Button
                   onClick={handleInstallClick}
                   size="sm"
-                  className="from-dream-DEFAULT bg-gradient-to-r to-purple-500 text-white hover:from-dream-light hover:to-purple-600"
+                  className="h-8 bg-gradient-to-r from-dream-DEFAULT to-purple-500 text-xs text-white hover:from-dream-light hover:to-purple-600 sm:h-9 sm:text-sm"
                 >
-                  <Download className="mr-2 h-4 w-4" />
+                  <Download className="mr-1.5 h-3 w-3 sm:mr-2 sm:h-4 sm:w-4" />
                   {t('pwa.install')}
                 </Button>
 
@@ -152,7 +177,7 @@ const PWAInstallPrompt = () => {
                   onClick={handleDismiss}
                   variant="ghost"
                   size="sm"
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  className="h-8 text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 sm:h-9 sm:text-sm"
                 >
                   {t('pwa.later')}
                 </Button>
@@ -161,9 +186,9 @@ const PWAInstallPrompt = () => {
 
             <button
               onClick={handleDismiss}
-              className="p-1 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+              className="flex-shrink-0 p-0.5 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 sm:p-1"
             >
-              <X className="h-4 w-4" />
+              <X className="h-3 w-3 sm:h-4 sm:w-4" />
             </button>
           </div>
         </CardContent>
