@@ -1,145 +1,89 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./contexts/AuthContext";
-import Layout from "./components/Layout";
-import AdminLayout from "./components/AdminLayout";
-import AdminRoute from "./components/AdminRoute";
-import PWAInstallPrompt from "./components/PWAInstallPrompt";
-import Index from "./pages/Index";
-import Stories from "./pages/Stories";
-import Story from "./pages/Story";
-import Courses from "./pages/Courses";
-import Course from "./pages/Course";
-import Games from "./pages/Games";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Profile from "./pages/Profile";
-import Subscription from "./pages/Subscription";
-import NotFound from "./pages/NotFound";
-
-// Admin pages
-import AdminDashboard from "./pages/admin/Dashboard";
-import AdminUsers from "./pages/admin/Users";
-import AdminStories from "./pages/admin/Stories";
-import AdminStoryEditor from "./pages/admin/StoryEditor";
-import AdminStoryOptions from "./pages/admin/StoryOptions";
-import AdminCourses from "./pages/admin/Courses";
-import AdminSettings from "./pages/admin/Settings";
-import AdminAppearance from "./pages/admin/Appearance";
-
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import "./i18n";
-
-// Ensure the default direction is RTL for Arabic
-const setInitialDirection = () => {
-  document.documentElement.dir = 'rtl'; // Default to RTL for Arabic
-  document.documentElement.lang = 'ar'; // Set language to Arabic
-};
+import Layout from "@/components/Layout";
+import Index from "@/pages/Index";
+import Stories from "@/pages/Stories";
+import Story from "@/pages/Story";
+import Games from "@/pages/Games";
+import Profile from "@/pages/Profile";
+import Login from "@/pages/Login";
+import Register from "@/pages/Register";
+import Subscription from "@/pages/Subscription";
+import Courses from "@/pages/Courses";
+import Course from "@/pages/Course";
+import NotFound from "@/pages/NotFound";
+import AdminLayout from "@/components/AdminLayout";
+import AdminRoute from "@/components/AdminRoute";
+import AdminDashboard from "@/pages/admin/Dashboard";
+import AdminStories from "@/pages/admin/Stories";
+import AdminStoryEditor from "@/pages/admin/StoryEditor";
+import AdminStoryOptions from "@/pages/admin/StoryOptions";
+import AdminCourses from "@/pages/admin/Courses";
+import AdminUsers from "@/pages/admin/Users";
+import AdminSettings from "@/pages/admin/Settings";
+import AdminAppearance from "@/pages/admin/Appearance";
+import { I18nextProvider } from "react-i18next";
+import i18n from "@/i18n";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
-      staleTime: 60000, // Increased to 1 minute
-      refetchOnWindowFocus: false, // Disable refetching when switching tabs
-      refetchOnMount: false, // Prevent unnecessary refetches on mount
-      refetchOnReconnect: false, // Disable refetch on reconnect to prevent tab switch issues
+      staleTime: 5 * 60 * 1000, // 5 minutes
     },
   },
 });
 
-const App = () => {
-  const { i18n } = useTranslation();
-
-  useEffect(() => {
-    setInitialDirection();
-
-    // Enhanced Page Visibility API handling
-    const handleVisibilityChange = () => {
-      if (document.hidden) {
-        // Tab became hidden - maintain state silently
-      } else {
-        // Tab became visible - continue normally
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    // Set document direction based on language
-    const handleLanguageChange = (lng: string) => {
-      if (lng === 'ar') {
-        document.documentElement.dir = 'rtl';
-        document.documentElement.lang = 'ar';
-      } else {
-        document.documentElement.dir = 'ltr';
-        document.documentElement.lang = lng;
-      }
-    };
-
-    // Set initial direction
-    handleLanguageChange(i18n.language);
-
-    // Listen for language changes
-    i18n.on('languageChanged', handleLanguageChange);
-
-    // Cleanup
-    return () => {
-      i18n.off('languageChanged', handleLanguageChange);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [i18n]);
-
+function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <BrowserRouter>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <PWAInstallPrompt />
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Layout />}>
-                <Route index element={<Index />} />
-                <Route path="/stories" element={<Stories />} />
-                <Route path="/stories/:storyId" element={<Story />} />
-                <Route path="/games" element={<Games />} />
-                <Route path="/courses" element={<Courses />} />
-                <Route path="/courses/:courseId" element={<Course />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/subscription" element={<Subscription />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                {/* Add specific 404 route */}
-                <Route path="/404" element={<NotFound />} />
-                <Route path="*" element={<NotFound />} />
-              </Route>
-              
-              {/* Admin Routes - wrapped in AdminRoute component for auth checks */}
-              <Route path="/admin" element={<AdminRoute />}>
-                <Route element={<AdminLayout />}>
+      <I18nextProvider i18n={i18n}>
+        <LanguageProvider>
+          <Router>
+            <AuthProvider>
+              <Routes>
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<Index />} />
+                  <Route path="stories" element={<Stories />} />
+                  <Route path="stories/:id" element={<Story />} />
+                  <Route path="games" element={<Games />} />
+                  <Route path="courses" element={<Courses />} />
+                  <Route path="courses/:id" element={<Course />} />
+                  <Route path="profile" element={<Profile />} />
+                  <Route path="login" element={<Login />} />
+                  <Route path="register" element={<Register />} />
+                  <Route path="subscription" element={<Subscription />} />
+                </Route>
+                
+                <Route path="/admin" element={
+                  <AdminRoute>
+                    <AdminLayout />
+                  </AdminRoute>
+                }>
                   <Route index element={<AdminDashboard />} />
-                  <Route path="users" element={<AdminUsers />} />
                   <Route path="stories" element={<AdminStories />} />
                   <Route path="stories/new" element={<AdminStoryEditor />} />
-                  <Route path="stories/edit/:id" element={<AdminStoryEditor />} />
-                  <Route path="stories/options" element={<AdminStoryOptions />} />
+                  <Route path="stories/:id/edit" element={<AdminStoryEditor />} />
+                  <Route path="stories/:id/options" element={<AdminStoryOptions />} />
                   <Route path="courses" element={<AdminCourses />} />
-                  <Route path="appearance" element={<AdminAppearance />} />
+                  <Route path="users" element={<AdminUsers />} />
                   <Route path="settings" element={<AdminSettings />} />
+                  <Route path="appearance" element={<AdminAppearance />} />
                 </Route>
-              </Route>
-            </Routes>
-          </TooltipProvider>
-        </BrowserRouter>
-      </AuthProvider>
+                
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <Toaster />
+            </AuthProvider>
+          </Router>
+        </LanguageProvider>
+      </I18nextProvider>
     </QueryClientProvider>
   );
-};
+}
 
 export default App;
