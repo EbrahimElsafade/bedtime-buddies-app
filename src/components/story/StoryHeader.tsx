@@ -4,23 +4,39 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { ShareDialog } from "./ShareDialog";
+import { useFavorites } from "@/hooks/useFavorites";
+import { useAuth } from "@/contexts/AuthContext";
+import { useParams, useNavigate } from "react-router-dom";
 
 interface StoryHeaderProps {
   onBackClick: () => void;
-  isFavorite: boolean;
-  onToggleFavorite: () => void;
   storyTitle: string;
   storyDescription?: string;
 }
 
 export const StoryHeader = ({ 
   onBackClick, 
-  isFavorite, 
-  onToggleFavorite, 
   storyTitle, 
   storyDescription 
 }: StoryHeaderProps) => {
   const { t } = useTranslation('stories');
+  const { id: storyId } = useParams();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const { isFavorite, toggleFavorite } = useFavorites();
+
+  const handleToggleFavorite = () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+    
+    if (storyId) {
+      toggleFavorite(storyId);
+    }
+  };
+
+  const isStoryFavorite = storyId ? isFavorite(storyId) : false;
 
   return (
     <div className="mb-6 flex flex-wrap justify-between items-center">
@@ -32,11 +48,11 @@ export const StoryHeader = ({
         <Button 
           variant="ghost" 
           size="icon" 
-          onClick={onToggleFavorite} 
-          className={cn("rounded-full", isFavorite && "text-red-500")}
-          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          onClick={handleToggleFavorite}
+          className={cn("rounded-full", isStoryFavorite && "text-red-500")}
+          aria-label={isStoryFavorite ? "Remove from favorites" : "Add to favorites"}
         >
-          <Heart className={cn("h-5 w-5", isFavorite && "fill-red-500")} />
+          <Heart className={cn("h-5 w-5", isStoryFavorite && "fill-red-500")} />
         </Button>
         
         <ShareDialog 
