@@ -202,9 +202,9 @@ export function useLanguage() {
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = React.useState<Language>("ar");
+  const [language, setLanguage] = useState<Language>("ar");
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (language === "ar") {
       document.documentElement.dir = "rtl";
       document.documentElement.lang = "ar";
