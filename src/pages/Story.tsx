@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
@@ -18,6 +17,7 @@ const Story = () => {
   const navigate = useNavigate()
   const { isAuthenticated, profile } = useAuth()
 
+  const [isFavorite, setIsFavorite] = useState(false)
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0)
 
   const { data: story, isLoading, error } = useStoryData(storyId)
@@ -61,6 +61,14 @@ const Story = () => {
 
   const currentSection = story.sections[currentSectionIndex]
 
+  const toggleFavorite = () => {
+    if (isAuthenticated) {
+      setIsFavorite(!isFavorite)
+    } else {
+      navigate('/login')
+    }
+  }
+
   const canAccessStory =
     story.is_free || (isAuthenticated && profile?.is_premium)
 
@@ -84,6 +92,8 @@ const Story = () => {
       <div className="container mx-auto max-w-4xl">
         <StoryHeader
           onBackClick={() => navigate('/stories')}
+          isFavorite={isFavorite}
+          onToggleFavorite={toggleFavorite}
           storyTitle={getStoryTitle()}
           storyDescription={getStoryDescription()}
         />

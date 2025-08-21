@@ -1,4 +1,5 @@
-import { createContext, useState, useContext, useEffect, ReactNode } from "react";
+
+import React, { createContext, useState, useContext, useEffect, ReactNode } from "react";
 
 type Language = 'en' | 'ar' | 'fr';
 
@@ -201,9 +202,9 @@ export function useLanguage() {
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>("ar");
+  const [language, setLanguage] = React.useState<Language>("ar");
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (language === "ar") {
       document.documentElement.dir = "rtl";
       document.documentElement.lang = "ar";

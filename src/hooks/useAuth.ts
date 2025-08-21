@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { logger } from '@/utils/logger';
 
 // Helper function to handle auth operations with retry logic
-const withRetry = async <T,>(operation: () => Promise<T>, maxRetries = 2): Promise<T> => {
+const withRetry = async <T>(operation: () => Promise<T>, maxRetries = 2): Promise<T> => {
   let lastError: Error;
   
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
@@ -104,7 +104,7 @@ export const useAuthOperations = () => {
     password: string, 
     parentName: string, 
     childName?: string, 
-    preferredLanguage: 'en' | 'ar-eg' | 'ar-fos7a' | 'fr' = 'ar-fos7a'
+    preferredLanguage: 'en' | 'ar-eg' | 'ar-fos7a' | 'fr'= 'ar-fos7a'
   ) => {
     setIsLoading(true);
     try {
