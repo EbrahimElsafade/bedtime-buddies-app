@@ -250,6 +250,20 @@
   }
 }
 
+/* iOS specific styling for bottom navigation */
+@supports (-webkit-touch-callout: none) {
+  /* iOS specific styles */
+  .ios-touch {
+    -webkit-appearance: none;
+    border-radius: 8px;
+  }
+  
+  /* Add margin to bottom navigation on iOS */
+  .mobile-bottom-nav {
+    margin: 0.125rem; /* m-0.5 equivalent */
+  }
+}
+
 /* Games section specific improvements */
 .games-container {
   max-width: 100vw;
