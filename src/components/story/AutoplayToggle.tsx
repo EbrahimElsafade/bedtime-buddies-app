@@ -1,5 +1,5 @@
-import { Toggle } from '@/components/ui/toggle'
-import { Label } from '@/components/ui/label'
+
+import { Badge } from '@/components/ui/badge'
 import { useTranslation } from 'react-i18next'
 
 interface AutoplayToggleProps {
@@ -13,15 +13,17 @@ export const AutoplayToggle = ({
 }: AutoplayToggleProps) => {
   const { t } = useTranslation()
 
+  const handleClick = () => {
+    onAutoplayChange(!isAutoplay)
+  }
+
   return (
-    <Toggle
-      id="autoplay"
-      className='hover:translate-y-0 my-auto h-fit data-[state=on]:bg-accent data-[state=on]:text-accent-foreground'
-      pressed={isAutoplay}
-      onPressedChange={onAutoplayChange}
-      size="sm"
+    <Badge
+      variant={isAutoplay ? "default" : "outline"}
+      className="cursor-pointer h-fit my-auto hover:opacity-80 transition-opacity"
+      onClick={handleClick}
     >
       {t('stories.autoPlay')}
-    </Toggle>
+    </Badge>
   )
 }
