@@ -115,8 +115,13 @@ const PWAInstallPrompt = () => {
     localStorage.setItem('pwa-prompt-dismissed', 'true')
   }
 
+  // Don't show if app is already installed
+  if (isInstalled) {
+    return null
+  }
+
   return (
-    <div className="fixed bottom-4 start-4 end-4 z-50 md:start-auto md:end-4 md:max-w-sm">
+    <div className="fixed md:bottom-20 bottom-4 start-4 end-4 z-50 md:start-auto md:end-4 md:max-w-sm">
       <Card className="border-dream-light/30 bg-white/95 shadow-xl backdrop-blur-sm dark:bg-nightsky-light/95">
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
