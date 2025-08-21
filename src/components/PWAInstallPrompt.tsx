@@ -99,7 +99,6 @@ const PWAInstallPrompt = () => {
           setIsInstalled(true)
         }
       } catch (error) {
-        // If automatic prompt fails, hide our prompt
         console.log('Install prompt failed')
       }
 
@@ -107,7 +106,6 @@ const PWAInstallPrompt = () => {
       setShowPrompt(false)
     } else {
       // For browsers that don't support the install prompt
-      // Just hide the prompt - no instructions
       setShowPrompt(false)
       localStorage.setItem('pwa-prompt-dismissed', 'true')
     }
