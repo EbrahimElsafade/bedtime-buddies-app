@@ -47,8 +47,8 @@ const Hero = () => {
       <div className="absolute top-3/4 left-3/4 w-3 h-3 bg-moon-light/40 rounded-full animate-bounce-gentle" style={{ animationDelay: '2s' }}></div>
 
       {/* Fun SVG Elements */}
-      {/* Rainbow - moved closer */}
-      <div className="absolute top-12 left-6 animate-float" style={{ animationDelay: '0.8s' }}>
+      {/* Rainbow - moved much closer */}
+      <div className="absolute top-8 left-4 animate-float" style={{ animationDelay: '0.8s' }}>
         <svg width="60" height="30" viewBox="0 0 60 30" fill="none" className="opacity-60">
           <path d="M5 25 C15 5, 45 5, 55 25" stroke="#FF6B9D" strokeWidth="3" fill="none" />
           <path d="M8 22 C16 8, 44 8, 52 22" stroke="#FFD93D" strokeWidth="3" fill="none" />
@@ -56,8 +56,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Cloud - moved closer */}
-      <div className="absolute top-16 right-8 animate-float" style={{ animationDelay: '1.2s' }}>
+      {/* Cloud - moved much closer */}
+      <div className="absolute top-12 right-6 animate-float" style={{ animationDelay: '1.2s' }}>
         <svg width="50" height="30" viewBox="0 0 50 30" fill="none" className="opacity-50">
           <ellipse cx="35" cy="20" rx="10" ry="8" fill="white" />
           <ellipse cx="25" cy="18" rx="12" ry="10" fill="white" />
@@ -65,8 +65,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Balloon - moved closer to center */}
-      <div className="absolute bottom-20 left-12 animate-float" style={{ animationDelay: '2.1s' }}>
+      {/* Balloon - moved much closer to center */}
+      <div className="absolute bottom-16 left-8 animate-float" style={{ animationDelay: '2.1s' }}>
         <svg width="25" height="40" viewBox="0 0 25 40" fill="none" className="opacity-70">
           <ellipse cx="12" cy="12" rx="10" ry="14" fill="#FF6B9D" />
           <line x1="12" y1="26" x2="12" y2="38" stroke="#8B5CF6" strokeWidth="2" />
@@ -74,8 +74,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Shooting Star - moved closer */}
-      <div className="absolute top-20 right-20 animate-twinkle" style={{ animationDelay: '1.8s' }}>
+      {/* Shooting Star - moved much closer */}
+      <div className="absolute top-16 right-12 animate-twinkle" style={{ animationDelay: '1.8s' }}>
         <svg width="40" height="20" viewBox="0 0 40 20" fill="none" className="opacity-80">
           <path d="M35 10 L25 10" stroke="#FFD93D" strokeWidth="2" />
           <path d="M30 6 L25 10 L30 14" stroke="#FFD93D" strokeWidth="2" fill="none" />
@@ -83,8 +83,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Magic Wand - moved closer */}
-      <div className="absolute bottom-24 right-12 animate-wiggle" style={{ animationDelay: '2.5s' }}>
+      {/* Magic Wand - moved much closer */}
+      <div className="absolute bottom-20 right-8 animate-wiggle" style={{ animationDelay: '2.5s' }}>
         <svg width="30" height="30" viewBox="0 0 30 30" fill="none" className="opacity-60">
           <line x1="5" y1="25" x2="20" y2="10" stroke="#8B5CF6" strokeWidth="3" strokeLinecap="round" />
           <polygon points="20,8 22,10 20,12 18,10" fill="#FFD93D" />
@@ -94,8 +94,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Castle - moved closer */}
-      <div className="absolute top-32 left-20 animate-float" style={{ animationDelay: '3.2s' }}>
+      {/* Castle - moved much closer */}
+      <div className="absolute top-28 left-12 animate-float" style={{ animationDelay: '3.2s' }}>
         <svg width="45" height="35" viewBox="0 0 45 35" fill="none" className="opacity-50">
           <rect x="5" y="15" width="35" height="20" fill="#8B5CF6" />
           <rect x="10" y="10" width="6" height="10" fill="#8B5CF6" />
@@ -107,8 +107,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Butterfly - moved closer */}
-      <div className="absolute top-36 right-16 animate-bounce-gentle" style={{ animationDelay: '1.4s' }}>
+      {/* Butterfly - moved much closer */}
+      <div className="absolute top-32 right-10 animate-bounce-gentle" style={{ animationDelay: '1.4s' }}>
         <svg width="35" height="25" viewBox="0 0 35 25" fill="none" className="opacity-70">
           <ellipse cx="10" cy="8" rx="8" ry="6" fill="#FF6B9D" transform="rotate(-15 10 8)" />
           <ellipse cx="25" cy="8" rx="8" ry="6" fill="#6BCF7F" transform="rotate(15 25 8)" />
@@ -119,8 +119,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Sun - moved closer */}
-      <div className="absolute top-6 left-32 animate-twinkle" style={{ animationDelay: '0.3s' }}>
+      {/* Sun - moved much closer */}
+      <div className="absolute top-4 left-20 animate-twinkle" style={{ animationDelay: '0.3s' }}>
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className="opacity-60">
           <circle cx="20" cy="20" r="8" fill="#FFD93D" />
           <g stroke="#FFD93D" strokeWidth="2" strokeLinecap="round">
@@ -136,8 +136,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Flower - moved closer */}
-      <div className="absolute bottom-32 left-28 animate-float" style={{ animationDelay: '2.8s' }}>
+      {/* Flower - moved much closer */}
+      <div className="absolute bottom-28 left-16 animate-float" style={{ animationDelay: '2.8s' }}>
         <svg width="30" height="35" viewBox="0 0 30 35" fill="none" className="opacity-60">
           <circle cx="15" cy="15" r="3" fill="#FFD93D" />
           <ellipse cx="15" cy="8" rx="4" ry="6" fill="#FF6B9D" />
@@ -149,8 +149,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Rocket Ship - moved closer */}
-      <div className="absolute top-10 right-24 animate-float" style={{ animationDelay: '1.6s' }}>
+      {/* Rocket Ship - moved much closer */}
+      <div className="absolute top-8 right-16 animate-float" style={{ animationDelay: '1.6s' }}>
         <svg width="35" height="50" viewBox="0 0 35 50" fill="none" className="opacity-75">
           <ellipse cx="17.5" cy="15" rx="8" ry="12" fill="#FF6B9D" />
           <polygon points="17.5,3 12,15 23,15" fill="#FFD93D" />
@@ -162,8 +162,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Ice Cream - moved closer */}
-      <div className="absolute bottom-16 right-28 animate-bounce-gentle" style={{ animationDelay: '3.1s' }}>
+      {/* Ice Cream - moved much closer */}
+      <div className="absolute bottom-12 right-16 animate-bounce-gentle" style={{ animationDelay: '3.1s' }}>
         <svg width="25" height="45" viewBox="0 0 25 45" fill="none" className="opacity-70">
           <polygon points="12.5,20 8,40 17,40" fill="#D2691E" />
           <circle cx="12.5" cy="15" r="8" fill="#FFB6C1" />
@@ -175,8 +175,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Teddy Bear - moved closer */}
-      <div className="absolute top-44 left-8 animate-wiggle" style={{ animationDelay: '2.2s' }}>
+      {/* Teddy Bear - moved much closer */}
+      <div className="absolute top-36 left-6 animate-wiggle" style={{ animationDelay: '2.2s' }}>
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none" className="opacity-65">
           <circle cx="20" cy="25" r="12" fill="#DEB887" />
           <circle cx="13" cy="18" r="6" fill="#DEB887" />
@@ -189,8 +189,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Musical Notes - moved closer */}
-      <div className="absolute top-24 left-16 animate-twinkle" style={{ animationDelay: '1.1s' }}>
+      {/* Musical Notes - moved much closer */}
+      <div className="absolute top-20 left-10 animate-twinkle" style={{ animationDelay: '1.1s' }}>
         <svg width="30" height="25" viewBox="0 0 30 25" fill="none" className="opacity-60">
           <ellipse cx="6" cy="18" rx="3" ry="2" fill="#8B5CF6" />
           <line x1="9" y1="18" x2="9" y2="8" stroke="#8B5CF6" strokeWidth="2" />
@@ -200,8 +200,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Lollipop - moved closer */}
-      <div className="absolute bottom-36 right-20 animate-float" style={{ animationDelay: '3.8s' }}>
+      {/* Lollipop - moved much closer */}
+      <div className="absolute bottom-32 right-14 animate-float" style={{ animationDelay: '3.8s' }}>
         <svg width="20" height="40" viewBox="0 0 20 40" fill="none" className="opacity-70">
           <circle cx="10" cy="10" r="8" fill="#FF69B4" />
           <circle cx="10" cy="10" r="6" fill="#FFB6C1" />
@@ -211,8 +211,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Dinosaur - moved closer */}
-      <div className="absolute top-40 right-6 animate-bounce-gentle" style={{ animationDelay: '2.7s' }}>
+      {/* Dinosaur - moved much closer */}
+      <div className="absolute top-36 right-4 animate-bounce-gentle" style={{ animationDelay: '2.7s' }}>
         <svg width="45" height="35" viewBox="0 0 45 35" fill="none" className="opacity-60">
           <ellipse cx="25" cy="20" rx="15" ry="8" fill="#90EE90" />
           <ellipse cx="35" cy="15" rx="8" ry="6" fill="#90EE90" />
@@ -228,8 +228,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Cupcake - moved closer */}
-      <div className="absolute bottom-8 left-20 animate-twinkle" style={{ animationDelay: '3.5s' }}>
+      {/* Cupcake - moved much closer */}
+      <div className="absolute bottom-6 left-12 animate-twinkle" style={{ animationDelay: '3.5s' }}>
         <svg width="25" height="30" viewBox="0 0 25 30" fill="none" className="opacity-75">
           <path d="M5 15 L20 15 L18 28 L7 28 Z" fill="#DEB887" />
           <ellipse cx="12.5" cy="12" rx="8" ry="5" fill="#FFB6C1" />
@@ -239,8 +239,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Kite - moved closer */}
-      <div className="absolute top-16 left-40 animate-float" style={{ animationDelay: '0.9s' }}>
+      {/* Kite - moved much closer */}
+      <div className="absolute top-12 left-24 animate-float" style={{ animationDelay: '0.9s' }}>
         <svg width="30" height="35" viewBox="0 0 30 35" fill="none" className="opacity-65">
           <polygon points="15,2 25,12 15,22 5,12" fill="#FF6B9D" />
           <polygon points="15,2 25,12 15,12" fill="#FFD93D" />
@@ -251,8 +251,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Pizza Slice - moved closer */}
-      <div className="absolute top-28 right-32 animate-wiggle" style={{ animationDelay: '2.9s' }}>
+      {/* Pizza Slice - moved much closer */}
+      <div className="absolute top-24 right-20 animate-wiggle" style={{ animationDelay: '2.9s' }}>
         <svg width="30" height="25" viewBox="0 0 30 25" fill="none" className="opacity-60">
           <path d="M15 2 L28 20 L2 20 Z" fill="#FFD700" />
           <path d="M15 2 L28 20 L2 20 Z" fill="#FF6347" />
@@ -263,8 +263,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Fairy - moved closer */}
-      <div className="absolute bottom-12 left-36 animate-float" style={{ animationDelay: '1.3s' }}>
+      {/* Fairy - moved much closer */}
+      <div className="absolute bottom-10 left-24 animate-float" style={{ animationDelay: '1.3s' }}>
         <svg width="25" height="35" viewBox="0 0 25 35" fill="none" className="opacity-70">
           <circle cx="12.5" cy="12" r="6" fill="#FFB6C1" />
           <ellipse cx="8" cy="8" rx="4" ry="6" fill="#E6E6FA" opacity="0.7" />
@@ -278,8 +278,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Train - moved closer */}
-      <div className="absolute top-20 right-36 animate-bounce-gentle" style={{ animationDelay: '3.4s' }}>
+      {/* Train - moved much closer */}
+      <div className="absolute top-16 right-22 animate-bounce-gentle" style={{ animationDelay: '3.4s' }}>
         <svg width="50" height="25" viewBox="0 0 50 25" fill="none" className="opacity-65">
           <rect x="5" y="10" width="35" height="12" fill="#FF6B9D" rx="2" />
           <rect x="8" y="8" width="8" height="6" fill="#87CEEB" />
@@ -291,8 +291,8 @@ const Hero = () => {
         </svg>
       </div>
 
-      {/* Robot - moved closer */}
-      <div className="absolute bottom-28 right-24 animate-twinkle" style={{ animationDelay: '1.9s' }}>
+      {/* Robot - moved much closer */}
+      <div className="absolute bottom-24 right-18 animate-twinkle" style={{ animationDelay: '1.9s' }}>
         <svg width="30" height="35" viewBox="0 0 30 35" fill="none" className="opacity-60">
           <rect x="8" y="15" width="14" height="16" fill="#C0C0C0" rx="2" />
           <rect x="10" y="8" width="10" height="8" fill="#C0C0C0" rx="2" />
@@ -308,10 +308,10 @@ const Hero = () => {
       </div>
 
       {/* More sparkle effects */}
-      <div className="absolute top-12 left-36 w-1 h-1 bg-dream-DEFAULT rounded-full animate-twinkle" style={{ animationDelay: '0.2s' }}></div>
-      <div className="absolute top-56 right-44 w-2 h-2 bg-moon-light rounded-full animate-twinkle" style={{ animationDelay: '2.3s' }}></div>
-      <div className="absolute bottom-28 left-44 w-1.5 h-1.5 bg-dream-light rounded-full animate-twinkle" style={{ animationDelay: '1.7s' }}></div>
-      <div className="absolute bottom-52 right-52 w-1 h-1 bg-moon-DEFAULT rounded-full animate-twinkle" style={{ animationDelay: '3.1s' }}></div>
+      <div className="absolute top-10 left-28 w-1 h-1 bg-dream-DEFAULT rounded-full animate-twinkle" style={{ animationDelay: '0.2s' }}></div>
+      <div className="absolute top-44 right-26 w-2 h-2 bg-moon-light rounded-full animate-twinkle" style={{ animationDelay: '2.3s' }}></div>
+      <div className="absolute bottom-22 left-32 w-1.5 h-1.5 bg-dream-light rounded-full animate-twinkle" style={{ animationDelay: '1.7s' }}></div>
+      <div className="absolute bottom-40 right-30 w-1 h-1 bg-moon-DEFAULT rounded-full animate-twinkle" style={{ animationDelay: '3.1s' }}></div>
     </section>
   );
 };
