@@ -1,8 +1,7 @@
 
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { LanguageProvider } from "@/contexts/LanguageContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Layout from "@/components/Layout";
 import Index from "@/pages/Index";
@@ -42,45 +41,43 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <I18nextProvider i18n={i18n}>
-        <LanguageProvider>
-          <Router>
-            <AuthProvider>
-              <Routes>
-                <Route path="/" element={<Layout />}>
-                  <Route index element={<Index />} />
-                  <Route path="stories" element={<Stories />} />
-                  <Route path="stories/:id" element={<Story />} />
-                  <Route path="games" element={<Games />} />
-                  <Route path="courses" element={<Courses />} />
-                  <Route path="courses/:id" element={<Course />} />
-                  <Route path="profile" element={<Profile />} />
-                  <Route path="login" element={<Login />} />
-                  <Route path="register" element={<Register />} />
-                  <Route path="subscription" element={<Subscription />} />
-                </Route>
-                
-                <Route path="/admin" element={
-                  <AdminRoute>
-                    <AdminLayout />
-                  </AdminRoute>
-                }>
-                  <Route index element={<AdminDashboard />} />
-                  <Route path="stories" element={<AdminStories />} />
-                  <Route path="stories/new" element={<AdminStoryEditor />} />
-                  <Route path="stories/:id/edit" element={<AdminStoryEditor />} />
-                  <Route path="stories/:id/options" element={<AdminStoryOptions />} />
-                  <Route path="courses" element={<AdminCourses />} />
-                  <Route path="users" element={<AdminUsers />} />
-                  <Route path="settings" element={<AdminSettings />} />
-                  <Route path="appearance" element={<AdminAppearance />} />
-                </Route>
-                
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              <Toaster />
-            </AuthProvider>
-          </Router>
-        </LanguageProvider>
+        <Router>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Index />} />
+                <Route path="stories" element={<Stories />} />
+                <Route path="stories/:id" element={<Story />} />
+                <Route path="games" element={<Games />} />
+                <Route path="courses" element={<Courses />} />
+                <Route path="courses/:id" element={<Course />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="login" element={<Login />} />
+                <Route path="register" element={<Register />} />
+                <Route path="subscription" element={<Subscription />} />
+              </Route>
+              
+              <Route path="/admin" element={
+                <AdminRoute>
+                  <AdminLayout />
+                </AdminRoute>
+              }>
+                <Route index element={<AdminDashboard />} />
+                <Route path="stories" element={<AdminStories />} />
+                <Route path="stories/new" element={<AdminStoryEditor />} />
+                <Route path="stories/:id/edit" element={<AdminStoryEditor />} />
+                <Route path="stories/:id/options" element={<AdminStoryOptions />} />
+                <Route path="courses" element={<AdminCourses />} />
+                <Route path="users" element={<AdminUsers />} />
+                <Route path="settings" element={<AdminSettings />} />
+                <Route path="appearance" element={<AdminAppearance />} />
+              </Route>
+              
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <Toaster />
+          </AuthProvider>
+        </Router>
       </I18nextProvider>
     </QueryClientProvider>
   );

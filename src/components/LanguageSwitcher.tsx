@@ -1,22 +1,39 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { GlobeIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 const LanguageSwitcher = () => {
   const { i18n, t } = useTranslation('misc');
-  const { setLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
 
   const changeLanguage = (language: string) => {
-    // Update both i18next and LanguageContext
     i18n.changeLanguage(language);
-    setLanguage(language as 'en' | 'ar' | 'fr');
     setOpen(false);
+    
+    // Update document direction and language
+    if (language === "ar") {
+      document.documentElement.dir = "rtl";
+      document.documentElement.lang = "ar";
+    } else {
+      document.documentElement.dir = "ltr";
+      document.documentElement.lang = language;
+    }
   };
+
+  // Set initial document direction based on current language
+  useEffect(() => {
+    const currentLang = i18n.language;
+    if (currentLang === "ar") {
+      document.documentElement.dir = "rtl";
+      document.documentElement.lang = "ar";
+    } else {
+      document.documentElement.dir = "ltr";
+      document.documentElement.lang = currentLang;
+    }
+  }, [i18n.language]);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
