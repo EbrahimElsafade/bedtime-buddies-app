@@ -16,7 +16,6 @@ import Courses from "@/pages/Courses";
 import Course from "@/pages/Course";
 import NotFound from "@/pages/NotFound";
 import AdminLayout from "@/components/AdminLayout";
-import AdminRoute from "@/components/AdminRoute";
 import AdminDashboard from "@/pages/admin/Dashboard";
 import AdminStories from "@/pages/admin/Stories";
 import AdminStoryEditor from "@/pages/admin/StoryEditor";
@@ -54,11 +53,7 @@ function App() {
               <Route path="subscription" element={<Subscription />} />
             </Route>
             
-            <Route path="/admin" element={
-              <AdminRoute>
-                <AdminLayout />
-              </AdminRoute>
-            }>
+            <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
               <Route path="stories" element={<AdminStories />} />
               <Route path="stories/new" element={<AdminStoryEditor />} />
