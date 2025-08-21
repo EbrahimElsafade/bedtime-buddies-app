@@ -99,42 +99,44 @@ const App = () => {
       <AuthProvider>
         <BrowserRouter>
           <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <PWAInstallPrompt />
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Layout />}>
-                <Route index element={<Index />} />
-                <Route path="/stories" element={<Stories />} />
-                <Route path="/stories/:storyId" element={<Story />} />
-                <Route path="/games" element={<Games />} />
-                <Route path="/courses" element={<Courses />} />
-                <Route path="/courses/:courseId" element={<Course />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/subscription" element={<Subscription />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                {/* Add specific 404 route */}
-                <Route path="/404" element={<NotFound />} />
-                <Route path="*" element={<NotFound />} />
-              </Route>
-              
-              {/* Admin Routes - wrapped in AdminRoute component for auth checks */}
-              <Route path="/admin" element={<AdminRoute />}>
-                <Route element={<AdminLayout />}>
-                  <Route index element={<AdminDashboard />} />
-                  <Route path="users" element={<AdminUsers />} />
-                  <Route path="stories" element={<AdminStories />} />
-                  <Route path="stories/new" element={<AdminStoryEditor />} />
-                  <Route path="stories/edit/:id" element={<AdminStoryEditor />} />
-                  <Route path="stories/options" element={<AdminStoryOptions />} />
-                  <Route path="courses" element={<AdminCourses />} />
-                  <Route path="appearance" element={<AdminAppearance />} />
-                  <Route path="settings" element={<AdminSettings />} />
+            <div className="min-h-screen bg-background text-foreground">
+              <Toaster />
+              <Sonner />
+              <PWAInstallPrompt />
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<Layout />}>
+                  <Route index element={<Index />} />
+                  <Route path="/stories" element={<Stories />} />
+                  <Route path="/stories/:storyId" element={<Story />} />
+                  <Route path="/games" element={<Games />} />
+                  <Route path="/courses" element={<Courses />} />
+                  <Route path="/courses/:courseId" element={<Course />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/subscription" element={<Subscription />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  {/* Add specific 404 route */}
+                  <Route path="/404" element={<NotFound />} />
+                  <Route path="*" element={<NotFound />} />
                 </Route>
-              </Route>
-            </Routes>
+                
+                {/* Admin Routes - wrapped in AdminRoute component for auth checks */}
+                <Route path="/admin" element={<AdminRoute />}>
+                  <Route element={<AdminLayout />}>
+                    <Route index element={<AdminDashboard />} />
+                    <Route path="users" element={<AdminUsers />} />
+                    <Route path="stories" element={<AdminStories />} />
+                    <Route path="stories/new" element={<AdminStoryEditor />} />
+                    <Route path="stories/edit/:id" element={<AdminStoryEditor />} />
+                    <Route path="stories/options" element={<AdminStoryOptions />} />
+                    <Route path="courses" element={<AdminCourses />} />
+                    <Route path="appearance" element={<AdminAppearance />} />
+                    <Route path="settings" element={<AdminSettings />} />
+                  </Route>
+                </Route>
+              </Routes>
+            </div>
           </TooltipProvider>
         </BrowserRouter>
       </AuthProvider>
