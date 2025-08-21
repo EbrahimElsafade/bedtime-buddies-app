@@ -111,17 +111,6 @@ export const StoryContent = ({
             />
           </div>
 
-          {/* <AudioControls
-            story={story}
-            currentSection={currentSection}
-            currentLanguage={currentLanguage}
-            currentSectionIndex={currentSectionIndex}
-            currentSectionDir={storyDirection}
-            onSectionChange={onSectionChange}
-            onPlayingChange={setIsAudioPlaying}
-            onAudioTimeUpdate={handleAudioTimeUpdate}
-          /> */}
-
           {/* Section Navigation - only show if not in single story audio mode or if no sections */}
           {(story.audio_mode !== 'single_story' ||
             story.sections.length > 1) && (
