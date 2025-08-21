@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -62,19 +63,19 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Bedtime Stories custom colors
+				// Updated Bedtime Stories custom colors for blue theme
 				nightsky: {
-					DEFAULT: '#1A1F2C', // Dark blue/purple for night sky background
+					DEFAULT: '#1A1F2C', // Keep dark blue/purple for night sky background
 					light: '#2D3748', // Slightly lighter night sky
-					accent: '#8B5CF6', // Purple accent for stars/elements
+					accent: '#5DADE2', // Light blue accent for stars/elements
 				},
 				dream: {
-					DEFAULT: '#8B5CF6', // Main purple
-					light: '#A78BFA', // Light purple
-					dark: '#7C3AED', // Dark purple
+					DEFAULT: '#5DADE2', // Baby blue for light mode
+					light: '#AED6F1', // Lighter baby blue
+					dark: '#3498DB', // Normal blue for dark mode
 				},
 				moon: {
-					DEFAULT: '#F5D77B', // Soft yellow for moon
+					DEFAULT: '#F5D77B', // Keep soft yellow for moon
 					light: '#FDE68A', // Light yellow
 					dark: '#F59E0B', // Dark yellow/orange
 				},
@@ -130,3 +131,4 @@ export default {
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+
