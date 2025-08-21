@@ -25,8 +25,6 @@ import AdminCourses from "@/pages/admin/Courses";
 import AdminUsers from "@/pages/admin/Users";
 import AdminSettings from "@/pages/admin/Settings";
 import AdminAppearance from "@/pages/admin/Appearance";
-import { I18nextProvider } from "react-i18next";
-import i18n from "@/i18n";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -40,45 +38,43 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <I18nextProvider i18n={i18n}>
-        <Router>
-          <AuthProvider>
-            <Routes>
-              <Route path="/" element={<Layout />}>
-                <Route index element={<Index />} />
-                <Route path="stories" element={<Stories />} />
-                <Route path="stories/:id" element={<Story />} />
-                <Route path="games" element={<Games />} />
-                <Route path="courses" element={<Courses />} />
-                <Route path="courses/:id" element={<Course />} />
-                <Route path="profile" element={<Profile />} />
-                <Route path="login" element={<Login />} />
-                <Route path="register" element={<Register />} />
-                <Route path="subscription" element={<Subscription />} />
-              </Route>
-              
-              <Route path="/admin" element={
-                <AdminRoute>
-                  <AdminLayout />
-                </AdminRoute>
-              }>
-                <Route index element={<AdminDashboard />} />
-                <Route path="stories" element={<AdminStories />} />
-                <Route path="stories/new" element={<AdminStoryEditor />} />
-                <Route path="stories/:id/edit" element={<AdminStoryEditor />} />
-                <Route path="stories/:id/options" element={<AdminStoryOptions />} />
-                <Route path="courses" element={<AdminCourses />} />
-                <Route path="users" element={<AdminUsers />} />
-                <Route path="settings" element={<AdminSettings />} />
-                <Route path="appearance" element={<AdminAppearance />} />
-              </Route>
-              
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <Toaster />
-          </AuthProvider>
-        </Router>
-      </I18nextProvider>
+      <Router>
+        <AuthProvider>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Index />} />
+              <Route path="stories" element={<Stories />} />
+              <Route path="stories/:id" element={<Story />} />
+              <Route path="games" element={<Games />} />
+              <Route path="courses" element={<Courses />} />
+              <Route path="courses/:id" element={<Course />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="login" element={<Login />} />
+              <Route path="register" element={<Register />} />
+              <Route path="subscription" element={<Subscription />} />
+            </Route>
+            
+            <Route path="/admin" element={
+              <AdminRoute>
+                <AdminLayout />
+              </AdminRoute>
+            }>
+              <Route index element={<AdminDashboard />} />
+              <Route path="stories" element={<AdminStories />} />
+              <Route path="stories/new" element={<AdminStoryEditor />} />
+              <Route path="stories/:id/edit" element={<AdminStoryEditor />} />
+              <Route path="stories/:id/options" element={<AdminStoryOptions />} />
+              <Route path="courses" element={<AdminCourses />} />
+              <Route path="users" element={<AdminUsers />} />
+              <Route path="settings" element={<AdminSettings />} />
+              <Route path="appearance" element={<AdminAppearance />} />
+            </Route>
+            
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Toaster />
+        </AuthProvider>
+      </Router>
     </QueryClientProvider>
   );
 }
