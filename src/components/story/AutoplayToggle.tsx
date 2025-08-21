@@ -11,17 +11,18 @@ export const AutoplayToggle = ({
   isAutoplay,
   onAutoplayChange,
 }: AutoplayToggleProps) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation('stories')
 
   return (
     <Toggle
       id="autoplay"
-      className='hover:translate-y-0 my-auto h-fit data-[state=on]:bg-accent data-[state=on]:text-accent-foreground'
+      className="md:my-auto h-fit py-0.5 my-0.5 hover:translate-y-0 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground"
       pressed={isAutoplay}
       onPressedChange={onAutoplayChange}
-      size="sm"
-    >
-      {t('stories.autoPlay')}
+      variant='outline'
+      >
+      {/* size="sm" */}
+      {t('autoPlay')}
     </Toggle>
   )
 }
