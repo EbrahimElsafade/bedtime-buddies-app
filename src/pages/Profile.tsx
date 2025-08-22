@@ -11,18 +11,33 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Profile = () => {
   const navigate = useNavigate();
   const { user, profile, isAuthenticated, isLoading, updateProfile, logout } = useAuth();
-  const { t } = useTranslation(['common', 'auth']);
+  const { t, i18n } = useTranslation(['common', 'auth']);
+  const { language } = useLanguage();
   
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [childName, setChildName] = useState("");
-  const [language, setLanguage] = useState<"en" | "ar-eg" | "ar-fos7a" | "fr">("ar-fos7a");
+  const [profileLanguage, setProfileLanguage] = useState<"en" | "ar-eg" | "ar-fos7a" | "fr">("ar-fos7a");
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  
+  // Sync i18next with LanguageContext
+  useEffect(() => {
+    const langMap: Record<string, string> = {
+      'en': 'en',
+      'ar': 'ar',
+      'fr': 'fr'
+    };
+    const i18nLang = langMap[language] || 'ar';
+    if (i18n.language !== i18nLang) {
+      i18n.changeLanguage(i18nLang);
+    }
+  }, [language, i18n]);
   
   // Debug logging
   useEffect(() => {
@@ -37,7 +52,7 @@ const Profile = () => {
   // Set page title
   useEffect(() => {
     document.title = `${t('common:appName')} - ${t('common:profile')}`;
-  }, [t]);
+  }, [t, language]);
   
   // Check authentication and redirect if needed
   useEffect(() => {
@@ -53,7 +68,7 @@ const Profile = () => {
       setName(profile.parent_name || "");
       setEmail(user.email || "");
       setChildName(profile.child_name || "");
-      setLanguage(profile.preferred_language || "ar-eg");
+      setProfileLanguage(profile.preferred_language || "ar-eg");
     }
   }, [user, profile]);
   
@@ -65,7 +80,7 @@ const Profile = () => {
       await updateProfile({
         parent_name: name,
         child_name: childName || undefined,
-        preferred_language: language
+        preferred_language: profileLanguage
       });
       
       setIsEditing(false);
@@ -194,8 +209,8 @@ const Profile = () => {
                     <Label htmlFor="language">{t('common:preferredLanguage')}</Label>
                     {isEditing ? (
                       <Select 
-                        value={language} 
-                        onValueChange={(value) => setLanguage(value as "en" | "ar-eg" | "ar-fos7a" | "fr")}
+                        value={profileLanguage} 
+                        onValueChange={(value) => setProfileLanguage(value as "en" | "ar-eg" | "ar-fos7a" | "fr")}
                       >
                         <SelectTrigger>
                           <SelectValue />
@@ -209,7 +224,7 @@ const Profile = () => {
                       </Select>
                     ) : (
                       <Input 
-                        value={getLanguageDisplayName(language)} 
+                        value={getLanguageDisplayName(profileLanguage)} 
                         disabled 
                       />
                     )}
