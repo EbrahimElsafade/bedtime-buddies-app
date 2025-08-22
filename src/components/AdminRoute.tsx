@@ -1,10 +1,14 @@
 
-import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRef, useEffect } from 'react'
 import { logger } from '@/utils/logger'
 
-const AdminRoute = () => {
+interface AdminRouteProps {
+  children: React.ReactNode
+}
+
+const AdminRoute = ({ children }: AdminRouteProps) => {
   const { isAuthenticated, isLoading, profile, user, isProfileLoaded } = useAuth()
   const location = useLocation()
   const mountTimeRef = useRef(Date.now())
@@ -59,9 +63,9 @@ const AdminRoute = () => {
     )
   }
 
-  // Render the child routes if user is an admin
+  // Render the children if user is an admin
   logger.info('AdminRoute - Admin access granted')
-  return <Outlet />
+  return <>{children}</>
 }
 
 export default AdminRoute
