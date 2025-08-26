@@ -19,51 +19,39 @@
       "type": "image/x-icon"
     },
     {
-      "src": "/placeholder.svg",
+      "src": "/favicon.ico",
       "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any"
+      "type": "image/x-icon",
+      "purpose": "any maskable"
     },
     {
-      "src": "/placeholder.svg",
-      "sizes": "512x512", 
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "/placeholder.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/placeholder.svg",
+      "src": "/favicon.ico",
       "sizes": "512x512",
-      "type": "image/svg+xml", 
-      "purpose": "maskable"
+      "type": "image/x-icon",
+      "purpose": "any maskable"
     }
   ],
   "shortcuts": [
     {
       "name": "Stories",
-      "short_name": "Stories",
+      "short_name": "Stories", 
       "description": "Browse interactive stories",
       "url": "/stories",
       "icons": [
         {
-          "src": "/placeholder.svg",
+          "src": "/favicon.ico",
           "sizes": "192x192"
         }
       ]
     },
     {
-      "name": "Games", 
+      "name": "Games",
       "short_name": "Games",
-      "description": "Play fun games",
+      "description": "Play fun games", 
       "url": "/games",
       "icons": [
         {
-          "src": "/placeholder.svg",
+          "src": "/favicon.ico",
           "sizes": "192x192"
         }
       ]
