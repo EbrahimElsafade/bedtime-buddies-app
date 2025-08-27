@@ -62,11 +62,11 @@ const PWAInstallPrompt = () => {
       e.preventDefault()
       setDeferredPrompt(e as BeforeInstallPromptEvent)
       
-      // Show our custom prompt immediately when browser prompt is available
+      // Show our custom prompt after a short delay
       setTimeout(() => {
         console.log('PWA: Showing install prompt')
         setShowPrompt(true)
-      }, 2000)
+      }, 3000)
     }
 
     const handleAppInstalled = () => {
@@ -92,29 +92,42 @@ const PWAInstallPrompt = () => {
   const handleInstallClick = async () => {
     console.log('PWA: Install button clicked')
     
-    if (deferredPrompt) {
-      try {
-        setIsInstalling(true)
-        console.log('PWA: Triggering deferred prompt')
-        await deferredPrompt.prompt()
-        const { outcome } = await deferredPrompt.userChoice
-        console.log('PWA: Install prompt outcome:', outcome)
-
-        if (outcome === 'accepted') {
-          console.log('PWA: User accepted the install prompt')
-          setShowPrompt(false)
-          setIsInstalled(true)
-        } else {
-          console.log('PWA: User dismissed the install prompt')
-          setIsInstalling(false)
-        }
-        setDeferredPrompt(null)
-      } catch (error) {
-        console.error('PWA: Install prompt failed:', error)
-        setIsInstalling(false)
+    if (!deferredPrompt) {
+      console.log('PWA: No deferred prompt available, checking for alternative methods')
+      
+      // For iOS Safari, show instructions
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+        alert('To install this app on your iOS device, tap the Share button and then "Add to Home Screen".')
+        return
       }
-    } else {
-      console.log('PWA: No deferred prompt available')
+      
+      // For other browsers, try to trigger the prompt anyway
+      const beforeInstallPromptEvent = new Event('beforeinstallprompt') as any
+      window.dispatchEvent(beforeInstallPromptEvent)
+      return
+    }
+
+    try {
+      setIsInstalling(true)
+      console.log('PWA: Triggering deferred prompt')
+      
+      // Show the native install prompt
+      await deferredPrompt.prompt()
+      const { outcome } = await deferredPrompt.userChoice
+      console.log('PWA: Install prompt outcome:', outcome)
+
+      if (outcome === 'accepted') {
+        console.log('PWA: User accepted the install prompt')
+        setShowPrompt(false)
+        // Don't set isInstalled here, wait for appinstalled event
+      } else {
+        console.log('PWA: User dismissed the install prompt')
+      }
+      
+      setDeferredPrompt(null)
+    } catch (error) {
+      console.error('PWA: Install prompt failed:', error)
+    } finally {
       setIsInstalling(false)
     }
   }
@@ -126,8 +139,8 @@ const PWAInstallPrompt = () => {
     localStorage.setItem('pwa-prompt-dismissed-time', Date.now().toString())
   }
 
-  // Don't show if app is already installed or no prompt available
-  if (isInstalled || !showPrompt || !deferredPrompt) {
+  // Don't show if app is already installed or conditions not met
+  if (isInstalled || !showPrompt) {
     return null
   }
 
