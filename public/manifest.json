@@ -14,15 +14,15 @@
   "_designer_note": "TODO: Designer needs to finish identity design and provide proper app icons",
   "icons": [
     {
-      "src": "/placeholder.svg",
+      "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/placeholder.svg", 
+      "src": "/icons/icon-512x512.png", 
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "maskable any"
     }
   ],
@@ -34,7 +34,7 @@
       "url": "/stories",
       "icons": [
         {
-          "src": "/placeholder.svg",
+          "src": "/icons/icon-192x192.png",
           "sizes": "192x192"
         }
       ]
@@ -46,7 +46,7 @@
       "url": "/games",
       "icons": [
         {
-          "src": "/placeholder.svg",
+          "src": "/icons/icon-192x192.png",
           "sizes": "192x192"
         }
       ]
