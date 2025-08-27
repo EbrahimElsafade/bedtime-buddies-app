@@ -74,7 +74,6 @@ const PWAInstallPrompt = () => {
       console.log('PWA: beforeinstallprompt event fired!', e)
       e.preventDefault()
       setDeferredPrompt(e as BeforeInstallPromptEvent)
-      // Show prompt immediately when event is available
       setShowPrompt(true)
     }
 
@@ -92,18 +91,12 @@ const PWAInstallPrompt = () => {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     window.addEventListener('appinstalled', handleAppInstalled)
 
-    // For Android Chrome, show prompt after user interaction
+    // Show prompt after delay, especially for mobile
     const showPromptAfterDelay = () => {
       console.log('PWA: Checking if we should show prompt...')
-      
-      // Only show on Android Chrome for now
-      if (/Android.*Chrome/.test(navigator.userAgent)) {
-        console.log('PWA: Showing prompt for Android Chrome')
-        setShowPrompt(true)
-      }
+      setShowPrompt(true)
     }
 
-    // Wait for user interaction, then show prompt
     const timer = setTimeout(showPromptAfterDelay, 3000)
 
     return () => {
@@ -117,56 +110,52 @@ const PWAInstallPrompt = () => {
     console.log('PWA: Install button clicked')
     console.log('PWA: Deferred prompt available:', !!deferredPrompt)
     
-    if (!deferredPrompt) {
-      console.log('PWA: No deferred prompt - checking browser and providing instructions')
-      
-      // Detect Android Chrome specifically
-      if (/Android.*Chrome/.test(navigator.userAgent)) {
-        console.log('PWA: Android Chrome detected - providing Chrome instructions')
-        alert(`To install this app on Android Chrome:
-
-1. Tap the menu (⋮) in the top right corner
-2. Look for "Add to Home screen" or "Install app"
-3. Tap it and then tap "Add" or "Install"
-
-If you don't see these options, make sure you're using Chrome and the page is loaded over HTTPS.`)
-        return
-      }
-      
-      // For other Android browsers
-      if (/Android/.test(navigator.userAgent)) {
-        alert(`To install this app on Android:
-
-1. Open this page in Chrome browser
-2. Tap the menu (⋮) and select "Add to Home screen"
-3. Or look for an install prompt at the bottom of the screen`)
-        return
-      }
-      
-      // Generic instructions
-      alert('To install this app, look for an "Install" button in your browser or check your browser menu for "Add to Home Screen" option.')
-      return
-    }
+    setIsInstalling(true)
 
     try {
-      setIsInstalling(true)
-      console.log('PWA: Triggering native install prompt')
-      
-      await deferredPrompt.prompt()
-      const { outcome } = await deferredPrompt.userChoice
-      console.log('PWA: Install prompt outcome:', outcome)
+      if (deferredPrompt) {
+        console.log('PWA: Triggering native install prompt')
+        await deferredPrompt.prompt()
+        const { outcome } = await deferredPrompt.userChoice
+        console.log('PWA: Install prompt outcome:', outcome)
 
-      if (outcome === 'accepted') {
-        console.log('PWA: User accepted the install prompt')
-        setShowPrompt(false)
+        if (outcome === 'accepted') {
+          console.log('PWA: User accepted the install prompt')
+          setShowPrompt(false)
+        }
+        
+        setDeferredPrompt(null)
       } else {
-        console.log('PWA: User dismissed the install prompt')
+        // Force trigger installation attempt on mobile
+        console.log('PWA: No deferred prompt - attempting mobile installation')
+        
+        // Try to trigger the Chrome mobile installation
+        if (/Android.*Chrome/.test(navigator.userAgent)) {
+          console.log('PWA: Android Chrome detected - attempting to trigger installation')
+          
+          // Create a temporary event to try to trigger installation
+          try {
+            // Check if the page meets PWA criteria and try to force prompt
+            const event = new Event('beforeinstallprompt');
+            window.dispatchEvent(event);
+            
+            // If that doesn't work, show minimal instructions
+            setTimeout(() => {
+              if (!isInstalled) {
+                alert('To install: Tap the menu (⋮) → "Add to Home screen" or "Install app"');
+              }
+            }, 1000);
+          } catch (error) {
+            console.log('PWA: Could not force prompt, showing instructions');
+            alert('To install: Tap the menu (⋮) → "Add to Home screen" or "Install app"');
+          }
+        } else {
+          alert('To install this app, look for "Add to Home Screen" in your browser menu.');
+        }
       }
-      
-      setDeferredPrompt(null)
     } catch (error) {
-      console.error('PWA: Install prompt failed:', error)
-      alert('Installation failed. Please try using your browser menu to install the app.')
+      console.error('PWA: Install failed:', error)
+      alert('Installation failed. Please use your browser menu to install the app.')
     } finally {
       setIsInstalling(false)
     }
@@ -215,7 +204,7 @@ If you don't see these options, make sure you're using Chrome and the page is lo
                   ) : (
                     <>
                       <Download className="mr-2 h-4 w-4" />
-                      {deferredPrompt ? t('pwa.install') : 'Install'}
+                      {t('pwa.install')}
                     </>
                   )}
                 </button>
