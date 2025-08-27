@@ -5,7 +5,7 @@ import { ArrowUp, ArrowDown, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const SnakeGame = () => {
-  const { t, i18n } = useTranslation('common');
+  const { t, i18n } = useTranslation('games');
   const [gameState, setGameState] = useState<'menu' | 'playing' | 'gameOver'>('menu');
   const [snake, setSnake] = useState([{ x: 5, y: 5 }]);
   const [food, setFood] = useState({ x: 15, y: 15 });
@@ -136,17 +136,17 @@ const SnakeGame = () => {
       <Card className="overflow-hidden border-dream-light/20 bg-white/80 dark:bg-nightsky-light/80 backdrop-blur-sm shadow-xl">
         <CardHeader className="text-center bg-gradient-to-br from-dream-light/10 to-purple-100/50 dark:from-nightsky/50 dark:to-nightsky-light/30">
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text  ">
-            {t('games.snake.title')}
+            {t('snake.title')}
           </CardTitle>
           <CardDescription className="text-gray-600 dark:text-gray-300">
-            {t('games.snake.description')}
+            {t('snake.description')}
           </CardDescription>
         </CardHeader>
         <CardContent className="p-8">
           <div className="flex flex-col items-center space-y-6">
             {highScore > 0 && (
               <div className="bg-gradient-to-r from-dream-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-xl p-6 shadow-lg border border-dream-light/20 dark:border-nightsky-light/30">
-                <div className="text-gray-600 dark:text-gray-300 text-sm mb-1 text-center">{t('games.snake.highScore')}</div>
+                <div className="text-gray-600 dark:text-gray-300 text-sm mb-1 text-center">{t('snake.highScore')}</div>
                 <div className="text-3xl font-bold text-dream-DEFAULT dark:text-dream-light text-center">{highScore}</div>
               </div>
             )}
@@ -157,7 +157,7 @@ const SnakeGame = () => {
             onClick={resetGame}
             className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-dream-DEFAULT to-dream-dark hover:from-dream-light hover:to-dream-DEFAULT text-white shadow-lg hover:shadow-xl transition-all duration-300"
           >
-            {t('games.snake.startGame')}
+            {t('snake.startGame')}
           </Button>
         </CardFooter>
       </Card>
@@ -169,22 +169,22 @@ const SnakeGame = () => {
       <Card className="overflow-hidden border-dream-light/20 bg-white/80 dark:bg-nightsky-light/80 backdrop-blur-sm shadow-xl">
         <CardHeader className="text-center bg-gradient-to-br from-red-50/50 to-red-100/30 dark:from-red-900/20 dark:to-red-800/10">
           <CardTitle className="text-2xl font-bold text-red-600 dark:text-red-400">
-            {t('games.snake.gameOver')}
+            {t('snake.gameOver')}
           </CardTitle>
           <CardDescription className="text-gray-600 dark:text-gray-300">
-            {t('games.snake.score')} {score}
+            {t('snake.score')} {score}
           </CardDescription>
         </CardHeader>
         <CardContent className="p-8">
           <div className="flex flex-col items-center space-y-6">
             {score === highScore && score > 0 && (
               <div className="text-dream-DEFAULT dark:text-dream-light font-bold text-lg animate-bounce">
-                🎉 {t('games.snake.newHighScore')}
+                🎉 {t('snake.newHighScore')}
               </div>
             )}
             
             <div className="bg-gradient-to-r from-dream-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-xl p-6 shadow-lg w-full max-w-sm border border-dream-light/20 dark:border-nightsky-light/30">
-              <div className="text-gray-600 dark:text-gray-300 text-sm mb-1 text-center">{t('games.snake.highScore')}</div>
+              <div className="text-gray-600 dark:text-gray-300 text-sm mb-1 text-center">{t('snake.highScore')}</div>
               <div className="text-3xl font-bold text-dream-DEFAULT dark:text-dream-light text-center">{highScore}</div>
             </div>
           </div>
@@ -194,7 +194,7 @@ const SnakeGame = () => {
             onClick={resetGame}
             className="w-full py-3 text-lg font-semibold bg-dream-DEFAULT hover:bg-dream-dark text-white dark:bg-gradient-to-r dark:from-dream-DEFAULT dark:to-dream-dark dark:hover:from-dream-light dark:hover:to-dream-DEFAULT shadow-lg hover:shadow-xl transition-all duration-300"
           >
-            {t('games.snake.playAgain')}
+            {t('snake.playAgain')}
           </Button>
         </CardFooter>
       </Card>
@@ -206,11 +206,11 @@ const SnakeGame = () => {
       <CardHeader className="bg-gradient-to-br from-dream-light/10 to-purple-100/50 dark:from-nightsky/50 dark:to-nightsky-light/30">
         <div className="flex justify-between items-center">
           <div className="bg-gradient-to-r from-dream-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-lg px-4 py-2 border border-dream-light/20 dark:border-nightsky-light/30">
-            <div className="text-sm text-gray-600 dark:text-gray-300">{t('games.snake.score')}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300">{t('snake.score')}</div>
             <div className="text-2xl font-bold text-dream-DEFAULT dark:text-dream-light">{score}</div>
           </div>
           <div className="bg-gradient-to-r from-dream-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-lg px-4 py-2 border border-dream-light/20 dark:border-nightsky-light/30">
-            <div className="text-sm text-gray-600 dark:text-gray-300">{t('games.snake.highScore')}</div>
+            <div className="text-sm text-gray-600 dark:text-gray-300">{t('snake.highScore')}</div>
             <div className="text-2xl font-bold text-dream-DEFAULT dark:text-dream-light">{highScore}</div>
           </div>
         </div>

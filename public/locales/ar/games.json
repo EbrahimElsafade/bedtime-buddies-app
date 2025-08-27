@@ -1,0 +1,77 @@
+{
+  "title": "ألعاب ممتعة",
+  "subtitle": "العب ألعابًا سريعة ومناسبة للعائلة للاستمتاع والتعلم.",
+  "hangman": {
+    "title": "كلمات",
+    "description": "خمن الكلمة باختيار الحروف",
+    "hints": {
+      "rainbow": "قوس ملون في السماء",
+      "butterfly": "حشرة ذات أجنحة ملونة",
+      "elephant": "أكبر حيوان بري",
+      "chocolate": "حلوى لذيذة",
+      "airplane": "تطير في السماء",
+      "computer": "جهاز للحوسبة",
+      "birthday": "احتفال سنوي",
+      "mountain": "تلة عالية جدًا"
+    },
+    "gameOver": "انتهت اللعبة!",
+    "youWin": "لقد فزت!",
+    "youLose": "لقد خسرت!",
+    "hint": "تلميح",
+    "incorrectGuesses": "محاولات خاطئة:",
+    "newGame": "لعبة جديدة"
+  },
+  "memory": {
+    "title": "لعبة الذاكرة",
+    "description": "اعثر على جميع الأزواج المتطابقة",
+    "testYourMemory": "اختبر ذاكرتك!",
+    "clickToFlip": "انقر لقلب البطاقة",
+    "startGame": "ابدأ اللعبة",
+    "moves": "الحركات",
+    "congratulations": "تهانينا!",
+    "gameCompleted": "أنهيت اللعبة في {{moves}} حركة!",
+    "playAgain": "العب مرة أخرى"
+  },
+  "rockPaperScissors": {
+    "title": "حجر ورقة مقص",
+    "description": "اختر حركتك وتغلب على الكمبيوتر",
+    "youWin": "لقد فزت!",
+    "computerWins": "الكمبيوتر فاز!",
+    "tie": "تعادل!",
+    "rock": "حجر",
+    "paper": "ورقة",
+    "scissors": "مقص",
+    "resetGame": "إعادة اللعب"
+  },
+  "snake": {
+    "title": "الثعبان",
+    "description": "كل الطعام وتجنب الجدران ونفسك",
+    "highScore": "أعلى نتيجة",
+    "startGame": "ابدأ اللعبة",
+    "gameOver": "انتهت اللعبة",
+    "score": "النتيجة",
+    "newHighScore": "رقم قياسي جديد!",
+    "playAgain": "العب مرة أخرى"
+  },
+  "ticTacToe": {
+    "title": "تيك تاك تو",
+    "description": "احصل على ثلاثة على التوالي للفوز",
+    "selectGameMode": "اختر وضع اللعبة",
+    "playerVsPlayer": "لاعب ضد لاعب",
+    "playWithFriend": "العب مع صديق",
+    "playerVsComputer": "لاعب ضد الكمبيوتر",
+    "challengeAI": "تحدَّ الذكاء الاصطناعي",
+    "vsComputer": "ضد الكمبيوتر",
+    "vsPlayer": "ضد لاعب",
+    "winner": "الفائز:",
+    "draw": "تعادل!",
+    "yourTurn": "دورك",
+    "computerThinking": "الكمبيوتر يفكر...",
+    "nextPlayer": "اللاعب التالي:",
+    "newGame": "لعبة جديدة",
+    "backToMenu": "العودة للقائمة",
+    "won": "فاز!"
+  }
+}
+
+

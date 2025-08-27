@@ -1,0 +1,77 @@
+{
+  "title": "Jeux amusants",
+  "subtitle": "Jouez à des jeux rapides et familiaux pour se détendre et apprendre.",
+  "hangman": {
+    "title": "Pendu",
+    "description": "Devine le mot en choisissant des lettres",
+    "hints": {
+      "rainbow": "Un arc coloré dans le ciel",
+      "butterfly": "Un insecte aux ailes colorées",
+      "elephant": "Le plus grand animal terrestre",
+      "chocolate": "Une friandise sucrée",
+      "airplane": "Il vole dans le ciel",
+      "computer": "Un appareil pour calculer",
+      "birthday": "Une célébration annuelle",
+      "mountain": "Une colline très haute"
+    },
+    "gameOver": "Partie terminée !",
+    "youWin": "Tu as gagné !",
+    "youLose": "Tu as perdu !",
+    "hint": "Indice",
+    "incorrectGuesses": "Erreurs :",
+    "newGame": "Nouvelle partie"
+  },
+  "memory": {
+    "title": "Mémoire",
+    "description": "Trouve toutes les paires identiques",
+    "testYourMemory": "Teste ta mémoire !",
+    "clickToFlip": "Clique pour retourner une carte",
+    "startGame": "Commencer",
+    "moves": "Coups",
+    "congratulations": "Bravo !",
+    "gameCompleted": "Tu as terminé en {{moves}} coups !",
+    "playAgain": "Rejouer"
+  },
+  "rockPaperScissors": {
+    "title": "Pierre Feuille Ciseaux",
+    "description": "Choisis ton coup et bats l'ordinateur",
+    "youWin": "Tu gagnes !",
+    "computerWins": "L'ordinateur gagne !",
+    "tie": "Égalité !",
+    "rock": "Pierre",
+    "paper": "Feuille",
+    "scissors": "Ciseaux",
+    "resetGame": "Réinitialiser"
+  },
+  "snake": {
+    "title": "Serpent",
+    "description": "Mange la nourriture et évite les murs et toi-même",
+    "highScore": "Meilleur score",
+    "startGame": "Commencer",
+    "gameOver": "Partie terminée",
+    "score": "Score",
+    "newHighScore": "Nouveau record !",
+    "playAgain": "Rejouer"
+  },
+  "ticTacToe": {
+    "title": "Morpion",
+    "description": "Aligne trois symboles pour gagner",
+    "selectGameMode": "Choisis un mode de jeu",
+    "playerVsPlayer": "Joueur vs Joueur",
+    "playWithFriend": "Jouer avec un ami",
+    "playerVsComputer": "Joueur vs Ordinateur",
+    "challengeAI": "Défier l'IA",
+    "vsComputer": "vs Ordinateur",
+    "vsPlayer": "vs Joueur",
+    "winner": "Gagnant :",
+    "draw": "Match nul !",
+    "yourTurn": "À toi de jouer",
+    "computerThinking": "L'ordinateur réfléchit...",
+    "nextPlayer": "Prochain joueur :",
+    "newGame": "Nouvelle partie",
+    "backToMenu": "Retour au menu",
+    "won": "a gagné !"
+  }
+}
+
+

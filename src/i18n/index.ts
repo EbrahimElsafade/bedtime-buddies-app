@@ -22,7 +22,7 @@ i18n
       loadPath: '/locales/{{lng}}/{{ns}}.json',
     },
     defaultNS: 'common',
-    ns: ['common', 'navigation', 'auth', 'hero', 'stories', 'features', 'admin', 'misc', 'premium', 'subscription', 'notFound'],
+    ns: ['common', 'navigation', 'auth', 'hero', 'stories', 'features', 'admin', 'misc', 'premium', 'subscription', 'notFound', 'games'],
   });
 
 export default i18n;

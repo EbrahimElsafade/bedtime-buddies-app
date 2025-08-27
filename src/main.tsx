@@ -5,6 +5,12 @@ import App from "./App.tsx";
 import "./index.css";
 import "./i18n";
 
+declare global {
+  interface Navigator {
+    standalone?: boolean;
+  }
+}
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <App />
@@ -59,7 +65,7 @@ if ('serviceWorker' in navigator) {
 
 // Check if app is running as PWA
 const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-const isInWebAppiOS = (window.navigator as any).standalone === true;
+const isInWebAppiOS = navigator.standalone === true;
 
 if (isStandalone || isInWebAppiOS) {
   console.log('App is running as PWA');

@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Users, Bot } from "lucide-react";
 
 const TicTacToeGame = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('games');
   const [board, setBoard] = useState(Array(9).fill(null));
   const [isXNext, setIsXNext] = useState(true);
   const [winner, setWinner] = useState<string | null>(null);
@@ -93,10 +93,10 @@ const TicTacToeGame = () => {
       const gameWinner = calculateWinner(newBoard);
       if (gameWinner) {
         setWinner(gameWinner);
-        toast.success(`${gameWinner} ${t('games.ticTacToe.won')}`);
+        toast.success(`${gameWinner} ${t('ticTacToe.won')}`);
       } else if (!newBoard.includes(null)) {
         setWinner('draw');
-        toast.info(t('games.ticTacToe.draw'));
+        toast.info(t('ticTacToe.draw'));
       }
     }
   };
@@ -112,11 +112,11 @@ const TicTacToeGame = () => {
     const gameWinner = calculateWinner(newBoard);
     if (gameWinner) {
       setWinner(gameWinner);
-      toast.success(`${gameWinner} ${t('games.ticTacToe.won')}`);
+      toast.success(`${gameWinner} ${t('ticTacToe.won')}`);
       return;
     } else if (!newBoard.includes(null)) {
       setWinner('draw');
-      toast.info(t('games.ticTacToe.draw'));
+      toast.info(t('ticTacToe.draw'));
       return;
     }
 
@@ -159,13 +159,13 @@ const TicTacToeGame = () => {
     return (
       <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
         <CardHeader>
-          <CardTitle className="text-xl">{t('games.ticTacToe.title')}</CardTitle>
-          <CardDescription>{t('games.ticTacToe.description')}</CardDescription>
+          <CardTitle className="text-xl">{t('ticTacToe.title')}</CardTitle>
+          <CardDescription>{t('ticTacToe.description')}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-medium mb-4 text-center">{t('games.ticTacToe.selectGameMode')}</h3>
+              <h3 className="text-lg font-medium mb-4 text-center">{t('ticTacToe.selectGameMode')}</h3>
               <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={() => startGameWithMode('player')}
@@ -173,8 +173,8 @@ const TicTacToeGame = () => {
                 >
                   <Users className="w-12 h-12 mx-auto mb-3" />
                   <div className="text-center">
-                    <div className="font-semibold">{t('games.ticTacToe.playerVsPlayer')}</div>
-                    <div className="text-sm text-muted-foreground mt-1">{t('games.ticTacToe.playWithFriend')}</div>
+                    <div className="font-semibold">{t('ticTacToe.playerVsPlayer')}</div>
+                    <div className="text-sm text-muted-foreground mt-1">{t('ticTacToe.playWithFriend')}</div>
                   </div>
                 </button>
                 
@@ -184,8 +184,8 @@ const TicTacToeGame = () => {
                 >
                   <Bot className="w-12 h-12 mx-auto mb-3" />
                   <div className="text-center">
-                    <div className="font-semibold">{t('games.ticTacToe.playerVsComputer')}</div>
-                    <div className="text-sm text-muted-foreground mt-1">{t('games.ticTacToe.challengeAI')}</div>
+                    <div className="font-semibold">{t('ticTacToe.playerVsComputer')}</div>
+                    <div className="text-sm text-muted-foreground mt-1">{t('ticTacToe.challengeAI')}</div>
                   </div>
                 </button>
               </div>
@@ -200,20 +200,20 @@ const TicTacToeGame = () => {
     <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
       <CardHeader>
         <CardTitle className="text-xl">
-          {t('games.ticTacToe.title')} - {gameMode === 'computer' ? t('games.ticTacToe.vsComputer') : t('games.ticTacToe.vsPlayer')}
+          {t('ticTacToe.title')} - {gameMode === 'computer' ? t('ticTacToe.vsComputer') : t('ticTacToe.vsPlayer')}
         </CardTitle>
-        <CardDescription>{t('games.ticTacToe.description')}</CardDescription>
+        <CardDescription>{t('ticTacToe.description')}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col items-center">
           <div className="mb-4 text-lg font-medium">
             {winner 
               ? winner === 'draw' 
-                ? t('games.ticTacToe.draw')
-                : `${t('games.ticTacToe.winner')} ${winner}` 
+                ? t('ticTacToe.draw')
+                : `${t('ticTacToe.winner')} ${winner}` 
               : gameMode === 'computer' 
-                ? `${isXNext ? t('games.ticTacToe.yourTurn') : t('games.ticTacToe.computerThinking')}`
-                : `${t('games.ticTacToe.nextPlayer')} ${isXNext ? '✖️' : '⭕'}`}
+                ? `${isXNext ? t('ticTacToe.yourTurn') : t('ticTacToe.computerThinking')}`
+                : `${t('ticTacToe.nextPlayer')} ${isXNext ? '✖️' : '⭕'}`}
           </div>
           
           <div className="grid grid-cols-3 gap-2 mb-4">
@@ -223,10 +223,10 @@ const TicTacToeGame = () => {
       </CardContent>
       <CardFooter className="flex gap-2">
         <Button onClick={resetGame} variant="outline" className="flex-1">
-          {t('games.ticTacToe.newGame')}
+          {t('ticTacToe.newGame')}
         </Button>
         <Button onClick={backToMenu} className="flex-1 bg-dream-DEFAULT hover:bg-dream-dark">
-          {t('games.ticTacToe.backToMenu')}
+          {t('ticTacToe.backToMenu')}
         </Button>
       </CardFooter>
     </Card>

@@ -1,0 +1,77 @@
+{
+  "title": "Fun Games",
+  "subtitle": "Play quick, family-friendly games to relax and learn.",
+  "hangman": {
+    "title": "Hangman",
+    "description": "Guess the word by choosing letters",
+    "hints": {
+      "rainbow": "A colorful arc in the sky",
+      "butterfly": "A colorful winged insect",
+      "elephant": "The largest land animal",
+      "chocolate": "A sweet treat",
+      "airplane": "It flies in the sky",
+      "computer": "A device for computing",
+      "birthday": "A yearly celebration",
+      "mountain": "A very high hill"
+    },
+    "gameOver": "Game Over!",
+    "youWin": "You Win!",
+    "youLose": "You Lose!",
+    "hint": "Hint",
+    "incorrectGuesses": "Incorrect guesses:",
+    "newGame": "New Game"
+  },
+  "memory": {
+    "title": "Memory Match",
+    "description": "Find all matching pairs",
+    "testYourMemory": "Test your memory!",
+    "clickToFlip": "Click a card to flip it",
+    "startGame": "Start Game",
+    "moves": "Moves",
+    "congratulations": "Congratulations!",
+    "gameCompleted": "You completed the game in {{moves}} moves!",
+    "playAgain": "Play Again"
+  },
+  "rockPaperScissors": {
+    "title": "Rock Paper Scissors",
+    "description": "Choose your move and beat the computer",
+    "youWin": "You win!",
+    "computerWins": "Computer wins!",
+    "tie": "It's a tie!",
+    "rock": "Rock",
+    "paper": "Paper",
+    "scissors": "Scissors",
+    "resetGame": "Reset Game"
+  },
+  "snake": {
+    "title": "Snake",
+    "description": "Eat the food and avoid the walls and yourself",
+    "highScore": "High Score",
+    "startGame": "Start Game",
+    "gameOver": "Game Over",
+    "score": "Score",
+    "newHighScore": "New High Score!",
+    "playAgain": "Play Again"
+  },
+  "ticTacToe": {
+    "title": "Tic Tac Toe",
+    "description": "Get three in a row to win",
+    "selectGameMode": "Select a game mode",
+    "playerVsPlayer": "Player vs Player",
+    "playWithFriend": "Play with a friend",
+    "playerVsComputer": "Player vs Computer",
+    "challengeAI": "Challenge the AI",
+    "vsComputer": "vs Computer",
+    "vsPlayer": "vs Player",
+    "winner": "Winner:",
+    "draw": "It's a draw!",
+    "yourTurn": "Your turn",
+    "computerThinking": "Computer is thinking...",
+    "nextPlayer": "Next player:",
+    "newGame": "New Game",
+    "backToMenu": "Back to Menu",
+    "won": "won!"
+  }
+}
+
+

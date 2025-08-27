@@ -44,6 +44,12 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Always fetch translation files from network to avoid stale locales
+  if (event.request.url.includes('/locales/')) {
+    event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
+    return;
+  }
+
   // Skip URLs that are not same-origin or HTTPS
   if (!event.request.url.startsWith(self.location.origin) && !event.request.url.startsWith('https://')) {
     return;

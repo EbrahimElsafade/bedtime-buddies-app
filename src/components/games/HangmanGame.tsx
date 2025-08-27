@@ -12,7 +12,7 @@ import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 
 const HangmanGame = () => {
-  const { t, i18n } = useTranslation('common')
+  const { t, i18n } = useTranslation('games')
   const [currentWord, setCurrentWord] = useState('')
   const [guessedLetters, setGuessedLetters] = useState<string[]>([])
   const [wrongGuesses, setWrongGuesses] = useState(0)
@@ -22,14 +22,14 @@ const HangmanGame = () => {
   const [hint, setHint] = useState('')
 
   const words = [
-    { word: 'RAINBOW', hint: t('games.hangman.hints.rainbow') },
-    { word: 'BUTTERFLY', hint: t('games.hangman.hints.butterfly') },
-    { word: 'ELEPHANT', hint: t('games.hangman.hints.elephant') },
-    { word: 'CHOCOLATE', hint: t('games.hangman.hints.chocolate') },
-    { word: 'AIRPLANE', hint: t('games.hangman.hints.airplane') },
-    { word: 'COMPUTER', hint: t('games.hangman.hints.computer') },
-    { word: 'BIRTHDAY', hint: t('games.hangman.hints.birthday') },
-    { word: 'MOUNTAIN', hint: t('games.hangman.hints.mountain') },
+    { word: 'RAINBOW', hint: t('hangman.hints.rainbow') },
+    { word: 'BUTTERFLY', hint: t('hangman.hints.butterfly') },
+    { word: 'ELEPHANT', hint: t('hangman.hints.elephant') },
+    { word: 'CHOCOLATE', hint: t('hangman.hints.chocolate') },
+    { word: 'AIRPLANE', hint: t('hangman.hints.airplane') },
+    { word: 'COMPUTER', hint: t('hangman.hints.computer') },
+    { word: 'BIRTHDAY', hint: t('hangman.hints.birthday') },
+    { word: 'MOUNTAIN', hint: t('hangman.hints.mountain') },
   ]
 
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
@@ -61,9 +61,7 @@ const HangmanGame = () => {
 
       if (newWrongGuesses >= maxWrongGuesses) {
         setGameStatus('lost')
-        toast.error(
-          `${t('games.hangman.gameOver')} The word was "${currentWord}"`,
-        )
+        toast.error(`${t('hangman.gameOver')} The word was "${currentWord}"`)
       }
     } else {
       const wordLetters = currentWord.split('')
@@ -73,7 +71,7 @@ const HangmanGame = () => {
 
       if (isComplete) {
         setGameStatus('won')
-        toast.success(t('games.hangman.youWin'))
+        toast.success(t('hangman.youWin'))
       }
     }
   }
@@ -213,10 +211,10 @@ const HangmanGame = () => {
       <Card className="overflow-hidden border-dream-light/20 bg-white/50 backdrop-blur-sm dark:bg-nightsky-light/50">
         <CardHeader className="px-4 py-4 text-center">
           <CardTitle className="from-dream-DEFAULT bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold md:text-2xl">
-            {t('games.hangman.title')}
+            {t('hangman.title')}
           </CardTitle>
           <CardDescription className="text-sm md:text-base">
-            {t('games.hangman.description')}
+            {t('hangman.description')}
           </CardDescription>
         </CardHeader>
         <CardContent className="px-4">
@@ -239,13 +237,13 @@ const HangmanGame = () => {
 
               <div className="mb-4 mt-2 text-center">
                 <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 md:text-sm">
-                  {t('games.hangman.title').toUpperCase()}
+                  {t('hangman.title').toUpperCase()}
                 </div>
               </div>
 
               <div className="text-center">
                 <div className="text-sm font-semibold text-red-600 dark:text-red-400 md:text-lg">
-                  {t('games.hangman.incorrectGuesses')} {wrongGuesses} /{' '}
+                  {t('hangman.incorrectGuesses')} {wrongGuesses} /{' '}
                   {maxWrongGuesses}
                 </div>
               </div>
@@ -259,7 +257,7 @@ const HangmanGame = () => {
 
                 <div className="mb-4 rounded-lg border border-blue-200 bg-gradient-to-r from-blue-100 to-purple-100 p-3 shadow-lg dark:border-blue-700 dark:from-blue-900 dark:to-purple-900 md:mb-6 md:p-4">
                   <div className="mb-1 text-xs font-medium text-blue-800 dark:text-blue-200 md:text-sm">
-                    {t('games.hangman.hint')}
+                    {t('hangman.hint')}
                   </div>
                   <div className="text-sm text-blue-700 dark:text-blue-300 md:text-base">
                     {hint}
@@ -302,7 +300,7 @@ const HangmanGame = () => {
             onClick={initializeGame}
             className="from-dream-DEFAULT w-full bg-gradient-to-r to-purple-600 py-3 text-base font-semibold transition-all duration-300 hover:from-dream-dark hover:to-purple-700 md:text-lg"
           >
-            {t('games.hangman.newGame')}
+            {t('hangman.newGame')}
           </Button>
         </CardFooter>
       </Card>

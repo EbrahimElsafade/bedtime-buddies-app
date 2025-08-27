@@ -7,7 +7,7 @@ import { Hand, Scissors } from "lucide-react";
 import { useTranslation } from 'react-i18next';
 
 const RockPaperScissorsGame = () => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('games');
   const [playerChoice, setPlayerChoice] = useState<string>('');
   const [computerChoice, setComputerChoice] = useState<string>('');
   const [playerScore, setPlayerScore] = useState(0);
@@ -51,15 +51,15 @@ const RockPaperScissorsGame = () => {
       
       if (winner === 'player') {
         setPlayerScore(prev => prev + 1);
-        setResult(t('games.rockPaperScissors.youWin'));
-        toast.success(t('games.rockPaperScissors.youWin'));
+        setResult(t('rockPaperScissors.youWin'));
+        toast.success(t('rockPaperScissors.youWin'));
       } else if (winner === 'computer') {
         setComputerScore(prev => prev + 1);
-        setResult(t('games.rockPaperScissors.computerWins'));
-        toast.error(t('games.rockPaperScissors.computerWins'));
+        setResult(t('rockPaperScissors.computerWins'));
+        toast.error(t('rockPaperScissors.computerWins'));
       } else {
-        setResult(t('games.rockPaperScissors.tie'));
-        toast.info(t('games.rockPaperScissors.tie'));
+        setResult(t('rockPaperScissors.tie'));
+        toast.info(t('rockPaperScissors.tie'));
       }
       
       setIsPlaying(false);
@@ -84,9 +84,9 @@ const RockPaperScissorsGame = () => {
     <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm max-w-4xl mx-auto">
       <CardHeader className="text-center px-4 md:px-6">
         <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text  ">
-          {t('games.rockPaperScissors.title')}
+          {t('rockPaperScissors.title')}
         </CardTitle>
-        <CardDescription className="text-sm md:text-base">{t('games.rockPaperScissors.description')}</CardDescription>
+        <CardDescription className="text-sm md:text-base">{t('rockPaperScissors.description')}</CardDescription>
       </CardHeader>
       <CardContent className="px-4 md:px-6">
         <div className="flex flex-col items-center space-y-6 md:space-y-8">
@@ -152,7 +152,7 @@ const RockPaperScissorsGame = () => {
                         {choice.emoji}
                       </div>
                       <div className="text-sm md:text-lg font-bold capitalize text-gray-700 dark:text-gray-200 group-hover:text-dream-DEFAULT transition-colors">
-                        {t(`games.rockPaperScissors.${choice.name}`)}
+                        {t(`rockPaperScissors.${choice.name}`)}
                       </div>
                     </div>
                     <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-dream-light/0 to-purple-500/0 group-hover:from-dream-light/10 group-hover:to-purple-500/10 transition-all duration-300"></div>
@@ -169,7 +169,7 @@ const RockPaperScissorsGame = () => {
           variant="outline" 
           className="w-full py-2 md:py-3 text-base md:text-lg font-semibold hover:bg-dream-light hover:text-white transition-all duration-300"
         >
-          {t('games.rockPaperScissors.resetGame')}
+          {t('rockPaperScissors.resetGame')}
         </Button>
       </CardFooter>
     </Card>

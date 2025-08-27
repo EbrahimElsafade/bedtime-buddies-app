@@ -12,7 +12,7 @@ import SnakeGame from "@/components/games/SnakeGame";
 
 const Games = () => {
   const { isAuthenticated } = useAuth();
-  const { t, i18n } = useTranslation(['common', 'navigation']);
+  const { t, i18n } = useTranslation(['games', 'common', 'navigation']);
   const isMobile = useIsMobile();
   
   useEffect(() => {
@@ -26,10 +26,10 @@ const Games = () => {
       <div className="container mx-auto max-w-6xl">
         <div className="mb-4 md:mb-6 lg:mb-8 text-center">
           <h1 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text   mb-2 md:mb-3 lg:mb-4 leading-tight">
-            {t('games.title', { ns: 'common' })}
+            {t('title', { ns: 'games' })}
           </h1>
           <p className="text-xs md:text-sm lg:text-base text-muted-foreground max-w-2xl mx-auto px-2">
-            {t('games.subtitle', { ns: 'common' })}
+            {t('subtitle', { ns: 'games' })}
           </p>
         </div>
 
@@ -47,7 +47,7 @@ const Games = () => {
                   : 'px-3 py-2 text-sm'
               } rounded-md transition-all font-medium ${isRTL ? 'font-arabic' : ''}`}
             >
-              {isMobile && isRTL ? 'إكس أو' : isMobile ? 'Tic Tac' : t('games.ticTacToe.title', { ns: 'common' })}
+              {isMobile && isRTL ? 'إكس أو' : isMobile ? 'Tic Tac' : t('ticTacToe.title', { ns: 'games' })}
             </TabsTrigger>
             <TabsTrigger 
               value="rock-paper-scissors"
@@ -57,7 +57,7 @@ const Games = () => {
                   : 'px-3 py-2 text-sm'
               } rounded-md transition-all font-medium ${isRTL ? 'font-arabic' : ''}`}
             >
-              {isMobile && isRTL ? 'حجر ورقة' : isMobile ? 'RPS' : t('games.rockPaperScissors.title', { ns: 'common' })}
+              {isMobile && isRTL ? 'حجر ورقة' : isMobile ? 'RPS' : t('rockPaperScissors.title', { ns: 'games' })}
             </TabsTrigger>
             <TabsTrigger 
               value="hangman"
@@ -67,7 +67,7 @@ const Games = () => {
                   : 'px-3 py-2 text-sm'
               } rounded-md transition-all font-medium ${isRTL ? 'font-arabic' : ''}`}
             >
-              {isMobile && isRTL ? 'المشنوق' : t('games.hangman.title', { ns: 'common' })}
+              {isMobile && isRTL ? 'كلمات' : t('hangman.title', { ns: 'games' })}
             </TabsTrigger>
             <TabsTrigger 
               value="memory"
@@ -77,7 +77,7 @@ const Games = () => {
                   : 'px-3 py-2 text-sm'
               } rounded-md transition-all font-medium ${isRTL ? 'font-arabic' : ''}`}
             >
-              {isMobile && isRTL ? 'ذاكرة' : t('games.memory.title', { ns: 'common' })}
+              {isMobile && isRTL ? 'ذاكرة' : t('memory.title', { ns: 'games' })}
             </TabsTrigger>
             <TabsTrigger 
               value="snake"
@@ -87,7 +87,7 @@ const Games = () => {
                   : 'px-3 py-2 text-sm'
               } rounded-md transition-all font-medium ${isRTL ? 'font-arabic' : ''}`}
             >
-              {isMobile && isRTL ? 'ثعبان' : t('games.snake.title', { ns: 'common' })}
+              {isMobile && isRTL ? 'ثعبان' : t('snake.title', { ns: 'games' })}
             </TabsTrigger>
           </TabsList>
           
