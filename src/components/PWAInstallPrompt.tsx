@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
-import { X, Download, Smartphone, Sparkles } from 'lucide-react'
+import { X, Download, Smartphone } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 declare global {
@@ -154,7 +154,7 @@ const PWAInstallPrompt = () => {
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
             <div className="rounded-lg bg-gradient-to-br from-dream-light/20 to-purple-100/50 p-2">
-              <Sparkles className="text-dream-DEFAULT h-6 w-6" />
+              <Smartphone className="text-dream-DEFAULT h-6 w-6" />
             </div>
 
             <div className="flex-1">
