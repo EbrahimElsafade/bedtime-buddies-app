@@ -158,7 +158,7 @@ const PWAInstallPrompt = () => {
                 <button
                   onClick={handleInstallClick}
                   disabled={isInstalling}
-                  className="inline-flex items-center rounded-md bg-gradient-to-r from-dream-DEFAULT to-purple-500 px-3 py-2 text-sm font-medium text-white hover:from-dream-light hover:to-purple-600 disabled:opacity-50"
+                  className="inline-flex items-center rounded-md hover:text-white dark:text-white bg-gradient-to-r from-dream-DEFAULT to-purple-500 px-3 py-2 text-sm font-medium text-black hover:from-dream-light hover:to-purple-600 disabled:opacity-50"
                 >
                   {isInstalling ? (
                     <>
