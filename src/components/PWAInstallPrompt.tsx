@@ -106,16 +106,17 @@ const PWAInstallPrompt = () => {
     console.log('PWA: Install button clicked')
     
     if (!deferredPrompt) {
-      console.log('PWA: No deferred prompt available, checking for alternative methods')
+      console.log('PWA: No deferred prompt available')
       
-      // For iOS Safari, show instructions
+      // For iOS Safari, show brief instruction but try to trigger add to homescreen
       if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream) {
-        alert('To install this app on your iOS device, tap the Share button and then "Add to Home Screen".')
+        console.log('PWA: iOS detected - user needs to manually add to home screen')
+        // On iOS, we can't programmatically install, user must do it manually
         return
       }
       
-      // For other browsers without deferred prompt, show instructions
-      alert('To install this app:\n\n• Chrome/Edge: Look for the install icon in the address bar\n• Firefox: Open the menu (≡) and select "Install"\n• Safari: Tap Share → Add to Home Screen')
+      // For other browsers, we can't force install without the event
+      console.log('PWA: Cannot install - no beforeinstallprompt event available')
       return
     }
 
