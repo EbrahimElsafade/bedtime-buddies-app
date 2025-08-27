@@ -27,6 +27,7 @@ const PWAInstallPrompt = () => {
   const [isInstalled, setIsInstalled] = useState(false)
   const [isInstalling, setIsInstalling] = useState(false)
   const [platform, setPlatform] = useState<'mobile' | 'desktop'>('desktop')
+  const [isiOS, setIsIOS] = useState(false)
 
   useEffect(() => {
     // Check if app is already installed
@@ -36,7 +37,9 @@ const PWAInstallPrompt = () => {
     // Detect platform
     const userAgent = navigator.userAgent.toLowerCase()
     const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/.test(userAgent)
+    const iOS = /iphone|ipad|ipod/.test(userAgent) && /safari/.test(userAgent)
     setPlatform(isMobile ? 'mobile' : 'desktop')
+    setIsIOS(iOS)
 
     if (isStandalone || isInWebAppIOS) {
       setIsInstalled(true)
@@ -49,8 +52,8 @@ const PWAInstallPrompt = () => {
       return
     }
 
-    // Show prompt for desktop browsers even without beforeInstallPrompt
-    if (platform === 'desktop') {
+    // Show prompt for desktop browsers even without beforeinstallprompt
+    if (!isMobile) {
       setTimeout(() => {
         setShowPrompt(true)
       }, 2000)
@@ -75,12 +78,19 @@ const PWAInstallPrompt = () => {
       localStorage.removeItem('pwa-prompt-dismissed')
     }
 
-    window.addEventListener('beforeInstallPrompt', handleBeforeInstallPrompt)
-    window.addEventListener('appInstalled', handleAppInstalled)
+    // iOS Safari does not fire beforeinstallprompt; show instructions UI
+    if (iOS) {
+      setTimeout(() => {
+        setShowPrompt(true)
+      }, 2000)
+    }
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+    window.addEventListener('appinstalled', handleAppInstalled)
 
     return () => {
-      window.removeEventListener('beforeInstallPrompt', handleBeforeInstallPrompt)
-      window.removeEventListener('appInstalled', handleAppInstalled)
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+      window.removeEventListener('appinstalled', handleAppInstalled)
     }
   }, [])
 
@@ -122,8 +132,8 @@ const PWAInstallPrompt = () => {
     return null
   }
 
-  // For mobile, require deferredPrompt. For desktop, show instructions.
-  if (platform === 'mobile' && !deferredPrompt) {
+  // For mobile, require deferredPrompt except on iOS (instructions only). For desktop, show instructions.
+  if (platform === 'mobile' && !deferredPrompt && !isiOS) {
     return null
   }
 

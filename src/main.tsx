@@ -33,21 +33,18 @@ if ('serviceWorker' in navigator) {
         console.log('Service worker is active and ready');
       }
       
-      // Listen for updates
+      // Listen for updates (safer flow): when a new SW is installed, prompt for refresh or auto-skip-waiting
       registration.addEventListener('updatefound', () => {
         console.log('Service worker update found');
         const newWorker = registration.installing;
-        if (newWorker) {
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed') {
-              if (navigator.serviceWorker.controller) {
-                console.log('New content is available, refresh needed');
-                // New content is available, refresh needed
-                window.location.reload();
-              }
-            }
-          });
-        }
+        if (!newWorker) return;
+        newWorker.addEventListener('statechange', () => {
+          if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+            console.log('New content is available. Activating new service worker...');
+            // Ask the new worker to skip waiting; page will reload on controllerchange
+            newWorker.postMessage({ type: 'SKIP_WAITING' });
+          }
+        });
       });
       
     } catch (error) {
@@ -55,11 +52,9 @@ if ('serviceWorker' in navigator) {
     }
   });
 
-  // Listen for service worker messages
-  navigator.serviceWorker.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'SKIP_WAITING') {
-      window.location.reload();
-    }
+  // When the controller changes (new SW takes control), reload once
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    window.location.reload();
   });
 }
 
