@@ -8,6 +8,10 @@ declare global {
   interface Navigator {
     standalone?: boolean
   }
+  
+  interface Window {
+    MSStream?: any
+  }
 }
 
 interface BeforeInstallPromptEvent extends Event {
@@ -96,7 +100,7 @@ const PWAInstallPrompt = () => {
       console.log('PWA: No deferred prompt available, checking for alternative methods')
       
       // For iOS Safari, show instructions
-      if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream) {
         alert('To install this app on your iOS device, tap the Share button and then "Add to Home Screen".')
         return
       }
