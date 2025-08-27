@@ -36,5 +36,11 @@
   "upgradeToPremium": "Passer au Premium",
   "loading": "Chargement...",
   "profileUpdated": "Profil mis à jour avec succès",
-  "profileLoadError": "Votre profil n'a pas pu être chargé. Veuillez vous reconnecter."
+  "profileLoadError": "Votre profil n'a pas pu être chargé. Veuillez vous reconnecter.",
+  "pwa": {
+    "installApp": "Installer l'application",
+    "installAppDescription": "Accédez instantanément et utilisez l'application hors ligne !",
+    "install": "Installer",
+    "later": "Plus tard"
+  }
 }

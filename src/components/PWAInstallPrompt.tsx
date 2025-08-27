@@ -1,6 +1,5 @@
 
 import React, { useState, useEffect } from 'react'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { X, Download, Smartphone } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
@@ -30,32 +29,32 @@ const PWAInstallPrompt = () => {
   const [platform, setPlatform] = useState<'mobile' | 'desktop'>('desktop')
 
   useEffect(() => {
-         // Check if app is already installed
-     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-     const isInWebAppiOS = navigator.standalone === true
+    // Check if app is already installed
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+    const isInWebAppiOS = navigator.standalone === true
 
-         // Detect platform
-     const userAgent = navigator.userAgent.toLowerCase()
-     const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/.test(userAgent)
-     setPlatform(isMobile ? 'mobile' : 'desktop')
+    // Detect platform
+    const userAgent = navigator.userAgent.toLowerCase()
+    const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/.test(userAgent)
+    setPlatform(isMobile ? 'mobile' : 'desktop')
 
-     if (isStandalone || isInWebAppiOS) {
-       setIsInstalled(true)
-       return
-     }
+    if (isStandalone || isInWebAppiOS) {
+      setIsInstalled(true)
+      return
+    }
 
-     // Check if user has already dismissed the prompt
-     const hasPromptBeenDismissed = localStorage.getItem('pwa-prompt-dismissed')
-     if (hasPromptBeenDismissed) {
-       return
-     }
+    // Check if user has already dismissed the prompt
+    const hasPromptBeenDismissed = localStorage.getItem('pwa-prompt-dismissed')
+    if (hasPromptBeenDismissed) {
+      return
+    }
 
-     // Show prompt for desktop browsers even without beforeinstallprompt
-     if (platform === 'desktop') {
-       setTimeout(() => {
-         setShowPrompt(true)
-       }, 2000)
-     }
+    // Show prompt for desktop browsers even without beforeinstallprompt
+    if (platform === 'desktop') {
+      setTimeout(() => {
+        setShowPrompt(true)
+      }, 2000)
+    }
 
     const handleBeforeInstallPrompt = (e: Event) => {
       console.log('Before install prompt triggered')
@@ -94,17 +93,12 @@ const PWAInstallPrompt = () => {
     try {
       setIsInstalling(true)
       console.log('Triggering install prompt')
-      
-      // Show the install prompt
       await deferredPrompt.prompt()
-      
-      // Wait for the user's choice
       const { outcome } = await deferredPrompt.userChoice
       console.log('Install prompt outcome:', outcome)
 
       if (outcome === 'accepted') {
         console.log('User accepted the install prompt')
-        // The 'appinstalled' event will handle the rest
       } else {
         console.log('User dismissed the install prompt')
         setIsInstalling(false)
@@ -123,15 +117,15 @@ const PWAInstallPrompt = () => {
     localStorage.setItem('pwa-prompt-dismissed', 'true')
   }
 
-     // Don't show if app is already installed
-   if (isInstalled || !showPrompt) {
-     return null
-   }
+  // Don't show if app is already installed
+  if (isInstalled || !showPrompt) {
+    return null
+  }
 
-   // For mobile, require deferredPrompt. For desktop, show instructions.
-   if (platform === 'mobile' && !deferredPrompt) {
-     return null
-   }
+  // For mobile, require deferredPrompt. For desktop, show instructions.
+  if (platform === 'mobile' && !deferredPrompt) {
+    return null
+  }
 
   return (
     <div className="fixed md:bottom-4 bottom-[4.5rem] start-4 end-4 z-50 md:start-auto md:end-4 md:max-w-sm">
@@ -144,44 +138,38 @@ const PWAInstallPrompt = () => {
 
             <div className="flex-1">
               <h3 className="mb-1 font-semibold text-gray-900 dark:text-white">
-                Install Wonder World App
+                {t('pwa.installApp')}
               </h3>
-                               <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">
-                   {platform === 'desktop' 
-                     ? 'Install this app on your desktop for a better experience!'
-                     : 'Get instant access and offline features on your device!'
-                   }
-                 </p>
+              <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">
+                {t('pwa.installAppDescription')}
+              </p>
 
               <div className="flex gap-2">
-                <Button
+                <button
                   onClick={handleInstallClick}
                   disabled={isInstalling}
-                  size="sm"
-                  className="from-dream-DEFAULT bg-gradient-to-r to-purple-500 text-white hover:from-dream-light hover:to-purple-600 disabled:opacity-50"
+                  className="inline-flex items-center rounded-md bg-gradient-to-r from-dream-DEFAULT to-purple-500 px-3 py-2 text-sm font-medium text-white hover:from-dream-light hover:to-purple-600 disabled:opacity-50"
                 >
-                                     {isInstalling ? (
-                     <>
-                       <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                       Installing...
-                     </>
-                   ) : (
-                     <>
-                       <Download className="mr-2 h-4 w-4" />
-                       {platform === 'desktop' ? 'Install App' : 'Install Now'}
-                     </>
-                   )}
-                </Button>
+                  {isInstalling ? (
+                    <>
+                      <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                      {t('loading')}
+                    </>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      {t('pwa.install')}
+                    </>
+                  )}
+                </button>
 
-                <Button
+                <button
                   onClick={handleDismiss}
-                  variant="ghost"
-                  size="sm"
                   disabled={isInstalling}
-                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  className="inline-flex items-center rounded-md px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
                 >
-                  Later
-                </Button>
+                  {t('pwa.later')}
+                </button>
               </div>
             </div>
 

@@ -36,5 +36,11 @@
   "upgradeToPremium": "Upgrade to Premium",
   "loading": "Loading...",
   "profileUpdated": "Profile updated successfully",
-  "profileLoadError": "Your profile could not be loaded. Please log in again."
+  "profileLoadError": "Your profile could not be loaded. Please log in again.",
+  "pwa": {
+    "installApp": "Install App",
+    "installAppDescription": "Get instant access and offline features on your device!",
+    "install": "Install",
+    "later": "Later"
+  }
 }
