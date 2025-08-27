@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { X, Download, Smartphone } from 'lucide-react'
@@ -33,32 +32,24 @@ const PWAInstallPrompt = () => {
   useEffect(() => {
     console.log('PWA Install Prompt: Initializing...')
     
-    // Enhanced PWA detection
+    // Check if app is already installed
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
     const isInWebAppIOS = navigator.standalone === true
-    const isInstallable = !isStandalone && !isInWebAppIOS
     
-    console.log('PWA Status:', { 
-      isStandalone, 
-      isInWebAppIOS, 
-      isInstallable,
-      userAgent: navigator.userAgent,
-      isAndroidChrome: /Android.*Chrome/.test(navigator.userAgent),
-      protocol: window.location.protocol,
-      hasServiceWorker: 'serviceWorker' in navigator
-    })
+    console.log('PWA Status:', { isStandalone, isInWebAppIOS })
 
-    if (!isInstallable) {
-      console.log('PWA: App is already installed or running in standalone mode')
+    if (isStandalone || isInWebAppIOS) {
+      console.log('PWA: App is already installed')
       setIsInstalled(true)
       return
     }
 
-    // Check dismissal status
+    // Check if user has already dismissed the prompt
     const hasPromptBeenDismissed = localStorage.getItem('pwa-prompt-dismissed')
     const dismissedTime = localStorage.getItem('pwa-prompt-dismissed-time')
     const oneMinuteAgo = Date.now() - 1 * 60 * 1000
     
+    // Reset dismissal after 1 minute (for testing)
     if (dismissedTime && parseInt(dismissedTime) < oneMinuteAgo) {
       console.log('PWA: Resetting dismissal after 1 minute')
       localStorage.removeItem('pwa-prompt-dismissed')
@@ -71,10 +62,9 @@ const PWAInstallPrompt = () => {
     }
 
     const handleBeforeInstallPrompt = (e: Event) => {
-      console.log('PWA: beforeinstallprompt event fired!', e)
+      console.log('PWA: beforeinstallprompt event fired')
       e.preventDefault()
       setDeferredPrompt(e as BeforeInstallPromptEvent)
-      setShowPrompt(true)
     }
 
     const handleAppInstalled = () => {
@@ -91,71 +81,66 @@ const PWAInstallPrompt = () => {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     window.addEventListener('appinstalled', handleAppInstalled)
 
-    // Show prompt after delay, especially for mobile
-    const showPromptAfterDelay = () => {
-      console.log('PWA: Checking if we should show prompt...')
+    // Always show prompt for testing (even without beforeinstallprompt)
+    setTimeout(() => {
+      console.log('PWA: Showing install prompt')
       setShowPrompt(true)
-    }
-
-    const timer = setTimeout(showPromptAfterDelay, 3000)
+    }, 2000)
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
       window.removeEventListener('appinstalled', handleAppInstalled)
-      clearTimeout(timer)
     }
   }, [])
 
   const handleInstallClick = async () => {
     console.log('PWA: Install button clicked')
-    console.log('PWA: Deferred prompt available:', !!deferredPrompt)
     
-    setIsInstalling(true)
+    if (!deferredPrompt) {
+      console.log('PWA: No deferred prompt available - showing manual instructions')
+      
+      // For iOS Safari
+      if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream) {
+        alert('To install this app on iOS:\n\n1. Tap the Share button (□↗) at the bottom\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm')
+        return
+      }
+      
+      // For Chrome/Edge
+      if (/Chrome|Edg/.test(navigator.userAgent)) {
+        alert('To install this app in Chrome/Edge:\n\n1. Look for the install icon (⊕) in the address bar\n2. Or click the three dots menu → "Install Wonder World"\n3. Click "Install" to confirm')
+        return
+      }
+      
+      // For Firefox
+      if (/Firefox/.test(navigator.userAgent)) {
+        alert('To install this app in Firefox:\n\n1. Click the menu button (≡)\n2. Select "Install"\n3. Click "Install" to confirm')
+        return
+      }
+      
+      // For other browsers
+      alert('To install this app:\n\n• Look for an install button in your browser\n• Or check your browser menu for "Install" or "Add to Home Screen" option')
+      return
+    }
 
     try {
-      if (deferredPrompt) {
-        console.log('PWA: Triggering native install prompt')
-        await deferredPrompt.prompt()
-        const { outcome } = await deferredPrompt.userChoice
-        console.log('PWA: Install prompt outcome:', outcome)
+      setIsInstalling(true)
+      console.log('PWA: Triggering deferred prompt')
+      
+      // Show the native install prompt
+      await deferredPrompt.prompt()
+      const { outcome } = await deferredPrompt.userChoice
+      console.log('PWA: Install prompt outcome:', outcome)
 
-        if (outcome === 'accepted') {
-          console.log('PWA: User accepted the install prompt')
-          setShowPrompt(false)
-        }
-        
-        setDeferredPrompt(null)
+      if (outcome === 'accepted') {
+        console.log('PWA: User accepted the install prompt')
+        setShowPrompt(false)
       } else {
-        // Force trigger installation attempt on mobile
-        console.log('PWA: No deferred prompt - attempting mobile installation')
-        
-        // Try to trigger the Chrome mobile installation
-        if (/Android.*Chrome/.test(navigator.userAgent)) {
-          console.log('PWA: Android Chrome detected - attempting to trigger installation')
-          
-          // Create a temporary event to try to trigger installation
-          try {
-            // Check if the page meets PWA criteria and try to force prompt
-            const event = new Event('beforeinstallprompt');
-            window.dispatchEvent(event);
-            
-            // If that doesn't work, show minimal instructions
-            setTimeout(() => {
-              if (!isInstalled) {
-                alert('To install: Tap the menu (⋮) → "Add to Home screen" or "Install app"');
-              }
-            }, 1000);
-          } catch (error) {
-            console.log('PWA: Could not force prompt, showing instructions');
-            alert('To install: Tap the menu (⋮) → "Add to Home screen" or "Install app"');
-          }
-        } else {
-          alert('To install this app, look for "Add to Home Screen" in your browser menu.');
-        }
+        console.log('PWA: User dismissed the install prompt')
       }
+      
+      setDeferredPrompt(null)
     } catch (error) {
-      console.error('PWA: Install failed:', error)
-      alert('Installation failed. Please use your browser menu to install the app.')
+      console.error('PWA: Install prompt failed:', error)
     } finally {
       setIsInstalling(false)
     }
@@ -204,7 +189,7 @@ const PWAInstallPrompt = () => {
                   ) : (
                     <>
                       <Download className="mr-2 h-4 w-4" />
-                      {t('pwa.install')}
+                      {deferredPrompt ? t('pwa.install') : 'Show Instructions'}
                     </>
                   )}
                 </button>
