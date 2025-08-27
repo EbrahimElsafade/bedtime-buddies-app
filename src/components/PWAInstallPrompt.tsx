@@ -120,9 +120,29 @@ const PWAInstallPrompt = () => {
       }
     }
 
-    // Hide the prompt and let the browser handle installation
-    console.log('PWA: No deferred prompt available - hiding prompt')
-    setShowPrompt(false)
+    // Show manual installation instructions when no deferred prompt
+    console.log('PWA: No deferred prompt available - showing manual instructions')
+    
+    // For iOS Safari
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream) {
+      alert('To install this app on iOS:\n\n1. Tap the Share button (□↗) at the bottom\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm')
+      return
+    }
+    
+    // For Chrome/Edge
+    if (/Chrome|Edg/.test(navigator.userAgent)) {
+      alert('To install this app in Chrome/Edge:\n\n1. Look for the install icon (⊕) in the address bar\n2. Or click the three dots menu → "Install Wonder World"\n3. Click "Install" to confirm')
+      return
+    }
+    
+    // For Firefox
+    if (/Firefox/.test(navigator.userAgent)) {
+      alert('To install this app in Firefox:\n\n1. Click the menu button (≡)\n2. Select "Install"\n3. Click "Install" to confirm')
+      return
+    }
+    
+    // For other browsers
+    alert('To install this app:\n\n• Look for an install button in your browser\n• Or check your browser menu for "Install" or "Add to Home Screen" option')
   }
 
   const handleDismiss = () => {
