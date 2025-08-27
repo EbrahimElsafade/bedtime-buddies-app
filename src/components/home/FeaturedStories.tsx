@@ -61,6 +61,10 @@ const FeaturedStories = () => {
     // Don't prevent default - let Link handle navigation
   }
 
+  const handleStoryClick = (storyId: string) => {
+    console.log('Story card clicked, navigating to:', `/stories/${storyId}`)
+  }
+
   if (isLoading) {
     return (
       <section className="relative bg-secondary/50 px-4 py-8 md:py-12">
@@ -144,8 +148,13 @@ const FeaturedStories = () => {
             )
 
             return (
-              <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card flex w-full h-80 cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/70 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/70 md:h-96 lg:h-[25rem]">
+              <Link 
+                key={story.id} 
+                to={`/stories/${story.id}`}
+                onClick={() => handleStoryClick(story.id)}
+                className="block"
+              >
+                <Card className="story-card flex w-full h-80 cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/70 pb-4 backdrop-blur-sm transition-all hover:shadow-lg hover:scale-[1.02] dark:bg-nightsky-light/70 md:h-96 lg:h-[25rem]">
                   <div className="relative h-40 overflow-hidden md:h-48">
                     {imageUrl ? (
                       <img
@@ -166,11 +175,11 @@ const FeaturedStories = () => {
                       </div>
                     )}
                     {story.is_free ? (
-                      <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-2 py-1 text-xs font-bold text-white shadow-lg md:px-3 md:py-1.5">
+                      <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-2 py-1 text-xs font-bold text-white shadow-lg md:px-3 md:py-1.5 pointer-events-none">
                         {t('misc:free.tag')}
                       </div>
                     ) : (
-                      <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-yellow-500 px-2 py-1 text-xs font-bold text-black shadow-lg md:px-3 md:py-1.5">
+                      <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-yellow-500 px-2 py-1 text-xs font-bold text-black shadow-lg md:px-3 md:py-1.5 pointer-events-none">
                         {t('misc:premium.tag')}
                       </div>
                     )}
@@ -184,7 +193,7 @@ const FeaturedStories = () => {
                         <div className="flex shrink-0 items-center gap-2">
                           <Badge
                             variant="secondary"
-                            className="text-dream-DEFAULT bg-dream-light/30 text-xs"
+                            className="text-dream-DEFAULT bg-dream-light/30 text-xs pointer-events-none"
                           >
                             {t(`stories:category.${story.category}`, {
                               defaultValue:
@@ -192,7 +201,7 @@ const FeaturedStories = () => {
                                 story.category.slice(1),
                             })}
                           </Badge>
-                          <div className="text-dream-DEFAULT flex items-center gap-1 text-xs">
+                          <div className="text-dream-DEFAULT flex items-center gap-1 text-xs pointer-events-none">
                             <Clock className="h-3 w-3" />
                             <span>
                               {story.duration} {t('misc:duration')}

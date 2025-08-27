@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
@@ -86,6 +85,10 @@ const Stories = () => {
 
     return matchesSearch && matchesCategory
   })
+
+  const handleStoryClick = (storyId: string) => {
+    console.log('Story card clicked, navigating to story:', storyId)
+  }
 
   if (isLoading) {
     return (
@@ -199,8 +202,13 @@ const Stories = () => {
               )
 
               return (
-                <Link key={story.id} to={`/stories/${story.id}`}>
-                  <Card className="story-card flex h-80 min-w-80 max-w-96 cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/70 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/70 md:h-96">
+                <Link 
+                  key={story.id} 
+                  to={`/stories/${story.id}`}
+                  onClick={() => handleStoryClick(story.id)}
+                  className="block"
+                >
+                  <Card className="story-card flex h-80 min-w-80 max-w-96 cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/70 backdrop-blur-sm transition-all hover:shadow-lg hover:scale-[1.02] dark:bg-nightsky-light/70 md:h-96">
                     <div className="relative h-56">
                       {imageUrl ? (
                         <img
@@ -223,11 +231,11 @@ const Stories = () => {
                         </div>
                       )}
                       {story.is_free ? (
-                        <div className="absolute right-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-white shadow-lg">
+                        <div className="absolute right-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-white shadow-lg pointer-events-none">
                           {t('free.tag', { ns: 'misc' })}
                         </div>
                       ) : (
-                        <div className="absolute right-2 top-2 rounded-full border-2 border-white bg-yellow-500 px-3 py-1.5 text-xs font-bold text-black shadow-lg">
+                        <div className="absolute right-2 top-2 rounded-full border-2 border-white bg-yellow-500 px-3 py-1.5 text-xs font-bold text-black shadow-lg pointer-events-none">
                           {t('premium.tag', { ns: 'misc' })}
                         </div>
                       )}
@@ -241,11 +249,11 @@ const Stories = () => {
                           <div className="ml-2 flex flex-shrink-0 items-center gap-2">
                             <Badge
                               variant="secondary"
-                              className="text-dream-DEFAULT bg-dream-light/30 text-xs"
+                              className="text-dream-DEFAULT bg-dream-light/30 text-xs pointer-events-none"
                             >
                               {t(`category.${story.category}`, { defaultValue: story.category.charAt(0).toUpperCase() + story.category.slice(1) })}
                             </Badge>
-                            <div className="text-dream-DEFAULT flex items-center text-xs">
+                            <div className="text-dream-DEFAULT flex items-center text-xs pointer-events-none">
                               <Clock className="mx-1 h-3 w-3" />
                               <span>
                                 {t('duration', { duration: story.duration })}
