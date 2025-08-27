@@ -30,32 +30,41 @@ const PWAInstallPrompt = () => {
   const [platform, setPlatform] = useState<'mobile' | 'desktop'>('desktop')
 
   useEffect(() => {
-    // Check if app is already installed
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-    const isInWebAppiOS = navigator.standalone === true
+         // Check if app is already installed
+     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+     const isInWebAppiOS = navigator.standalone === true
 
-    // Detect platform
-    const userAgent = navigator.userAgent.toLowerCase()
-    const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/.test(userAgent)
-    setPlatform(isMobile ? 'mobile' : 'desktop')
+         // Detect platform
+     const userAgent = navigator.userAgent.toLowerCase()
+     const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/.test(userAgent)
+     setPlatform(isMobile ? 'mobile' : 'desktop')
 
-    if (isStandalone || isInWebAppiOS) {
-      setIsInstalled(true)
-      return
-    }
+     if (isStandalone || isInWebAppiOS) {
+       setIsInstalled(true)
+       return
+     }
 
-    // Check if user has already dismissed the prompt
-    const hasPromptBeenDismissed = localStorage.getItem('pwa-prompt-dismissed')
-    if (hasPromptBeenDismissed) {
-      return
-    }
+     // Check if user has already dismissed the prompt
+     const hasPromptBeenDismissed = localStorage.getItem('pwa-prompt-dismissed')
+     if (hasPromptBeenDismissed) {
+       return
+     }
+
+     // Show prompt for desktop browsers even without beforeinstallprompt
+     if (platform === 'desktop') {
+       setTimeout(() => {
+         setShowPrompt(true)
+       }, 2000)
+     }
 
     const handleBeforeInstallPrompt = (e: Event) => {
       console.log('Before install prompt triggered')
       e.preventDefault()
       setDeferredPrompt(e as BeforeInstallPromptEvent)
-      // Show prompt immediately when we have a native prompt
-      setShowPrompt(true)
+      // Show prompt after a short delay
+      setTimeout(() => {
+        setShowPrompt(true)
+      }, 2000)
     }
 
     const handleAppInstalled = () => {
@@ -70,66 +79,43 @@ const PWAInstallPrompt = () => {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     window.addEventListener('appinstalled', handleAppInstalled)
 
-    // For platforms that don't fire beforeinstallprompt, show prompt after delay
-    const showPromptTimer = setTimeout(() => {
-      if (!deferredPrompt && !isInstalled) {
-        // Only show for mobile platforms that might support add to homescreen
-        if (isMobile) {
-          setShowPrompt(true)
-        }
-      }
-    }, 5000)
-
     return () => {
-      clearTimeout(showPromptTimer)
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
       window.removeEventListener('appinstalled', handleAppInstalled)
     }
-  }, [deferredPrompt, isInstalled])
+  }, [])
 
   const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      try {
-        setIsInstalling(true)
-        console.log('Triggering native install prompt')
-        
-        // Show the native install prompt
-        await deferredPrompt.prompt()
-        
-        // Wait for the user's choice
-        const { outcome } = await deferredPrompt.userChoice
-        console.log('Install prompt outcome:', outcome)
+    if (!deferredPrompt) {
+      console.log('No deferred prompt available')
+      return
+    }
 
-        if (outcome === 'accepted') {
-          console.log('User accepted the install prompt')
-          // The 'appinstalled' event will handle the rest
-        } else {
-          console.log('User dismissed the install prompt')
-          setIsInstalling(false)
-          handleDismiss()
-        }
-      } catch (error) {
-        console.error('Install prompt failed:', error)
+    try {
+      setIsInstalling(true)
+      console.log('Triggering install prompt')
+      
+      // Show the install prompt
+      await deferredPrompt.prompt()
+      
+      // Wait for the user's choice
+      const { outcome } = await deferredPrompt.userChoice
+      console.log('Install prompt outcome:', outcome)
+
+      if (outcome === 'accepted') {
+        console.log('User accepted the install prompt')
+        // The 'appinstalled' event will handle the rest
+      } else {
+        console.log('User dismissed the install prompt')
         setIsInstalling(false)
         handleDismiss()
       }
-
-      setDeferredPrompt(null)
-    } else {
-      // For iOS Safari, try to trigger add to homescreen
-      if (platform === 'mobile' && navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome')) {
-        // Create a custom event to potentially trigger iOS add to homescreen
-        try {
-          const event = new CustomEvent('addtohomescreen')
-          window.dispatchEvent(event)
-        } catch (error) {
-          console.log('iOS add to homescreen not available')
-        }
-      }
-      
-      // Dismiss the prompt since we can't install
-      handleDismiss()
+    } catch (error) {
+      console.error('Install prompt failed:', error)
+      setIsInstalling(false)
     }
+
+    setDeferredPrompt(null)
   }
 
   const handleDismiss = () => {
@@ -137,23 +123,15 @@ const PWAInstallPrompt = () => {
     localStorage.setItem('pwa-prompt-dismissed', 'true')
   }
 
-  // Don't show if app is already installed or no prompt available
-  if (isInstalled || !showPrompt) {
-    return null
-  }
+     // Don't show if app is already installed
+   if (isInstalled || !showPrompt) {
+     return null
+   }
 
-  // Only show if we have a native prompt available or on mobile
-  if (!deferredPrompt && platform === 'desktop') {
-    return null
-  }
-
-  const getInstallMessage = () => {
-    if (platform === 'mobile') {
-      return 'Install Wonder World App for the best experience!'
-    } else {
-      return 'Install Wonder World App on your desktop!'
-    }
-  }
+   // For mobile, require deferredPrompt. For desktop, show instructions.
+   if (platform === 'mobile' && !deferredPrompt) {
+     return null
+   }
 
   return (
     <div className="fixed md:bottom-4 bottom-[4.5rem] start-4 end-4 z-50 md:start-auto md:end-4 md:max-w-sm">
@@ -168,9 +146,12 @@ const PWAInstallPrompt = () => {
               <h3 className="mb-1 font-semibold text-gray-900 dark:text-white">
                 Install Wonder World App
               </h3>
-              <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">
-                {getInstallMessage()}
-              </p>
+                               <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">
+                   {platform === 'desktop' 
+                     ? 'Install this app on your desktop for a better experience!'
+                     : 'Get instant access and offline features on your device!'
+                   }
+                 </p>
 
               <div className="flex gap-2">
                 <Button
@@ -179,17 +160,17 @@ const PWAInstallPrompt = () => {
                   size="sm"
                   className="from-dream-DEFAULT bg-gradient-to-r to-purple-500 text-white hover:from-dream-light hover:to-purple-600 disabled:opacity-50"
                 >
-                  {isInstalling ? (
-                    <>
-                      <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                      Installing...
-                    </>
-                  ) : (
-                    <>
-                      <Download className="mr-2 h-4 w-4" />
-                      Install Now
-                    </>
-                  )}
+                                     {isInstalling ? (
+                     <>
+                       <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                       Installing...
+                     </>
+                   ) : (
+                     <>
+                       <Download className="mr-2 h-4 w-4" />
+                       {platform === 'desktop' ? 'Install App' : 'Install Now'}
+                     </>
+                   )}
                 </Button>
 
                 <Button
