@@ -45,19 +45,20 @@ const PWAInstallPrompt = () => {
       return
     }
 
-    // Check if user has already dismissed the prompt
+    // Check if user has already dismissed the prompt (reduced to 1 minute for testing)
     const hasPromptBeenDismissed = localStorage.getItem('pwa-prompt-dismissed')
     const dismissedTime = localStorage.getItem('pwa-prompt-dismissed-time')
-    const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000
+    const oneMinuteAgo = Date.now() - 1 * 60 * 1000 // Changed from 24 hours to 1 minute for testing
     
-    // Reset dismissal after 24 hours
-    if (dismissedTime && parseInt(dismissedTime) < oneDayAgo) {
+    // Reset dismissal after 1 minute (for easier testing)
+    if (dismissedTime && parseInt(dismissedTime) < oneMinuteAgo) {
+      console.log('PWA: Resetting dismissal after 1 minute')
       localStorage.removeItem('pwa-prompt-dismissed')
       localStorage.removeItem('pwa-prompt-dismissed-time')
     }
     
-    if (hasPromptBeenDismissed && dismissedTime && parseInt(dismissedTime) > oneDayAgo) {
-      console.log('PWA: Prompt was recently dismissed')
+    if (hasPromptBeenDismissed && dismissedTime && parseInt(dismissedTime) > oneMinuteAgo) {
+      console.log('PWA: Prompt was recently dismissed, will show again in:', Math.ceil((parseInt(dismissedTime) + 60000 - Date.now()) / 1000), 'seconds')
       return
     }
 
@@ -70,7 +71,7 @@ const PWAInstallPrompt = () => {
       setTimeout(() => {
         console.log('PWA: Showing install prompt')
         setShowPrompt(true)
-      }, 3000)
+      }, 2000) // Reduced from 3000 to 2000ms
     }
 
     const handleAppInstalled = () => {
@@ -86,6 +87,14 @@ const PWAInstallPrompt = () => {
     // Listen for install events
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     window.addEventListener('appinstalled', handleAppInstalled)
+
+    // For testing purposes, show prompt even without beforeinstallprompt event
+    if (!hasPromptBeenDismissed || (dismissedTime && parseInt(dismissedTime) < oneMinuteAgo)) {
+      console.log('PWA: Showing prompt for testing (no beforeinstallprompt event required)')
+      setTimeout(() => {
+        setShowPrompt(true)
+      }, 2000)
+    }
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
@@ -105,9 +114,8 @@ const PWAInstallPrompt = () => {
         return
       }
       
-      // For other browsers, try to trigger the prompt anyway
-      const beforeInstallPromptEvent = new Event('beforeinstallprompt') as any
-      window.dispatchEvent(beforeInstallPromptEvent)
+      // For other browsers without deferred prompt, show instructions
+      alert('To install this app:\n\n• Chrome/Edge: Look for the install icon in the address bar\n• Firefox: Open the menu (≡) and select "Install"\n• Safari: Tap Share → Add to Home Screen')
       return
     }
 
