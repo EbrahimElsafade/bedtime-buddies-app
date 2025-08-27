@@ -31,14 +31,14 @@ const PWAInstallPrompt = () => {
   useEffect(() => {
     // Check if app is already installed
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-    const isInWebAppiOS = navigator.standalone === true
+    const isInWebAppIOS = navigator.standalone === true
 
     // Detect platform
     const userAgent = navigator.userAgent.toLowerCase()
     const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/.test(userAgent)
     setPlatform(isMobile ? 'mobile' : 'desktop')
 
-    if (isStandalone || isInWebAppiOS) {
+    if (isStandalone || isInWebAppIOS) {
       setIsInstalled(true)
       return
     }
@@ -49,7 +49,7 @@ const PWAInstallPrompt = () => {
       return
     }
 
-    // Show prompt for desktop browsers even without beforeinstallprompt
+    // Show prompt for desktop browsers even without beforeInstallPrompt
     if (platform === 'desktop') {
       setTimeout(() => {
         setShowPrompt(true)
@@ -75,12 +75,12 @@ const PWAInstallPrompt = () => {
       localStorage.removeItem('pwa-prompt-dismissed')
     }
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-    window.addEventListener('appinstalled', handleAppInstalled)
+    window.addEventListener('beforeInstallPrompt', handleBeforeInstallPrompt)
+    window.addEventListener('appInstalled', handleAppInstalled)
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-      window.removeEventListener('appinstalled', handleAppInstalled)
+      window.removeEventListener('beforeInstallPrompt', handleBeforeInstallPrompt)
+      window.removeEventListener('appInstalled', handleAppInstalled)
     }
   }, [])
 
