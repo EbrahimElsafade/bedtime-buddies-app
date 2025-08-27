@@ -13,14 +13,14 @@ import { getMultilingualText } from '@/utils/multilingualUtils'
 import { logger } from '@/utils/logger'
 
 const Story = () => {
-  const { storyId } = useParams<{ storyId: string }>()
+  const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { isAuthenticated, profile } = useAuth()
 
   const [isFavorite, setIsFavorite] = useState(false)
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0)
 
-  const { data: story, isLoading, error } = useStoryData(storyId)
+  const { data: story, isLoading, error } = useStoryData(id)
   const { currentLanguage, setCurrentLanguage } = useStoryLanguage(story)
   const currentLanguageKey = currentLanguage[0] + currentLanguage[1]
   const currentStoryDir = currentLanguageKey === 'ar' ? 'rtl' : 'ltr'
