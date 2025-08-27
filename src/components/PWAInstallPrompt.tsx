@@ -47,16 +47,16 @@ const PWAInstallPrompt = () => {
     // Check if user has already dismissed the prompt
     const hasPromptBeenDismissed = localStorage.getItem('pwa-prompt-dismissed')
     const dismissedTime = localStorage.getItem('pwa-prompt-dismissed-time')
-    const oneMinuteAgo = Date.now() - 1 * 60 * 1000
+    const tenSecondsAgo = Date.now() - 10 * 1000 // Reduced to 10 seconds for testing
     
-    // Reset dismissal after 1 minute (for testing)
-    if (dismissedTime && parseInt(dismissedTime) < oneMinuteAgo) {
-      console.log('PWA: Resetting dismissal after 1 minute')
+    // Reset dismissal after 10 seconds (for testing)
+    if (dismissedTime && parseInt(dismissedTime) < tenSecondsAgo) {
+      console.log('PWA: Resetting dismissal after 10 seconds')
       localStorage.removeItem('pwa-prompt-dismissed')
       localStorage.removeItem('pwa-prompt-dismissed-time')
     }
     
-    if (hasPromptBeenDismissed && dismissedTime && parseInt(dismissedTime) > oneMinuteAgo) {
+    if (hasPromptBeenDismissed && dismissedTime && parseInt(dismissedTime) > tenSecondsAgo) {
       console.log('PWA: Prompt was recently dismissed')
       return
     }
