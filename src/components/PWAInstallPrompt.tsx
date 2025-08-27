@@ -38,19 +38,32 @@ const PWAInstallPrompt = () => {
     const isInWebAppIOS = navigator.standalone === true
     const isInstallable = !isStandalone && !isInWebAppIOS
     
+    // Check if app is already installed
+    const isAndroidChrome = /Android.*Chrome/.test(navigator.userAgent)
+    const hasServiceWorker = 'serviceWorker' in navigator
+    const isHTTPS = location.protocol === 'https:' || location.hostname === 'localhost'
+    
     console.log('PWA Status:', { 
       isStandalone, 
       isInWebAppIOS, 
       isInstallable,
       userAgent: navigator.userAgent,
-      isAndroidChrome: /Android.*Chrome/.test(navigator.userAgent),
+      isAndroidChrome,
+      hasServiceWorker,
+      isHTTPS,
       protocol: window.location.protocol,
-      hasServiceWorker: 'serviceWorker' in navigator
+      hostname: window.location.hostname
     })
 
     if (!isInstallable) {
       console.log('PWA: App is already installed or running in standalone mode')
       setIsInstalled(true)
+      return
+    }
+
+    // Only proceed if basic PWA requirements are met
+    if (!hasServiceWorker || !isHTTPS) {
+      console.log('PWA: Basic requirements not met', { hasServiceWorker, isHTTPS })
       return
     }
 
@@ -91,18 +104,24 @@ const PWAInstallPrompt = () => {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     window.addEventListener('appinstalled', handleAppInstalled)
 
-    // Show prompt after delay, especially for mobile
-    const showPromptAfterDelay = () => {
-      console.log('PWA: Checking if we should show prompt...')
-      setShowPrompt(true)
+    // For Android Chrome, show prompt after delay if conditions are met
+    if (isAndroidChrome) {
+      const showPromptAfterDelay = () => {
+        console.log('PWA: Android Chrome - showing prompt after delay')
+        setShowPrompt(true)
+      }
+      const timer = setTimeout(showPromptAfterDelay, 2000)
+      
+      return () => {
+        window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+        window.removeEventListener('appinstalled', handleAppInstalled)
+        clearTimeout(timer)
+      }
     }
-
-    const timer = setTimeout(showPromptAfterDelay, 3000)
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
       window.removeEventListener('appinstalled', handleAppInstalled)
-      clearTimeout(timer)
     }
   }, [])
 
@@ -122,40 +141,47 @@ const PWAInstallPrompt = () => {
         if (outcome === 'accepted') {
           console.log('PWA: User accepted the install prompt')
           setShowPrompt(false)
+          setIsInstalled(true)
+        } else {
+          console.log('PWA: User dismissed the install prompt')
         }
         
         setDeferredPrompt(null)
       } else {
-        // Force trigger installation attempt on mobile
-        console.log('PWA: No deferred prompt - attempting mobile installation')
+        console.log('PWA: No deferred prompt available')
         
-        // Try to trigger the Chrome mobile installation
-        if (/Android.*Chrome/.test(navigator.userAgent)) {
-          console.log('PWA: Android Chrome detected - attempting to trigger installation')
+        // Check if we're on Android Chrome
+        const isAndroidChrome = /Android.*Chrome/.test(navigator.userAgent)
+        
+        if (isAndroidChrome) {
+          console.log('PWA: Android Chrome detected - showing manual instructions')
           
-          // Create a temporary event to try to trigger installation
-          try {
-            // Check if the page meets PWA criteria and try to force prompt
-            const event = new Event('beforeinstallprompt');
-            window.dispatchEvent(event);
-            
-            // If that doesn't work, show minimal instructions
-            setTimeout(() => {
-              if (!isInstalled) {
-                alert('To install: Tap the menu (⋮) → "Add to Home screen" or "Install app"');
-              }
-            }, 1000);
-          } catch (error) {
-            console.log('PWA: Could not force prompt, showing instructions');
-            alert('To install: Tap the menu (⋮) → "Add to Home screen" or "Install app"');
-          }
+          // Create a more user-friendly dialog
+          const installText = `To install Wonder World on your device:
+
+1. Tap the menu button (⋮) in your browser
+2. Look for "Add to Home screen" or "Install app"
+3. Tap it and follow the prompts
+
+If you don't see this option, the app might already be installed or your browser doesn't support PWA installation.`
+
+          alert(installText)
         } else {
-          alert('To install this app, look for "Add to Home Screen" in your browser menu.');
+          console.log('PWA: Non-Android Chrome browser')
+          alert('To install this app, look for "Add to Home Screen" or "Install" in your browser menu.')
         }
       }
     } catch (error) {
-      console.error('PWA: Install failed:', error)
-      alert('Installation failed. Please use your browser menu to install the app.')
+      console.error('PWA: Install error:', error)
+      
+      // More specific error handling
+      const isAndroidChrome = /Android.*Chrome/.test(navigator.userAgent)
+      
+      if (isAndroidChrome) {
+        alert(`Installation not available automatically. Please use Chrome's menu (⋮) → "Add to Home screen" to install the app.`)
+      } else {
+        alert('Installation failed. Please use your browser menu to install the app.')
+      }
     } finally {
       setIsInstalling(false)
     }
@@ -204,7 +230,7 @@ const PWAInstallPrompt = () => {
                   ) : (
                     <>
                       <Download className="mr-2 h-4 w-4" />
-                      {t('pwa.install')}
+                      {deferredPrompt ? t('pwa.install') : 'Install Guide'}
                     </>
                   )}
                 </button>
