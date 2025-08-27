@@ -44,22 +44,9 @@ const PWAInstallPrompt = () => {
       return
     }
 
-    // Check if user has already dismissed the prompt
-    const hasPromptBeenDismissed = localStorage.getItem('pwa-prompt-dismissed')
-    const dismissedTime = localStorage.getItem('pwa-prompt-dismissed-time')
-    const tenSecondsAgo = Date.now() - 10 * 1000 // Reduced to 10 seconds for testing
-    
-    // Reset dismissal after 10 seconds (for testing)
-    if (dismissedTime && parseInt(dismissedTime) < tenSecondsAgo) {
-      console.log('PWA: Resetting dismissal after 10 seconds')
-      localStorage.removeItem('pwa-prompt-dismissed')
-      localStorage.removeItem('pwa-prompt-dismissed-time')
-    }
-    
-    if (hasPromptBeenDismissed && dismissedTime && parseInt(dismissedTime) > tenSecondsAgo) {
-      console.log('PWA: Prompt was recently dismissed')
-      return
-    }
+    // Clear dismissal for testing on Android
+    localStorage.removeItem('pwa-prompt-dismissed')
+    localStorage.removeItem('pwa-prompt-dismissed-time')
 
     const handleBeforeInstallPrompt = (e: Event) => {
       console.log('PWA: beforeinstallprompt event fired')
@@ -81,11 +68,21 @@ const PWAInstallPrompt = () => {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     window.addEventListener('appinstalled', handleAppInstalled)
 
-    // Always show prompt for testing (even without beforeinstallprompt)
+    // Show prompt after delay, but only if beforeinstallprompt fired or we're testing
     setTimeout(() => {
-      console.log('PWA: Showing install prompt')
-      setShowPrompt(true)
-    }, 2000)
+      if (deferredPrompt) {
+        console.log('PWA: Showing install prompt with deferred prompt')
+        setShowPrompt(true)
+      } else {
+        console.log('PWA: No deferred prompt available yet, checking Android support...')
+        // Force show for Android testing - Android sometimes delays the event
+        const isAndroid = /android/i.test(navigator.userAgent)
+        if (isAndroid) {
+          console.log('PWA: Android detected, showing prompt for manual install')
+          setShowPrompt(true)
+        }
+      }
+    }, 3000)
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
@@ -133,8 +130,8 @@ const PWAInstallPrompt = () => {
     localStorage.setItem('pwa-prompt-dismissed-time', Date.now().toString())
   }
 
-  // Don't show if app is already installed, conditions not met, or no deferred prompt
-  if (isInstalled || !showPrompt || !deferredPrompt) {
+  // Don't show if app is already installed or conditions not met
+  if (isInstalled || !showPrompt) {
     return null
   }
 
