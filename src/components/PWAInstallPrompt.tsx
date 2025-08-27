@@ -21,119 +21,144 @@ interface BeforeInstallPromptEvent extends Event {
 
 const PWAInstallPrompt = () => {
   const { t } = useTranslation('common')
-  const [deferredPrompt, setDeferredPrompt] =
-    useState<BeforeInstallPromptEvent | null>(null)
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [showPrompt, setShowPrompt] = useState(false)
   const [isInstalled, setIsInstalled] = useState(false)
   const [isInstalling, setIsInstalling] = useState(false)
-  const [platform, setPlatform] = useState<'mobile' | 'desktop'>('desktop')
-  const [isiOS, setIsIOS] = useState(false)
 
   useEffect(() => {
+    console.log('PWA Install Prompt: Initializing...')
+    
     // Check if app is already installed
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
     const isInWebAppIOS = navigator.standalone === true
-
-    // Detect platform
-    const userAgent = navigator.userAgent.toLowerCase()
-    const isMobile = /android|iphone|ipad|ipod|blackberry|windows phone/.test(userAgent)
-    const iOS = /iphone|ipad|ipod/.test(userAgent) && /safari/.test(userAgent)
-    setPlatform(isMobile ? 'mobile' : 'desktop')
-    setIsIOS(iOS)
+    
+    console.log('PWA Status:', { isStandalone, isInWebAppIOS })
 
     if (isStandalone || isInWebAppIOS) {
+      console.log('PWA: App is already installed')
       setIsInstalled(true)
       return
     }
 
     // Check if user has already dismissed the prompt
     const hasPromptBeenDismissed = localStorage.getItem('pwa-prompt-dismissed')
-    if (hasPromptBeenDismissed) {
+    const dismissedTime = localStorage.getItem('pwa-prompt-dismissed-time')
+    const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000
+    
+    // Reset dismissal after 24 hours
+    if (dismissedTime && parseInt(dismissedTime) < oneDayAgo) {
+      localStorage.removeItem('pwa-prompt-dismissed')
+      localStorage.removeItem('pwa-prompt-dismissed-time')
+    }
+    
+    if (hasPromptBeenDismissed && dismissedTime && parseInt(dismissedTime) > oneDayAgo) {
+      console.log('PWA: Prompt was recently dismissed')
       return
     }
 
-    // Show prompt for desktop browsers even without beforeinstallprompt
-    if (!isMobile) {
-      setTimeout(() => {
-        setShowPrompt(true)
-      }, 2000)
-    }
-
     const handleBeforeInstallPrompt = (e: Event) => {
-      console.log('Before install prompt triggered')
+      console.log('PWA: beforeinstallprompt event fired')
       e.preventDefault()
       setDeferredPrompt(e as BeforeInstallPromptEvent)
-      // Show prompt after a short delay
+      
+      // Show prompt after a delay
       setTimeout(() => {
+        console.log('PWA: Showing install prompt')
         setShowPrompt(true)
-      }, 2000)
+      }, 3000)
     }
 
     const handleAppInstalled = () => {
-      console.log('App installed successfully')
+      console.log('PWA: App installed successfully')
       setIsInstalled(true)
       setShowPrompt(false)
       setDeferredPrompt(null)
       setIsInstalling(false)
       localStorage.removeItem('pwa-prompt-dismissed')
+      localStorage.removeItem('pwa-prompt-dismissed-time')
     }
 
-    // iOS Safari does not fire beforeinstallprompt; show instructions UI
-    if (iOS) {
-      setTimeout(() => {
-        setShowPrompt(true)
-      }, 2000)
-    }
-
+    // Listen for install events
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     window.addEventListener('appinstalled', handleAppInstalled)
+
+    // For browsers that don't fire beforeinstallprompt, show prompt anyway
+    const userAgent = navigator.userAgent.toLowerCase()
+    const isChrome = userAgent.includes('chrome') && !userAgent.includes('edg')
+    const isFirefox = userAgent.includes('firefox')
+    const isSafari = userAgent.includes('safari') && !userAgent.includes('chrome')
+    
+    console.log('Browser detection:', { isChrome, isFirefox, isSafari })
+
+    // Show prompt for all browsers after delay if no beforeinstallprompt fired
+    setTimeout(() => {
+      if (!deferredPrompt && !isInstalled) {
+        console.log('PWA: No deferred prompt, showing fallback prompt')
+        setShowPrompt(true)
+      }
+    }, 5000)
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
       window.removeEventListener('appinstalled', handleAppInstalled)
     }
-  }, [])
+  }, [deferredPrompt, isInstalled])
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) {
-      console.log('No deferred prompt available')
-      return
-    }
+    console.log('PWA: Install button clicked')
+    
+    if (deferredPrompt) {
+      try {
+        setIsInstalling(true)
+        console.log('PWA: Triggering deferred prompt')
+        await deferredPrompt.prompt()
+        const { outcome } = await deferredPrompt.userChoice
+        console.log('PWA: Install prompt outcome:', outcome)
 
-    try {
-      setIsInstalling(true)
-      console.log('Triggering install prompt')
-      await deferredPrompt.prompt()
-      const { outcome } = await deferredPrompt.userChoice
-      console.log('Install prompt outcome:', outcome)
-
-      if (outcome === 'accepted') {
-        console.log('User accepted the install prompt')
-      } else {
-        console.log('User dismissed the install prompt')
+        if (outcome === 'accepted') {
+          console.log('PWA: User accepted the install prompt')
+          setShowPrompt(false)
+        } else {
+          console.log('PWA: User dismissed the install prompt')
+          setIsInstalling(false)
+        }
+        setDeferredPrompt(null)
+      } catch (error) {
+        console.error('PWA: Install prompt failed:', error)
         setIsInstalling(false)
-        handleDismiss()
       }
-    } catch (error) {
-      console.error('Install prompt failed:', error)
-      setIsInstalling(false)
+    } else {
+      // Fallback: Try to guide user to manual installation
+      console.log('PWA: No deferred prompt available, showing manual instructions')
+      
+      const userAgent = navigator.userAgent.toLowerCase()
+      let message = ''
+      
+      if (userAgent.includes('chrome')) {
+        message = 'In Chrome: Click the menu (⋮) → "Add to Home screen" or "Install app"'
+      } else if (userAgent.includes('firefox')) {
+        message = 'In Firefox: Click the menu (☰) → "Install" or "Add to Home screen"'
+      } else if (userAgent.includes('safari')) {
+        message = 'In Safari: Tap the Share button (⬆) → "Add to Home Screen"'
+      } else {
+        message = 'Look for "Add to Home screen" or "Install app" option in your browser menu'
+      }
+      
+      alert(`To install Wonder World:\n\n${message}`)
+      handleDismiss()
     }
-
-    setDeferredPrompt(null)
   }
 
   const handleDismiss = () => {
+    console.log('PWA: Prompt dismissed by user')
     setShowPrompt(false)
     localStorage.setItem('pwa-prompt-dismissed', 'true')
+    localStorage.setItem('pwa-prompt-dismissed-time', Date.now().toString())
   }
 
   // Don't show if app is already installed
   if (isInstalled || !showPrompt) {
-    return null
-  }
-
-  // For mobile, require deferredPrompt except on iOS (instructions only). For desktop, show instructions.
-  if (platform === 'mobile' && !deferredPrompt && !isiOS) {
     return null
   }
 
