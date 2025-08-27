@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { X, Download, Smartphone } from 'lucide-react'
@@ -45,12 +44,12 @@ const PWAInstallPrompt = () => {
       return
     }
 
-    // Check if user has already dismissed the prompt (reduced to 1 minute for testing)
+    // Check if user has already dismissed the prompt
     const hasPromptBeenDismissed = localStorage.getItem('pwa-prompt-dismissed')
     const dismissedTime = localStorage.getItem('pwa-prompt-dismissed-time')
-    const oneMinuteAgo = Date.now() - 1 * 60 * 1000 // Changed from 24 hours to 1 minute for testing
+    const oneMinuteAgo = Date.now() - 1 * 60 * 1000
     
-    // Reset dismissal after 1 minute (for easier testing)
+    // Reset dismissal after 1 minute (for testing)
     if (dismissedTime && parseInt(dismissedTime) < oneMinuteAgo) {
       console.log('PWA: Resetting dismissal after 1 minute')
       localStorage.removeItem('pwa-prompt-dismissed')
@@ -58,7 +57,7 @@ const PWAInstallPrompt = () => {
     }
     
     if (hasPromptBeenDismissed && dismissedTime && parseInt(dismissedTime) > oneMinuteAgo) {
-      console.log('PWA: Prompt was recently dismissed, will show again in:', Math.ceil((parseInt(dismissedTime) + 60000 - Date.now()) / 1000), 'seconds')
+      console.log('PWA: Prompt was recently dismissed')
       return
     }
 
@@ -66,12 +65,6 @@ const PWAInstallPrompt = () => {
       console.log('PWA: beforeinstallprompt event fired')
       e.preventDefault()
       setDeferredPrompt(e as BeforeInstallPromptEvent)
-      
-      // Show our custom prompt after a short delay
-      setTimeout(() => {
-        console.log('PWA: Showing install prompt')
-        setShowPrompt(true)
-      }, 2000) // Reduced from 3000 to 2000ms
     }
 
     const handleAppInstalled = () => {
@@ -88,13 +81,11 @@ const PWAInstallPrompt = () => {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     window.addEventListener('appinstalled', handleAppInstalled)
 
-    // For testing purposes, show prompt even without beforeinstallprompt event
-    if (!hasPromptBeenDismissed || (dismissedTime && parseInt(dismissedTime) < oneMinuteAgo)) {
-      console.log('PWA: Showing prompt for testing (no beforeinstallprompt event required)')
-      setTimeout(() => {
-        setShowPrompt(true)
-      }, 2000)
-    }
+    // Always show prompt for testing (even without beforeinstallprompt)
+    setTimeout(() => {
+      console.log('PWA: Showing install prompt')
+      setShowPrompt(true)
+    }, 2000)
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
@@ -106,17 +97,28 @@ const PWAInstallPrompt = () => {
     console.log('PWA: Install button clicked')
     
     if (!deferredPrompt) {
-      console.log('PWA: No deferred prompt available')
+      console.log('PWA: No deferred prompt available - showing manual instructions')
       
-      // For iOS Safari, show brief instruction but try to trigger add to homescreen
+      // For iOS Safari
       if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream) {
-        console.log('PWA: iOS detected - user needs to manually add to home screen')
-        // On iOS, we can't programmatically install, user must do it manually
+        alert('To install this app on iOS:\n\n1. Tap the Share button (□↗) at the bottom\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm')
         return
       }
       
-      // For other browsers, we can't force install without the event
-      console.log('PWA: Cannot install - no beforeinstallprompt event available')
+      // For Chrome/Edge
+      if (/Chrome|Edg/.test(navigator.userAgent)) {
+        alert('To install this app in Chrome/Edge:\n\n1. Look for the install icon (⊕) in the address bar\n2. Or click the three dots menu → "Install Wonder World"\n3. Click "Install" to confirm')
+        return
+      }
+      
+      // For Firefox
+      if (/Firefox/.test(navigator.userAgent)) {
+        alert('To install this app in Firefox:\n\n1. Click the menu button (≡)\n2. Select "Install"\n3. Click "Install" to confirm')
+        return
+      }
+      
+      // For other browsers
+      alert('To install this app:\n\n• Look for an install button in your browser\n• Or check your browser menu for "Install" or "Add to Home Screen" option')
       return
     }
 
@@ -132,7 +134,6 @@ const PWAInstallPrompt = () => {
       if (outcome === 'accepted') {
         console.log('PWA: User accepted the install prompt')
         setShowPrompt(false)
-        // Don't set isInstalled here, wait for appinstalled event
       } else {
         console.log('PWA: User dismissed the install prompt')
       }
@@ -188,7 +189,7 @@ const PWAInstallPrompt = () => {
                   ) : (
                     <>
                       <Download className="mr-2 h-4 w-4" />
-                      {t('pwa.install')}
+                      {deferredPrompt ? t('pwa.install') : 'Show Instructions'}
                     </>
                   )}
                 </button>
