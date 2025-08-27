@@ -62,11 +62,11 @@ const PWAInstallPrompt = () => {
       e.preventDefault()
       setDeferredPrompt(e as BeforeInstallPromptEvent)
       
-      // Show prompt after a delay
+      // Show our custom prompt immediately when browser prompt is available
       setTimeout(() => {
         console.log('PWA: Showing install prompt')
         setShowPrompt(true)
-      }, 3000)
+      }, 2000)
     }
 
     const handleAppInstalled = () => {
@@ -83,27 +83,11 @@ const PWAInstallPrompt = () => {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
     window.addEventListener('appinstalled', handleAppInstalled)
 
-    // For browsers that don't fire beforeinstallprompt, show prompt anyway
-    const userAgent = navigator.userAgent.toLowerCase()
-    const isChrome = userAgent.includes('chrome') && !userAgent.includes('edg')
-    const isFirefox = userAgent.includes('firefox')
-    const isSafari = userAgent.includes('safari') && !userAgent.includes('chrome')
-    
-    console.log('Browser detection:', { isChrome, isFirefox, isSafari })
-
-    // Show prompt for all browsers after delay if no beforeinstallprompt fired
-    setTimeout(() => {
-      if (!deferredPrompt && !isInstalled) {
-        console.log('PWA: No deferred prompt, showing fallback prompt')
-        setShowPrompt(true)
-      }
-    }, 5000)
-
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
       window.removeEventListener('appinstalled', handleAppInstalled)
     }
-  }, [deferredPrompt, isInstalled])
+  }, [])
 
   const handleInstallClick = async () => {
     console.log('PWA: Install button clicked')
@@ -119,6 +103,7 @@ const PWAInstallPrompt = () => {
         if (outcome === 'accepted') {
           console.log('PWA: User accepted the install prompt')
           setShowPrompt(false)
+          setIsInstalled(true)
         } else {
           console.log('PWA: User dismissed the install prompt')
           setIsInstalling(false)
@@ -129,24 +114,8 @@ const PWAInstallPrompt = () => {
         setIsInstalling(false)
       }
     } else {
-      // Fallback: Try to guide user to manual installation
-      console.log('PWA: No deferred prompt available, showing manual instructions')
-      
-      const userAgent = navigator.userAgent.toLowerCase()
-      let message = ''
-      
-      if (userAgent.includes('chrome')) {
-        message = 'In Chrome: Click the menu (⋮) → "Add to Home screen" or "Install app"'
-      } else if (userAgent.includes('firefox')) {
-        message = 'In Firefox: Click the menu (☰) → "Install" or "Add to Home screen"'
-      } else if (userAgent.includes('safari')) {
-        message = 'In Safari: Tap the Share button (⬆) → "Add to Home Screen"'
-      } else {
-        message = 'Look for "Add to Home screen" or "Install app" option in your browser menu'
-      }
-      
-      alert(`To install Wonder World:\n\n${message}`)
-      handleDismiss()
+      console.log('PWA: No deferred prompt available')
+      setIsInstalling(false)
     }
   }
 
@@ -157,8 +126,8 @@ const PWAInstallPrompt = () => {
     localStorage.setItem('pwa-prompt-dismissed-time', Date.now().toString())
   }
 
-  // Don't show if app is already installed
-  if (isInstalled || !showPrompt) {
+  // Don't show if app is already installed or no prompt available
+  if (isInstalled || !showPrompt || !deferredPrompt) {
     return null
   }
 
