@@ -109,7 +109,7 @@ const PWAInstallPrompt = () => {
   }
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 z-50 md:left-auto md:right-4 md:max-w-sm">
+    <div className="fixed bottom-20 left-4 right-4 z-50 md:bottom-4 md:left-auto md:right-4 md:max-w-sm">
       <Card className="border-primary/20 bg-white/95 shadow-xl backdrop-blur-sm dark:bg-gray-900/95">
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
