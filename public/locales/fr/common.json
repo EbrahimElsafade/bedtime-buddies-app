@@ -1,4 +1,3 @@
-
 {
   "appName": "Histoires du Soir",
   "home": "Accueil",
@@ -43,6 +42,14 @@
     "installAppDescriptionIOS": "Appuyez sur le bouton Partager ci-dessous, puis appuyez sur 'Ajouter à l'écran d'accueil' pour installer cette application",
     "install": "Installer",
     "gotIt": "Compris",
-    "later": "Plus tard"
+    "later": "Plus tard",
+    "ios": {
+      "installInstructions": "Instructions d'installation",
+      "step1": "Appuyez sur le bouton Partager",
+      "step2": "Sélectionnez 'Ajouter à l'écran d'accueil'",
+      "step3": "Appuyez sur 'Ajouter' pour installer",
+      "iosHint": "Installez pour un accès rapide et une utilisation hors ligne",
+      "showInstructions": "Afficher Comment Installer"
+    }
   }
 }

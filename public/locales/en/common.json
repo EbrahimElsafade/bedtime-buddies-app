@@ -1,4 +1,3 @@
-
 {
   "appName": "Bedtime Stories",
   "home": "Home",
@@ -43,6 +42,14 @@
     "installAppDescriptionIOS": "Tap the Share button below, then tap 'Add to Home Screen' to install this app",
     "install": "Install",
     "gotIt": "Got it",
-    "later": "Later"
+    "later": "Later",
+    "ios": {
+      "installInstructions": "Install Instructions",
+      "step1": "Tap the share button",
+      "step2": "Select 'Add to Home Screen'",
+      "step3": "Tap 'Add' to install",
+      "iosHint": "Install for quick access and offline use",
+      "showInstructions": "Show How"
+    }
   }
 }

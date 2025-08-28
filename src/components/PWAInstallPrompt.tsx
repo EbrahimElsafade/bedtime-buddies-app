@@ -183,7 +183,7 @@ const PWAInstallPrompt = () => {
           <CardContent className="p-6">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                {t('pwa.installInstructions')}
+                {t('pwa.iso.installInstructions')}
               </h3>
               <Button
                 onClick={handleDismiss}
@@ -204,7 +204,7 @@ const PWAInstallPrompt = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-700 dark:text-gray-300">
-                    {t('pwa.step1')}
+                    {t('pwa.iso.step1')}
                   </span>
                   <Share className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                 </div>
@@ -218,7 +218,7 @@ const PWAInstallPrompt = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-sm text-gray-700 dark:text-gray-300">
-                    {t('pwa.step2')}
+                    {t('pwa.iso.step2')}
                   </span>
                   <div className="flex items-center gap-1 rounded border bg-white px-2 py-1 dark:bg-gray-800">
                     <Plus className="h-4 w-4 text-gray-600 dark:text-gray-400" />
@@ -234,14 +234,14 @@ const PWAInstallPrompt = () => {
                   </span>
                 </div>
                 <span className="text-sm text-gray-700 dark:text-gray-300">
-                  {t('pwa.step3')}
+                  {t('pwa.iso.step3')}
                 </span>
               </div>
             </div>
 
             <div className="mt-6 flex gap-2">
               <Button onClick={handleDismiss} className="flex-1">
-                {t('pwa.gotIt')}
+                {t('pwa.iso.gotIt')}
               </Button>
             </div>
           </CardContent>
