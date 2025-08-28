@@ -119,10 +119,10 @@ const PWAInstallPrompt = () => {
 
             <div className="flex-1">
               <h3 className="mb-1 font-semibold text-gray-900 dark:text-white">
-                Install Wonder World
+                {t('pwa.installApp')}
               </h3>
               <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">
-                Install our app for a better experience with offline access and quick launch.
+                {t('pwa.installAppDescription')}
               </p>
 
               <div className="flex gap-2">
@@ -135,12 +135,12 @@ const PWAInstallPrompt = () => {
                   {isInstalling ? (
                     <>
                       <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                      Installing...
+                      {t('loading')}
                     </>
                   ) : (
                     <>
                       <Download className="mr-2 h-4 w-4" />
-                      Install
+                      {t('pwa.install')}
                     </>
                   )}
                 </Button>
@@ -152,7 +152,7 @@ const PWAInstallPrompt = () => {
                   size="sm"
                   className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
                 >
-                  Later
+                  {t('pwa.later')}
                 </Button>
               </div>
             </div>
