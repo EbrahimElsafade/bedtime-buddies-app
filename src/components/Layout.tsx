@@ -3,8 +3,6 @@ import { Outlet, Link, useLocation } from 'react-router-dom'
 import {
   Moon,
   Sun,
-  Menu,
-  X,
   Home,
   Book,
   BookOpen,
@@ -30,7 +28,6 @@ interface NavigationSettings {
 const Layout = () => {
   const { isAuthenticated, user, profile, logout } = useAuth()
   const { t } = useTranslation(['navigation', 'auth', 'misc'])
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
   const location = useLocation()
 
@@ -121,17 +118,6 @@ const Layout = () => {
     return navigationSettings[item.key as keyof NavigationSettings] !== false
   })
 
-  // Handle scrolling when mobile menu is open
-  useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'auto'
-    }
-    return () => {
-      document.body.style.overflow = 'auto'
-    }
-  }, [isMenuOpen])
 
   return (
     <div className="nightsky-gradient stars-bg flex min-h-screen flex-col pb-16 dark:text-white md:pb-0">
@@ -226,74 +212,6 @@ const Layout = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="fixed inset-0 top-16 z-50 overflow-y-auto bg-white/90 backdrop-blur-lg dark:bg-nightsky/95 md:hidden">
-            <nav className="flex flex-col space-y-3 p-4">
-              {navItems.map(item => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={cn(
-                    'rounded-md px-4 py-3 text-center text-lg font-medium',
-                    isActive(item.path)
-                      ? 'bg-dream-DEFAULT text-white shadow-md'
-                      : 'text-dream-DEFAULT hover:bg-dream-DEFAULT/10 dark:text-white dark:hover:bg-white/10',
-                  )}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-
-              {isAuthenticated ? (
-                <>
-                  <Link
-                    to="/profile"
-                    className="text-dream-DEFAULT hover:bg-dream-DEFAULT/10 rounded-md px-4 py-3 text-center text-lg font-medium dark:text-white dark:hover:bg-white/10"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {t('auth:profile')}
-                  </Link>
-                  <button
-                    className="text-dream-DEFAULT hover:bg-dream-DEFAULT/10 w-full rounded-md px-4 py-3 text-center text-lg font-medium dark:text-white dark:hover:bg-white/10"
-                    onClick={() => {
-                      logout()
-                      setIsMenuOpen(false)
-                    }}
-                  >
-                    {t('auth:logout')}
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="text-dream-DEFAULT hover:bg-dream-DEFAULT/10 rounded-md px-4 py-3 text-center text-lg font-medium dark:text-white dark:hover:bg-white/10"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {t('auth:login')}
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="bg-dream-DEFAULT rounded-md px-4 py-3 text-center text-lg font-medium text-white"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {t('auth:signUp')}
-                  </Link>
-                </>
-              )}
-
-              <Link
-                to="/subscription"
-                className="text-moon-DEFAULT rounded-md px-4 py-3 text-center text-lg font-medium hover:bg-secondary/50"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                ✨ {t('misc:layout.subscribe')}
-              </Link>
-            </nav>
-          </div>
-        )}
       </header>
 
       {/* Main Content */}
