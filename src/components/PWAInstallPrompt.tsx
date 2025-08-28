@@ -38,25 +38,15 @@ const PWAInstallPrompt = () => {
     const isAndroid = /android/.test(userAgent)
     const isChrome = /chrome/.test(userAgent)
 
-    // return {
-    //   isIOS,
-    //   isSafari,
-    //   isStandalone,
-    //   isIOSWebApp,
-    //   isAndroid,
-    //   isChrome,
-    //   canInstallNatively:
-    //     (!isIOS && 'serviceWorker' in navigator) || (isAndroid && isChrome),
-    // }
-
     return {
-      isIOS: true,
-      isSafari: false,
-      isStandalone: false,
-      isIOSWebApp: false,
-      isAndroid: false,
-      isChrome: true,
-      canInstallNatively: false,
+      isIOS,
+      isSafari,
+      isStandalone,
+      isIOSWebApp,
+      isAndroid,
+      isChrome,
+      canInstallNatively:
+        (!isIOS && 'serviceWorker' in navigator) || (isAndroid && isChrome),
     }
   }
 
