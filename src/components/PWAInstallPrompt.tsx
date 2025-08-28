@@ -47,6 +47,18 @@ const PWAInstallPrompt = () => {
       }
     }
 
+    // Check if we're on iOS (Safari doesn't support beforeinstallprompt)
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches
+    
+    if (isIOS && !isInStandaloneMode) {
+      // Show iOS-specific install instructions after delay
+      setTimeout(() => {
+        setShowPrompt(true)
+      }, 3000)
+      return
+    }
+
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault()
       setDeferredPrompt(e as BeforeInstallPromptEvent)
@@ -75,6 +87,15 @@ const PWAInstallPrompt = () => {
   }, [])
 
   const handleInstallClick = async () => {
+    // Check if we're on iOS
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    
+    if (isIOS) {
+      // For iOS, just dismiss the prompt as we can't programmatically install
+      setShowPrompt(false)
+      return
+    }
+
     if (!deferredPrompt) {
       setShowPrompt(false)
       return
@@ -104,7 +125,15 @@ const PWAInstallPrompt = () => {
     localStorage.setItem('pwa-prompt-dismissed-time', Date.now().toString())
   }
 
-  if (isInstalled || !showPrompt || !deferredPrompt) {
+  // Check if we're on iOS
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+  
+  if (isInstalled || !showPrompt) {
+    return null
+  }
+
+  // Don't show if not iOS and no deferred prompt available
+  if (!isIOS && !deferredPrompt) {
     return null
   }
 
@@ -122,7 +151,7 @@ const PWAInstallPrompt = () => {
                 {t('pwa.installApp')}
               </h3>
               <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">
-                {t('pwa.installAppDescription')}
+                {isIOS ? t('pwa.installAppDescriptionIOS') : t('pwa.installAppDescription')}
               </p>
 
               <div className="flex gap-2">
@@ -140,7 +169,7 @@ const PWAInstallPrompt = () => {
                   ) : (
                     <>
                       <Download className="mr-2 h-4 w-4" />
-                      {t('pwa.install')}
+                      {isIOS ? t('pwa.gotIt') : t('pwa.install')}
                     </>
                   )}
                 </Button>

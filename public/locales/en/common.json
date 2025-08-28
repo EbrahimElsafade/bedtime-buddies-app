@@ -40,7 +40,9 @@
   "pwa": {
     "installApp": "Install App",
     "installAppDescription": "Get instant access and offline features on your device!",
+    "installAppDescriptionIOS": "Tap the Share button below, then tap 'Add to Home Screen' to install this app",
     "install": "Install",
+    "gotIt": "Got it",
     "later": "Later"
   }
 }

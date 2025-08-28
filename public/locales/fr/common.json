@@ -40,7 +40,9 @@
   "pwa": {
     "installApp": "Installer l'application",
     "installAppDescription": "Accédez instantanément et utilisez l'application hors ligne !",
+    "installAppDescriptionIOS": "Appuyez sur le bouton Partager ci-dessous, puis appuyez sur 'Ajouter à l'écran d'accueil' pour installer cette application",
     "install": "Installer",
+    "gotIt": "Compris",
     "later": "Plus tard"
   }
 }
