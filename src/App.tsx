@@ -42,8 +42,8 @@ function App() {
           <AuthProvider>
             <TooltipProvider>
               <Toaster />
-              <PWAInstallPrompt />
               <BrowserRouter>
+                <PWAInstallPrompt />
                 <Routes>
                   {/* Public Routes with Layout */}
                   <Route path="/" element={<Layout />}>
