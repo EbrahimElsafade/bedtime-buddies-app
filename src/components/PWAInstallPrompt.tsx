@@ -28,7 +28,34 @@ const PWAInstallPrompt = () => {
   const [isInstalled, setIsInstalled] = useState(false)
   const [isInstalling, setIsInstalling] = useState(false)
 
+  const [testingMode, setTestingMode] = useState(false)
+  const [simulateDevice, setSimulateDevice] = useState('ios') // 'real', 'ios', 'android'
+
   const getDeviceInfo = () => {
+    if (testingMode) {
+      if (simulateDevice === 'ios') {
+        return {
+          isIOS: true,
+          isSafari: true,
+          isStandalone: false,
+          isIOSWebApp: false,
+          isAndroid: false,
+          isChrome: false,
+          canInstallNatively: false,
+        }
+      } else if (simulateDevice === 'android') {
+        return {
+          isIOS: false,
+          isSafari: false,
+          isStandalone: false,
+          isIOSWebApp: false,
+          isAndroid: true,
+          isChrome: true,
+          canInstallNatively: true,
+        }
+      }
+    }
+
     const userAgent = navigator.userAgent.toLowerCase()
     const isIOS = /ipad|iphone|ipod/.test(userAgent)
     const isSafari =
