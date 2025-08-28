@@ -9,6 +9,7 @@ import { ThemeProvider } from "next-themes";
 import Layout from "@/components/Layout";
 import AdminLayout from "@/components/AdminLayout";
 import AdminRoute from "@/components/AdminRoute";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
 import Index from "./pages/Index";
 import Stories from "./pages/Stories";
@@ -41,6 +42,7 @@ function App() {
           <AuthProvider>
             <TooltipProvider>
               <Toaster />
+              <PWAInstallPrompt />
               <BrowserRouter>
                 <Routes>
                   {/* Public Routes with Layout */}
