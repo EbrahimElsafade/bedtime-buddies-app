@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { X, Download, Smartphone } from 'lucide-react'
+import { X, Download, Smartphone, Plus, Home, Share } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 declare global {
@@ -21,49 +21,78 @@ interface BeforeInstallPromptEvent extends Event {
 
 const PWAInstallPrompt = () => {
   const { t } = useTranslation('common')
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  const [deferredPrompt, setDeferredPrompt] =
+    useState<BeforeInstallPromptEvent | null>(null)
   const [showPrompt, setShowPrompt] = useState(false)
+  const [showIOSInstructions, setShowIOSInstructions] = useState(false)
   const [isInstalled, setIsInstalled] = useState(false)
   const [isInstalling, setIsInstalling] = useState(false)
+
+  const getDeviceInfo = () => {
+    const userAgent = navigator.userAgent.toLowerCase()
+    const isIOS = /ipad|iphone|ipod/.test(userAgent)
+    const isSafari =
+      /safari/.test(userAgent) && !/chrome|crios|fxios/.test(userAgent)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+    const isIOSWebApp = navigator.standalone === true
+    const isAndroid = /android/.test(userAgent)
+    const isChrome = /chrome/.test(userAgent)
+
+    return {
+      isIOS,
+      isSafari,
+      isStandalone,
+      isIOSWebApp,
+      isAndroid,
+      isChrome,
+      canInstallNatively:
+        (!isIOS && 'serviceWorker' in navigator) || (isAndroid && isChrome),
+    }
+  }
+
+  const deviceInfo = getDeviceInfo()
 
   useEffect(() => {
     // Check if app is already installed
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
     const isInWebAppIOS = navigator.standalone === true
-    
-    if (isStandalone || isInWebAppIOS) {
+
+    if (deviceInfo.isStandalone || deviceInfo.isIOSWebApp) {
       setIsInstalled(true)
       return
     }
+    const dismissalKey = deviceInfo.isIOS
+      ? 'pwa-prompt-dismissed-ios'
+      : 'pwa-prompt-dismissed'
+    const dismissed = localStorage.getItem(dismissalKey)
+    const dismissedTime = localStorage.getItem(`${dismissalKey}-time`)
 
-    // Check if user previously dismissed the prompt
-    const dismissed = localStorage.getItem('pwa-prompt-dismissed')
-    const dismissedTime = localStorage.getItem('pwa-prompt-dismissed-time')
-    
     if (dismissed && dismissedTime) {
-      const oneDayAgo = Date.now() - 24 * 60 * 60 * 1000
-      if (parseInt(dismissedTime) > oneDayAgo) {
-        return // Don't show again for 24 hours
+      // iOS: 7 days, Others: 1 day
+      const cooldownPeriod = deviceInfo.isIOS
+        ? 7 * 24 * 60 * 60 * 1000
+        : 24 * 60 * 60 * 1000
+      const cooldownEnd = parseInt(dismissedTime) + cooldownPeriod
+
+      if (Date.now() < cooldownEnd) {
+        return
       }
     }
 
-    // Check if we're on iOS (Safari doesn't support beforeinstallprompt)
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-    const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches
-    
-    if (isIOS && !isInStandaloneMode) {
-      // Show iOS-specific install instructions after delay
-      setTimeout(() => {
+    // For iOS Safari, show instructions after delay
+    if (deviceInfo.isIOS && deviceInfo.isSafari && !deviceInfo.isIOSWebApp) {
+      const timer = setTimeout(() => {
         setShowPrompt(true)
-      }, 3000)
-      return
+      }, 5000) // Longer delay for iOS
+
+      return () => clearTimeout(timer)
     }
 
+    // For other platforms, handle beforeinstallprompt
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault()
       setDeferredPrompt(e as BeforeInstallPromptEvent)
-      
-      // Show prompt after a short delay
+
       setTimeout(() => {
         setShowPrompt(true)
       }, 3000)
@@ -72,27 +101,32 @@ const PWAInstallPrompt = () => {
     const handleAppInstalled = () => {
       setIsInstalled(true)
       setShowPrompt(false)
+      setShowIOSInstructions(false)
       setDeferredPrompt(null)
+      // Clear all dismissal records
       localStorage.removeItem('pwa-prompt-dismissed')
       localStorage.removeItem('pwa-prompt-dismissed-time')
+      localStorage.removeItem('pwa-prompt-dismissed-ios')
+      localStorage.removeItem('pwa-prompt-dismissed-ios-time')
     }
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-    window.addEventListener('appinstalled', handleAppInstalled)
+    if (deviceInfo.canInstallNatively) {
+      window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+      window.addEventListener('appinstalled', handleAppInstalled)
 
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-      window.removeEventListener('appinstalled', handleAppInstalled)
+      return () => {
+        window.removeEventListener(
+          'beforeinstallprompt',
+          handleBeforeInstallPrompt,
+        )
+        window.removeEventListener('appinstalled', handleAppInstalled)
+      }
     }
   }, [])
 
   const handleInstallClick = async () => {
-    // Check if we're on iOS
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-    
-    if (isIOS) {
-      // For iOS, just dismiss the prompt as we can't programmatically install
-      setShowPrompt(false)
+    if (deviceInfo.isIOS) {
+      setShowIOSInstructions(true)
       return
     }
 
@@ -103,14 +137,13 @@ const PWAInstallPrompt = () => {
 
     try {
       setIsInstalling(true)
-      
       await deferredPrompt.prompt()
       const { outcome } = await deferredPrompt.userChoice
 
       if (outcome === 'accepted') {
         setShowPrompt(false)
       }
-      
+
       setDeferredPrompt(null)
     } catch (error) {
       console.error('Install prompt failed:', error)
@@ -121,22 +154,103 @@ const PWAInstallPrompt = () => {
 
   const handleDismiss = () => {
     setShowPrompt(false)
-    localStorage.setItem('pwa-prompt-dismissed', 'true')
-    localStorage.setItem('pwa-prompt-dismissed-time', Date.now().toString())
+    setShowIOSInstructions(false)
+
+    const dismissalKey = deviceInfo.isIOS
+      ? 'pwa-prompt-dismissed-ios'
+      : 'pwa-prompt-dismissed'
+    localStorage.setItem(dismissalKey, 'true')
+    localStorage.setItem(`${dismissalKey}-time`, Date.now().toString())
   }
 
-  // Check if we're on iOS
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-  
-  if (isInstalled || !showPrompt) {
+  // Don't show if already installed
+  if (isInstalled) {
     return null
   }
 
-  // Don't show if not iOS and no deferred prompt available
-  if (!isIOS && !deferredPrompt) {
+  // Don't show if not supported and not iOS
+  if (!deviceInfo.isIOS && !deferredPrompt && !showPrompt) {
     return null
   }
 
+  if (!showPrompt) {
+    return null
+  }
+  if (showIOSInstructions) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <Card className="w-full max-w-md bg-white dark:bg-gray-900">
+          <CardContent className="p-6">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                {t('pwa.installInstructions')}
+              </h3>
+              <Button
+                onClick={handleDismiss}
+                variant="ghost"
+                size="sm"
+                className="p-1 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20">
+                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800">
+                  <span className="text-sm font-bold text-blue-600 dark:text-blue-300">
+                    1
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                    {t('pwa.step1')}
+                  </span>
+                  <Share className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 rounded-lg bg-green-50 p-3 dark:bg-green-900/20">
+                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-green-100 dark:bg-green-800">
+                  <span className="text-sm font-bold text-green-600 dark:text-green-300">
+                    2
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                    {t('pwa.step2')}
+                  </span>
+                  <div className="flex items-center gap-1 rounded border bg-white px-2 py-1 dark:bg-gray-800">
+                    <Plus className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                    <Home className="h-4 w-4 text-gray-600 dark:text-gray-400" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 rounded-lg bg-purple-50 p-3 dark:bg-purple-900/20">
+                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-800">
+                  <span className="text-sm font-bold text-purple-600 dark:text-purple-300">
+                    3
+                  </span>
+                </div>
+                <span className="text-sm text-gray-700 dark:text-gray-300">
+                  {t('pwa.step3')}
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-6 flex gap-2">
+              <Button onClick={handleDismiss} className="flex-1">
+                {t('pwa.gotIt')}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  // Main install prompt
   return (
     <div className="fixed bottom-20 left-4 right-4 z-50 md:bottom-4 md:left-auto md:right-4 md:max-w-sm">
       <Card className="border-primary/20 bg-white/95 shadow-xl backdrop-blur-sm dark:bg-gray-900/95">
@@ -151,8 +265,16 @@ const PWAInstallPrompt = () => {
                 {t('pwa.installApp')}
               </h3>
               <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">
-                {isIOS ? t('pwa.installAppDescriptionIOS') : t('pwa.installAppDescription')}
+                {deviceInfo.isIOS
+                  ? t('pwa.installAppDescriptionIOS')
+                  : t('pwa.installAppDescription')}
               </p>
+
+              {deviceInfo.isIOS && (
+                <div className="mb-3 rounded bg-blue-50 p-2 text-xs text-blue-700 dark:bg-blue-900/20 dark:text-blue-300">
+                  {t('pwa.iosHint')}
+                </div>
+              )}
 
               <div className="flex gap-2">
                 <Button
@@ -168,8 +290,14 @@ const PWAInstallPrompt = () => {
                     </>
                   ) : (
                     <>
-                      <Download className="mr-2 h-4 w-4" />
-                      {isIOS ? t('pwa.gotIt') : t('pwa.install')}
+                      {deviceInfo.isIOS ? (
+                        <Share className="mr-2 h-4 w-4" />
+                      ) : (
+                        <Download className="mr-2 h-4 w-4" />
+                      )}
+                      {deviceInfo.isIOS
+                        ? t('pwa.showInstructions')
+                        : t('pwa.install')}
                     </>
                   )}
                 </Button>
