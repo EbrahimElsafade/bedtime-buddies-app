@@ -194,7 +194,7 @@ const PWAInstallPrompt = () => {
                 {t('pwa.installApp')}
               </h3>
 
-              {showIOSInstructions ? (
+              {!showIOSInstructions ? (
                 <>
                   <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">
                     {deviceInfo.isIOS
