@@ -223,20 +223,6 @@ const Layout = () => {
               </div>
             )}
 
-            {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="rounded-full md:hidden"
-              aria-label={t('misc:accessibility.menu')}
-            >
-              {isMenuOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Menu className="h-5 w-5" />
-              )}
-            </Button>
           </div>
         </div>
 
