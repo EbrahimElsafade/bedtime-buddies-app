@@ -62,8 +62,8 @@ const PWAInstallPrompt = () => {
       return
     }
     const dismissalKey = deviceInfo.isIOS
-      ? 'pwa-prompt-dismissed-ios'
-      : 'pwa-prompt-dismissed'
+      ? 'pwa-prompt-dismissed-ios-v2'
+      : 'pwa-prompt-dismissed-v2'
     const dismissed = localStorage.getItem(dismissalKey)
     const dismissedTime = localStorage.getItem(`${dismissalKey}-time`)
 
@@ -104,10 +104,10 @@ const PWAInstallPrompt = () => {
       setShowIOSInstructions(false)
       setDeferredPrompt(null)
       // Clear all dismissal records
-      localStorage.removeItem('pwa-prompt-dismissed')
-      localStorage.removeItem('pwa-prompt-dismissed-time')
-      localStorage.removeItem('pwa-prompt-dismissed-ios')
-      localStorage.removeItem('pwa-prompt-dismissed-ios-time')
+      localStorage.removeItem('pwa-prompt-dismissed-v2')
+      localStorage.removeItem('pwa-prompt-dismissed-v2-time')
+      localStorage.removeItem('pwa-prompt-dismissed-ios-v2')
+      localStorage.removeItem('pwa-prompt-dismissed-ios-v2-time')
     }
 
     if (deviceInfo.canInstallNatively) {
@@ -160,8 +160,8 @@ const PWAInstallPrompt = () => {
     setShowIOSInstructions(false)
 
     const dismissalKey = deviceInfo.isIOS
-      ? 'pwa-prompt-dismissed-ios'
-      : 'pwa-prompt-dismissed'
+      ? 'pwa-prompt-dismissed-ios-v2'
+      : 'pwa-prompt-dismissed-v2'
     localStorage.setItem(dismissalKey, 'true')
     localStorage.setItem(`${dismissalKey}-time`, Date.now().toString())
   }
