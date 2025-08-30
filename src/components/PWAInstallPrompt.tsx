@@ -79,11 +79,11 @@ const PWAInstallPrompt = () => {
       }
     }
 
-    // For iOS Safari, show instructions after delay
+    // For iOS Safari, show instructions (same timing as Android)
     if (deviceInfo.isIOS && deviceInfo.isSafari && !deviceInfo.isIOSWebApp) {
       const timer = setTimeout(() => {
         setShowPrompt(true)
-      }, 5000) // Longer delay for iOS
+      }, 3000) // Same delay as Android
 
       return () => clearTimeout(timer)
     }
@@ -204,7 +204,7 @@ const PWAInstallPrompt = () => {
 
                   {deviceInfo.isIOS && (
                     <div className="mb-3 rounded bg-blue-50 p-2 text-xs text-blue-700 dark:bg-blue-900/20 dark:text-blue-300">
-                      {t('pwa.iosHint')}
+                      {t('pwa.ios.iosHint')}
                     </div>
                   )}
 
@@ -250,7 +250,7 @@ const PWAInstallPrompt = () => {
                 <div className="mt-3 space-y-4">
                   <div className="flex items-center justify-between">
                     <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
-                      {t('pwa.installInstructions', 'Install Instructions')}
+                      {t('pwa.ios.installInstructions')}
                     </h4>
                   </div>
 
@@ -263,7 +263,7 @@ const PWAInstallPrompt = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-gray-700 dark:text-gray-300">
-                        {t('pwa.step1', 'Tap the share button')}
+                        {t('pwa.ios.step1')}
                       </span>
                       <Share className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                     </div>
@@ -278,7 +278,7 @@ const PWAInstallPrompt = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-gray-700 dark:text-gray-300">
-                        {t('pwa.step2', "Select 'Add to Home Screen")}
+                        {t('pwa.ios.step2')}
                       </span>
                       <div className="flex items-center gap-1 rounded border bg-white px-2 py-1 dark:bg-gray-800">
                         <Plus className="h-4 w-4 text-gray-600 dark:text-gray-400" />
@@ -295,7 +295,7 @@ const PWAInstallPrompt = () => {
                       </span>
                     </div>
                     <span className="text-sm text-gray-700 dark:text-gray-300">
-                      {t('pwa.step3', "Tap 'Add' to install")}
+                      {t('pwa.ios.step3')}
                     </span>
                   </div>
 
