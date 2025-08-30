@@ -32,7 +32,6 @@ const Layout = () => {
   const { t } = useTranslation(['navigation', 'auth', 'misc'])
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
-  const [showIOSPWATest, setShowIOSPWATest] = useState(false)
   const location = useLocation()
 
   // Fetch navigation settings
@@ -87,10 +86,6 @@ const Layout = () => {
       document.documentElement.classList.add('dark')
     }
     setIsDarkMode(!isDarkMode)
-  }
-
-  const triggerIOSPWATest = () => {
-    setShowIOSPWATest(true)
   }
 
   const isActive = (path: string) => {
@@ -232,13 +227,7 @@ const Layout = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => {
-                // For testing: if menu is closed, trigger iOS PWA popup first
-                if (!isMenuOpen) {
-                  triggerIOSPWATest()
-                }
-                setIsMenuOpen(!isMenuOpen)
-              }}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="rounded-full md:hidden"
               aria-label={t('misc:accessibility.menu')}
             >
@@ -381,84 +370,6 @@ const Layout = () => {
           )
         })}
       </div>
-
-      {/* Test iOS PWA Popup */}
-      {showIOSPWATest && (
-        <div className="fixed bottom-20 left-4 right-4 z-50 md:bottom-4 md:left-auto md:right-4 md:max-w-sm md:rtl:left-4 md:rtl:right-auto">
-          <div className="border-primary/20 bg-white/95 shadow-xl backdrop-blur-sm dark:bg-gray-900/95 rounded-lg border p-4">
-            <div className="flex items-start gap-3">
-              <div className="rounded-lg bg-gradient-to-br from-primary/20 to-purple-100/50 p-2 dark:from-primary/30 dark:to-purple-900/30">
-                <Menu className="h-6 w-6 text-primary" />
-              </div>
-
-              <div className="flex-1">
-                <h3 className="mb-1 font-semibold text-gray-900 dark:text-white">
-                  {t('common:pwa.installApp')}
-                </h3>
-
-                <div className="mt-3 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
-                      {t('common:pwa.ios.installInstructions')}
-                    </h4>
-                  </div>
-
-                  {/* Step 1 */}
-                  <div className="flex items-center gap-3 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20">
-                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800">
-                      <span className="text-sm font-bold text-blue-600 dark:text-blue-300">1</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-700 dark:text-gray-300">
-                        {t('common:pwa.ios.step1')}
-                      </span>
-                      <div className="h-5 w-5 text-blue-600 dark:text-blue-400">📤</div>
-                    </div>
-                  </div>
-
-                  {/* Step 2 */}
-                  <div className="flex items-center gap-3 rounded-lg bg-green-50 p-3 dark:bg-green-900/20">
-                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-green-100 dark:bg-green-800">
-                      <span className="text-sm font-bold text-green-600 dark:text-green-300">2</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-700 dark:text-gray-300">
-                        {t('common:pwa.ios.step2')}
-                      </span>
-                      <div className="flex items-center gap-1 rounded border bg-white px-2 py-1 dark:bg-gray-800">
-                        <span className="text-gray-600 dark:text-gray-400">➕🏠</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Step 3 */}
-                  <div className="flex items-center gap-3 rounded-lg bg-purple-50 p-3 dark:bg-purple-900/20">
-                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-800">
-                      <span className="text-sm font-bold text-purple-600 dark:text-purple-300">3</span>
-                    </div>
-                    <span className="text-sm text-gray-700 dark:text-gray-300">
-                      {t('common:pwa.ios.step3')}
-                    </span>
-                  </div>
-
-                  <Button onClick={() => setShowIOSPWATest(false)} className="w-full">
-                    {t('common:pwa.gotIt')}
-                  </Button>
-                </div>
-              </div>
-
-              <Button
-                onClick={() => setShowIOSPWATest(false)}
-                variant="ghost"
-                size="sm"
-                className="p-1 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
