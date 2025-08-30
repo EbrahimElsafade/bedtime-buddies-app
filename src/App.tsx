@@ -43,6 +43,7 @@ function App() {
             <TooltipProvider>
               <Toaster />
               <BrowserRouter>
+                <PWAInstallPrompt />
                 <Routes>
                   {/* Public Routes with Layout */}
                   <Route path="/" element={<Layout />}>
@@ -82,7 +83,6 @@ function App() {
                   {/* 404 Route */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
-                <PWAInstallPrompt />
               </BrowserRouter>
             </TooltipProvider>
           </AuthProvider>

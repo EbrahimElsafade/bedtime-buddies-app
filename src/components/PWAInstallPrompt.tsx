@@ -62,8 +62,8 @@ const PWAInstallPrompt = () => {
       return
     }
     const dismissalKey = deviceInfo.isIOS
-      ? 'pwa-prompt-dismissed-ios-v2'
-      : 'pwa-prompt-dismissed-v2'
+      ? 'pwa-prompt-dismissed-ios'
+      : 'pwa-prompt-dismissed'
     const dismissed = localStorage.getItem(dismissalKey)
     const dismissedTime = localStorage.getItem(`${dismissalKey}-time`)
 
@@ -79,11 +79,11 @@ const PWAInstallPrompt = () => {
       }
     }
 
-    // For iOS Safari, show instructions (same timing as Android)
+    // For iOS Safari, show instructions after delay
     if (deviceInfo.isIOS && deviceInfo.isSafari && !deviceInfo.isIOSWebApp) {
       const timer = setTimeout(() => {
         setShowPrompt(true)
-      }, 3000) // Same delay as Android
+      }, 5000) // Longer delay for iOS
 
       return () => clearTimeout(timer)
     }
@@ -104,10 +104,10 @@ const PWAInstallPrompt = () => {
       setShowIOSInstructions(false)
       setDeferredPrompt(null)
       // Clear all dismissal records
-      localStorage.removeItem('pwa-prompt-dismissed-v2')
-      localStorage.removeItem('pwa-prompt-dismissed-v2-time')
-      localStorage.removeItem('pwa-prompt-dismissed-ios-v2')
-      localStorage.removeItem('pwa-prompt-dismissed-ios-v2-time')
+      localStorage.removeItem('pwa-prompt-dismissed')
+      localStorage.removeItem('pwa-prompt-dismissed-time')
+      localStorage.removeItem('pwa-prompt-dismissed-ios')
+      localStorage.removeItem('pwa-prompt-dismissed-ios-time')
     }
 
     if (deviceInfo.canInstallNatively) {
@@ -160,8 +160,8 @@ const PWAInstallPrompt = () => {
     setShowIOSInstructions(false)
 
     const dismissalKey = deviceInfo.isIOS
-      ? 'pwa-prompt-dismissed-ios-v2'
-      : 'pwa-prompt-dismissed-v2'
+      ? 'pwa-prompt-dismissed-ios'
+      : 'pwa-prompt-dismissed'
     localStorage.setItem(dismissalKey, 'true')
     localStorage.setItem(`${dismissalKey}-time`, Date.now().toString())
   }
@@ -204,7 +204,7 @@ const PWAInstallPrompt = () => {
 
                   {deviceInfo.isIOS && (
                     <div className="mb-3 rounded bg-blue-50 p-2 text-xs text-blue-700 dark:bg-blue-900/20 dark:text-blue-300">
-                      {t('pwa.ios.iosHint')}
+                      {t('pwa.iosHint')}
                     </div>
                   )}
 
@@ -250,7 +250,7 @@ const PWAInstallPrompt = () => {
                 <div className="mt-3 space-y-4">
                   <div className="flex items-center justify-between">
                     <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
-                      {t('pwa.ios.installInstructions')}
+                      {t('pwa.installInstructions', 'Install Instructions')}
                     </h4>
                   </div>
 
@@ -263,7 +263,7 @@ const PWAInstallPrompt = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-gray-700 dark:text-gray-300">
-                        {t('pwa.ios.step1')}
+                        {t('pwa.step1', 'Tap the share button')}
                       </span>
                       <Share className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                     </div>
@@ -278,7 +278,7 @@ const PWAInstallPrompt = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-gray-700 dark:text-gray-300">
-                        {t('pwa.ios.step2')}
+                        {t('pwa.step2', "Select 'Add to Home Screen")}
                       </span>
                       <div className="flex items-center gap-1 rounded border bg-white px-2 py-1 dark:bg-gray-800">
                         <Plus className="h-4 w-4 text-gray-600 dark:text-gray-400" />
@@ -295,7 +295,7 @@ const PWAInstallPrompt = () => {
                       </span>
                     </div>
                     <span className="text-sm text-gray-700 dark:text-gray-300">
-                      {t('pwa.ios.step3')}
+                      {t('pwa.step3', "Tap 'Add' to install")}
                     </span>
                   </div>
 
