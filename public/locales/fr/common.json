@@ -39,7 +39,7 @@
   "pwa": {
     "installApp": "Installer l'application",
     "installAppDescription": "Accédez instantanément et utilisez l'application hors ligne !",
-    "installAppDescriptionIOS": "Appuyez sur le bouton Partager ci-dessous, puis appuyez sur 'Ajouter à l'écran d'accueil' pour installer cette application",
+    "installAppDescriptionIOS": "Installez pour un accès rapide et une utilisation hors ligne cette application",
     "install": "Installer",
     "gotIt": "Compris",
     "later": "Plus tard",
@@ -48,7 +48,6 @@
       "step1": "Appuyez sur le bouton Partager",
       "step2": "Sélectionnez 'Ajouter à l'écran d'accueil'",
       "step3": "Appuyez sur 'Ajouter' pour installer",
-      "iosHint": "Installez pour un accès rapide et une utilisation hors ligne",
       "showInstructions": "Afficher Comment Installer"
     }
   }

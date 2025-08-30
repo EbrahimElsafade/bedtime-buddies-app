@@ -38,6 +38,16 @@ const PWAInstallPrompt = () => {
     const isAndroid = /android/.test(userAgent)
     const isChrome = /chrome/.test(userAgent)
 
+    // return {
+    //   isIOS: true,
+    //   isSafari: true,
+    //   isStandalone: false,
+    //   isIOSWebApp: false,
+    //   isAndroid: false,
+    //   isChrome: false,
+    //   canInstallNatively: false,
+    // }
+
     return {
       isIOS,
       isSafari,
@@ -197,14 +207,12 @@ const PWAInstallPrompt = () => {
               {!showIOSInstructions ? (
                 <>
                   <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">
-                    {deviceInfo.isIOS
-                      ? t('pwa.installAppDescriptionIOS')
-                      : t('pwa.installAppDescription')}
+                    {deviceInfo.isIOS ? '' : t('pwa.installAppDescription')}
                   </p>
 
                   {deviceInfo.isIOS && (
                     <div className="mb-3 rounded bg-blue-50 p-2 text-xs text-blue-700 dark:bg-blue-900/20 dark:text-blue-300">
-                      {t('pwa.iosHint')}
+                      {t('pwa.installAppDescriptionIOS')}
                     </div>
                   )}
 
