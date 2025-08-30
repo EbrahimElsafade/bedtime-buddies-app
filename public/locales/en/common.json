@@ -43,6 +43,11 @@
     "install": "Install",
     "gotIt": "Got it",
     "later": "Later",
+    "iosHint": "Install for quick access and offline use",
+    "installInstructions": "Install Instructions",
+    "step1": "Tap the share button",
+    "step2": "Select 'Add to Home Screen'",
+    "step3": "Tap 'Add' to install",
     "ios": {
       "installInstructions": "Install Instructions",
       "step1": "Tap the share button",
