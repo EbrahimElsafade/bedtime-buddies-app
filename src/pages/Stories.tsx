@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
@@ -44,8 +43,6 @@ const Stories = () => {
         console.error('Error fetching stories:', error)
         throw error
       }
-
-      console.log('data', data)
 
       return data || []
     },
@@ -95,7 +92,7 @@ const Stories = () => {
       >
         <div className="container mx-auto max-w-6xl">
           <div className="mb-4 text-center md:mb-6 lg:mb-8">
-            <h1 className="from-dream-DEFAULT mb-2 bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold leading-tight   md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
+            <h1 className="from-dream-DEFAULT mb-2 bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
               {t('allStories')}
             </h1>
           </div>
@@ -122,7 +119,7 @@ const Stories = () => {
     >
       <div className="container mx-auto max-w-6xl">
         <div className="mb-4 text-center md:mb-6 lg:mb-8">
-          <h1 className="from-dream-DEFAULT mb-2 bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold leading-tight   md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
+          <h1 className="from-dream-DEFAULT mb-2 bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
             {t('allStories')}
           </h1>
           <p className="mx-auto max-w-2xl px-2 text-xs text-muted-foreground md:text-sm lg:text-base">
@@ -168,7 +165,11 @@ const Stories = () => {
                 onClick={() => setSelectedCategory(category.name)}
                 className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
               >
-                {t(`category.${category.name}`, { defaultValue: category.name.charAt(0).toUpperCase() + category.name.slice(1) })}
+                {t(`category.${category.name}`, {
+                  defaultValue:
+                    category.name.charAt(0).toUpperCase() +
+                    category.name.slice(1),
+                })}
               </Button>
             ))}
           </div>
@@ -243,7 +244,11 @@ const Stories = () => {
                               variant="secondary"
                               className="text-dream-DEFAULT bg-dream-light/30 text-xs"
                             >
-                              {t(`category.${story.category}`, { defaultValue: story.category.charAt(0).toUpperCase() + story.category.slice(1) })}
+                              {t(`category.${story.category}`, {
+                                defaultValue:
+                                  story.category.charAt(0).toUpperCase() +
+                                  story.category.slice(1),
+                              })}
                             </Badge>
                             <div className="text-dream-DEFAULT flex items-center text-xs">
                               <Clock className="mx-1 h-3 w-3" />

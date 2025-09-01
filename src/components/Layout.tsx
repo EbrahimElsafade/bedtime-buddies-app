@@ -43,7 +43,6 @@ const Layout = () => {
         .select('setting_value')
         .eq('setting_key', 'home_page')
         .maybeSingle()
-      console.log("data", data)
 
       if (error) {
         console.error('Error fetching navigation settings:', error)
