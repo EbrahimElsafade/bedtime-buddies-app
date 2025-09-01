@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect, ReactNode } from "react";
+import { createContext, useState, useContext, useEffect, ReactNode } from "react";
 
 type Language = 'en' | 'ar' | 'fr';
 
@@ -153,7 +153,6 @@ const translations = {
     'nav.home': 'Accueil',
     'nav.stories': 'Histoires',
     'nav.games': 'Jeux',
-    'nav.profile': 'Profil',
     'duration': 'mins',
     'button.readStory': 'Lire l\'histoire',
     'button.readNow': 'Lire maintenant',
