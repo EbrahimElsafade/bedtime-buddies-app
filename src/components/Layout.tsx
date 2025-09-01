@@ -100,7 +100,7 @@ const Layout = () => {
       icon: Book,
       key: 'stories',
     },
-    { name: t('nav.courses'), path: '/courses', icon: Layers, key: 'courses' },
+    { name: t('navigation:courses'), path: '/courses', icon: Layers, key: 'courses' },
     {
       name: t('navigation:games'),
       path: '/games',
