@@ -36,13 +36,14 @@ const Layout = () => {
 
   // Fetch navigation settings
   const { data: navigationSettings } = useQuery({
-    queryKey: ['appearance-settings', 'navigation'],
+    queryKey: ['appearance-settings', 'home_page'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('appearance_settings')
         .select('setting_value')
-        .eq('setting_key', 'navigation')
+        .eq('setting_key', 'home_page')
         .maybeSingle()
+      console.log("data", data)
 
       if (error) {
         console.error('Error fetching navigation settings:', error)
