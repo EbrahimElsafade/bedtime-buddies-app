@@ -1,20 +1,10 @@
-- fontFamily in arabic like cairo ✔️
-- duration ✔️
-- story card the space between the clock icon and the time ✔️
-- card not clickable popular story card ✔️
-- stories page space ✔️
-- snake game ✔️
-- change the hangman game name in arabic ✔️
-- english , فصحي , French ,مصري ✔️
-- categories translate to arabic ✔️
-- fix the footer ✔️
-- share button plugin ✔️
-- change the app identity ✔️
-- manifest.json for pwa ✔️
-- auto-play and medea player ✔️
-- optionally (the profile page)
+- the profile page
+- suggestion (animate the images of the story)
 
-baby blue ans claud white
-dark blue
-add more svg in the hero section and some color in the header
-optionally (animate the images of the story)
+- fix payment popup
+- fix auth routes translations 
+
+- courses:
+    - fix the courses card routes
+    - get courses category from eng.Ibrahim 
+    - courses 404 page => route back instead of only to the courses page
