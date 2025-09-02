@@ -5,16 +5,12 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
   Card,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
 import { courses, Course } from '@/data/courses'
-import { cn } from '@/lib/utils'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 const Courses = () => {
@@ -178,8 +174,12 @@ const Courses = () => {
             ) : (
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {filteredCourses.map(course => (
-                  <Link key={course.id} to={`/courses/${course.id}`}>
-                    <Card className="story-card relative z-20 w-full flex h-[25rem] cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/10">
+                  <Link
+                    onClick={() => console.log(`/courses/${course.id}`)}
+                    key={course.id}
+                    to={`/courses/${course.id}`}
+                  >
+                    <Card className="story-card relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/10">
                       <div className="relative h-48 overflow-hidden">
                         <img
                           src={course.coverImage}
@@ -231,7 +231,8 @@ const Courses = () => {
                           <div className="text-dream-DEFAULT mt-2 flex items-center text-xs dark:text-foreground">
                             <BookOpen className="mr-1 h-3 w-3" />
                             <span>
-                              {course.lessons} {t('courses.lessons')} • {course.ageRange} {t('courses.years')}
+                              {course.lessons} {t('courses.lessons')} •{' '}
+                              {course.ageRange} {t('courses.years')}
                             </span>
                           </div>
                         </CardHeader>
