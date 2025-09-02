@@ -1,5 +1,6 @@
 - the profile page
 - suggestion (animate the images of the story)
+- don't forget to fix the seo of the app 
 
 - fix payment popup
 - fix auth routes translations 
