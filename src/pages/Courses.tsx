@@ -176,78 +176,68 @@ const Courses = () => {
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 xl:grid-cols-3">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {filteredCourses.map(course => (
-                  <Card
-                    key={course.id}
-                    className="story-card overflow-hidden border-dream-light/20 bg-white/70 backdrop-blur-sm transition-all hover:shadow-lg dark:bg-nightsky-light/70"
-                  >
-                    <div className="relative aspect-[3/2]">
-                      <img
-                        src={course.coverImage}
-                        alt={course.title}
-                        className="h-full w-full object-cover"
-                      />
-                      <div className="text-dream-DEFAULT absolute right-2 top-2 rounded-full bg-white/80 px-2 py-1 text-xs dark:bg-nightsky-light/80">
-                        {course.ageRange} {t('courses.years')}
+                  <Link key={course.id} to={`/courses/${course.id}`}>
+                    <Card className="story-card relative z-20 w-full flex h-[25rem] cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/10">
+                      <div className="relative h-48 overflow-hidden">
+                        <img
+                          src={course.coverImage}
+                          alt={course.title}
+                          className="h-full w-full object-cover"
+                          onError={e => {
+                            console.log(
+                              'Course image failed to load:',
+                              course.coverImage,
+                            )
+                            e.currentTarget.style.display = 'none'
+                          }}
+                        />
+                        {course.isFree ? (
+                          <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-white shadow-lg">
+                            {t('free.tag')}
+                          </div>
+                        ) : (
+                          <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-yellow-500 px-3 py-1.5 text-xs font-bold text-black shadow-lg">
+                            {t('premium.tag')}
+                          </div>
+                        )}
                       </div>
-                      {course.isFree ? (
-                        <div className="bg-dream-DEFAULT absolute left-2 top-2 rounded-full px-2 py-1 text-xs font-medium text-white">
-                          {t('free.tag')}
-                        </div>
-                      ) : (
-                        <div className="bg-moon-DEFAULT absolute left-2 top-2 rounded-full px-2 py-1 text-xs font-medium text-white">
-                          {t('premium.tag')}
-                        </div>
-                      )}
-                    </div>
-                    <CardHeader className="px-3 pb-2 pt-3 md:px-6 md:pt-6">
-                      <div className="flex items-start justify-between gap-2">
-                        <CardTitle className="text-dream-DEFAULT line-clamp-2 flex-1 text-base md:text-xl">
-                          {course.title}
-                        </CardTitle>
-                        <Badge className="text-dream-DEFAULT shrink-0 border-none bg-dream-light/30 text-xs">
-                          {course.category.charAt(0).toUpperCase() +
-                            course.category.slice(1)}
-                        </Badge>
+                      <div className="flex flex-1 flex-col">
+                        <CardHeader className="flex-1 pb-2">
+                          <div className="mb-2 flex items-start justify-between">
+                            <CardTitle className="text-dream-DEFAULT line-clamp-2 flex-1 text-lg">
+                              {course.title}
+                            </CardTitle>
+                            <div className="ml-2 flex items-center gap-2">
+                              <Badge
+                                variant="secondary"
+                                className="text-dream-DEFAULT bg-dream-light/30 text-xs"
+                              >
+                                {course.category.charAt(0).toUpperCase() +
+                                  course.category.slice(1)}
+                              </Badge>
+                              <div className="text-dream-DEFAULT flex items-center gap-1 text-xs">
+                                <Clock className="h-3 w-3" />
+                                <span>
+                                  {course.duration} {t('duration')}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <CardDescription className="text-dream-DEFAULT line-clamp-2 text-sm leading-relaxed dark:text-foreground">
+                            {course.description}
+                          </CardDescription>
+                          <div className="text-dream-DEFAULT mt-2 flex items-center text-xs dark:text-foreground">
+                            <BookOpen className="mr-1 h-3 w-3" />
+                            <span>
+                              {course.lessons} {t('courses.lessons')} • {course.ageRange} {t('courses.years')}
+                            </span>
+                          </div>
+                        </CardHeader>
                       </div>
-                      <CardDescription className="text-dream-DEFAULT line-clamp-2 text-sm dark:text-foreground">
-                        {course.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="px-3 pb-2 md:px-6">
-                      <div className="text-dream-DEFAULT flex items-center justify-between text-xs dark:text-foreground md:text-sm">
-                        <div className="flex items-center">
-                          <BookOpen className="mx-1 h-3 w-3 md:h-4 md:w-4" />
-                          <span>
-                            {course.lessons} {t('courses.lessons')}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-3 w-3 md:h-4 md:w-4" />
-                          <span>
-                            {course.duration} {t('duration')}
-                          </span>
-                        </div>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="px-3 pt-2 md:px-6 md:pt-6">
-                      <Link to={`/courses/${course.id}`} className="w-full">
-                        <Button
-                          className={cn(
-                            'h-8 w-full text-xs md:h-9 md:text-sm',
-                            course.isFree
-                              ? 'bg-dream-DEFAULT text-white hover:bg-dream-dark dark:text-white'
-                              : 'bg-moon-DEFAULT text-dream-DEFAULT hover:bg-moon-dark dark:text-white',
-                          )}
-                        >
-                          {course.isFree
-                            ? t('button.startLearning')
-                            : t('button.premium')}
-                        </Button>
-                      </Link>
-                    </CardFooter>
-                  </Card>
+                    </Card>
+                  </Link>
                 ))}
               </div>
             )}
