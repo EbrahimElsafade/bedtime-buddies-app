@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, BookOpen, Clock } from 'lucide-react'
 import { Input } from '@/components/ui/input'
@@ -10,46 +10,83 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { courses, Course } from '@/data/courses'
+import { Skeleton } from '@/components/ui/skeleton'
+import { useCourses, type CourseFromDB } from '@/hooks/useCourses'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 const Courses = () => {
   const [searchQuery, setSearchQuery] = useState('')
-  const [filteredCourses, setFilteredCourses] = useState<Course[]>(courses)
-  const [activeCategory, setActiveCategory] = useState<
-    Course['category'] | 'all'
-  >('all')
+  const [activeCategory, setActiveCategory] = useState<string | 'all'>('all')
   const { t } = useLanguage()
+  const { data: courses = [], isLoading, error } = useCourses()
 
   useEffect(() => {
     document.title = 'Bedtime Stories - Learn with Courses'
+  }, [])
 
-    const filtered = courses.filter(
+  const filteredCourses = useMemo(() => {
+    if (!courses) return []
+    
+    return courses.filter(
       course =>
         (activeCategory === 'all' || course.category === activeCategory) &&
         (course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
           course.description.toLowerCase().includes(searchQuery.toLowerCase())),
     )
+  }, [courses, activeCategory, searchQuery])
 
-    setFilteredCourses(filtered)
-  }, [searchQuery, activeCategory])
-
-  const handleCategoryChange = (category: Course['category'] | 'all') => {
+  const handleCategoryChange = (category: string | 'all') => {
     setActiveCategory(category)
   }
 
-  const getAgeCounts = () => {
+  const categoryCounts = useMemo(() => {
+    if (!courses) return {}
+    
     const counts: Record<string, number> = {}
     courses.forEach(course => {
-      if (!counts[course.ageRange]) {
-        counts[course.ageRange] = 0
+      if (!counts[course.category]) {
+        counts[course.category] = 0
       }
-      counts[course.ageRange]++
+      counts[course.category]++
     })
     return counts
+  }, [courses])
+
+  if (isLoading) {
+    return (
+      <div className="relative px-3 py-8 md:px-4 md:py-12">
+        <div className="container mx-auto max-w-7xl">
+          <Skeleton className="h-8 w-64 mb-6" />
+          <div className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-4">
+            <div className="lg:col-span-1">
+              <Skeleton className="h-64 w-full" />
+            </div>
+            <div className="lg:col-span-3">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                {[...Array(6)].map((_, i) => (
+                  <Skeleton key={i} className="h-[25rem] w-full" />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
-  const ageCounts = getAgeCounts()
+  if (error) {
+    return (
+      <div className="relative px-3 py-8 md:px-4 md:py-12">
+        <div className="container mx-auto max-w-7xl">
+          <div className="text-center py-12">
+            <p className="text-dream-DEFAULT text-lg">
+              {t('courses.errorLoading')}
+            </p>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="relative px-3 py-8 md:px-4 md:py-12">
@@ -98,66 +135,31 @@ const Courses = () => {
                   >
                     {t('courses.allCourses')} ({courses.length})
                   </Button>
-                  <Button
-                    variant={
-                      activeCategory === 'language' ? 'default' : 'ghost'
-                    }
-                    className={`${activeCategory === 'language' ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
-                    onClick={() => handleCategoryChange('language')}
-                  >
-                    {t('courses.categories.language')} (
-                    {courses.filter(c => c.category === 'language').length})
-                  </Button>
-                  <Button
-                    variant={activeCategory === 'math' ? 'default' : 'ghost'}
-                    className={`${activeCategory === 'math' ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
-                    onClick={() => handleCategoryChange('math')}
-                  >
-                    {t('courses.categories.math')} (
-                    {courses.filter(c => c.category === 'math').length})
-                  </Button>
-                  <Button
-                    variant={activeCategory === 'science' ? 'default' : 'ghost'}
-                    className={`${activeCategory === 'science' ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
-                    onClick={() => handleCategoryChange('science')}
-                  >
-                    {t('courses.categories.science')} (
-                    {courses.filter(c => c.category === 'science').length})
-                  </Button>
-                  <Button
-                    variant={activeCategory === 'arts' ? 'default' : 'ghost'}
-                    className={`${activeCategory === 'arts' ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
-                    onClick={() => handleCategoryChange('arts')}
-                  >
-                    {t('courses.categories.arts')} (
-                    {courses.filter(c => c.category === 'arts').length})
-                  </Button>
-                  <Button
-                    variant={activeCategory === 'social' ? 'default' : 'ghost'}
-                    className={`${activeCategory === 'social' ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
-                    onClick={() => handleCategoryChange('social')}
-                  >
-                    {t('courses.categories.social')} (
-                    {courses.filter(c => c.category === 'social').length})
-                  </Button>
+                  {Object.entries(categoryCounts).map(([category, count]) => (
+                    <Button
+                      key={category}
+                      variant={activeCategory === category ? 'default' : 'ghost'}
+                      className={`${activeCategory === category ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
+                      onClick={() => handleCategoryChange(category)}
+                    >
+                      {category.charAt(0).toUpperCase() + category.slice(1)} ({count})
+                    </Button>
+                  ))}
                 </div>
               </div>
 
-              {/* Age Range Filters */}
+              {/* Languages */}
               <div>
                 <h4 className="text-dream-DEFAULT mb-2 text-sm font-medium md:text-base">
-                  {t('courses.years')}
+                  {t('courses.languages')}
                 </h4>
                 <div className="flex flex-wrap gap-1 md:gap-2">
-                  {Object.entries(ageCounts).map(([age, count]) => (
-                    <Badge
-                      key={age}
-                      variant="outline"
-                      className="border-dream-light bg-dream-light/20 text-xs"
-                    >
-                      {age} {t('courses.years')} ({count})
-                    </Badge>
-                  ))}
+                  <Badge
+                    variant="outline"
+                    className="border-dream-light bg-dream-light/20 text-xs"
+                  >
+                    English ({courses.length})
+                  </Badge>
                 </div>
               </div>
             </div>
@@ -175,25 +177,24 @@ const Courses = () => {
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {filteredCourses.map(course => (
                   <Link
-                    onClick={() => console.log(`/courses/${course.id}`)}
                     key={course.id}
                     to={`/courses/${course.id}`}
                   >
                     <Card className="story-card relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/10">
                       <div className="relative h-48 overflow-hidden">
                         <img
-                          src={course.coverImage}
+                          src={course.cover_image || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'}
                           alt={course.title}
                           className="h-full w-full object-cover"
                           onError={e => {
                             console.log(
                               'Course image failed to load:',
-                              course.coverImage,
+                              course.cover_image,
                             )
                             e.currentTarget.style.display = 'none'
                           }}
                         />
-                        {course.isFree ? (
+                        {course.is_free ? (
                           <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-white shadow-lg">
                             {t('free.tag')}
                           </div>
@@ -217,12 +218,6 @@ const Courses = () => {
                                 {course.category.charAt(0).toUpperCase() +
                                   course.category.slice(1)}
                               </Badge>
-                              <div className="text-dream-DEFAULT flex items-center gap-1 text-xs">
-                                <Clock className="h-3 w-3" />
-                                <span>
-                                  {course.duration} {t('duration')}
-                                </span>
-                              </div>
                             </div>
                           </div>
                           <CardDescription className="text-dream-DEFAULT line-clamp-2 text-sm leading-relaxed dark:text-foreground">
@@ -231,8 +226,7 @@ const Courses = () => {
                           <div className="text-dream-DEFAULT mt-2 flex items-center text-xs dark:text-foreground">
                             <BookOpen className="mr-1 h-3 w-3" />
                             <span>
-                              {course.lessons} {t('courses.lessons')} •{' '}
-                              {course.ageRange} {t('courses.years')}
+                              {course.languages.join(', ')} • Published {new Date(course.created_at).toLocaleDateString()}
                             </span>
                           </div>
                         </CardHeader>
