@@ -12,7 +12,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useCourses, type CourseFromDB } from '@/hooks/useCourses'
-import { useLanguage } from '@/contexts/LanguageContext'
+import { useLanguage } from '@/hooks/useLanguage'
 
 const Courses = () => {
   const [searchQuery, setSearchQuery] = useState('')

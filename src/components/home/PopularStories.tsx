@@ -13,7 +13,7 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getMultilingualText } from '@/utils/multilingualUtils'
-import { useLanguage } from '@/contexts/LanguageContext'
+import { useLanguage } from '@/hooks/useLanguage'
 
 const PopularStories = () => {
   const { t, i18n } = useTranslation(['misc', 'stories'])

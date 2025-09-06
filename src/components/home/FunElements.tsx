@@ -1,6 +1,6 @@
 
 import { Baby, Star, Rocket, BookOpen, Cake, Heart, Crown, Zap, Sparkles, Music, Gift, CircleDot } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const FunElements = () => {
   const { t } = useLanguage();
