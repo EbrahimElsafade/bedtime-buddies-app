@@ -82,7 +82,7 @@ export const useCourse = (courseId: string) => {
   });
 };
 
-export const getFeaturedCourses = () => {
+export const useFeaturedCourses = () => {
   return useQuery({
     queryKey: ['featured-courses'],
     queryFn: async () => {

@@ -6,12 +6,12 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation } from "react-i18next";
-import { getFeaturedCourses } from "@/hooks/useCourses";
+import { useFeaturedCourses } from "@/hooks/useCourses";
 import { cn } from "@/lib/utils";
 
 const FeaturedCourses = () => {
   const { t } = useTranslation(['misc', 'stories']);
-  const { data: featuredCourses = [], isLoading } = getFeaturedCourses();
+  const { data: featuredCourses = [], isLoading } = useFeaturedCourses();
   
   if (isLoading) {
     return (
