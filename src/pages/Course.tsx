@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Calendar, Clock, BookOpen, Play, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ const Course = () => {
   
   const { data, isLoading, error } = useCourse(courseId || '');
   const course = data?.course;
-  const lessons = data?.lessons || [];
+  const lessons = useMemo(() => data?.lessons || [], [data?.lessons]);
   const isPremium = profile?.is_premium || false;
   
   useEffect(() => {
