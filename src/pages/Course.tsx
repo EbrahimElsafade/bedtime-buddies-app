@@ -12,6 +12,7 @@ import { useCourse, type CourseLessonFromDB } from "@/hooks/useCourses";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/hooks/useLanguage";
 import { cn } from "@/lib/utils";
+import { SecureVideoPlayer } from "@/components/course/SecureVideoPlayer";
 
 const Course = () => {
   const { id: courseId } = useParams<{ id: string }>();
@@ -236,17 +237,14 @@ const Course = () => {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Video Player */}
                 <div className="lg:col-span-2">
-                  {selectedLesson?.video_url ? (
+                  {selectedLesson ? (
                     <div className="space-y-4">
-                      <div className="aspect-video bg-black rounded-lg overflow-hidden">
-                        <iframe 
-                          src={selectedLesson.video_url}
-                          title={selectedLesson.title}
-                          className="w-full h-full"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        ></iframe>
-                      </div>
+                      <SecureVideoPlayer 
+                        lessonId={selectedLesson.id}
+                        fallbackVideoUrl={selectedLesson.video_url || undefined}
+                        title={selectedLesson.title}
+                        className="w-full"
+                      />
                       <div>
                         <h3 className="text-xl font-bubbly text-dream-DEFAULT mb-2">
                           {selectedLesson.title}
@@ -256,24 +254,6 @@ const Course = () => {
                           <span>{selectedLesson.duration} minutes</span>
                         </div>
                         <p className="text-dream-DEFAULT dark:text-foreground">
-                          {selectedLesson.description}
-                        </p>
-                      </div>
-                    </div>
-                  ) : selectedLesson ? (
-                    <div className="aspect-video bg-secondary rounded-lg flex items-center justify-center">
-                      <div className="text-center">
-                        <h3 className="text-xl font-bubbly text-dream-DEFAULT mb-2">
-                          {selectedLesson.title}
-                        </h3>
-                        <p className="text-center text-muted-foreground mb-4">
-                          Video coming soon for this lesson
-                        </p>
-                        <div className="flex items-center justify-center mb-2 text-sm text-dream-DEFAULT dark:text-foreground">
-                          <Clock className="mr-1 h-4 w-4" />
-                          <span>{selectedLesson.duration} minutes</span>
-                        </div>
-                        <p className="text-dream-DEFAULT dark:text-foreground max-w-md">
                           {selectedLesson.description}
                         </p>
                       </div>
