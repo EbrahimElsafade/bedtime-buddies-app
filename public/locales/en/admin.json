@@ -61,7 +61,11 @@
     "published": "Published",
     "draft": "Draft",
     "free": "Free",
-    "premium": "Premium"
+    "premium": "Premium",
+    "allStories": "All",
+    "view": "View",
+    "showing": "Showing",
+    "of": "of"
   },
   "storyEditor": {
     "title": "Story Editor",
@@ -88,24 +92,27 @@
     "preview": "Preview"
   },
   "courses": {
-    "title": "Course Management",
+    "title": "Courses",
+    "description": "Manage all educational courses",
+    "allCourses": "All Courses",
     "addNew": "Add New Course",
+    "edit": "Edit Course",
+    "delete": "Delete Course",
+    "publish": "Publish Course",
+    "unpublish": "Unpublish Course",
+    "published": "Published",
+    "draft": "Draft",
+    "searchPlaceholder": "Search courses...",
+    "noCourses": "No courses found",
     "totalCourses": "Total Courses",
     "publishedCourses": "Published Courses",
     "draftCourses": "Draft Courses",
-    "searchPlaceholder": "Search courses...",
     "courseTitle": "Title",
     "category": "Category",
     "lessons": "Lessons",
     "status": "Status",
     "createdDate": "Created",
-    "actions": "Actions",
-    "edit": "Edit",
-    "delete": "Delete",
-    "publish": "Publish",
-    "unpublish": "Unpublish",
-    "published": "Published",
-    "draft": "Draft"
+    "actions": "Actions"
   },
   "settings": {
     "title": "Admin Settings",
