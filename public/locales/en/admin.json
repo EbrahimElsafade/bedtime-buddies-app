@@ -153,6 +153,24 @@
     "languageRemoved": "Language Removed",
     "languageRemovedDesc": "Language '{{language}}' has been removed successfully"
   },
+  "courseOptions": {
+    "title": "Course Options",
+    "description": "Manage categories and languages available for courses",
+    "categories": "Categories",
+    "categoriesDesc": "Manage course categories that can be selected when creating or editing courses",
+    "languages": "Languages", 
+    "languagesDesc": "Manage languages available for course content",
+    "addCategoryPlaceholder": "Enter new category",
+    "addLanguagePlaceholder": "Enter new language code (e.g., en, ar, fr)",
+    "categoryAdded": "Category Added",
+    "categoryAddedDesc": "Category '{{category}}' has been added successfully",
+    "categoryRemoved": "Category Removed", 
+    "categoryRemovedDesc": "Category '{{category}}' has been removed successfully",
+    "languageAdded": "Language Added",
+    "languageAddedDesc": "Language '{{language}}' has been added successfully", 
+    "languageRemoved": "Language Removed",
+    "languageRemovedDesc": "Language '{{language}}' has been removed successfully"
+  },
   "forms": {
     "required": "This field is required",
     "invalidEmail": "Invalid email address",

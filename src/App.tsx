@@ -28,6 +28,7 @@ import AdminDashboard from "./pages/admin/Dashboard";
 import AdminStories from "./pages/admin/Stories";
 import AdminStoryEditor from "./pages/admin/StoryEditor";
 import AdminStoryOptions from "./pages/admin/StoryOptions";
+import AdminCourseOptions from "./pages/admin/CourseOptions";
 import AdminUsers from "./pages/admin/Users";
 import AdminCourses from "./pages/admin/Courses";
 import AdminCourseEditor from "./pages/admin/CourseEditor";
@@ -75,7 +76,8 @@ function App() {
                     <Route path="stories" element={<AdminStories />} />
                     <Route path="stories/new" element={<AdminStoryEditor />} />
                     <Route path="stories/:id/edit" element={<AdminStoryEditor />} />
-                    <Route path="stories/:id/options" element={<AdminStoryOptions />} />
+                    <Route path="stories/options" element={<AdminStoryOptions />} />
+                    <Route path="courses/options" element={<AdminCourseOptions />} />
                     <Route path="users" element={<AdminUsers />} />
                     <Route path="courses" element={<AdminCourses />} />
                     <Route path="courses/new" element={<AdminCourseEditor />} />

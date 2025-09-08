@@ -149,6 +149,24 @@
     "languageRemoved": "تم حذف اللغة",
     "languageRemovedDesc": "تم حذف اللغة '{{language}}' بنجاح"
   },
+  "courseOptions": {
+    "title": "خيارات الدورات",
+    "description": "إدارة الفئات واللغات المتاحة للدورات",
+    "categories": "الفئات",
+    "categoriesDesc": "إدارة فئات الدورات التي يمكن اختيارها عند إنشاء أو تعديل الدورات",
+    "languages": "اللغات",
+    "languagesDesc": "إدارة اللغات المتاحة لمحتوى الدورات",
+    "addCategoryPlaceholder": "أدخل فئة جديدة",
+    "addLanguagePlaceholder": "أدخل رمز لغة جديد (مثل: en, ar, fr)",
+    "categoryAdded": "تمت إضافة الفئة",
+    "categoryAddedDesc": "تمت إضافة الفئة '{{category}}' بنجاح",
+    "categoryRemoved": "تم حذف الفئة",
+    "categoryRemovedDesc": "تم حذف الفئة '{{category}}' بنجاح",
+    "languageAdded": "تمت إضافة اللغة",
+    "languageAddedDesc": "تمت إضافة اللغة '{{language}}' بنجاح",
+    "languageRemoved": "تم حذف اللغة",
+    "languageRemovedDesc": "تم حذف اللغة '{{language}}' بنجاح"
+  },
   "forms": {
     "required": "هذا الحقل مطلوب",
     "invalidEmail": "عنوان بريد إلكتروني غير صحيح",

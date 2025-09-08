@@ -149,6 +149,24 @@
     "languageRemoved": "Langue Supprimée",
     "languageRemovedDesc": "La langue '{{language}}' a été supprimée avec succès"
   },
+  "courseOptions": {
+    "title": "Options des Cours",
+    "description": "Gérer les catégories et langues disponibles pour les cours",
+    "categories": "Catégories",
+    "categoriesDesc": "Gérer les catégories de cours qui peuvent être sélectionnées lors de la création ou modification de cours",
+    "languages": "Langues",
+    "languagesDesc": "Gérer les langues disponibles pour le contenu des cours",
+    "addCategoryPlaceholder": "Entrer une nouvelle catégorie",
+    "addLanguagePlaceholder": "Entrer un nouveau code de langue (ex: en, ar, fr)",
+    "categoryAdded": "Catégorie Ajoutée",
+    "categoryAddedDesc": "La catégorie '{{category}}' a été ajoutée avec succès",
+    "categoryRemoved": "Catégorie Supprimée",
+    "categoryRemovedDesc": "La catégorie '{{category}}' a été supprimée avec succès",
+    "languageAdded": "Langue Ajoutée",
+    "languageAddedDesc": "La langue '{{language}}' a été ajoutée avec succès",
+    "languageRemoved": "Langue Supprimée",
+    "languageRemovedDesc": "La langue '{{language}}' a été supprimée avec succès"
+  },
   "forms": {
     "required": "Ce champ est requis",
     "invalidEmail": "Adresse email invalide",
