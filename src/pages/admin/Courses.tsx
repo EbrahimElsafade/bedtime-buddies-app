@@ -1,7 +1,6 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -57,7 +56,6 @@ type Course = {
 };
 
 const Courses = () => {
-  const { t } = useTranslation("admin");
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
@@ -67,7 +65,7 @@ const Courses = () => {
   const fetchCourses = async () => {
     const { data, error } = await supabase.from("courses").select("*");
     if (error) {
-      toast.error(t("forms.error"));
+      toast.error("Failed to fetch courses");
       throw error;
     }
     return data as Course[];
@@ -128,17 +126,17 @@ const Courses = () => {
     });
 
   const deleteCourse = async (id: string) => {
-    if (confirm(t("forms.deleteConfirm"))) {
+    if (confirm("Are you sure you want to delete this course? This action cannot be undone.")) {
       try {
         const { error } = await supabase.from("courses").delete().eq("id", id);
         
         if (error) throw error;
         
-        toast.success(t("courses.delete"));
+        toast.success("Course deleted successfully");
         refetch();
       } catch (error) {
         console.error("Error deleting course:", error);
-        toast.error(t("forms.error"));
+        toast.error("Failed to delete course");
       }
     }
   };
@@ -150,13 +148,13 @@ const Courses = () => {
         .update({ is_published: !course.is_published })
         .eq("id", course.id);
         
-        if (error) throw error;
-        
-        toast.success(`${t("courses.title")} ${course.is_published ? t("courses.unpublish") : t("courses.publish")}`);
-        refetch();
-      } catch (error) {
-        console.error("Error updating course status:", error);
-        toast.error(t("forms.error"));
+      if (error) throw error;
+      
+      toast.success(`Course ${course.is_published ? "unpublished" : "published"} successfully`);
+      refetch();
+    } catch (error) {
+      console.error("Error updating course status:", error);
+      toast.error("Failed to update course status");
     }
   };
 
@@ -165,29 +163,29 @@ const Courses = () => {
       <header className="mb-8">
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="text-3xl font-bold">{t("courses.title")}</h1>
+            <h1 className="text-3xl font-bold">Courses</h1>
             <p className="text-muted-foreground">
-              {t("courses.description")}
+              Manage all educational courses
             </p>
           </div>
           <Button onClick={() => navigate("/admin/courses/new")}>
             <PlusCircle className="mr-2 h-4 w-4" />
-            {t("courses.addNew")}
+            Add New Course
           </Button>
         </div>
       </header>
       
       <Card>
         <CardHeader>
-          <CardTitle className="text-xl">{t("courses.allCourses")}</CardTitle>
+          <CardTitle className="text-xl">All Courses</CardTitle>
           <CardDescription>
-            {t("dashboard.totalCourses")}: {courses.length} | {t("courses.published")}: {courses.filter(c => c.is_published).length}
+            Total: {courses.length} courses | Published: {courses.filter(c => c.is_published).length} courses
           </CardDescription>
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-4">
             <div className="relative flex-1 w-full">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder={t("courses.searchPlaceholder")}
+                placeholder="Search courses..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-8 w-full"
@@ -199,21 +197,21 @@ const Courses = () => {
                 size="sm"
                 onClick={() => setFilter("all")}
               >
-                {t("stories.allStories")}
+                All
               </Button>
               <Button
                 variant={filter === "published" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setFilter("published")}
               >
-                {t("courses.published")}
+                Published
               </Button>
               <Button
                 variant={filter === "draft" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setFilter("draft")}
               >
-                {t("courses.draft")}
+                Draft
               </Button>
               <Button
                 variant="outline"
@@ -232,49 +230,49 @@ const Courses = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead onClick={() => toggleSort("title")} className="cursor-pointer">
-                    {t("storyEditor.storyTitle")}
+                    Title
                     {sortField === "title" && (
                       <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                     )}
                   </TableHead>
                   <TableHead onClick={() => toggleSort("category")} className="cursor-pointer">
-                    {t("storyEditor.category")}
+                    Category
                     {sortField === "category" && (
                       <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                     )}
                   </TableHead>
                   <TableHead onClick={() => toggleSort("is_free")} className="cursor-pointer">
-                    {t("users.status")}
+                    Type
                     {sortField === "is_free" && (
                       <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                     )}
                   </TableHead>
                   <TableHead onClick={() => toggleSort("languages")} className="cursor-pointer hidden md:table-cell">
-                    {t("storyEditor.languages")}
+                    Languages
                     {sortField === "languages" && (
                       <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                     )}
                   </TableHead>
                   <TableHead onClick={() => toggleSort("is_published")} className="cursor-pointer">
-                    {t("users.status")}
+                    Status
                     {sortField === "is_published" && (
                       <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                     )}
                   </TableHead>
-                  <TableHead className="w-[100px] text-right">{t("users.actions")}</TableHead>
+                  <TableHead className="w-[100px] text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center py-8">
-                      {t("forms.saving")}...
+                      Loading courses...
                     </TableCell>
                   </TableRow>
                 ) : filteredCourses.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="text-center py-8">
-                      {t("courses.noCourses")}
+                      No courses found
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -287,11 +285,11 @@ const Courses = () => {
                       <TableCell>
                         {course.is_free ? (
                           <Badge variant="default" className="bg-dream-DEFAULT hover:bg-dream-dark">
-                            {t("users.free")}
+                            Free
                           </Badge>
                         ) : (
                           <Badge variant="default" className="bg-moon-DEFAULT hover:bg-moon-dark">
-                            {t("users.premium")}
+                            Premium
                           </Badge>
                         )}
                       </TableCell>
@@ -305,10 +303,10 @@ const Courses = () => {
                       <TableCell>
                         {course.is_published ? (
                           <Badge variant="default" className="bg-green-600 hover:bg-green-700">
-                            {t("courses.published")}
+                            Published
                           </Badge>
                         ) : (
-                          <Badge variant="outline">{t("courses.draft")}</Badge>
+                          <Badge variant="outline">Draft</Badge>
                         )}
                       </TableCell>
                       <TableCell className="text-right">
@@ -323,27 +321,27 @@ const Courses = () => {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>{t("users.actions")}</DropdownMenuLabel>
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
                             <DropdownMenuItem asChild>
                               <Link to={`/courses/${course.id}`}>
-                                <Eye className="mr-2 h-4 w-4" /> {t("stories.view")}
+                                <Eye className="mr-2 h-4 w-4" /> View
                               </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem asChild>
                               <Link to={`/admin/courses/edit/${course.id}`}>
-                                <Edit className="mr-2 h-4 w-4" /> {t("courses.edit")}
+                                <Edit className="mr-2 h-4 w-4" /> Edit
                               </Link>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => togglePublishStatus(course)}>
-                              {course.is_published ? t("courses.unpublish") : t("courses.publish")}
+                              {course.is_published ? "Unpublish" : "Publish"} Course
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem 
                               className="text-red-600" 
                               onClick={() => deleteCourse(course.id)}
                             >
-                              <Trash2 className="mr-2 h-4 w-4" /> {t("courses.delete")}
+                              <Trash2 className="mr-2 h-4 w-4" /> Delete
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -357,7 +355,7 @@ const Courses = () => {
         </CardContent>
         <CardFooter className="flex justify-between">
           <p className="text-sm text-muted-foreground">
-            {t("stories.showing")} {filteredCourses.length} {t("stories.of")} {courses.length} {t("courses.title").toLowerCase()}
+            Showing {filteredCourses.length} of {courses.length} courses
           </p>
         </CardFooter>
       </Card>

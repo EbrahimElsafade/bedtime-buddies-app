@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Clock, Heart, BookOpen } from "lucide-react";
 import { getImageUrl } from "@/utils/imageUtils";
 import { getMultilingualText } from "@/utils/multilingualUtils";

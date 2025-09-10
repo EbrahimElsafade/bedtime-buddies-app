@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { GlobeIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const LanguageSwitcher = () => {
   const { i18n, t } = useTranslation('misc');

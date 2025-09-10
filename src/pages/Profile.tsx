@@ -11,7 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Profile = () => {
   const navigate = useNavigate();

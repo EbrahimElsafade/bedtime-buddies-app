@@ -1,43 +1,39 @@
 
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Calendar, Clock, BookOpen, Play, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/components/ui/use-toast";
-import { useCourse, type CourseLessonFromDB } from "@/hooks/useCourses";
+import { getCourseById, CourseVideo } from "@/data/courses";
 import { useAuth } from "@/contexts/AuthContext";
-import { useLanguage } from "@/hooks/useLanguage";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
-import { SecureVideoPlayer } from "@/components/course/SecureVideoPlayer";
 
 const Course = () => {
-  const { id: courseId } = useParams<{ id: string }>();
+  const { courseId } = useParams<{ courseId: string }>();
   const { isAuthenticated, profile } = useAuth();
   const { t } = useLanguage();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("overview");
-  const [selectedLesson, setSelectedLesson] = useState<CourseLessonFromDB | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null);
   
-  const { data, isLoading, error } = useCourse(courseId || '');
-  const course = data?.course;
-  const lessons = useMemo(() => data?.lessons || [], [data?.lessons]);
+  const course = courseId ? getCourseById(courseId) : undefined;
   const isPremium = profile?.is_premium || false;
   
   useEffect(() => {
     if (course) {
       document.title = `${course.title} | Bedtime Stories`;
-      // Set the first lesson as selected by default if there are lessons
-      if (lessons && lessons.length > 0) {
-        setSelectedLesson(lessons[0]);
+      // Set the first video as selected by default if there are videos
+      if (course.videos && course.videos.length > 0) {
+        setSelectedVideo(course.videos[0]);
       }
     } else {
       document.title = "Course Not Found | Bedtime Stories";
     }
-  }, [course, lessons]);
+  }, [course]);
   
   const handleStartCourse = () => {
     if (!isAuthenticated) {
@@ -49,7 +45,7 @@ const Course = () => {
       return;
     }
     
-    if (!course?.is_free && !isPremium) {
+    if (!course?.isFree && !isPremium) {
       toast({
         title: t('toast.premiumRequired'),
         description: t('toast.upgradeToPremium'),
@@ -64,16 +60,15 @@ const Course = () => {
       description: `${t('toast.enjoyLearning')} ${course?.title}!`,
     });
     
-    // Select first lesson and switch to content tab
-    if (lessons && lessons.length > 0) {
-      setSelectedLesson(lessons[0]);
+    // Select first video and switch to content tab
+    if (course?.videos && course.videos.length > 0) {
+      setSelectedVideo(course.videos[0]);
       setActiveTab("content");
     }
   };
   
-  const handleLessonSelect = (lesson: CourseLessonFromDB) => {
-    // For now, all lessons are accessible if the course is free or user has premium
-    if (!course?.is_free && !isPremium) {
+  const handleVideoSelect = (video: CourseVideo) => {
+    if (!video.isFree && !isPremium && !course?.isFree) {
       toast({
         title: t('toast.premiumRequired'),
         description: t('toast.upgradeToPremium'),
@@ -81,38 +76,10 @@ const Course = () => {
       });
       return;
     }
-    setSelectedLesson(lesson);
+    setSelectedVideo(video);
   };
-
-  if (isLoading) {
-    return (
-      <div className="py-12 px-4 relative">
-        <div className="container mx-auto">
-          <Skeleton className="h-6 w-32 mb-6" />
-          <div className="grid grid-cols-1 gap-8">
-            <div className="flex flex-col md:flex-row gap-8 items-start">
-              <div className="md:w-1/3">
-                <Skeleton className="w-full h-64" />
-              </div>
-              <div className="md:w-2/3">
-                <Skeleton className="h-8 w-3/4 mb-4" />
-                <div className="flex gap-2 mb-4">
-                  <Skeleton className="h-6 w-16" />
-                  <Skeleton className="h-6 w-16" />
-                  <Skeleton className="h-6 w-16" />
-                </div>
-                <Skeleton className="h-4 w-full mb-2" />
-                <Skeleton className="h-4 w-full mb-6" />
-                <Skeleton className="h-10 w-32" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !course) {
+  
+  if (!course) {
     return (
       <div className="py-16 px-4 text-center">
         <h1 className="text-3xl font-bubbly mb-6 text-dream-DEFAULT">
@@ -147,7 +114,7 @@ const Course = () => {
             <div className="md:w-1/3">
               <Card className="overflow-hidden border-dream-light/30">
                 <img 
-                  src={course.cover_image || 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'} 
+                  src={course.coverImage} 
                   alt={course.title} 
                   className="w-full h-auto aspect-[4/3] object-cover"
                 />
@@ -162,9 +129,9 @@ const Course = () => {
                   {course.category.charAt(0).toUpperCase() + course.category.slice(1)}
                 </Badge>
                 <Badge className="bg-moon-light/30 text-dream-DEFAULT border-none">
-                  {course.languages.join(', ')}
+                  {course.ageRange} {t('courses.years')}
                 </Badge>
-                {course.is_free ? (
+                {course.isFree ? (
                   <Badge className="bg-dream-DEFAULT/80 text-white border-none">
                     {t('free.tag')}
                   </Badge>
@@ -177,12 +144,12 @@ const Course = () => {
               
               <div className="flex flex-wrap gap-4 mb-6 text-sm text-dream-DEFAULT dark:text-foreground">
                 <div className="flex items-center">
-                  <BookOpen className="mr-2 h-4 w-4" />
-                  <span>{lessons.length} {t('courses.lessons')}</span>
+                  <Clock className="mr-2 h-4 w-4" />
+                  <span>{course.duration} {t('duration')}</span>
                 </div>
                 <div className="flex items-center">
-                  <Calendar className="mr-2 h-4 w-4" />
-                  <span>Created {new Date(course.created_at).toLocaleDateString()}</span>
+                  <BookOpen className="mr-2 h-4 w-4" />
+                  <span>{course.lessons} {t('courses.lessons')}</span>
                 </div>
               </div>
               
@@ -192,12 +159,12 @@ const Course = () => {
                 onClick={handleStartCourse}
                 className={cn(
                   "px-8 py-2 rounded-full", 
-                  course.is_free 
+                  course.isFree 
                     ? "bg-dream-DEFAULT hover:bg-dream-dark text-white" 
                     : "bg-moon-DEFAULT hover:bg-moon-dark text-dream-DEFAULT dark:text-white"
                 )}
               >
-                {course.is_free 
+                {course.isFree 
                   ? t('button.startLearning')
                   : isAuthenticated && isPremium 
                     ? t('button.startLearning')
@@ -225,9 +192,9 @@ const Course = () => {
                 
                 <h2 className="text-xl font-bubbly mt-6 mb-3 text-dream-DEFAULT">{t('course.whatYouLearn')}</h2>
                 <ul className="list-disc pl-5">
-                  <li>Interactive lessons designed for young learners</li>
-                  <li>Progressive skill building and knowledge retention</li>
-                  <li>Fun activities to keep children engaged</li>
+                  <li>{t('course.learnPoint1')}</li>
+                  <li>{t('course.learnPoint2')}</li>
+                  <li>{t('course.learnPoint3')}</li>
                 </ul>
               </div>
             </TabsContent>
@@ -237,77 +204,82 @@ const Course = () => {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 {/* Video Player */}
                 <div className="lg:col-span-2">
-                  {selectedLesson ? (
+                  {selectedVideo ? (
                     <div className="space-y-4">
-                      <SecureVideoPlayer 
-                        lessonId={selectedLesson.id}
-                        fallbackVideoUrl={selectedLesson.video_url || undefined}
-                        title={selectedLesson.title}
-                        className="w-full"
-                      />
+                      <div className="aspect-video bg-black rounded-lg overflow-hidden">
+                        <iframe 
+                          src={selectedVideo.videoUrl}
+                          title={selectedVideo.title}
+                          className="w-full h-full"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        ></iframe>
+                      </div>
                       <div>
                         <h3 className="text-xl font-bubbly text-dream-DEFAULT mb-2">
-                          {selectedLesson.title}
+                          {selectedVideo.title}
                         </h3>
                         <div className="flex items-center mb-2 text-sm text-dream-DEFAULT dark:text-foreground">
                           <Clock className="mr-1 h-4 w-4" />
-                          <span>{selectedLesson.duration} minutes</span>
+                          <span>{selectedVideo.duration} {t('duration')}</span>
                         </div>
                         <p className="text-dream-DEFAULT dark:text-foreground">
-                          {selectedLesson.description}
+                          {selectedVideo.description}
                         </p>
                       </div>
                     </div>
                   ) : (
                     <div className="aspect-video bg-secondary rounded-lg flex items-center justify-center">
                       <p className="text-center text-muted-foreground">
-                        Select a lesson to start learning
+                        {t('course.selectVideo')}
                       </p>
                     </div>
                   )}
                 </div>
                 
-                {/* Lesson List */}
+                {/* Video List */}
                 <div className="lg:col-span-1">
                   <h3 className="text-xl font-bubbly text-dream-DEFAULT mb-4">
-                    Course Lessons
+                    {t('course.courseVideos')}
                   </h3>
                   
                   <div className="space-y-3">
-                    {lessons && lessons.length > 0 ? (
-                      lessons.map((lesson) => (
+                    {course.videos && course.videos.length > 0 ? (
+                      course.videos.map((video) => (
                         <Card 
-                          key={lesson.id}
+                          key={video.id}
                           className={cn(
                             "cursor-pointer hover:border-dream-DEFAULT transition-all",
-                            selectedLesson?.id === lesson.id && "border-dream-DEFAULT"
+                            selectedVideo?.id === video.id && "border-dream-DEFAULT"
                           )}
-                          onClick={() => handleLessonSelect(lesson)}
+                          onClick={() => handleVideoSelect(video)}
                         >
                           <CardContent className="p-3">
                             <div className="flex items-start gap-3">
-                              <div className="relative w-12 h-12 flex-shrink-0 rounded-full bg-dream-light/20 flex items-center justify-center">
-                                <span className="text-dream-DEFAULT font-bold text-sm">
-                                  {lesson.lesson_order}
-                                </span>
-                                {!course.is_free && !isPremium && (
-                                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-full">
-                                    <Lock className="h-4 w-4 text-white" />
+                              <div className="relative w-24 h-16 flex-shrink-0">
+                                <img 
+                                  src={video.thumbnail} 
+                                  alt={video.title} 
+                                  className="w-full h-full object-cover rounded"
+                                />
+                                {!video.isFree && !course.isFree && !isPremium && (
+                                  <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded">
+                                    <Lock className="h-6 w-6 text-white" />
                                   </div>
                                 )}
-                                {lesson.video_url && (
-                                  <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-dream-DEFAULT flex items-center justify-center">
-                                    <Play className="h-2 w-2 text-white" />
+                                <div className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
+                                  <div className="h-8 w-8 rounded-full bg-dream-DEFAULT flex items-center justify-center">
+                                    <Play className="h-4 w-4 text-white" />
                                   </div>
-                                )}
+                                </div>
                               </div>
                               <div className="flex-1 min-w-0">
-                                <h4 className="text-dream-DEFAULT font-medium text-sm">
-                                  {lesson.title}
+                                <h4 className="text-dream-DEFAULT font-medium text-sm truncate">
+                                  {video.title}
                                 </h4>
                                 <div className="flex items-center mt-1 text-xs text-dream-DEFAULT/70">
-                                  <Clock className="mr-1 h-3 w-3" />
-                                  <span>{lesson.duration} minutes</span>
+                                  <Clock className="mx-1 h-3 w-3" />
+                                  <span>{video.duration} {t('duration')}</span>
                                 </div>
                               </div>
                             </div>
@@ -316,7 +288,7 @@ const Course = () => {
                       ))
                     ) : (
                       <p className="text-muted-foreground text-center py-4">
-                        No lessons available yet
+                        {t('course.noVideos')}
                       </p>
                     )}
                   </div>

@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getMultilingualText } from '@/utils/multilingualUtils'
-import { useLanguage } from '@/hooks/useLanguage'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 const Stories = () => {
   const [searchTerm, setSearchTerm] = useState('')

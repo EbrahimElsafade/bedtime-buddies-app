@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
+  // Allows to automatically instanciate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -48,7 +48,6 @@ export type Database = {
           lesson_order: number
           title: string
           updated_at: string | null
-          video_path: string | null
           video_url: string | null
         }
         Insert: {
@@ -60,7 +59,6 @@ export type Database = {
           lesson_order: number
           title: string
           updated_at?: string | null
-          video_path?: string | null
           video_url?: string | null
         }
         Update: {
@@ -72,7 +70,6 @@ export type Database = {
           lesson_order?: number
           title?: string
           updated_at?: string | null
-          video_path?: string | null
           video_url?: string | null
         }
         Relationships: [
@@ -363,35 +360,6 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "fk_story_sections_story_id"
-            columns: ["story_id"]
-            isOneToOne: false
-            referencedRelation: "stories"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_favorites: {
-        Row: {
-          created_at: string
-          id: string
-          story_id: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          story_id: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          story_id?: string
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_favorites_story_id_fkey"
             columns: ["story_id"]
             isOneToOne: false
             referencedRelation: "stories"
