@@ -73,7 +73,7 @@ function App() {
                     <Route index element={<AdminDashboard />} />
                     <Route path="stories" element={<AdminStories />} />
                     <Route path="stories/new" element={<AdminStoryEditor />} />
-                    <Route path="stories/:id/edit" element={<AdminStoryEditor />} />
+                    <Route path="stories/edit/:id" element={<AdminStoryEditor />} />
                     <Route path="stories/:id/options" element={<AdminStoryOptions />} />
                     <Route path="users" element={<AdminUsers />} />
                     <Route path="courses" element={<AdminCourses />} />
