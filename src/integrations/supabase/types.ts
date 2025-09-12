@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -38,6 +38,27 @@ export type Database = {
         }
         Relationships: []
       }
+      course_categories: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       course_lessons: {
         Row: {
           course_id: string
@@ -46,8 +67,10 @@ export type Database = {
           duration: number
           id: string
           lesson_order: number
+          thumbnail_path: string | null
           title: string
           updated_at: string | null
+          video_path: string | null
           video_url: string | null
         }
         Insert: {
@@ -56,9 +79,11 @@ export type Database = {
           description: string
           duration: number
           id?: string
-          lesson_order: number
+          lesson_order?: number
+          thumbnail_path?: string | null
           title: string
           updated_at?: string | null
+          video_path?: string | null
           video_url?: string | null
         }
         Update: {
@@ -68,8 +93,10 @@ export type Database = {
           duration?: number
           id?: string
           lesson_order?: number
+          thumbnail_path?: string | null
           title?: string
           updated_at?: string | null
+          video_path?: string | null
           video_url?: string | null
         }
         Relationships: [
@@ -85,41 +112,64 @@ export type Database = {
       courses: {
         Row: {
           category: string
+          category_id: string | null
           cover_image: string | null
+          cover_image_path: string | null
           created_at: string | null
           description: string
           id: string
           is_free: boolean
           is_published: boolean
           languages: string[]
+          lessons: number | null
+          max_age: number | null
+          min_age: number | null
           title: string
           updated_at: string | null
         }
         Insert: {
           category: string
+          category_id?: string | null
           cover_image?: string | null
+          cover_image_path?: string | null
           created_at?: string | null
           description: string
           id?: string
           is_free?: boolean
           is_published?: boolean
           languages?: string[]
+          lessons?: number | null
+          max_age?: number | null
+          min_age?: number | null
           title: string
           updated_at?: string | null
         }
         Update: {
           category?: string
+          category_id?: string | null
           cover_image?: string | null
+          cover_image_path?: string | null
           created_at?: string | null
           description?: string
           id?: string
           is_free?: boolean
           is_published?: boolean
           languages?: string[]
+          lessons?: number | null
+          max_age?: number | null
+          min_age?: number | null
           title?: string
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "courses_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "course_categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -360,6 +410,35 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "fk_story_sections_story_id"
+            columns: ["story_id"]
+            isOneToOne: false
+            referencedRelation: "stories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_favorites: {
+        Row: {
+          created_at: string
+          id: string
+          story_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          story_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          story_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_favorites_story_id_fkey"
             columns: ["story_id"]
             isOneToOne: false
             referencedRelation: "stories"

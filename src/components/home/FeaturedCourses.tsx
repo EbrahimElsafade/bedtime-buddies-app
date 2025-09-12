@@ -1,18 +1,17 @@
 
 import { Link } from "react-router-dom";
 import { ArrowRight, BookOpen, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useTranslation } from "react-i18next";
-import { getFeaturedCourses } from "@/data/courses";
-import { cn } from "@/lib/utils";
+import { useFeaturedCourses, useCourseCategories } from "@/hooks/useCourseData";
 
 const FeaturedCourses = () => {
   const { t } = useTranslation(['misc', 'stories']);
-  const featuredCourses = getFeaturedCourses().slice(0, 3);
+  const { data: featuredCourses = [], isLoading } = useFeaturedCourses();
+  const { data: categories = [] } = useCourseCategories();
   
-  if (!featuredCourses.length) return null;
+  if (isLoading || !featuredCourses.length) return null;
 
   return (
     <section className="py-12 px-4 bg-secondary/50 relative">
@@ -27,66 +26,60 @@ const FeaturedCourses = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {featuredCourses.map((course) => (
-            <Card key={course.id} className="story-card overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm">
-              <div className="aspect-[3/2] relative">
-                <img 
-                  src={course.coverImage} 
-                  alt={course.title} 
-                  className="w-full h-full object-cover"
-                />
-                {course.isFree ? (
-                  <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                    {t('misc:free.tag')}
-                  </div>
-                ) : (
-                  <div className="absolute top-2 left-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
-                    {t('misc:premium.tag')}
-                  </div>
-                )}
-                <div className="absolute top-2 right-2 bg-white/80 dark:bg-nightsky-light/80 text-xs px-2 py-1 rounded-full text-dream-DEFAULT">
-                  {course.ageRange} {t('misc:courses.years')}
-                </div>
-              </div>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xl text-dream-DEFAULT">{course.title}</CardTitle>
-                <CardDescription className="line-clamp-2 text-dream-DEFAULT dark:text-foreground">
-                  {course.description}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pb-2">
-                <div className="flex flex-wrap gap-2 mb-2">
-                  <Badge variant="secondary" className="bg-dream-light/30 text-dream-DEFAULT">
-                    {course.category.charAt(0).toUpperCase() + course.category.slice(1)}
-                  </Badge>
-                </div>
-                <div className="flex items-center justify-between text-sm text-dream-DEFAULT">
-                  <div className="flex items-center">
-                    <BookOpen className="h-4 w-4 mr-1" />
-                    <span>{course.lessons} {t('misc:courses.lessons')}</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Clock className="h-4 w-4 mr-1" />
-                    <span>{course.duration} {t('misc:duration')}</span>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Link to={`/courses/${course.id}`} className="w-full">
-                  <Button 
-                    className={cn(
-                      "w-full", 
-                      course.isFree 
-                        ? "bg-dream-DEFAULT hover:bg-dream-dark hover:text-white text-black dark:text-white" 
-                        : "bg-moon-DEFAULT hover:bg-moon-dark hover:text-white text-black dark:text-white"
+          {featuredCourses.map((course) => {
+            const category = categories.find(cat => cat.id === course.categoryId);
+            return (
+              <Link key={course.id} to={`/courses/${course.id}`} className="block">
+                <Card className="story-card cursor-pointer overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm transition-transform hover:scale-105">
+                  <div className="aspect-[3/2] relative">
+                    <img 
+                      src={course.coverImagePath} 
+                      alt={course.title} 
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000';
+                      }}
+                    />
+                    {course.isFree ? (
+                      <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                        {t('misc:free.tag')}
+                      </div>
+                    ) : (
+                      <div className="absolute top-2 left-2 bg-moon-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                        {t('misc:premium.tag')}
+                      </div>
                     )}
-                  >
-                    {course.isFree ? t('misc:button.startLearning') : t('misc:button.premium')}
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
-          ))}
+                    <div className="absolute top-2 right-2 bg-white/80 dark:bg-nightsky-light/80 text-xs px-2 py-1 rounded-full text-dream-DEFAULT">
+                      {course.minAge}-{course.maxAge} {t('misc:courses.years')}
+                    </div>
+                  </div>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-xl text-dream-DEFAULT">{course.title}</CardTitle>
+                    <CardDescription className="line-clamp-2 text-dream-DEFAULT dark:text-foreground">
+                      {course.description}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="pb-4">
+                    <div className="flex flex-wrap gap-2 mb-2">
+                      <Badge variant="secondary" className="bg-dream-light/30 text-dream-DEFAULT">
+                        {category?.name || 'General'}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center justify-between text-sm text-dream-DEFAULT">
+                      <div className="flex items-center">
+                        <BookOpen className="h-4 w-4 mr-1" />
+                        <span>{course.lessons} {t('misc:courses.lessons')}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Clock className="h-4 w-4 mr-1" />
+                        <span>{Math.floor(course.duration / 60)} {t('misc:duration')}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
         </div>
       </div>
       

@@ -7,53 +7,61 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Badge } from '@/components/ui/badge'
-import { courses, Course } from '@/data/courses'
-import { cn } from '@/lib/utils'
+import { Course } from '@/types/course'
+import { useCoursesData, useCourseCategories } from '@/hooks/useCourseData'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 const Courses = () => {
   const [searchQuery, setSearchQuery] = useState('')
-  const [filteredCourses, setFilteredCourses] = useState<Course[]>(courses)
-  const [activeCategory, setActiveCategory] = useState<
-    Course['category'] | 'all'
-  >('all')
+  const [filteredCourses, setFilteredCourses] = useState<Course[]>([])
+  const [activeCategory, setActiveCategory] = useState<string>('all')
   const { t } = useLanguage()
+  
+  const { data: courses = [], isLoading } = useCoursesData()
+  const { data: categories = [] } = useCourseCategories()
 
   useEffect(() => {
     document.title = 'Bedtime Stories - Learn with Courses'
 
-    const filtered = courses.filter(
-      course =>
-        (activeCategory === 'all' || course.category === activeCategory) &&
-        (course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          course.description.toLowerCase().includes(searchQuery.toLowerCase())),
-    )
+    const filtered = courses.filter(course => {
+      const categoryMatch = activeCategory === 'all' || course.categoryId === activeCategory
+      const searchMatch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        course.description.toLowerCase().includes(searchQuery.toLowerCase())
+      return categoryMatch && searchMatch
+    })
 
     setFilteredCourses(filtered)
-  }, [searchQuery, activeCategory])
+  }, [searchQuery, activeCategory, courses])
 
-  const handleCategoryChange = (category: Course['category'] | 'all') => {
+  const handleCategoryChange = (category: string) => {
     setActiveCategory(category)
   }
 
   const getAgeCounts = () => {
     const counts: Record<string, number> = {}
     courses.forEach(course => {
-      if (!counts[course.ageRange]) {
-        counts[course.ageRange] = 0
+      const ageRange = `${course.minAge}-${course.maxAge}`
+      if (!counts[ageRange]) {
+        counts[ageRange] = 0
       }
-      counts[course.ageRange]++
+      counts[ageRange]++
     })
     return counts
   }
 
   const ageCounts = getAgeCounts()
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-dream-DEFAULT">Loading courses...</div>
+      </div>
+    )
+  }
 
   return (
     <div className="relative px-3 py-8 md:px-4 md:py-12">
@@ -92,7 +100,7 @@ const Courses = () => {
               {/* Category Filters */}
               <div className="mb-4 md:mb-6">
                 <h4 className="text-dream-DEFAULT mb-2 text-sm font-medium md:text-base">
-                  {t('courses.categories.language')}
+                  Categories
                 </h4>
                 <div className="flex flex-col space-y-1">
                   <Button
@@ -102,48 +110,17 @@ const Courses = () => {
                   >
                     {t('courses.allCourses')} ({courses.length})
                   </Button>
-                  <Button
-                    variant={
-                      activeCategory === 'language' ? 'default' : 'ghost'
-                    }
-                    className={`${activeCategory === 'language' ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
-                    onClick={() => handleCategoryChange('language')}
-                  >
-                    {t('courses.categories.language')} (
-                    {courses.filter(c => c.category === 'language').length})
-                  </Button>
-                  <Button
-                    variant={activeCategory === 'math' ? 'default' : 'ghost'}
-                    className={`${activeCategory === 'math' ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
-                    onClick={() => handleCategoryChange('math')}
-                  >
-                    {t('courses.categories.math')} (
-                    {courses.filter(c => c.category === 'math').length})
-                  </Button>
-                  <Button
-                    variant={activeCategory === 'science' ? 'default' : 'ghost'}
-                    className={`${activeCategory === 'science' ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
-                    onClick={() => handleCategoryChange('science')}
-                  >
-                    {t('courses.categories.science')} (
-                    {courses.filter(c => c.category === 'science').length})
-                  </Button>
-                  <Button
-                    variant={activeCategory === 'arts' ? 'default' : 'ghost'}
-                    className={`${activeCategory === 'arts' ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
-                    onClick={() => handleCategoryChange('arts')}
-                  >
-                    {t('courses.categories.arts')} (
-                    {courses.filter(c => c.category === 'arts').length})
-                  </Button>
-                  <Button
-                    variant={activeCategory === 'social' ? 'default' : 'ghost'}
-                    className={`${activeCategory === 'social' ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
-                    onClick={() => handleCategoryChange('social')}
-                  >
-                    {t('courses.categories.social')} (
-                    {courses.filter(c => c.category === 'social').length})
-                  </Button>
+                  {categories.map(category => (
+                    <Button
+                      key={category.id}
+                      variant={activeCategory === category.id ? 'default' : 'ghost'}
+                      className={`${activeCategory === category.id ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
+                      onClick={() => handleCategoryChange(category.id)}
+                    >
+                      {category.name} (
+                      {courses.filter(c => c.categoryId === category.id).length})
+                    </Button>
+                  ))}
                 </div>
               </div>
 
@@ -177,68 +154,70 @@ const Courses = () => {
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-                {filteredCourses.map(course => (
-                  <Link key={course.id} to={`/courses/${course.id}`}>
-                    <Card className="story-card relative z-20 w-full flex h-[25rem] cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/10">
-                      <div className="relative h-48 overflow-hidden">
-                        <img
-                          src={course.coverImage}
-                          alt={course.title}
-                          className="h-full w-full object-cover"
-                          onError={e => {
-                            console.log(
-                              'Course image failed to load:',
-                              course.coverImage,
-                            )
-                            e.currentTarget.style.display = 'none'
-                          }}
-                        />
-                        {course.isFree ? (
-                          <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-white shadow-lg">
-                            {t('free.tag')}
-                          </div>
-                        ) : (
-                          <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-yellow-500 px-3 py-1.5 text-xs font-bold text-black shadow-lg">
-                            {t('premium.tag')}
-                          </div>
-                        )}
-                      </div>
-                      <div className="flex flex-1 flex-col">
-                        <CardHeader className="flex-1 pb-2">
-                          <div className="mb-2 flex items-start justify-between">
-                            <CardTitle className="text-dream-DEFAULT line-clamp-2 flex-1 text-lg">
-                              {course.title}
-                            </CardTitle>
-                            <div className="ml-2 flex items-center gap-2">
-                              <Badge
-                                variant="secondary"
-                                className="text-dream-DEFAULT bg-dream-light/30 text-xs"
-                              >
-                                {course.category.charAt(0).toUpperCase() +
-                                  course.category.slice(1)}
-                              </Badge>
-                              <div className="text-dream-DEFAULT flex items-center gap-1 text-xs">
-                                <Clock className="h-3 w-3" />
-                                <span>
-                                  {course.duration} {t('duration')}
-                                </span>
+                {filteredCourses.map(course => {
+                  const category = categories.find(cat => cat.id === course.categoryId);
+                  return (
+                    <Link key={course.id} to={`/courses/${course.id}`}>
+                      <Card className="story-card relative z-20 w-full flex h-[25rem] cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/10">
+                        <div className="relative h-48 overflow-hidden">
+                          <img
+                            src={course.coverImagePath}
+                            alt={course.title}
+                            className="h-full w-full object-cover"
+                            onError={e => {
+                              console.log(
+                                'Course image failed to load:',
+                                course.coverImagePath,
+                              )
+                              e.currentTarget.src = 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
+                            }}
+                          />
+                          {course.isFree ? (
+                            <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-white shadow-lg">
+                              {t('free.tag')}
+                            </div>
+                          ) : (
+                            <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-yellow-500 px-3 py-1.5 text-xs font-bold text-black shadow-lg">
+                              {t('premium.tag')}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex flex-1 flex-col">
+                          <CardHeader className="flex-1 pb-2">
+                            <div className="mb-2 flex items-start justify-between">
+                              <CardTitle className="text-dream-DEFAULT line-clamp-2 flex-1 text-lg">
+                                {course.title}
+                              </CardTitle>
+                              <div className="ml-2 flex items-center gap-2">
+                                <Badge
+                                  variant="secondary"
+                                  className="text-dream-DEFAULT bg-dream-light/30 text-xs"
+                                >
+                                  {category?.name || 'General'}
+                                </Badge>
+                                <div className="text-dream-DEFAULT flex items-center gap-1 text-xs">
+                                  <Clock className="h-3 w-3" />
+                                  <span>
+                                    {Math.floor(course.duration / 60)} {t('duration')}
+                                  </span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                          <CardDescription className="text-dream-DEFAULT line-clamp-2 text-sm leading-relaxed dark:text-foreground">
-                            {course.description}
-                          </CardDescription>
-                          <div className="text-dream-DEFAULT mt-2 flex items-center text-xs dark:text-foreground">
-                            <BookOpen className="mr-1 h-3 w-3" />
-                            <span>
-                              {course.lessons} {t('courses.lessons')} • {course.ageRange} {t('courses.years')}
-                            </span>
-                          </div>
-                        </CardHeader>
-                      </div>
-                    </Card>
-                  </Link>
-                ))}
+                            <CardDescription className="text-dream-DEFAULT line-clamp-2 text-sm leading-relaxed dark:text-foreground">
+                              {course.description}
+                            </CardDescription>
+                            <div className="text-dream-DEFAULT mt-2 flex items-center text-xs dark:text-foreground">
+                              <BookOpen className="mr-1 h-3 w-3" />
+                              <span>
+                                {course.lessons} {t('courses.lessons')} • {course.minAge}-{course.maxAge} {t('courses.years')}
+                              </span>
+                            </div>
+                          </CardHeader>
+                        </div>
+                      </Card>
+                    </Link>
+                  );
+                })}
               </div>
             )}
           </div>
