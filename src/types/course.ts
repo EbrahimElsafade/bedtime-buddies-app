@@ -21,7 +21,7 @@ export type Course = {
   id: string;
   title: string;
   description: string;
-  categoryId: string; // foreign key to Category.id
+  category: string; 
   minAge: number;
   maxAge: number;
   duration: number; // total in seconds

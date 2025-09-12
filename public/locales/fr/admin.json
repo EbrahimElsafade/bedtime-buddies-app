@@ -1,4 +1,3 @@
-
 {
   "dashboard": {
     "title": "Tableau de Bord Admin",
@@ -14,6 +13,7 @@
     "users": "Utilisateurs",
     "stories": "Histoires",
     "courses": "Cours",
+    "appearance": "Appearance",
     "settings": "Paramètres",
     "logout": "Déconnexion"
   },
