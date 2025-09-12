@@ -1,277 +1,313 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Plus, Trash2, Edit2, Check, X } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Plus, Trash2, Edit2, Check, X } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
+import { supabase } from '@/integrations/supabase/client'
 
 type StoryCategory = {
-  id: string;
-  name: string;
-  created_at: string;
-  updated_at: string;
-};
+  id: string
+  name: string
+  created_at: string
+  updated_at: string
+}
 
 type StoryLanguage = {
-  id: string;
-  code: string;
-  name: string;
-  created_at: string;
-  updated_at: string;
-};
+  id: string
+  code: string
+  name: string
+  created_at: string
+  updated_at: string
+}
 
 const StoryOptions = () => {
-  const { t } = useTranslation('admin');
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
-  
-  const [newCategory, setNewCategory] = useState("");
-  const [newLanguageCode, setNewLanguageCode] = useState("");
-  const [newLanguageName, setNewLanguageName] = useState("");
-  
+  const { t } = useTranslation('admin')
+  const { toast } = useToast()
+  const queryClient = useQueryClient()
+
+  const [newCategory, setNewCategory] = useState('')
+  const [newLanguageCode, setNewLanguageCode] = useState('')
+  const [newLanguageName, setNewLanguageName] = useState('')
+
   // Edit states
-  const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
-  const [editingCategoryName, setEditingCategoryName] = useState("");
-  const [editingLanguageId, setEditingLanguageId] = useState<string | null>(null);
-  const [editingLanguageCode, setEditingLanguageCode] = useState("");
-  const [editingLanguageName, setEditingLanguageName] = useState("");
+  const [editingCategoryId, setEditingCategoryId] = useState<string | null>(
+    null,
+  )
+  const [editingCategoryName, setEditingCategoryName] = useState('')
+  const [editingLanguageId, setEditingLanguageId] = useState<string | null>(
+    null,
+  )
+  const [editingLanguageCode, setEditingLanguageCode] = useState('')
+  const [editingLanguageName, setEditingLanguageName] = useState('')
 
   // Fetch categories
   const { data: categories = [], isLoading: categoriesLoading } = useQuery({
     queryKey: ['story-categories'],
     queryFn: async () => {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from('story_categories')
         .select('*')
-        .order('name');
-      
-      if (error) throw error;
-      return data as StoryCategory[];
-    }
-  });
+        .order('name')
+
+      if (error) throw error
+      return data as StoryCategory[]
+    },
+  })
 
   // Fetch languages
   const { data: languages = [], isLoading: languagesLoading } = useQuery({
     queryKey: ['story-languages'],
     queryFn: async () => {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from('story_languages')
         .select('*')
-        .order('name');
-      
-      if (error) throw error;
-      return data as StoryLanguage[];
-    }
-  });
+        .order('name')
+
+      if (error) throw error
+      return data as StoryLanguage[]
+    },
+  })
 
   // Add category mutation
   const addCategoryMutation = useMutation({
     mutationFn: async (name: string) => {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from('story_categories')
         .insert({ name })
         .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+        .single()
+
+      if (error) throw error
+      return data
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['story-categories'] });
-      setNewCategory("");
+    onSuccess: data => {
+      queryClient.invalidateQueries({ queryKey: ['story-categories'] })
+      setNewCategory('')
       toast({
         title: t('storyOptions.categoryAdded'),
-        description: t('storyOptions.categoryAddedDesc', { category: data.name }),
-      });
-    }
-  });
+        description: t('storyOptions.categoryAddedDesc', {
+          category: data.name,
+        }),
+      })
+    },
+  })
 
   // Update category mutation
   const updateCategoryMutation = useMutation({
     mutationFn: async ({ id, name }: { id: string; name: string }) => {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from('story_categories')
         .update({ name })
         .eq('id', id)
         .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+        .single()
+
+      if (error) throw error
+      return data
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['story-categories'] });
-      setEditingCategoryId(null);
-      setEditingCategoryName("");
+    onSuccess: data => {
+      queryClient.invalidateQueries({ queryKey: ['story-categories'] })
+      setEditingCategoryId(null)
+      setEditingCategoryName('')
       toast({
-        title: "Category Updated",
+        title: 'Category Updated',
         description: `Category '${data.name}' has been updated successfully`,
-      });
-    }
-  });
+      })
+    },
+  })
 
   // Remove category mutation
   const removeCategoryMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await (supabase as any)
+      const { error } = await supabase
         .from('story_categories')
         .delete()
-        .eq('id', id);
-      
-      if (error) throw error;
+        .eq('id', id)
+
+      if (error) throw error
     },
     onSuccess: (_, id) => {
-      const category = categories.find(cat => cat.id === id);
-      queryClient.invalidateQueries({ queryKey: ['story-categories'] });
+      const category = categories.find(cat => cat.id === id)
+      queryClient.invalidateQueries({ queryKey: ['story-categories'] })
       toast({
         title: t('storyOptions.categoryRemoved'),
-        description: t('storyOptions.categoryRemovedDesc', { category: category?.name }),
-      });
-    }
-  });
+        description: t('storyOptions.categoryRemovedDesc', {
+          category: category?.name,
+        }),
+      })
+    },
+  })
 
   // Add language mutation
   const addLanguageMutation = useMutation({
     mutationFn: async ({ code, name }: { code: string; name: string }) => {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .from('story_languages')
         .insert({ code, name })
         .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+        .single()
+
+      if (error) throw error
+      return data
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['story-languages'] });
-      setNewLanguageCode("");
-      setNewLanguageName("");
+    onSuccess: data => {
+      queryClient.invalidateQueries({ queryKey: ['story-languages'] })
+      setNewLanguageCode('')
+      setNewLanguageName('')
       toast({
         title: t('storyOptions.languageAdded'),
-        description: t('storyOptions.languageAddedDesc', { language: data.name }),
-      });
-    }
-  });
+        description: t('storyOptions.languageAddedDesc', {
+          language: data.name,
+        }),
+      })
+    },
+  })
 
   // Update language mutation
   const updateLanguageMutation = useMutation({
-    mutationFn: async ({ id, code, name }: { id: string; code: string; name: string }) => {
-      const { data, error } = await (supabase as any)
+    mutationFn: async ({
+      id,
+      code,
+      name,
+    }: {
+      id: string
+      code: string
+      name: string
+    }) => {
+      const { data, error } = await supabase
         .from('story_languages')
         .update({ code, name })
         .eq('id', id)
         .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+        .single()
+
+      if (error) throw error
+      return data
     },
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['story-languages'] });
-      setEditingLanguageId(null);
-      setEditingLanguageCode("");
-      setEditingLanguageName("");
+    onSuccess: data => {
+      queryClient.invalidateQueries({ queryKey: ['story-languages'] })
+      setEditingLanguageId(null)
+      setEditingLanguageCode('')
+      setEditingLanguageName('')
       toast({
-        title: "Language Updated",
+        title: 'Language Updated',
         description: `Language '${data.name}' has been updated successfully`,
-      });
-    }
-  });
+      })
+    },
+  })
 
   // Remove language mutation
   const removeLanguageMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await (supabase as any)
+      const { error } = await supabase
         .from('story_languages')
         .delete()
-        .eq('id', id);
-      
-      if (error) throw error;
+        .eq('id', id)
+
+      if (error) throw error
     },
     onSuccess: (_, id) => {
-      const language = languages.find(lang => lang.id === id);
-      queryClient.invalidateQueries({ queryKey: ['story-languages'] });
+      const language = languages.find(lang => lang.id === id)
+      queryClient.invalidateQueries({ queryKey: ['story-languages'] })
       toast({
         title: t('storyOptions.languageRemoved'),
-        description: t('storyOptions.languageRemovedDesc', { language: language?.name }),
-      });
-    }
-  });
+        description: t('storyOptions.languageRemovedDesc', {
+          language: language?.name,
+        }),
+      })
+    },
+  })
 
   const addCategory = () => {
-    if (newCategory.trim() && !categories.some(cat => cat.name === newCategory.trim())) {
-      addCategoryMutation.mutate(newCategory.trim());
+    if (
+      newCategory.trim() &&
+      !categories.some(cat => cat.name === newCategory.trim())
+    ) {
+      addCategoryMutation.mutate(newCategory.trim())
     }
-  };
+  }
 
   const startEditCategory = (category: StoryCategory) => {
-    setEditingCategoryId(category.id);
-    setEditingCategoryName(category.name);
-  };
+    setEditingCategoryId(category.id)
+    setEditingCategoryName(category.name)
+  }
 
   const saveEditCategory = () => {
     if (editingCategoryId && editingCategoryName.trim()) {
       updateCategoryMutation.mutate({
         id: editingCategoryId,
-        name: editingCategoryName.trim()
-      });
+        name: editingCategoryName.trim(),
+      })
     }
-  };
+  }
 
   const cancelEditCategory = () => {
-    setEditingCategoryId(null);
-    setEditingCategoryName("");
-  };
+    setEditingCategoryId(null)
+    setEditingCategoryName('')
+  }
 
   const removeCategory = (id: string) => {
-    removeCategoryMutation.mutate(id);
-  };
+    removeCategoryMutation.mutate(id)
+  }
 
   const addLanguage = () => {
-    if (newLanguageCode.trim() && newLanguageName.trim() && 
-        !languages.some(lang => lang.code === newLanguageCode.trim())) {
-      addLanguageMutation.mutate({ 
-        code: newLanguageCode.trim(), 
-        name: newLanguageName.trim() 
-      });
+    if (
+      newLanguageCode.trim() &&
+      newLanguageName.trim() &&
+      !languages.some(lang => lang.code === newLanguageCode.trim())
+    ) {
+      addLanguageMutation.mutate({
+        code: newLanguageCode.trim(),
+        name: newLanguageName.trim(),
+      })
     }
-  };
+  }
 
   const startEditLanguage = (language: StoryLanguage) => {
-    setEditingLanguageId(language.id);
-    setEditingLanguageCode(language.code);
-    setEditingLanguageName(language.name);
-  };
+    setEditingLanguageId(language.id)
+    setEditingLanguageCode(language.code)
+    setEditingLanguageName(language.name)
+  }
 
   const saveEditLanguage = () => {
-    if (editingLanguageId && editingLanguageCode.trim() && editingLanguageName.trim()) {
+    if (
+      editingLanguageId &&
+      editingLanguageCode.trim() &&
+      editingLanguageName.trim()
+    ) {
       updateLanguageMutation.mutate({
         id: editingLanguageId,
         code: editingLanguageCode.trim(),
-        name: editingLanguageName.trim()
-      });
+        name: editingLanguageName.trim(),
+      })
     }
-  };
+  }
 
   const cancelEditLanguage = () => {
-    setEditingLanguageId(null);
-    setEditingLanguageCode("");
-    setEditingLanguageName("");
-  };
+    setEditingLanguageId(null)
+    setEditingLanguageCode('')
+    setEditingLanguageName('')
+  }
 
   const removeLanguage = (id: string) => {
-    removeLanguageMutation.mutate(id);
-  };
+    removeLanguageMutation.mutate(id)
+  }
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
+    <div className="container mx-auto space-y-8 p-6">
       <div>
         <h1 className="text-3xl font-bold">{t('storyOptions.title')}</h1>
-        <p className="text-muted-foreground mt-2">
+        <p className="mt-2 text-muted-foreground">
           {t('storyOptions.description')}
         </p>
       </div>
@@ -292,31 +328,33 @@ const StoryOptions = () => {
               <Input
                 placeholder={t('storyOptions.addCategoryPlaceholder')}
                 value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && addCategory()}
+                onChange={e => setNewCategory(e.target.value)}
+                onKeyPress={e => e.key === 'Enter' && addCategory()}
               />
-              <Button 
-                onClick={addCategory} 
+              <Button
+                onClick={addCategory}
                 size="sm"
                 disabled={addCategoryMutation.isPending}
               >
                 <Plus className="h-4 w-4" />
               </Button>
             </div>
-            
+
             {categoriesLoading ? (
-              <div className="text-center py-4">Loading categories...</div>
+              <div className="py-4 text-center">Loading categories...</div>
             ) : (
               <div className="flex flex-wrap gap-2">
-                {categories.map((category) => (
+                {categories.map(category => (
                   <div key={category.id}>
                     {editingCategoryId === category.id ? (
-                      <div className="flex items-center gap-2 p-2 border rounded-md bg-white">
+                      <div className="flex items-center gap-2 rounded-md border bg-white p-2">
                         <Input
                           value={editingCategoryName}
-                          onChange={(e) => setEditingCategoryName(e.target.value)}
+                          onChange={e => setEditingCategoryName(e.target.value)}
                           className="h-6 text-sm"
-                          onKeyPress={(e) => e.key === 'Enter' && saveEditCategory()}
+                          onKeyPress={e =>
+                            e.key === 'Enter' && saveEditCategory()
+                          }
                         />
                         <Button
                           variant="ghost"
@@ -337,7 +375,10 @@ const StoryOptions = () => {
                         </Button>
                       </div>
                     ) : (
-                      <Badge variant="secondary" className="flex items-center gap-1">
+                      <Badge
+                        variant="secondary"
+                        className="flex items-center gap-1"
+                      >
                         {category.name}
                         <Button
                           variant="ghost"
@@ -371,9 +412,7 @@ const StoryOptions = () => {
             <CardTitle className="flex items-center">
               {t('storyOptions.languages')}
             </CardTitle>
-            <CardDescription>
-              {t('storyOptions.languagesDesc')}
-            </CardDescription>
+            <CardDescription>{t('storyOptions.languagesDesc')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
@@ -381,16 +420,16 @@ const StoryOptions = () => {
                 <Input
                   placeholder="Language code (e.g., en, ar, fr)"
                   value={newLanguageCode}
-                  onChange={(e) => setNewLanguageCode(e.target.value)}
+                  onChange={e => setNewLanguageCode(e.target.value)}
                 />
                 <Input
                   placeholder="Language name (e.g., English)"
                   value={newLanguageName}
-                  onChange={(e) => setNewLanguageName(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && addLanguage()}
+                  onChange={e => setNewLanguageName(e.target.value)}
+                  onKeyPress={e => e.key === 'Enter' && addLanguage()}
                 />
-                <Button 
-                  onClick={addLanguage} 
+                <Button
+                  onClick={addLanguage}
                   size="sm"
                   disabled={addLanguageMutation.isPending}
                 >
@@ -398,27 +437,29 @@ const StoryOptions = () => {
                 </Button>
               </div>
             </div>
-            
+
             {languagesLoading ? (
-              <div className="text-center py-4">Loading languages...</div>
+              <div className="py-4 text-center">Loading languages...</div>
             ) : (
               <div className="flex flex-wrap gap-2">
-                {languages.map((language) => (
+                {languages.map(language => (
                   <div key={language.id}>
                     {editingLanguageId === language.id ? (
-                      <div className="flex items-center gap-2 p-2 border rounded-md bg-white">
+                      <div className="flex items-center gap-2 rounded-md border bg-white p-2">
                         <Input
                           value={editingLanguageCode}
-                          onChange={(e) => setEditingLanguageCode(e.target.value)}
-                          className="h-6 text-sm w-16"
+                          onChange={e => setEditingLanguageCode(e.target.value)}
+                          className="h-6 w-16 text-sm"
                           placeholder="Code"
                         />
                         <Input
                           value={editingLanguageName}
-                          onChange={(e) => setEditingLanguageName(e.target.value)}
+                          onChange={e => setEditingLanguageName(e.target.value)}
                           className="h-6 text-sm"
                           placeholder="Name"
-                          onKeyPress={(e) => e.key === 'Enter' && saveEditLanguage()}
+                          onKeyPress={e =>
+                            e.key === 'Enter' && saveEditLanguage()
+                          }
                         />
                         <Button
                           variant="ghost"
@@ -439,7 +480,10 @@ const StoryOptions = () => {
                         </Button>
                       </div>
                     ) : (
-                      <Badge variant="secondary" className="flex items-center gap-1">
+                      <Badge
+                        variant="secondary"
+                        className="flex items-center gap-1"
+                      >
                         {language.name} ({language.code})
                         <Button
                           variant="ghost"
@@ -468,7 +512,7 @@ const StoryOptions = () => {
         </Card>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default StoryOptions;
+export default StoryOptions
