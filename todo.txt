@@ -8,4 +8,6 @@
 - courses:
     - Published button rest and need to be fixed 
     - upload the HLS video instead of the normal normal is not working anymore
-    - fix the courses UI/UX 
+    - fix the courses UI/UX for the user and the admin 
+    - fix the categories in the courses page
+    - add translation to the courses at least for the title and the description 
