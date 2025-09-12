@@ -6,6 +6,6 @@
 - fix auth routes translations 
 
 - courses:
-    - fix the courses card routes
-    - get courses category from eng.Ibrahim 
-    - courses 404 page => route back instead of only to the courses page
+    - Published button rest and need to be fixed 
+    - upload the HLS video instead of the normal normal is not working anymore
+    - fix the courses UI/UX 
