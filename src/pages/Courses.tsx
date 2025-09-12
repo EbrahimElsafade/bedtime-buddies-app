@@ -28,7 +28,7 @@ const Courses = () => {
     document.title = 'Bedtime Stories - Learn with Courses'
 
     const filtered = courses.filter(course => {
-      const categoryMatch = activeCategory === 'all' || course.categoryId === activeCategory
+      const categoryMatch = activeCategory === 'all' || course.category === activeCategory
       const searchMatch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         course.description.toLowerCase().includes(searchQuery.toLowerCase())
       return categoryMatch && searchMatch
@@ -155,7 +155,7 @@ const Courses = () => {
             ) : (
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {filteredCourses.map(course => {
-                  const category = categories.find(cat => cat.id === course.categoryId);
+                  const category = categories.find(cat => cat.id === course.category);
                   return (
                     <Link key={course.id} to={`/courses/${course.id}`}>
                       <Card className="story-card relative z-20 w-full flex h-[25rem] cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/10">

@@ -175,9 +175,9 @@ const Course = () => {
 
               <div className="mb-4 flex flex-wrap gap-2">
                 <Badge className="text-dream-DEFAULT border-none bg-dream-light/30">
-                  {course.categoryId
-                    ? course.categoryId.charAt(0).toUpperCase() +
-                      course.categoryId.slice(1)
+                  {course.category
+                    ? course.category.charAt(0).toUpperCase() +
+                      course.category.slice(1)
                     : 'General'}
                 </Badge>
                 <Badge className="text-dream-DEFAULT border-none bg-moon-light/30">

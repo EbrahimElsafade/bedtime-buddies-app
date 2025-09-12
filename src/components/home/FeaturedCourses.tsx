@@ -27,7 +27,7 @@ const FeaturedCourses = () => {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {featuredCourses.map((course) => {
-            const category = categories.find(cat => cat.id === course.categoryId);
+            const category = categories.find(cat => cat.id === course.category);
             return (
               <Link key={course.id} to={`/courses/${course.id}`} className="block">
                 <Card className="story-card cursor-pointer overflow-hidden border-dream-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm transition-transform hover:scale-105">
