@@ -13,7 +13,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
 
 const Course = () => {
-  const { courseId } = useParams<{ courseId: string }>();
+  const { id: courseId } = useParams<{ id: string }>();
   const { isAuthenticated, profile } = useAuth();
   const { t } = useLanguage();
   const { toast } = useToast();

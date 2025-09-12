@@ -74,7 +74,7 @@ function App() {
                     <Route path="stories" element={<AdminStories />} />
                     <Route path="stories/new" element={<AdminStoryEditor />} />
                     <Route path="stories/edit/:id" element={<AdminStoryEditor />} />
-                    <Route path="stories/:id/options" element={<AdminStoryOptions />} />
+                    <Route path="stories/options" element={<AdminStoryOptions />} />
                     <Route path="users" element={<AdminUsers />} />
                     <Route path="courses" element={<AdminCourses />} />
                     <Route path="settings" element={<AdminSettings />} />
