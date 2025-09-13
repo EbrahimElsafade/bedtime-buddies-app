@@ -49,8 +49,7 @@ interface CourseLessonForm extends Omit<CourseVideo, 'id'> {
   id?: string
   thumbnailFile?: File | null
   thumbnailPreview?: string | null
-  videoFiles?: File[]
-  videoPreview?: string | null
+  videoUrl?: string
 }
 
 const CourseEditor = () => {
@@ -188,9 +187,7 @@ const CourseEditor = () => {
             thumbnailPreview: lesson.thumbnail_path
               ? getImageUrl(lesson.thumbnail_path)
               : null,
-            videoPreview: lesson.video_path
-              ? getImageUrl(lesson.video_path)
-              : null,
+            videoUrl: lesson.video_url || '',
           }
         })
 
@@ -229,7 +226,7 @@ const CourseEditor = () => {
       order: courseLessons.length + 1,
       createdAt: new Date().toISOString(),
       thumbnailPreview: null,
-      videoPreview: null,
+      videoUrl: '',
     }
 
     setCourseLessons([...courseLessons, newLesson])
@@ -270,18 +267,11 @@ const CourseEditor = () => {
 
   const handleLessonVideoChange = (
     lessonIndex: number,
-    e: React.ChangeEvent<HTMLInputElement>,
+    url: string,
   ) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const files = Array.from(e.target.files)
-
-      const updatedLessons = [...courseLessons]
-      updatedLessons[lessonIndex].videoFiles = files
-      updatedLessons[lessonIndex].videoPreview = URL.createObjectURL(
-        files.find(f => f.name.endsWith('.m3u8'))!,
-      )
-      setCourseLessons(updatedLessons)
-    }
+    const updatedLessons = [...courseLessons]
+    updatedLessons[lessonIndex].videoUrl = url
+    setCourseLessons(updatedLessons)
   }
 
   // Handle save/submit
@@ -389,26 +379,8 @@ const CourseEditor = () => {
           lessonThumbnailUrl = filename
         }
 
-        // Upload lesson video if it's a file
-        let lessonVideoUrl = lesson.videoPath
-        if (lesson.videoFiles && lesson.videoFiles.length > 0) {
-          const folder = `course-videos/${courseId}/lesson-${lesson.order}-${Date.now()}`
-
-          for (const file of lesson.videoFiles) {
-            const { error: uploadError } = await supabase.storage
-              .from('admin-content')
-              .upload(`${folder}/${file.name}`, file, {
-                cacheControl: '3600',
-                upsert: false,
-              })
-
-            if (uploadError) throw uploadError
-          }
-
-          // Save only the .m3u8 path in DB
-          const m3u8File = lesson.videoFiles.find(f => f.name.endsWith('.m3u8'))
-          lessonVideoUrl = `${folder}/${m3u8File?.name}`
-        }
+        // Use the video URL directly for HSL streams
+        let lessonVideoUrl = lesson.videoUrl || lesson.videoPath
 
         // Insert lesson
         const { error: lessonError } = await supabase
@@ -417,7 +389,7 @@ const CourseEditor = () => {
             course_id: courseId,
             title: lesson.title,
             description: lesson.description,
-            video_path: lessonVideoUrl,
+            video_url: lessonVideoUrl,
             thumbnail_path: lessonThumbnailUrl,
             duration: lesson.duration,
             lesson_order: lesson.order,
@@ -804,49 +776,20 @@ const CourseEditor = () => {
                                 </div>
                               </div>
 
-                              {/* Lesson Video */}
+                              {/* Lesson Video URL */}
                               <div className="space-y-2">
-                                <Label>Lesson Video</Label>
-                                <div className="flex items-center gap-4">
-                                  {lesson.videoFiles?.length ? (
-                                    <div className="relative flex h-20 w-32 items-center justify-center rounded-md border bg-muted text-xs text-muted-foreground">
-                                      Video uploaded
-                                      <Button
-                                        type="button"
-                                        size="icon"
-                                        variant="destructive"
-                                        className="absolute right-1 top-1 h-6 w-6"
-                                        onClick={() => {
-                                          const updatedLessons = [
-                                            ...courseLessons,
-                                          ]
-                                          updatedLessons[
-                                            lessonIndex
-                                          ].videoFiles = null
-                                          setCourseLessons(updatedLessons)
-                                        }}
-                                      >
-                                        <X className="h-3 w-3" />
-                                      </Button>
-                                    </div>
-                                  ) : (
-                                    <div className="flex h-20 w-32 flex-col items-center justify-center rounded-md border border-dashed border-muted-foreground/50 bg-muted">
-                                      <Video className="mb-1 h-6 w-6 text-muted-foreground" />
-                                      <p className="text-center text-xs text-muted-foreground">
-                                        Upload
-                                      </p>
-                                    </div>
-                                  )}
-                                  <Input
-                                    type="file"
-                                    // accept="video/*"
-                                    multiple
-                                    onChange={e =>
-                                      handleLessonVideoChange(lessonIndex, e)
-                                    }
-                                    className="flex-1"
-                                  />
-                                </div>
+                                <Label>HSL Video URL</Label>
+                                <Input
+                                  type="url"
+                                  placeholder="Enter HSL video URL (e.g., https://example.com/video.m3u8)"
+                                  value={lesson.videoUrl || ''}
+                                  onChange={e =>
+                                    handleLessonVideoChange(lessonIndex, e.target.value)
+                                  }
+                                />
+                                <p className="text-xs text-muted-foreground">
+                                  Enter the URL for your HSL video stream (.m3u8 file)
+                                </p>
                               </div>
                             </div>
                           </div>
