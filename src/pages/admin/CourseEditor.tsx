@@ -50,6 +50,8 @@ interface CourseLessonForm extends Omit<CourseVideo, 'id'> {
   thumbnailFile?: File | null
   thumbnailPreview?: string | null
   videoUrl?: string
+  videoFiles?: File[] | null
+  uploadMethod?: 'url' | 'upload'
 }
 
 const CourseEditor = () => {
@@ -188,6 +190,7 @@ const CourseEditor = () => {
               ? getImageUrl(lesson.thumbnail_path)
               : null,
             videoUrl: lesson.video_url || '',
+            uploadMethod: lesson.video_url ? 'url' : 'upload',
           }
         })
 
@@ -227,6 +230,7 @@ const CourseEditor = () => {
       createdAt: new Date().toISOString(),
       thumbnailPreview: null,
       videoUrl: '',
+      uploadMethod: 'url',
     }
 
     setCourseLessons([...courseLessons, newLesson])
@@ -272,6 +276,18 @@ const CourseEditor = () => {
     const updatedLessons = [...courseLessons]
     updatedLessons[lessonIndex].videoUrl = url
     setCourseLessons(updatedLessons)
+  }
+
+  const handleLessonVideoFilesChange = (
+    lessonIndex: number,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const files = Array.from(e.target.files)
+      const updatedLessons = [...courseLessons]
+      updatedLessons[lessonIndex].videoFiles = files
+      setCourseLessons(updatedLessons)
+    }
   }
 
   // Handle save/submit
@@ -379,8 +395,36 @@ const CourseEditor = () => {
           lessonThumbnailUrl = filename
         }
 
-        // Use the video URL directly for HSL streams
+        // Handle video upload or URL
         let lessonVideoUrl = lesson.videoUrl || lesson.videoPath || ''
+        
+        // Upload HSL video files if provided
+        if (lesson.videoFiles && lesson.videoFiles.length > 0) {
+          const folder = `course-videos/${courseId}/lesson-${lesson.order}-${Date.now()}`
+          
+          // Upload all video files to storage
+          for (const file of lesson.videoFiles) {
+            const { error: uploadError } = await supabase.storage
+              .from('course-videos')
+              .upload(`${folder}/${file.name}`, file, {
+                cacheControl: '3600',
+                upsert: false,
+              })
+
+            if (uploadError) {
+              console.error('Video upload error:', uploadError)
+              throw uploadError
+            }
+          }
+
+          // Find the master playlist file (.m3u8) and use its path
+          const m3u8File = lesson.videoFiles.find(f => f.name.endsWith('.m3u8'))
+          if (m3u8File) {
+            lessonVideoUrl = `${folder}/${m3u8File.name}`
+          } else {
+            throw new Error('No .m3u8 playlist file found in the uploaded video files')
+          }
+        }
 
         // Insert lesson
         const { error: lessonError } = await supabase
@@ -776,21 +820,105 @@ const CourseEditor = () => {
                                 </div>
                               </div>
 
-                              {/* Lesson Video URL */}
+                              {/* Video Upload Method Selection */}
                               <div className="space-y-2">
-                                <Label>HSL Video URL</Label>
-                                <Input
-                                  type="url"
-                                  placeholder="Enter HSL video URL (e.g., https://example.com/video.m3u8)"
-                                  value={lesson.videoUrl || ''}
-                                  onChange={e =>
-                                    handleLessonVideoChange(lessonIndex, e.target.value)
-                                  }
-                                />
-                                <p className="text-xs text-muted-foreground">
-                                  Enter the URL for your HSL video stream (.m3u8 file)
-                                </p>
+                                <Label>Video Method</Label>
+                                <div className="flex gap-4">
+                                  <label className="flex items-center space-x-2 cursor-pointer">
+                                    <input
+                                      type="radio"
+                                      name={`uploadMethod-${lessonIndex}`}
+                                      value="url"
+                                      checked={lesson.uploadMethod === 'url'}
+                                      onChange={() => {
+                                        const updatedLessons = [...courseLessons]
+                                        updatedLessons[lessonIndex].uploadMethod = 'url'
+                                        updatedLessons[lessonIndex].videoFiles = null
+                                        setCourseLessons(updatedLessons)
+                                      }}
+                                      className="form-radio"
+                                    />
+                                    <span className="text-sm">HSL URL</span>
+                                  </label>
+                                  <label className="flex items-center space-x-2 cursor-pointer">
+                                    <input
+                                      type="radio"
+                                      name={`uploadMethod-${lessonIndex}`}
+                                      value="upload"
+                                      checked={lesson.uploadMethod === 'upload'}
+                                      onChange={() => {
+                                        const updatedLessons = [...courseLessons]
+                                        updatedLessons[lessonIndex].uploadMethod = 'upload'
+                                        updatedLessons[lessonIndex].videoUrl = ''
+                                        setCourseLessons(updatedLessons)
+                                      }}
+                                      className="form-radio"
+                                    />
+                                    <span className="text-sm">Upload Files</span>
+                                  </label>
+                                </div>
                               </div>
+
+                              {/* Video Input based on method */}
+                              {lesson.uploadMethod === 'url' ? (
+                                <div className="space-y-2">
+                                  <Label>HSL Video URL</Label>
+                                  <Input
+                                    type="url"
+                                    placeholder="Enter HSL video URL (e.g., https://example.com/video.m3u8)"
+                                    value={lesson.videoUrl || ''}
+                                    onChange={e =>
+                                      handleLessonVideoChange(lessonIndex, e.target.value)
+                                    }
+                                  />
+                                  <p className="text-xs text-muted-foreground">
+                                    Enter the URL for your HSL video stream (.m3u8 file)
+                                  </p>
+                                </div>
+                              ) : (
+                                <div className="space-y-2">
+                                  <Label>Upload HSL Video Files</Label>
+                                  <div className="flex items-center gap-4">
+                                    {lesson.videoFiles?.length ? (
+                                      <div className="relative flex h-20 w-32 items-center justify-center rounded-md border bg-muted text-xs text-muted-foreground">
+                                        {lesson.videoFiles.length} files selected
+                                        <Button
+                                          type="button"
+                                          size="icon"
+                                          variant="destructive"
+                                          className="absolute right-1 top-1 h-6 w-6"
+                                          onClick={() => {
+                                            const updatedLessons = [...courseLessons]
+                                            updatedLessons[lessonIndex].videoFiles = null
+                                            setCourseLessons(updatedLessons)
+                                          }}
+                                        >
+                                          <X className="h-3 w-3" />
+                                        </Button>
+                                      </div>
+                                    ) : (
+                                      <div className="flex h-20 w-32 flex-col items-center justify-center rounded-md border border-dashed border-muted-foreground/50 bg-muted">
+                                        <Video className="mb-1 h-6 w-6 text-muted-foreground" />
+                                        <p className="text-center text-xs text-muted-foreground">
+                                          Select Files
+                                        </p>
+                                      </div>
+                                    )}
+                                    <div className="flex-1">
+                                      <Input
+                                        type="file"
+                                        multiple
+                                        accept=".m3u8,.ts,.mp4"
+                                        onChange={e => handleLessonVideoFilesChange(lessonIndex, e)}
+                                        className="mb-2"
+                                      />
+                                      <p className="text-xs text-muted-foreground">
+                                        Select all HSL files: .m3u8 playlist and .ts segments. You can also upload .mp4 files.
+                                      </p>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
                             </div>
                           </div>
                         </AccordionContent>
