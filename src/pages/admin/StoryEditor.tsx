@@ -1119,17 +1119,16 @@ const StoryEditor = () => {
                         <AccordionTrigger className="hover:no-underline">
                           <div className="flex items-center justify-between w-full mr-4">
                             <span className="font-medium">Section {section.order}</span>
-                            <Button
-                              type="button"
-                              variant="destructive"
-                              size="sm"
+                            <span
+                              role="button"
+                              className="rounded-xl border bg-red-500 p-2"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 deleteSection(sectionIndex);
                               }}
                             >
                               <Trash2 className="h-4 w-4" />
-                            </Button>
+                            </span>
                           </div>
                         </AccordionTrigger>
                         <AccordionContent className="pt-4">

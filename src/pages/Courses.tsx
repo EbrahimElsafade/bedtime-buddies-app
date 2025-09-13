@@ -1,47 +1,46 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, BookOpen, Clock } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Course } from '@/types/course'
 import { useCoursesData, useCourseCategories } from '@/hooks/useCourseData'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 const Courses = () => {
   const [searchQuery, setSearchQuery] = useState('')
-  const [filteredCourses, setFilteredCourses] = useState<Course[]>([])
   const [activeCategory, setActiveCategory] = useState<string>('all')
   const { t } = useLanguage()
-  
+
   const { data: courses = [], isLoading } = useCoursesData()
   const { data: categories = [] } = useCourseCategories()
 
   useEffect(() => {
     document.title = 'Bedtime Stories - Learn with Courses'
+  }, [])
 
-    const filtered = courses.filter(course => {
-      const categoryMatch = activeCategory === 'all' || course.category === activeCategory
-      const searchMatch = course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  const filteredCourses = useMemo(() => {
+    return courses.filter(course => {
+      const categoryMatch =
+        activeCategory === 'all' || course.category === activeCategory
+      const searchMatch =
+        course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         course.description.toLowerCase().includes(searchQuery.toLowerCase())
       return categoryMatch && searchMatch
     })
-
-    setFilteredCourses(filtered)
   }, [searchQuery, activeCategory, courses])
 
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category)
   }
 
-  const getAgeCounts = () => {
+  const ageCounts = useMemo(() => {
     const counts: Record<string, number> = {}
     courses.forEach(course => {
       const ageRange = `${course.minAge}-${course.maxAge}`
@@ -51,13 +50,11 @@ const Courses = () => {
       counts[ageRange]++
     })
     return counts
-  }
-
-  const ageCounts = getAgeCounts()
+  }, [courses])
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="text-dream-DEFAULT">Loading courses...</div>
       </div>
     )
@@ -113,12 +110,15 @@ const Courses = () => {
                   {categories.map(category => (
                     <Button
                       key={category.id}
-                      variant={activeCategory === category.id ? 'default' : 'ghost'}
-                      className={`${activeCategory === category.id ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
-                      onClick={() => handleCategoryChange(category.id)}
+                      variant={
+                        activeCategory === category.name ? 'default' : 'ghost'
+                      }
+                      className={`${activeCategory === category.name ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
+                      onClick={() => handleCategoryChange(category.name)}
                     >
                       {category.name} (
-                      {courses.filter(c => c.categoryId === category.id).length})
+                      {courses.filter(c => c.category === category.name).length}
+                      )
                     </Button>
                   ))}
                 </div>
@@ -155,10 +155,12 @@ const Courses = () => {
             ) : (
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {filteredCourses.map(course => {
-                  const category = categories.find(cat => cat.id === course.category);
+                  const category = categories.find(
+                    cat => cat.id === course.category,
+                  )
                   return (
                     <Link key={course.id} to={`/courses/${course.id}`}>
-                      <Card className="story-card relative z-20 w-full flex h-[25rem] cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/10">
+                      <Card className="story-card relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/10">
                         <div className="relative h-48 overflow-hidden">
                           <img
                             src={course.coverImagePath}
@@ -169,7 +171,8 @@ const Courses = () => {
                                 'Course image failed to load:',
                                 course.coverImagePath,
                               )
-                              e.currentTarget.src = 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
+                              e.currentTarget.src =
+                                'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
                             }}
                           />
                           {course.isFree ? (
@@ -198,7 +201,8 @@ const Courses = () => {
                                 <div className="text-dream-DEFAULT flex items-center gap-1 text-xs">
                                   <Clock className="h-3 w-3" />
                                   <span>
-                                    {Math.floor(course.duration / 60)} {t('duration')}
+                                    {Math.floor(course.duration / 60)}{' '}
+                                    {t('duration')}
                                   </span>
                                 </div>
                               </div>
@@ -209,14 +213,16 @@ const Courses = () => {
                             <div className="text-dream-DEFAULT mt-2 flex items-center text-xs dark:text-foreground">
                               <BookOpen className="mr-1 h-3 w-3" />
                               <span>
-                                {course.lessons} {t('courses.lessons')} • {course.minAge}-{course.maxAge} {t('courses.years')}
+                                {course.lessons} {t('courses.lessons')} •{' '}
+                                {course.minAge}-{course.maxAge}{' '}
+                                {t('courses.years')}
                               </span>
                             </div>
                           </CardHeader>
                         </div>
                       </Card>
                     </Link>
-                  );
+                  )
                 })}
               </div>
             )}

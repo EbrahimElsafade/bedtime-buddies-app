@@ -685,17 +685,16 @@ const CourseEditor = () => {
                               Lesson {lesson.order}:{' '}
                               {lesson.title || 'Untitled'}
                             </span>
-                            <Button
-                              type="button"
-                              variant="destructive"
-                              size="sm"
+                            <span
+                              role="button"
+                              className="rounded-xl border bg-red-500 p-2"
                               onClick={e => {
                                 e.stopPropagation()
                                 deleteLesson(lessonIndex)
                               }}
                             >
                               <Trash2 className="h-4 w-4" />
-                            </Button>
+                            </span>
                           </div>
                         </AccordionTrigger>
                         <AccordionContent className="pt-4">
