@@ -75,3 +75,24 @@ export const getAudioUrl = (audioPath: string | null): string => {
   
   return urlData.publicUrl;
 };
+
+export const getVideoUrl = (videoPath: string | null, videoUrl: string | null): string => {
+  // If there's an external URL, use it
+  if (videoUrl && (videoUrl.startsWith('http://') || videoUrl.startsWith('https://'))) {
+    return videoUrl;
+  }
+  
+  // If there's a storage path, convert to public URL
+  if (videoPath) {
+    // If it's already a full URL, return as is
+    if (videoPath.startsWith('http://') || videoPath.startsWith('https://')) {
+      return videoPath;
+    }
+    
+    // Get the public URL from course-videos storage bucket
+    const { data } = supabase.storage.from("course-videos").getPublicUrl(videoPath);
+    return data.publicUrl;
+  }
+  
+  return '';
+};

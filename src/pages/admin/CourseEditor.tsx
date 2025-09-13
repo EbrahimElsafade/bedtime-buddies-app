@@ -396,11 +396,12 @@ const CourseEditor = () => {
         }
 
         // Handle video upload or URL
-        let lessonVideoUrl = lesson.videoUrl || lesson.videoPath || ''
+        let lessonVideoUrl = lesson.videoUrl || ''
+        let lessonVideoPath = lesson.videoPath || ''
         
         // Upload HSL video files if provided
         if (lesson.videoFiles && lesson.videoFiles.length > 0) {
-          const folder = `course-videos/${courseId}/lesson-${lesson.order}-${Date.now()}`
+          const folder = `${courseId}/lesson-${lesson.order}-${Date.now()}`
           
           // Upload all video files to storage
           for (const file of lesson.videoFiles) {
@@ -417,10 +418,11 @@ const CourseEditor = () => {
             }
           }
 
-          // Find the master playlist file (.m3u8) and use its path
+          // Find the master playlist file (.m3u8) and store its storage path
           const m3u8File = lesson.videoFiles.find(f => f.name.endsWith('.m3u8'))
           if (m3u8File) {
-            lessonVideoUrl = `${folder}/${m3u8File.name}`
+            lessonVideoPath = `${folder}/${m3u8File.name}`
+            lessonVideoUrl = '' // Clear URL since we're using storage path
           } else {
             throw new Error('No .m3u8 playlist file found in the uploaded video files')
           }
@@ -434,6 +436,7 @@ const CourseEditor = () => {
             title: lesson.title,
             description: lesson.description,
             video_url: lessonVideoUrl,
+            video_path: lessonVideoPath,
             thumbnail_path: lessonThumbnailUrl,
             duration: lesson.duration,
             lesson_order: lesson.order,
