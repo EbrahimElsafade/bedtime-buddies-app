@@ -380,7 +380,7 @@ const CourseEditor = () => {
         }
 
         // Use the video URL directly for HSL streams
-        let lessonVideoUrl = lesson.videoUrl || lesson.videoPath
+        let lessonVideoUrl = lesson.videoUrl || lesson.videoPath || ''
 
         // Insert lesson
         const { error: lessonError } = await supabase
