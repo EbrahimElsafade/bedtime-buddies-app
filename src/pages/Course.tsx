@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, Calendar, Clock, BookOpen, Play, Lock, Loader2 } from 'lucide-react'
+import {
+  ArrowLeft,
+  Calendar,
+  Clock,
+  BookOpen,
+  Play,
+  Lock,
+  Loader2,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -11,6 +19,7 @@ import { useCourseData } from '@/hooks/useCourseData'
 import { useAuth } from '@/contexts/AuthContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { cn } from '@/lib/utils'
+import HLSVideoPlayer from '@/components/course/HLSVideoPlayer'
 
 const Course = () => {
   const { id: courseId } = useParams<{ id: string }>()
@@ -272,13 +281,27 @@ const Course = () => {
                   {selectedVideo ? (
                     <div className="space-y-4">
                       <div className="aspect-video overflow-hidden rounded-lg bg-black">
-                        <iframe
-                          src={selectedVideo.videoPath}
-                          title={selectedVideo.title}
-                          className="h-full w-full"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                        ></iframe>
+                        {/* Replace the iframe with HLSVideoPlayer */}
+                        {selectedVideo.videoPath ? (
+                          <HLSVideoPlayer
+                            videoPath={selectedVideo.videoPath}
+                            title={selectedVideo.title}
+                            className="rounded-lg"
+                          />
+                        ) : selectedVideo.videoPath ? (
+                          // Fallback for URL-based videos (if you still want to support them)
+                          <iframe
+                            src={selectedVideo.videoPath}
+                            title={selectedVideo.title}
+                            className="h-full w-full"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          ></iframe>
+                        ) : (
+                          <div className="flex h-full items-center justify-center text-white">
+                            <p>No video source available</p>
+                          </div>
+                        )}
                       </div>
                       <div>
                         <h3 className="text-dream-DEFAULT mb-2 font-bubbly text-xl">
