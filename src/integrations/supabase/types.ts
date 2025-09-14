@@ -112,15 +112,18 @@ export type Database = {
       courses: {
         Row: {
           category: string
-          category_id: string | null
           cover_image: string | null
-          cover_image_path: string | null
           created_at: string | null
           description: string
           id: string
+          instructor_avatar: string | null
+          instructor_bio: string | null
+          instructor_expertise: string[] | null
+          instructor_name: string | null
           is_free: boolean
           is_published: boolean
           languages: string[]
+          learning_objectives: string[] | null
           lessons: number | null
           max_age: number | null
           min_age: number | null
@@ -129,15 +132,18 @@ export type Database = {
         }
         Insert: {
           category: string
-          category_id?: string | null
           cover_image?: string | null
-          cover_image_path?: string | null
           created_at?: string | null
           description: string
           id?: string
+          instructor_avatar?: string | null
+          instructor_bio?: string | null
+          instructor_expertise?: string[] | null
+          instructor_name?: string | null
           is_free?: boolean
           is_published?: boolean
           languages?: string[]
+          learning_objectives?: string[] | null
           lessons?: number | null
           max_age?: number | null
           min_age?: number | null
@@ -146,30 +152,25 @@ export type Database = {
         }
         Update: {
           category?: string
-          category_id?: string | null
           cover_image?: string | null
-          cover_image_path?: string | null
           created_at?: string | null
           description?: string
           id?: string
+          instructor_avatar?: string | null
+          instructor_bio?: string | null
+          instructor_expertise?: string[] | null
+          instructor_name?: string | null
           is_free?: boolean
           is_published?: boolean
           languages?: string[]
+          learning_objectives?: string[] | null
           lessons?: number | null
           max_age?: number | null
           min_age?: number | null
           title?: string
           updated_at?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "courses_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
-            referencedRelation: "course_categories"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       profiles: {
         Row: {

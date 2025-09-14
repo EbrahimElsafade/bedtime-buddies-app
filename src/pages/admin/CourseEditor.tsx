@@ -75,7 +75,15 @@ const CourseEditor = () => {
     isFree: true,
     isFeatured: false,
     coverImagePath: null as string | null,
+    learningObjectives: [] as string[],
+    instructorName: '',
+    instructorBio: '',
+    instructorAvatar: '',
+    instructorExpertise: [] as string[],
   })
+
+  const [newObjective, setNewObjective] = useState('')
+  const [newExpertise, setNewExpertise] = useState('')
 
   // Course lessons/videos
   const [courseLessons, setCourseLessons] = useState<CourseLessonForm[]>([])
@@ -153,8 +161,8 @@ const CourseEditor = () => {
       const { course, lessons } = courseDetails
 
       // Handle cover image preview
-      if (course.cover_image_path) {
-        const imageUrl = getImageUrl(course.cover_image_path)
+      if (course.cover_image) {
+        const imageUrl = getImageUrl(course.cover_image)
         console.log('Setting preview image URL:', imageUrl)
         setCoverImagePreview(imageUrl)
       }
@@ -167,7 +175,12 @@ const CourseEditor = () => {
         maxAge: course.max_age || 12,
         isFree: course.is_free || true,
         isFeatured: course.is_published || false,
-        coverImagePath: course.cover_image_path,
+        coverImagePath: course.cover_image,
+        learningObjectives: course.learning_objectives || [],
+        instructorName: course.instructor_name || '',
+        instructorBio: course.instructor_bio || '',
+        instructorAvatar: course.instructor_avatar || '',
+        instructorExpertise: course.instructor_expertise || [],
       })
 
       // Process lessons for the form
@@ -334,12 +347,17 @@ const CourseEditor = () => {
             title: courseData.title,
             description: courseData.description,
             category: courseData.category,
-            cover_image_path: coverImageUrl,
+            cover_image: coverImageUrl,
             min_age: courseData.minAge,
             max_age: courseData.maxAge,
             is_free: courseData.isFree,
             is_published: courseData.isFeatured,
             lessons: courseLessons.length,
+            learning_objectives: courseData.learningObjectives,
+            instructor_name: courseData.instructorName || null,
+            instructor_bio: courseData.instructorBio || null,
+            instructor_avatar: courseData.instructorAvatar || null,
+            instructor_expertise: courseData.instructorExpertise,
           })
           .select('id')
           .single()
@@ -353,12 +371,17 @@ const CourseEditor = () => {
             title: courseData.title,
             description: courseData.description,
             category: courseData.category,
-            cover_image_path: coverImageUrl,
+            cover_image: coverImageUrl,
             min_age: courseData.minAge,
             max_age: courseData.maxAge,
             is_free: courseData.isFree,
             is_published: courseData.isFeatured,
             lessons: courseLessons.length,
+            learning_objectives: courseData.learningObjectives,
+            instructor_name: courseData.instructorName || null,
+            instructor_bio: courseData.instructorBio || null,
+            instructor_avatar: courseData.instructorAvatar || null,
+            instructor_expertise: courseData.instructorExpertise,
           })
           .eq('id', courseId)
 
@@ -669,6 +692,190 @@ const CourseEditor = () => {
                       />
                     </div>
                   </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Learning Objectives Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Learning Objectives</CardTitle>
+                <CardDescription>
+                  What will students learn from this course?
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex gap-2">
+                  <Input
+                    placeholder="Add a learning objective..."
+                    value={newObjective}
+                    onChange={e => setNewObjective(e.target.value)}
+                    onKeyPress={e => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault()
+                        if (newObjective.trim()) {
+                          setCourseData({
+                            ...courseData,
+                            learningObjectives: [...courseData.learningObjectives, newObjective.trim()]
+                          })
+                          setNewObjective('')
+                        }
+                      }
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      if (newObjective.trim()) {
+                        setCourseData({
+                          ...courseData,
+                          learningObjectives: [...courseData.learningObjectives, newObjective.trim()]
+                        })
+                        setNewObjective('')
+                      }
+                    }}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+                {courseData.learningObjectives.length > 0 && (
+                  <div className="space-y-2">
+                    {courseData.learningObjectives.map((objective, index) => (
+                      <div key={index} className="flex items-center justify-between rounded-md border p-2">
+                        <span className="text-sm">{objective}</span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setCourseData({
+                              ...courseData,
+                              learningObjectives: courseData.learningObjectives.filter((_, i) => i !== index)
+                            })
+                          }}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Instructor Information Card */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Instructor Information</CardTitle>
+                <CardDescription>
+                  Information about the course instructor
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="instructor-name">Instructor Name</Label>
+                  <Input
+                    id="instructor-name"
+                    placeholder="Enter instructor name"
+                    value={courseData.instructorName}
+                    onChange={e =>
+                      setCourseData({
+                        ...courseData,
+                        instructorName: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label htmlFor="instructor-bio">Instructor Bio</Label>
+                  <Textarea
+                    id="instructor-bio"
+                    placeholder="Enter instructor biography..."
+                    value={courseData.instructorBio}
+                    onChange={e =>
+                      setCourseData({
+                        ...courseData,
+                        instructorBio: e.target.value,
+                      })
+                    }
+                    rows={3}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="instructor-avatar">Instructor Avatar URL</Label>
+                  <Input
+                    id="instructor-avatar"
+                    placeholder="Enter avatar image URL"
+                    value={courseData.instructorAvatar}
+                    onChange={e =>
+                      setCourseData({
+                        ...courseData,
+                        instructorAvatar: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Expertise Areas</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Add expertise area..."
+                      value={newExpertise}
+                      onChange={e => setNewExpertise(e.target.value)}
+                      onKeyPress={e => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          if (newExpertise.trim()) {
+                            setCourseData({
+                              ...courseData,
+                              instructorExpertise: [...courseData.instructorExpertise, newExpertise.trim()]
+                            })
+                            setNewExpertise('')
+                          }
+                        }
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        if (newExpertise.trim()) {
+                          setCourseData({
+                            ...courseData,
+                            instructorExpertise: [...courseData.instructorExpertise, newExpertise.trim()]
+                          })
+                          setNewExpertise('')
+                        }
+                      }}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  {courseData.instructorExpertise.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {courseData.instructorExpertise.map((skill, index) => (
+                        <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                          {skill}
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="h-auto p-0 text-xs"
+                            onClick={() => {
+                              setCourseData({
+                                ...courseData,
+                                instructorExpertise: courseData.instructorExpertise.filter((_, i) => i !== index)
+                              })
+                            }}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

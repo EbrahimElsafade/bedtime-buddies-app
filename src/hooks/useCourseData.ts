@@ -57,11 +57,18 @@ export const useCourseData = (courseId: string | undefined) => {
         duration: 0, // Will be calculated from lessons duration
         lessons: courseData.lessons || videos.length,
         coverImagePath:
-          courseData.cover_image_path || courseData.cover_image || '',
+          courseData.cover_image || '',
         isFeatured: courseData.is_published,
         isFree: courseData.is_free,
         videos,
         createdAt: courseData.created_at,
+        learningObjectives: courseData.learning_objectives || [],
+        instructor: courseData.instructor_name ? {
+          name: courseData.instructor_name,
+          bio: courseData.instructor_bio || '',
+          avatar: courseData.instructor_avatar || undefined,
+          expertise: courseData.instructor_expertise || []
+        } : undefined,
       }
     },
     enabled: !!courseId,
@@ -96,7 +103,7 @@ export const useCoursesData = () => {
           maxAge: course.max_age || 12,
           duration: 0, // Will be calculated from lessons duration
           lessons: course.lessons || 0,
-          coverImagePath: course.cover_image_path || course.cover_image || '',
+          coverImagePath: course.cover_image || '',
           isFeatured: course.is_published,
           isFree: course.is_free,
           createdAt: course.created_at,
@@ -132,7 +139,7 @@ export const useFeaturedCourses = () => {
           maxAge: course.max_age || 12,
           duration: 0, // Will be calculated from lessons duration
           lessons: course.lessons || 0,
-          coverImagePath: course.cover_image_path || course.cover_image || '',
+          coverImagePath: course.cover_image || '',
           isFeatured: true,
           isFree: course.is_free,
           createdAt: course.created_at,
