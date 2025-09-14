@@ -69,7 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Simplified auth state handler without complex ref management
   const handleAuthStateChange = useCallback(
     debounce(async (event: string, currentSession: any) => {
-      logger.debug('Processing auth state change:', event, currentSession?.user?.email);
+      // logger.debug('Processing auth state change:', event, currentSession?.user?.email);
       
       if (currentSession) {
         setSession(currentSession);
@@ -101,7 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 
   useEffect(() => {
-    logger.debug("Setting up auth state listener");
+    // logger.debug("Setting up auth state listener");
     let isMounted = true;
     let subscription: any;
     
@@ -115,11 +115,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             // Only process important events
             const importantEvents = ['SIGNED_IN', 'SIGNED_OUT', 'INITIAL_SESSION'];
             if (!importantEvents.includes(event)) {
-              logger.debug('Ignoring auth event:', event);
+              // logger.debug('Ignoring auth event:', event);
               return;
             }
             
-            logger.debug('Processing important auth event:', event, !!currentSession);
+            // logger.debug('Processing important auth event:', event, !!currentSession);
             handleAuthStateChange(event, currentSession);
           }
         );
@@ -139,7 +139,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             const storedSession = sessionStorage.getItem('supabase.auth.session');
             if (storedSession) {
               const parsedSession = JSON.parse(storedSession);
-              logger.debug("Attempting to restore session from sessionStorage");
+              // logger.debug("Attempting to restore session from sessionStorage");
               
               // Validate the stored session is still valid
               if (parsedSession.expires_at && new Date(parsedSession.expires_at * 1000) > new Date()) {
@@ -151,7 +151,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
         }
         
-        logger.debug("Initial session check:", !!sessionToUse);
+        // logger.debug("Initial session check:", !!sessionToUse);
         
         if (sessionToUse) {
           setSession(sessionToUse);
@@ -190,7 +190,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       sessionValid: !!session && session.expires_at && new Date(session.expires_at * 1000) > new Date()
     };
     
-    logger.debug("Auth state update:", logData);
+    // logger.debug("Auth state update:", logData);
   }, [user, profile, authLoading, profileLoading, profileLoaded, isLoading, session]);
 
   // Create the context value

@@ -14,7 +14,7 @@ const withRetry = async <T>(operation: () => Promise<T>, maxRetries = 2): Promis
       return await operation();
     } catch (error: any) {
       lastError = error;
-      logger.debug(`Auth operation attempt ${attempt + 1} failed:`, error.message);
+      // logger.debug(`Auth operation attempt ${attempt + 1} failed:`, error.message);
       
       if (attempt < maxRetries) {
         // Wait before retrying

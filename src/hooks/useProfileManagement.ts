@@ -14,7 +14,7 @@ export const useProfileManagement = (user: User | null) => {
   const fetchUserProfile = useCallback(async (userId: string, skipIfLoaded = false) => {
     // Skip fetching if profile is already loaded and skipIfLoaded is true
     if (skipIfLoaded && profileLoaded && profile) {
-      logger.debug("Profile already loaded, skipping fetch");
+      // logger.debug("Profile already loaded, skipping fetch");
       return profile;
     }
 
@@ -22,7 +22,7 @@ export const useProfileManagement = (user: User | null) => {
       setIsLoading(true);
       setError(null);
       
-      logger.debug("Starting to fetch profile for user:", userId);
+      // logger.debug("Starting to fetch profile for user:", userId);
       
       const { data, error: profileError } = await supabase
         .from('profiles')
@@ -35,7 +35,7 @@ export const useProfileManagement = (user: User | null) => {
         throw profileError;
       }
 
-      logger.debug("Profile fetched successfully:", data);
+      // logger.debug("Profile fetched successfully:", data);
       
       // Transform the data to match the Profile type from auth.ts
       const transformedProfile: Profile = {
@@ -51,7 +51,7 @@ export const useProfileManagement = (user: User | null) => {
       
       setProfile(transformedProfile);
       setProfileLoaded(true);
-      logger.debug("Profile fetch completed, profileLoaded set to true");
+      // logger.debug("Profile fetch completed, profileLoaded set to true");
       
       return transformedProfile;
     } catch (err: any) {
@@ -105,13 +105,13 @@ export const useProfileManagement = (user: User | null) => {
   // Effect to fetch profile when user changes, but avoid refetch on tab switches
   useEffect(() => {
     if (user?.id) {
-      logger.debug("useProfileManagement effect triggered, user:", user.id);
+      // logger.debug("useProfileManagement effect triggered, user:", user.id);
       
       // Only fetch if we don't have a profile loaded yet
       if (!profileLoaded) {
         fetchUserProfile(user.id);
       } else {
-        logger.debug("Profile already loaded, skipping fetch");
+        // logger.debug("Profile already loaded, skipping fetch");
       }
     } else if (!user) {
       // Clear profile when user logs out
