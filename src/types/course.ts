@@ -31,4 +31,11 @@ export type Course = {
   isFree: boolean;
   videos?: CourseVideo[];
   createdAt: string;
+  learningObjectives?: string[];
+  instructor?: {
+    name: string;
+    bio: string;
+    avatar?: string;
+    expertise?: string[];
+  };
 };
