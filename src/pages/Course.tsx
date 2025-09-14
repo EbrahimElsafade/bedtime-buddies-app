@@ -262,22 +262,19 @@ const Course = () => {
                 </h2>
                 <p>{course.description}</p>
 
-                <h2 className="text-dream-DEFAULT mb-3 mt-6 font-bubbly text-xl">
-                  {t('course.whatYouLearn')}
-                </h2>
-                {course.learningObjectives && course.learningObjectives.length > 0 ? (
-                  <ul className="list-disc pl-5">
-                    {course.learningObjectives.map((objective, index) => (
-                      <li key={index}>{objective}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <ul className="list-disc pl-5">
-                    <li>{t('course.learnPoint1')}</li>
-                    <li>{t('course.learnPoint2')}</li>
-                    <li>{t('course.learnPoint3')}</li>
-                  </ul>
-                )}
+                {course.learningObjectives &&
+                  course.learningObjectives.length > 0 && (
+                    <>
+                      <h2 className="text-dream-DEFAULT mb-3 mt-6 font-bubbly text-xl">
+                        {t('course.whatYouLearn')}
+                      </h2>
+                      <ul className="list-disc pl-5">
+                        {course.learningObjectives.map((objective, index) => (
+                          <li key={index}>{objective}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
 
                 {course.instructor && (
                   <>
@@ -299,15 +296,22 @@ const Course = () => {
                         <p className="text-dream-DEFAULT/80 mt-1 text-sm">
                           {course.instructor.bio}
                         </p>
-                        {course.instructor.expertise && course.instructor.expertise.length > 0 && (
-                          <div className="mt-2 flex flex-wrap gap-1">
-                            {course.instructor.expertise.map((skill, index) => (
-                              <Badge key={index} variant="secondary" className="text-xs">
-                                {skill}
-                              </Badge>
-                            ))}
-                          </div>
-                        )}
+                        {course.instructor.expertise &&
+                          course.instructor.expertise.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              {course.instructor.expertise.map(
+                                (skill, index) => (
+                                  <Badge
+                                    key={index}
+                                    variant="secondary"
+                                    className="text-xs"
+                                  >
+                                    {skill}
+                                  </Badge>
+                                ),
+                              )}
+                            </div>
+                          )}
                       </div>
                     </div>
                   </>
