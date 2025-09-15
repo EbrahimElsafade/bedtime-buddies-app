@@ -12,6 +12,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { useCoursesData, useCourseCategories } from '@/hooks/useCourseData'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { getImageUrl } from '@/utils/imageUtils'
 
 const Courses = () => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -163,7 +164,7 @@ const Courses = () => {
                       <Card className="story-card relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/10">
                         <div className="relative h-48 overflow-hidden">
                           <img
-                            src={course.coverImagePath}
+                            src={getImageUrl(course.coverImagePath)}
                             alt={course.title}
                             className="h-full w-full object-cover"
                             onError={e => {

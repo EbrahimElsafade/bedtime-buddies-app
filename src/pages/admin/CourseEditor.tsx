@@ -319,7 +319,7 @@ const CourseEditor = () => {
           'Size:',
           coverImageFile.size,
         )
-        const filename = `cover-${Date.now()}-${coverImageFile.name}`
+        const filename = `course-cover-${Date.now()}-${coverImageFile.name}`
 
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from('admin-content')
@@ -590,7 +590,7 @@ const CourseEditor = () => {
                       {coverImagePreview ? (
                         <div className="relative aspect-square w-full max-w-[200px] overflow-hidden rounded-md border">
                           <img
-                            src={coverImagePreview}
+                            src={getImageUrl(coverImagePreview)}
                             alt="Cover preview"
                             className="h-full w-full object-cover"
                           />

@@ -85,8 +85,6 @@ export const useCoursesData = () => {
         .eq('is_published', true)
         .order('created_at', { ascending: false })
 
-      // console.log(coursesData)
-
       if (coursesError) {
         console.error('Error fetching courses:', coursesError)
         throw coursesError

@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import {
   ArrowLeft,
-  Calendar,
   Clock,
   BookOpen,
   Play,
@@ -20,6 +19,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { cn } from '@/lib/utils'
 import HLSVideoPlayer from '@/components/course/HLSVideoPlayer'
+import { getImageUrl } from '@/utils/imageUtils'
 
 const Course = () => {
   const { id: courseId } = useParams<{ id: string }>()
@@ -185,7 +185,7 @@ const Course = () => {
             <div className="md:w-1/3">
               <Card className="overflow-hidden border-dream-light/30">
                 <img
-                  src={course.coverImagePath}
+                  src={getImageUrl(course.coverImagePath)}
                   alt={course.title}
                   className="aspect-[4/3] h-auto w-full object-cover"
                 />
@@ -412,7 +412,7 @@ const Course = () => {
                             <div className="flex items-start gap-3">
                               <div className="relative h-16 w-24 flex-shrink-0">
                                 <img
-                                  src={video.thumbnailPath}
+                                  src={getImageUrl(video.thumbnailPath)}
                                   alt={video.title}
                                   className="h-full w-full rounded object-cover"
                                 />
