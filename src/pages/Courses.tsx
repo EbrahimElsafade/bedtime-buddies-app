@@ -114,13 +114,13 @@ const Courses = () => {
                     <Button
                       key={category.id}
                       variant={
-                        activeCategory === getLocalized(category, 'name', lang) ? 'default' : 'ghost'
+                        activeCategory === category.name_en ? 'default' : 'ghost'
                       }
-                      className={`${activeCategory === getLocalized(category, 'name', lang) ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
-                      onClick={() => handleCategoryChange(getLocalized(category, 'name', lang))}
+                      className={`${activeCategory === category.name_en ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
+                      onClick={() => handleCategoryChange(category.name_en)}
                     >
                       {getLocalized(category, 'name', lang)} (
-                      {courses.filter(c => c.category === getLocalized(category, 'name', lang)).length}
+                      {courses.filter(c => c.category === category.name_en).length}
                       )
                     </Button>
                   ))}
@@ -159,7 +159,7 @@ const Courses = () => {
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {filteredCourses.map(course => {
                   const category = categories.find(
-                    cat => cat.id === course.category,
+                    cat => cat.id === course.category || cat.name_en === course.category || cat.name_ar === course.category || cat.name_fr === course.category,
                   )
                   return (
                     <Link key={course.id} to={`/courses/${course.id}`}>
