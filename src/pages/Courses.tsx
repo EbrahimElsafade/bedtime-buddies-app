@@ -13,11 +13,13 @@ import { Badge } from '@/components/ui/badge'
 import { useCoursesData, useCourseCategories } from '@/hooks/useCourseData'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { getImageUrl } from '@/utils/imageUtils'
+import { getLocalized } from '@/utils/getLocalized'
 
 const Courses = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState<string>('all')
   const { t } = useLanguage()
+  const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
 
   const { data: courses = [], isLoading } = useCoursesData()
   const { data: categories = [] } = useCourseCategories()
@@ -31,8 +33,8 @@ const Courses = () => {
       const categoryMatch =
         activeCategory === 'all' || course.category === activeCategory
       const searchMatch =
-        course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        course.description.toLowerCase().includes(searchQuery.toLowerCase())
+        getLocalized(course, 'title', lang).toLowerCase().includes(searchQuery.toLowerCase()) ||
+        getLocalized(course, 'description', lang).toLowerCase().includes(searchQuery.toLowerCase())
       return categoryMatch && searchMatch
     })
   }, [searchQuery, activeCategory, courses])
@@ -165,7 +167,7 @@ const Courses = () => {
                         <div className="relative h-48 overflow-hidden">
                           <img
                             src={getImageUrl(course.coverImagePath)}
-                            alt={course.title}
+                            alt={getLocalized(course, 'title', lang)}
                             className="h-full w-full object-cover"
                             onError={e => {
                               console.log(
@@ -190,7 +192,7 @@ const Courses = () => {
                           <CardHeader className="flex-1 pb-2">
                             <div className="mb-2 flex items-start justify-between">
                               <CardTitle className="text-dream-DEFAULT line-clamp-2 flex-1 text-lg">
-                                {course.title}
+                                {getLocalized(course, 'title', lang)}
                               </CardTitle>
                               <div className="ml-2 flex items-center gap-2">
                                 <Badge
@@ -209,7 +211,7 @@ const Courses = () => {
                               </div>
                             </div>
                             <CardDescription className="text-dream-DEFAULT line-clamp-2 text-sm leading-relaxed dark:text-foreground">
-                              {course.description}
+                              {getLocalized(course, 'description', lang)}
                             </CardDescription>
                             <div className="text-dream-DEFAULT mt-2 flex items-center text-xs dark:text-foreground">
                               <BookOpen className="mr-1 h-3 w-3" />

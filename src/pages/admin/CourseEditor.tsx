@@ -67,8 +67,12 @@ const CourseEditor = () => {
 
   // Course form data
   const [courseData, setCourseData] = useState({
-    title: '',
-    description: '',
+    title_en: '',
+    title_ar: '',
+    title_fr: '',
+    description_en: '',
+    description_ar: '',
+    description_fr: '',
     category: '',
     minAge: 3,
     maxAge: 12,
@@ -168,8 +172,12 @@ const CourseEditor = () => {
       }
 
       setCourseData({
-        title: course.title || '',
-        description: course.description || '',
+        title_en: course.title_en || '',
+        title_ar: course.title_ar || '',
+        title_fr: course.title_fr || '',
+        description_en: course.description_en || '',
+        description_ar: course.description_ar || '',
+        description_fr: course.description_fr || '',
         category: course.category || '',
         minAge: course.min_age || 3,
         maxAge: course.max_age || 12,
@@ -191,8 +199,12 @@ const CourseEditor = () => {
 
           return {
             id: lesson.id,
-            title: lesson.title || '',
-            description: lesson.description || '',
+            title_en: lesson.title_en || '',
+            title_ar: lesson.title_ar || '',
+            title_fr: lesson.title_fr || '',
+            description_en: lesson.description_en || '',
+            description_ar: lesson.description_ar || '',
+            description_fr: lesson.description_fr || '',
             videoPath: lesson.video_path || '',
             thumbnailPath: lesson.thumbnail_path || '',
             duration: lesson.duration || 0,
@@ -233,8 +245,12 @@ const CourseEditor = () => {
   // Lesson management functions
   const addNewLesson = () => {
     const newLesson: CourseLessonForm = {
-      title: '',
-      description: '',
+      title_en: '',
+      title_ar: '',
+      title_fr: '',
+      description_en: '',
+      description_ar: '',
+      description_fr: '',
       videoPath: '',
       thumbnailPath: '',
       duration: 0,
@@ -282,10 +298,7 @@ const CourseEditor = () => {
     }
   }
 
-  const handleLessonVideoChange = (
-    lessonIndex: number,
-    url: string,
-  ) => {
+  const handleLessonVideoChange = (lessonIndex: number, url: string) => {
     const updatedLessons = [...courseLessons]
     updatedLessons[lessonIndex].videoUrl = url
     setCourseLessons(updatedLessons)
@@ -344,8 +357,12 @@ const CourseEditor = () => {
         const { data: newCourse, error: courseError } = await supabase
           .from('courses')
           .insert({
-            title: courseData.title,
-            description: courseData.description,
+            title_en: courseData.title_en,
+            title_ar: courseData.title_ar,
+            title_fr: courseData.title_fr,
+            description_en: courseData.description_en,
+            description_ar: courseData.description_ar,
+            description_fr: courseData.description_fr,
             category: courseData.category,
             cover_image: coverImageUrl,
             min_age: courseData.minAge,
@@ -368,8 +385,12 @@ const CourseEditor = () => {
         const { error: courseError } = await supabase
           .from('courses')
           .update({
-            title: courseData.title,
-            description: courseData.description,
+            title_en: courseData.title_en,
+            title_ar: courseData.title_ar,
+            title_fr: courseData.title_fr,
+            description_en: courseData.description_en,
+            description_ar: courseData.description_ar,
+            description_fr: courseData.description_fr,
             category: courseData.category,
             cover_image: coverImageUrl,
             min_age: courseData.minAge,
@@ -421,11 +442,11 @@ const CourseEditor = () => {
         // Handle video upload or URL
         let lessonVideoUrl = lesson.videoUrl || ''
         let lessonVideoPath = lesson.videoPath || ''
-        
+
         // Upload HSL video files if provided
         if (lesson.videoFiles && lesson.videoFiles.length > 0) {
           const folder = `${courseId}/lesson-${lesson.order}-${Date.now()}`
-          
+
           // Upload all video files to storage
           for (const file of lesson.videoFiles) {
             const { error: uploadError } = await supabase.storage
@@ -447,7 +468,9 @@ const CourseEditor = () => {
             lessonVideoPath = `${folder}/${m3u8File.name}`
             lessonVideoUrl = '' // Clear URL since we're using storage path
           } else {
-            throw new Error('No .m3u8 playlist file found in the uploaded video files')
+            throw new Error(
+              'No .m3u8 playlist file found in the uploaded video files',
+            )
           }
         }
 
@@ -456,8 +479,12 @@ const CourseEditor = () => {
           .from('course_lessons')
           .insert({
             course_id: courseId,
-            title: lesson.title,
-            description: lesson.description,
+            title_en: lesson.title_en,
+            title_ar: lesson.title_ar,
+            title_fr: lesson.title_fr,
+            description_en: lesson.description_en,
+            description_ar: lesson.description_ar,
+            description_fr: lesson.description_fr,
             video_url: lessonVideoUrl,
             video_path: lessonVideoPath,
             thumbnail_path: lessonThumbnailUrl,
@@ -516,32 +543,86 @@ const CourseEditor = () => {
               <CardContent className="space-y-6">
                 <div className="space-y-2">
                   <Label htmlFor="title">Title</Label>
-                  <Input
-                    id="title"
-                    placeholder="Enter course title"
-                    value={courseData.title}
-                    onChange={e =>
-                      setCourseData({ ...courseData, title: e.target.value })
-                    }
-                    required
-                  />
+                  <div className="flex flex-wrap gap-4 md:flex-nowrap">
+                    <Input
+                      id="title"
+                      placeholder="Enter course title in English"
+                      value={courseData.title_en}
+                      onChange={e =>
+                        setCourseData({
+                          ...courseData,
+                          title_en: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                    <Input
+                      id="title"
+                      placeholder="Enter course title in Arabic"
+                      value={courseData.title_ar}
+                      onChange={e =>
+                        setCourseData({
+                          ...courseData,
+                          title_ar: e.target.value,
+                        })
+                      }
+                    />
+                    <Input
+                      id="title"
+                      placeholder="Enter course title in French"
+                      value={courseData.title_fr}
+                      onChange={e =>
+                        setCourseData({
+                          ...courseData,
+                          title_fr: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                  </div>
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    placeholder="Enter course description"
-                    value={courseData.description}
-                    onChange={e =>
-                      setCourseData({
-                        ...courseData,
-                        description: e.target.value,
-                      })
-                    }
-                    className="min-h-[100px]"
-                    required
-                  />
+                  <div className="flex flex-wrap gap-4 md:flex-nowrap">
+                    <Textarea
+                      id="description"
+                      placeholder="Enter course description in English"
+                      value={courseData.description_en}
+                      onChange={e =>
+                        setCourseData({
+                          ...courseData,
+                          description_en: e.target.value,
+                        })
+                      }
+                      className="min-h-[100px]"
+                      required
+                    />
+                    <Textarea
+                      id="description"
+                      placeholder="Enter course description in Arabic"
+                      value={courseData.description_ar}
+                      onChange={e =>
+                        setCourseData({
+                          ...courseData,
+                          description_ar: e.target.value,
+                        })
+                      }
+                      className="min-h-[100px]"
+                    />
+                    <Textarea
+                      id="description"
+                      placeholder="Enter course description in French"
+                      value={courseData.description_fr}
+                      onChange={e =>
+                        setCourseData({
+                          ...courseData,
+                          description_fr: e.target.value,
+                        })
+                      }
+                      className="min-h-[100px]"
+                    />
+                  </div>
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -716,7 +797,10 @@ const CourseEditor = () => {
                         if (newObjective.trim()) {
                           setCourseData({
                             ...courseData,
-                            learningObjectives: [...courseData.learningObjectives, newObjective.trim()]
+                            learningObjectives: [
+                              ...courseData.learningObjectives,
+                              newObjective.trim(),
+                            ],
                           })
                           setNewObjective('')
                         }
@@ -729,7 +813,10 @@ const CourseEditor = () => {
                       if (newObjective.trim()) {
                         setCourseData({
                           ...courseData,
-                          learningObjectives: [...courseData.learningObjectives, newObjective.trim()]
+                          learningObjectives: [
+                            ...courseData.learningObjectives,
+                            newObjective.trim(),
+                          ],
                         })
                         setNewObjective('')
                       }
@@ -741,7 +828,10 @@ const CourseEditor = () => {
                 {courseData.learningObjectives.length > 0 && (
                   <div className="space-y-2">
                     {courseData.learningObjectives.map((objective, index) => (
-                      <div key={index} className="flex items-center justify-between rounded-md border p-2">
+                      <div
+                        key={index}
+                        className="flex items-center justify-between rounded-md border p-2"
+                      >
                         <span className="text-sm">{objective}</span>
                         <Button
                           type="button"
@@ -750,7 +840,10 @@ const CourseEditor = () => {
                           onClick={() => {
                             setCourseData({
                               ...courseData,
-                              learningObjectives: courseData.learningObjectives.filter((_, i) => i !== index)
+                              learningObjectives:
+                                courseData.learningObjectives.filter(
+                                  (_, i) => i !== index,
+                                ),
                             })
                           }}
                         >
@@ -786,7 +879,7 @@ const CourseEditor = () => {
                     }
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="instructor-bio">Instructor Bio</Label>
                   <Textarea
@@ -804,7 +897,9 @@ const CourseEditor = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="instructor-avatar">Instructor Avatar URL</Label>
+                  <Label htmlFor="instructor-avatar">
+                    Instructor Avatar URL
+                  </Label>
                   <Input
                     id="instructor-avatar"
                     placeholder="Enter avatar image URL"
@@ -831,7 +926,10 @@ const CourseEditor = () => {
                           if (newExpertise.trim()) {
                             setCourseData({
                               ...courseData,
-                              instructorExpertise: [...courseData.instructorExpertise, newExpertise.trim()]
+                              instructorExpertise: [
+                                ...courseData.instructorExpertise,
+                                newExpertise.trim(),
+                              ],
                             })
                             setNewExpertise('')
                           }
@@ -844,7 +942,10 @@ const CourseEditor = () => {
                         if (newExpertise.trim()) {
                           setCourseData({
                             ...courseData,
-                            instructorExpertise: [...courseData.instructorExpertise, newExpertise.trim()]
+                            instructorExpertise: [
+                              ...courseData.instructorExpertise,
+                              newExpertise.trim(),
+                            ],
                           })
                           setNewExpertise('')
                         }
@@ -856,7 +957,11 @@ const CourseEditor = () => {
                   {courseData.instructorExpertise.length > 0 && (
                     <div className="flex flex-wrap gap-2">
                       {courseData.instructorExpertise.map((skill, index) => (
-                        <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                        <Badge
+                          key={index}
+                          variant="secondary"
+                          className="flex items-center gap-1"
+                        >
                           {skill}
                           <Button
                             type="button"
@@ -866,7 +971,10 @@ const CourseEditor = () => {
                             onClick={() => {
                               setCourseData({
                                 ...courseData,
-                                instructorExpertise: courseData.instructorExpertise.filter((_, i) => i !== index)
+                                instructorExpertise:
+                                  courseData.instructorExpertise.filter(
+                                    (_, i) => i !== index,
+                                  ),
                               })
                             }}
                           >
@@ -909,7 +1017,7 @@ const CourseEditor = () => {
                           <div className="mr-4 flex w-full items-center justify-between">
                             <span className="font-medium">
                               Lesson {lesson.order}:{' '}
-                              {lesson.title || 'Untitled'}
+                              {lesson.title_en || 'Untitled'}
                             </span>
                             <span
                               role="button"
@@ -928,18 +1036,42 @@ const CourseEditor = () => {
                             <div className="grid gap-4 sm:grid-cols-2">
                               <div className="space-y-2">
                                 <Label>Lesson Title</Label>
-                                <Input
-                                  placeholder="Enter lesson title"
-                                  value={lesson.title}
-                                  onChange={e =>
-                                    updateLessonField(
-                                      lessonIndex,
-                                      'title',
-                                      e.target.value,
-                                    )
-                                  }
-                                  required
-                                />
+                                <div className="flex flex-wrap gap-4 md:flex-nowrap">
+                                  <Input
+                                    placeholder="Enter lesson title"
+                                    value={lesson.title_en}
+                                    onChange={e =>
+                                      updateLessonField(
+                                        lessonIndex,
+                                        'title_en',
+                                        e.target.value,
+                                      )
+                                    }
+                                    required
+                                  />
+                                  <Input
+                                    placeholder="Enter lesson title"
+                                    value={lesson.title_ar}
+                                    onChange={e =>
+                                      updateLessonField(
+                                        lessonIndex,
+                                        'title_ar',
+                                        e.target.value,
+                                      )
+                                    }
+                                  />
+                                  <Input
+                                    placeholder="Enter lesson title"
+                                    value={lesson.title_fr}
+                                    onChange={e =>
+                                      updateLessonField(
+                                        lessonIndex,
+                                        'title_fr',
+                                        e.target.value,
+                                      )
+                                    }
+                                  />
+                                </div>
                               </div>
                               <div className="space-y-2">
                                 <Label>Duration (minutes)</Label>
@@ -961,18 +1093,44 @@ const CourseEditor = () => {
 
                             <div className="space-y-2">
                               <Label>Lesson Description</Label>
-                              <Textarea
-                                placeholder="Enter lesson description"
-                                value={lesson.description}
-                                onChange={e =>
-                                  updateLessonField(
-                                    lessonIndex,
-                                    'description',
-                                    e.target.value,
-                                  )
-                                }
-                                className="min-h-[80px]"
-                              />
+                              <div className="flex flex-wrap gap-4 md:flex-nowrap">
+                                <Textarea
+                                  placeholder="Enter lesson description"
+                                  value={lesson.description_en}
+                                  onChange={e =>
+                                    updateLessonField(
+                                      lessonIndex,
+                                      'description_en',
+                                      e.target.value,
+                                    )
+                                  }
+                                  className="min-h-[80px]"
+                                />
+                                <Textarea
+                                  placeholder="Enter lesson description"
+                                  value={lesson.description_ar}
+                                  onChange={e =>
+                                    updateLessonField(
+                                      lessonIndex,
+                                      'description_ar',
+                                      e.target.value,
+                                    )
+                                  }
+                                  className="min-h-[80px]"
+                                />
+                                <Textarea
+                                  placeholder="Enter lesson description"
+                                  value={lesson.description_fr}
+                                  onChange={e =>
+                                    updateLessonField(
+                                      lessonIndex,
+                                      'description_fr',
+                                      e.target.value,
+                                    )
+                                  }
+                                  className="min-h-[80px]"
+                                />
+                              </div>
                             </div>
 
                             <div className="grid gap-4 sm:grid-cols-2">
@@ -1034,37 +1192,49 @@ const CourseEditor = () => {
                               <div className="space-y-2">
                                 <Label>Video Method</Label>
                                 <div className="flex gap-4">
-                                  <label className="flex items-center space-x-2 cursor-pointer">
+                                  <label className="flex cursor-pointer items-center space-x-2">
                                     <input
                                       type="radio"
                                       name={`uploadMethod-${lessonIndex}`}
                                       value="url"
                                       checked={lesson.uploadMethod === 'url'}
                                       onChange={() => {
-                                        const updatedLessons = [...courseLessons]
-                                        updatedLessons[lessonIndex].uploadMethod = 'url'
-                                        updatedLessons[lessonIndex].videoFiles = null
+                                        const updatedLessons = [
+                                          ...courseLessons,
+                                        ]
+                                        updatedLessons[
+                                          lessonIndex
+                                        ].uploadMethod = 'url'
+                                        updatedLessons[lessonIndex].videoFiles =
+                                          null
                                         setCourseLessons(updatedLessons)
                                       }}
                                       className="form-radio"
                                     />
                                     <span className="text-sm">HSL URL</span>
                                   </label>
-                                  <label className="flex items-center space-x-2 cursor-pointer">
+                                  <label className="flex cursor-pointer items-center space-x-2">
                                     <input
                                       type="radio"
                                       name={`uploadMethod-${lessonIndex}`}
                                       value="upload"
                                       checked={lesson.uploadMethod === 'upload'}
                                       onChange={() => {
-                                        const updatedLessons = [...courseLessons]
-                                        updatedLessons[lessonIndex].uploadMethod = 'upload'
-                                        updatedLessons[lessonIndex].videoUrl = ''
+                                        const updatedLessons = [
+                                          ...courseLessons,
+                                        ]
+                                        updatedLessons[
+                                          lessonIndex
+                                        ].uploadMethod = 'upload'
+                                        updatedLessons[lessonIndex].videoUrl =
+                                          ''
                                         setCourseLessons(updatedLessons)
                                       }}
                                       className="form-radio"
                                     />
-                                    <span className="text-sm">Upload Files</span>
+                                    <span className="text-sm">
+                                      Upload Files
+                                    </span>
                                   </label>
                                 </div>
                               </div>
@@ -1078,11 +1248,15 @@ const CourseEditor = () => {
                                     placeholder="Enter HSL video URL (e.g., https://example.com/video.m3u8)"
                                     value={lesson.videoUrl || ''}
                                     onChange={e =>
-                                      handleLessonVideoChange(lessonIndex, e.target.value)
+                                      handleLessonVideoChange(
+                                        lessonIndex,
+                                        e.target.value,
+                                      )
                                     }
                                   />
                                   <p className="text-xs text-muted-foreground">
-                                    Enter the URL for your HSL video stream (.m3u8 file)
+                                    Enter the URL for your HSL video stream
+                                    (.m3u8 file)
                                   </p>
                                 </div>
                               ) : (
@@ -1091,15 +1265,20 @@ const CourseEditor = () => {
                                   <div className="flex items-center gap-4">
                                     {lesson.videoFiles?.length ? (
                                       <div className="relative flex h-20 w-32 items-center justify-center rounded-md border bg-muted text-xs text-muted-foreground">
-                                        {lesson.videoFiles.length} files selected
+                                        {lesson.videoFiles.length} files
+                                        selected
                                         <Button
                                           type="button"
                                           size="icon"
                                           variant="destructive"
                                           className="absolute right-1 top-1 h-6 w-6"
                                           onClick={() => {
-                                            const updatedLessons = [...courseLessons]
-                                            updatedLessons[lessonIndex].videoFiles = null
+                                            const updatedLessons = [
+                                              ...courseLessons,
+                                            ]
+                                            updatedLessons[
+                                              lessonIndex
+                                            ].videoFiles = null
                                             setCourseLessons(updatedLessons)
                                           }}
                                         >
@@ -1119,11 +1298,18 @@ const CourseEditor = () => {
                                         type="file"
                                         multiple
                                         accept=".m3u8,.ts,.mp4"
-                                        onChange={e => handleLessonVideoFilesChange(lessonIndex, e)}
+                                        onChange={e =>
+                                          handleLessonVideoFilesChange(
+                                            lessonIndex,
+                                            e,
+                                          )
+                                        }
                                         className="mb-2"
                                       />
                                       <p className="text-xs text-muted-foreground">
-                                        Select all HSL files: .m3u8 playlist and .ts segments. You can also upload .mp4 files.
+                                        Select all HSL files: .m3u8 playlist and
+                                        .ts segments. You can also upload .mp4
+                                        files.
                                       </p>
                                     </div>
                                   </div>
@@ -1149,7 +1335,10 @@ const CourseEditor = () => {
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting || !courseData.title}>
+            <Button
+              type="submit"
+              disabled={isSubmitting || !courseData.title_en}
+            >
               {isSubmitting && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               )}

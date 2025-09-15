@@ -1,13 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import {
-  ArrowLeft,
-  Clock,
-  BookOpen,
-  Play,
-  Lock,
-  Loader2,
-} from 'lucide-react'
+import { ArrowLeft, Clock, BookOpen, Play, Lock, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -20,6 +13,7 @@ import { useLanguage } from '@/contexts/LanguageContext'
 import { cn } from '@/lib/utils'
 import HLSVideoPlayer from '@/components/course/HLSVideoPlayer'
 import { getImageUrl } from '@/utils/imageUtils'
+import { getLocalized } from '@/utils/getLocalized'
 
 const Course = () => {
   const { id: courseId } = useParams<{ id: string }>()
@@ -31,8 +25,8 @@ const Course = () => {
 
   const { data: course, isLoading, error } = useCourseData(courseId)
   const isPremium = profile?.is_premium || false
-  console.log(course);
-  
+  const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
+  const isRTL = lang === 'ar'
 
   const tabsRef = useRef<HTMLDivElement>(null)
 
@@ -51,7 +45,7 @@ const Course = () => {
 
   useEffect(() => {
     if (course) {
-      document.title = `${course.title} | Bedtime Stories`
+      document.title = `${getLocalized(course, 'title', lang)} | Bedtime Stories`
       // Set the first video as selected by default if there are videos
       if (course.videos && course.videos.length > 0) {
         setSelectedVideo(course.videos[0])
@@ -59,7 +53,7 @@ const Course = () => {
     } else {
       document.title = 'Course Not Found | Bedtime Stories'
     }
-  }, [course])
+  }, [course, lang])
 
   const handleStartCourse = () => {
     if (!isAuthenticated) {
@@ -188,7 +182,7 @@ const Course = () => {
               <Card className="overflow-hidden border-dream-light/30">
                 <img
                   src={getImageUrl(course.coverImagePath)}
-                  alt={course.title}
+                  alt={getLocalized(course, 'title', lang)}
                   className="aspect-[4/3] h-auto w-full object-cover"
                 />
               </Card>
@@ -196,7 +190,7 @@ const Course = () => {
 
             <div className="md:w-2/3">
               <h1 className="text-dream-DEFAULT mb-4 font-bubbly text-3xl md:text-4xl">
-                {course.title}
+                {getLocalized(course, 'title', lang)}
               </h1>
 
               <div className="mb-4 flex flex-wrap gap-2">
@@ -236,7 +230,7 @@ const Course = () => {
               </div>
 
               <p className="text-dream-DEFAULT mb-6 dark:text-foreground">
-                {course.description}
+                {getLocalized(course, 'description', lang)}
               </p>
 
               <Button
@@ -261,6 +255,7 @@ const Course = () => {
           <Tabs
             ref={tabsRef}
             value={activeTab}
+            dir={isRTL ? 'rtl' : 'ltr'}
             onValueChange={setActiveTab}
             className="w-full"
           >
@@ -279,7 +274,7 @@ const Course = () => {
                 <h2 className="text-dream-DEFAULT mb-3 font-bubbly text-xl">
                   {t('course.about')}
                 </h2>
-                <p>{course.description}</p>
+                <p>{getLocalized(course, 'description', lang)}</p>
 
                 {course.learningObjectives &&
                   course.learningObjectives.length > 0 && (
@@ -346,7 +341,6 @@ const Course = () => {
                   {selectedVideo ? (
                     <div className="space-y-4">
                       <div className="aspect-video overflow-hidden rounded-lg bg-black">
-                        {/* Replace the iframe with HLSVideoPlayer */}
                         {selectedVideo.videoPath ? (
                           <HLSVideoPlayer
                             videoPath={selectedVideo.videoPath}

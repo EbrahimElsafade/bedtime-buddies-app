@@ -41,6 +41,7 @@ import {
   Trash2,
   Eye,
 } from "lucide-react";
+import { getLocalized } from "@/utils/getLocalized";
 
 type Course = {
   id: string;
@@ -61,6 +62,7 @@ const Courses = () => {
   const [filter, setFilter] = useState<"all" | "published" | "draft">("all");
   const [sortField, setSortField] = useState<keyof Course>("created_at");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
 
   const fetchCourses = async () => {
     const { data, error } = await supabase.from("courses").select("*");
@@ -87,7 +89,7 @@ const Courses = () => {
 
   const filteredCourses = courses
     .filter((course) => {
-      const matchesSearch = course.title
+      const matchesSearch = getLocalized(course, 'title', lang)
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
         

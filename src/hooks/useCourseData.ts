@@ -1,6 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import { Course, CourseVideo, Category } from '@/types/course'
+import { Database } from '@/integrations/supabase/types';
+
+type CourseRow = Database['public']['Tables']['courses']['Row'];
+
 
 export const useCourseData = (courseId: string | undefined) => {
   return useQuery({
@@ -37,8 +41,12 @@ export const useCourseData = (courseId: string | undefined) => {
       const videos: CourseVideo[] =
         lessonsData?.map(lesson => ({
           id: lesson.id,
-          title: lesson.title,
-          description: lesson.description,
+          title_en: lesson.title_en,
+          title_ar: lesson.title_ar,
+          title_fr: lesson.title_fr,
+          description_en: lesson.description_en,
+          description_ar: lesson.description_ar,
+          description_fr: lesson.description_fr,
           videoPath: lesson.video_path || '',
           thumbnailPath: lesson.thumbnail_path || '',
           duration: lesson.duration,
@@ -49,26 +57,31 @@ export const useCourseData = (courseId: string | undefined) => {
 
       return {
         id: courseData.id,
-        title: courseData.title,
-        description: courseData.description,
+        title_en: courseData.title_en,
+        title_ar: courseData.title_ar,
+        title_fr: courseData.title_fr,
+        description_en: courseData.description_en,
+        description_ar: courseData.description_ar,
+        description_fr: courseData.description_fr,
         category: courseData.category || '',
         minAge: courseData.min_age || 3,
         maxAge: courseData.max_age || 12,
         duration: 0, // Will be calculated from lessons duration
         lessons: courseData.lessons || videos.length,
-        coverImagePath:
-          courseData.cover_image || '',
+        coverImagePath: courseData.cover_image || '',
         isFeatured: courseData.is_published,
         isFree: courseData.is_free,
         videos,
         createdAt: courseData.created_at,
         learningObjectives: courseData.learning_objectives || [],
-        instructor: courseData.instructor_name ? {
-          name: courseData.instructor_name,
-          bio: courseData.instructor_bio || '',
-          avatar: courseData.instructor_avatar || undefined,
-          expertise: courseData.instructor_expertise || []
-        } : undefined,
+        instructor: courseData.instructor_name
+          ? {
+              name: courseData.instructor_name,
+              bio: courseData.instructor_bio || '',
+              avatar: courseData.instructor_avatar || undefined,
+              expertise: courseData.instructor_expertise || [],
+            }
+          : undefined,
       }
     },
     enabled: !!courseId,
@@ -93,8 +106,12 @@ export const useCoursesData = () => {
       return (
         coursesData?.map(course => ({
           id: course.id,
-          title: course.title,
-          description: course.description,
+          title_en: course.title_en,
+          title_ar: course.title_ar,
+          title_fr: course.title_fr,
+          description_en: course.description_en,
+          description_ar: course.description_ar,
+          description_fr: course.description_fr,
           category: course.category || '',
           minAge: course.min_age || 3,
           maxAge: course.max_age || 12,
@@ -129,8 +146,12 @@ export const useFeaturedCourses = () => {
       return (
         coursesData?.map(course => ({
           id: course.id,
-          title: course.title,
-          description: course.description,
+          title_en: course.title_en,
+          title_ar: course.title_ar,
+          title_fr: course.title_fr,
+          description_en: course.description_en,
+          description_ar: course.description_ar,
+          description_fr: course.description_fr,
           category: course.category || '',
           minAge: course.min_age || 3,
           maxAge: course.max_age || 12,

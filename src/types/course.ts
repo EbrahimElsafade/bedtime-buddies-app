@@ -1,14 +1,20 @@
 export type Category = {
   id: string;
-  name: string;
+  name_en: string;
+  name_ar?: string;
+  name_fr?: string;
   created_at: string;
   updated_at: string;
 };
 
 export type CourseVideo = {
   id: string;
-  title: string;
-  description: string;
+  title_en: string;
+  title_ar: string;
+  title_fr: string;
+  description_en: string;
+  description_ar: string;
+  description_fr: string;
   videoPath: string; // Supabase storage path
   thumbnailPath: string; // Supabase storage path
   duration: number; // in seconds
@@ -19,8 +25,12 @@ export type CourseVideo = {
 
 export type Course = {
   id: string;
-  title: string;
-  description: string;
+  title_en: string;
+  title_ar: string;
+  title_fr: string;
+  description_en: string;
+  description_ar: string;
+  description_fr: string;
   category: string; 
   minAge: number;
   maxAge: number;
@@ -33,9 +43,15 @@ export type Course = {
   createdAt: string;
   learningObjectives?: string[];
   instructor?: {
-    name: string;
-    bio: string;
+    name_en: string;
+    name_ar?: string;
+    name_fr?: string;
+    bio_en: string;
+    bio_ar?: string;
+    bio_fr?: string;
     avatar?: string;
-    expertise?: string[];
+    expertise_en?: string[];
+    expertise_ar?: string[];
+    expertise_fr?: string[];
   };
 };
