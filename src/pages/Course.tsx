@@ -31,6 +31,8 @@ const Course = () => {
 
   const { data: course, isLoading, error } = useCourseData(courseId)
   const isPremium = profile?.is_premium || false
+  console.log(course);
+  
 
   const tabsRef = useRef<HTMLDivElement>(null)
 

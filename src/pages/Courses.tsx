@@ -126,7 +126,7 @@ const Courses = () => {
               </div>
 
               {/* Age Range Filters */}
-              <div>
+              {/* <div>
                 <h4 className="text-dream-DEFAULT mb-2 text-sm font-medium md:text-base">
                   {t('courses.years')}
                 </h4>
@@ -141,7 +141,7 @@ const Courses = () => {
                     </Badge>
                   ))}
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 
