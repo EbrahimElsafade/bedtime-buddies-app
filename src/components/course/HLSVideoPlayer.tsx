@@ -36,9 +36,9 @@ const HLSVideoPlayer = ({ videoPath, title, className = '' }: HLSVideoPlayerProp
           hls.loadSource(videoUrl)
           hls.attachMedia(video)
           
-          hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            console.log('HLS manifest loaded, ready to play')
-          })
+          // hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          //   console.log('HLS manifest loaded, ready to play')
+          // })
 
           hls.on(Hls.Events.ERROR, (event, data) => {
             console.error('HLS error:', data)

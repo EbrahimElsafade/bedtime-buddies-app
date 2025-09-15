@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import {
   ArrowLeft,
@@ -31,6 +31,21 @@ const Course = () => {
 
   const { data: course, isLoading, error } = useCourseData(courseId)
   const isPremium = profile?.is_premium || false
+
+  const tabsRef = useRef<HTMLDivElement>(null)
+
+  const scrollToTabs = () => {
+    setTimeout(() => {
+      requestAnimationFrame(() => {
+        if (tabsRef.current) {
+          tabsRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          })
+        }
+      })
+    })
+  }
 
   useEffect(() => {
     if (course) {
@@ -73,6 +88,7 @@ const Course = () => {
     if (course?.videos && course.videos.length > 0) {
       setSelectedVideo(course.videos[0])
       setActiveTab('content')
+      scrollToTabs()
     }
   }
 
@@ -241,6 +257,7 @@ const Course = () => {
 
           {/* Tabs Section */}
           <Tabs
+            ref={tabsRef}
             value={activeTab}
             onValueChange={setActiveTab}
             className="w-full"
@@ -321,9 +338,9 @@ const Course = () => {
 
             {/* Content Tab */}
             <TabsContent value="content" className="space-y-8">
-              <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+              <div className="flex flex-col gap-8 lg:flex-row rtl:lg:flex-row-reverse">
                 {/* Video Player */}
-                <div className="lg:col-span-2">
+                <div className="lg:flex-[2]">
                   {selectedVideo ? (
                     <div className="space-y-4">
                       <div className="aspect-video overflow-hidden rounded-lg bg-black">
@@ -374,7 +391,7 @@ const Course = () => {
                 </div>
 
                 {/* Video List */}
-                <div className="lg:col-span-1">
+                <div className="lg:flex-1">
                   <h3 className="text-dream-DEFAULT mb-4 font-bubbly text-xl">
                     {t('course.courseVideos')}
                   </h3>
