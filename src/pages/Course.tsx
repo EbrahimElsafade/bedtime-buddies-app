@@ -77,7 +77,7 @@ const Course = () => {
     // If authentication and premium check passes, we would start the course
     toast({
       title: t('toast.courseStarted'),
-      description: `${t('toast.enjoyLearning')} ${course?.title}!`,
+      description: `${t('toast.enjoyLearning')} ${getLocalized(course, 'title', lang)}!`,
     })
 
     // Select first video and switch to content tab
@@ -299,33 +299,33 @@ const Course = () => {
                       {course.instructor.avatar && (
                         <img
                           src={course.instructor.avatar}
-                          alt={course.instructor.name}
+                          alt={getLocalized(course.instructor, 'name', lang)}
                           className="h-16 w-16 rounded-full object-cover"
                         />
                       )}
                       <div>
                         <h3 className="text-dream-DEFAULT font-medium">
-                          {course.instructor.name}
+                          {getLocalized(course.instructor, 'name', lang)}
                         </h3>
                         <p className="text-dream-DEFAULT/80 mt-1 text-sm">
-                          {course.instructor.bio}
+                          {getLocalized(course.instructor, 'bio', lang)}
                         </p>
-                        {course.instructor.expertise &&
-                          course.instructor.expertise.length > 0 && (
+                        {(() => {
+                          const expertise = getLocalized(course.instructor, 'expertise', lang);
+                          return Array.isArray(expertise) && expertise.length > 0 && (
                             <div className="mt-2 flex flex-wrap gap-1">
-                              {course.instructor.expertise.map(
-                                (skill, index) => (
-                                  <Badge
-                                    key={index}
-                                    variant="secondary"
-                                    className="text-xs"
-                                  >
-                                    {skill}
-                                  </Badge>
-                                ),
-                              )}
+                              {expertise.map((skill: string, index: number) => (
+                                <Badge
+                                  key={index}
+                                  variant="secondary"
+                                  className="text-xs"
+                                >
+                                  {skill}
+                                </Badge>
+                              ))}
                             </div>
-                          )}
+                          );
+                        })()}
                       </div>
                     </div>
                   </>
@@ -344,14 +344,14 @@ const Course = () => {
                         {selectedVideo.videoPath ? (
                           <HLSVideoPlayer
                             videoPath={selectedVideo.videoPath}
-                            title={selectedVideo.title}
+                            title={getLocalized(selectedVideo, 'title', lang)}
                             className="rounded-lg"
                           />
                         ) : selectedVideo.videoPath ? (
                           // Fallback for URL-based videos (if you still want to support them)
                           <iframe
                             src={selectedVideo.videoPath}
-                            title={selectedVideo.title}
+                            title={getLocalized(selectedVideo, 'title', lang)}
                             className="h-full w-full"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                             allowFullScreen
@@ -364,7 +364,7 @@ const Course = () => {
                       </div>
                       <div>
                         <h3 className="text-dream-DEFAULT mb-2 font-bubbly text-xl">
-                          {selectedVideo.title}
+                          {getLocalized(selectedVideo, 'title', lang)}
                         </h3>
                         <div className="text-dream-DEFAULT mb-2 flex items-center text-sm dark:text-foreground">
                           <Clock className="mr-1 h-4 w-4" />
@@ -373,7 +373,7 @@ const Course = () => {
                           </span>
                         </div>
                         <p className="text-dream-DEFAULT dark:text-foreground">
-                          {selectedVideo.description}
+                          {getLocalized(selectedVideo, 'description', lang)}
                         </p>
                       </div>
                     </div>
@@ -409,7 +409,7 @@ const Course = () => {
                               <div className="relative h-16 w-24 flex-shrink-0">
                                 <img
                                   src={getImageUrl(video.thumbnailPath)}
-                                  alt={video.title}
+                                  alt={getLocalized(video, 'title', lang)}
                                   className="h-full w-full rounded object-cover"
                                 />
                                 {!video.isFree &&
@@ -427,7 +427,7 @@ const Course = () => {
                               </div>
                               <div className="min-w-0 flex-1">
                                 <h4 className="text-dream-DEFAULT truncate text-sm font-medium">
-                                  {video.title}
+                                  {getLocalized(video, 'title', lang)}
                                 </h4>
                                 <div className="text-dream-DEFAULT/70 mt-1 flex items-center text-xs">
                                   <Clock className="mx-1 h-3 w-3" />

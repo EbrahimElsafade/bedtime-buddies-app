@@ -41,12 +41,12 @@ export const useCourseData = (courseId: string | undefined) => {
       const videos: CourseVideo[] =
         lessonsData?.map(lesson => ({
           id: lesson.id,
-          title_en: lesson.title_en,
-          title_ar: lesson.title_ar,
-          title_fr: lesson.title_fr,
-          description_en: lesson.description_en,
-          description_ar: lesson.description_ar,
-          description_fr: lesson.description_fr,
+          title_en: lesson.title,
+          title_ar: lesson.title,
+          title_fr: lesson.title,
+          description_en: lesson.description,
+          description_ar: lesson.description,
+          description_fr: lesson.description,
           videoPath: lesson.video_path || '',
           thumbnailPath: lesson.thumbnail_path || '',
           duration: lesson.duration,
@@ -57,12 +57,12 @@ export const useCourseData = (courseId: string | undefined) => {
 
       return {
         id: courseData.id,
-        title_en: courseData.title_en,
-        title_ar: courseData.title_ar,
-        title_fr: courseData.title_fr,
-        description_en: courseData.description_en,
-        description_ar: courseData.description_ar,
-        description_fr: courseData.description_fr,
+        title_en: courseData.title,
+        title_ar: courseData.title,
+        title_fr: courseData.title,
+        description_en: courseData.description,
+        description_ar: courseData.description,
+        description_fr: courseData.description,
         category: courseData.category || '',
         minAge: courseData.min_age || 3,
         maxAge: courseData.max_age || 12,
@@ -76,10 +76,16 @@ export const useCourseData = (courseId: string | undefined) => {
         learningObjectives: courseData.learning_objectives || [],
         instructor: courseData.instructor_name
           ? {
-              name: courseData.instructor_name,
-              bio: courseData.instructor_bio || '',
+              name_en: courseData.instructor_name,
+              name_ar: courseData.instructor_name,
+              name_fr: courseData.instructor_name,
+              bio_en: courseData.instructor_bio || '',
+              bio_ar: courseData.instructor_bio || '',
+              bio_fr: courseData.instructor_bio || '',
               avatar: courseData.instructor_avatar || undefined,
-              expertise: courseData.instructor_expertise || [],
+              expertise_en: courseData.instructor_expertise || [],
+              expertise_ar: courseData.instructor_expertise || [],
+              expertise_fr: courseData.instructor_expertise || [],
             }
           : undefined,
       }
@@ -106,12 +112,12 @@ export const useCoursesData = () => {
       return (
         coursesData?.map(course => ({
           id: course.id,
-          title_en: course.title_en,
-          title_ar: course.title_ar,
-          title_fr: course.title_fr,
-          description_en: course.description_en,
-          description_ar: course.description_ar,
-          description_fr: course.description_fr,
+          title_en: course.title,
+          title_ar: course.title,
+          title_fr: course.title,
+          description_en: course.description,
+          description_ar: course.description,
+          description_fr: course.description,
           category: course.category || '',
           minAge: course.min_age || 3,
           maxAge: course.max_age || 12,
@@ -146,12 +152,12 @@ export const useFeaturedCourses = () => {
       return (
         coursesData?.map(course => ({
           id: course.id,
-          title_en: course.title_en,
-          title_ar: course.title_ar,
-          title_fr: course.title_fr,
-          description_en: course.description_en,
-          description_ar: course.description_ar,
-          description_fr: course.description_fr,
+          title_en: course.title,
+          title_ar: course.title,
+          title_fr: course.title,
+          description_en: course.description,
+          description_ar: course.description,
+          description_fr: course.description,
           category: course.category || '',
           minAge: course.min_age || 3,
           maxAge: course.max_age || 12,
@@ -184,7 +190,9 @@ export const useCourseCategories = () => {
       return (
         data?.map(category => ({
           id: category.id,
-          name: category.name,
+          name_en: category.name,
+          name_ar: category.name,
+          name_fr: category.name,
           created_at: category.created_at,
           updated_at: category.updated_at,
         })) || []

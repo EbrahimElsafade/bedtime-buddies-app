@@ -172,12 +172,12 @@ const CourseEditor = () => {
       }
 
       setCourseData({
-        title_en: course.title_en || '',
-        title_ar: course.title_ar || '',
-        title_fr: course.title_fr || '',
-        description_en: course.description_en || '',
-        description_ar: course.description_ar || '',
-        description_fr: course.description_fr || '',
+        title_en: course.title || '',
+        title_ar: course.title || '',
+        title_fr: course.title || '',
+        description_en: course.description || '',
+        description_ar: course.description || '',
+        description_fr: course.description || '',
         category: course.category || '',
         minAge: course.min_age || 3,
         maxAge: course.max_age || 12,
@@ -199,12 +199,12 @@ const CourseEditor = () => {
 
           return {
             id: lesson.id,
-            title_en: lesson.title_en || '',
-            title_ar: lesson.title_ar || '',
-            title_fr: lesson.title_fr || '',
-            description_en: lesson.description_en || '',
-            description_ar: lesson.description_ar || '',
-            description_fr: lesson.description_fr || '',
+            title_en: lesson.title || '',
+            title_ar: lesson.title || '',
+            title_fr: lesson.title || '',
+            description_en: lesson.description || '',
+            description_ar: lesson.description || '',
+            description_fr: lesson.description || '',
             videoPath: lesson.video_path || '',
             thumbnailPath: lesson.thumbnail_path || '',
             duration: lesson.duration || 0,
@@ -357,12 +357,8 @@ const CourseEditor = () => {
         const { data: newCourse, error: courseError } = await supabase
           .from('courses')
           .insert({
-            title_en: courseData.title_en,
-            title_ar: courseData.title_ar,
-            title_fr: courseData.title_fr,
-            description_en: courseData.description_en,
-            description_ar: courseData.description_ar,
-            description_fr: courseData.description_fr,
+            title: courseData.title_en,
+            description: courseData.description_en,
             category: courseData.category,
             cover_image: coverImageUrl,
             min_age: courseData.minAge,
@@ -385,12 +381,8 @@ const CourseEditor = () => {
         const { error: courseError } = await supabase
           .from('courses')
           .update({
-            title_en: courseData.title_en,
-            title_ar: courseData.title_ar,
-            title_fr: courseData.title_fr,
-            description_en: courseData.description_en,
-            description_ar: courseData.description_ar,
-            description_fr: courseData.description_fr,
+            title: courseData.title_en,
+            description: courseData.description_en,
             category: courseData.category,
             cover_image: coverImageUrl,
             min_age: courseData.minAge,
@@ -479,12 +471,8 @@ const CourseEditor = () => {
           .from('course_lessons')
           .insert({
             course_id: courseId,
-            title_en: lesson.title_en,
-            title_ar: lesson.title_ar,
-            title_fr: lesson.title_fr,
-            description_en: lesson.description_en,
-            description_ar: lesson.description_ar,
-            description_fr: lesson.description_fr,
+            title: lesson.title_en,
+            description: lesson.description_en,
             video_url: lessonVideoUrl,
             video_path: lessonVideoPath,
             thumbnail_path: lessonThumbnailUrl,

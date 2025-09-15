@@ -114,13 +114,13 @@ const Courses = () => {
                     <Button
                       key={category.id}
                       variant={
-                        activeCategory === category.name ? 'default' : 'ghost'
+                        activeCategory === getLocalized(category, 'name', lang) ? 'default' : 'ghost'
                       }
-                      className={`${activeCategory === category.name ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
-                      onClick={() => handleCategoryChange(category.name)}
+                      className={`${activeCategory === getLocalized(category, 'name', lang) ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
+                      onClick={() => handleCategoryChange(getLocalized(category, 'name', lang))}
                     >
-                      {category.name} (
-                      {courses.filter(c => c.category === category.name).length}
+                      {getLocalized(category, 'name', lang)} (
+                      {courses.filter(c => c.category === getLocalized(category, 'name', lang)).length}
                       )
                     </Button>
                   ))}
@@ -199,7 +199,7 @@ const Courses = () => {
                                   variant="secondary"
                                   className="text-dream-DEFAULT bg-dream-light/30 text-xs"
                                 >
-                                  {category?.name || 'General'}
+                                  {category ? getLocalized(category, 'name', lang) : 'General'}
                                 </Badge>
                                 <div className="text-dream-DEFAULT flex items-center gap-1 text-xs">
                                   <Clock className="h-3 w-3" />
