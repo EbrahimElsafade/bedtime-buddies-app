@@ -38,28 +38,33 @@ export const useCourseData = (courseId: string | undefined) => {
 
       // Transform lessons to match our interface
       const videos: CourseVideo[] =
-        lessonsData?.map(lesson => ({
-          id: lesson.id,
-          title_en: lesson.title,
-          title_ar: lesson.title,
-          title_fr: lesson.title,
-          description_en: lesson.description,
-          description_ar: lesson.description,
-          description_fr: lesson.description,
-          videoPath: lesson.video_path || '',
-          thumbnailPath: lesson.thumbnail_path || '',
-          duration: lesson.duration,
-          isFree: courseData.is_free,
-          order: lesson.lesson_order,
-          createdAt: lesson.created_at,
-        })) || []
+        lessonsData?.map(lesson => {
+          const lessonData = lesson as any;
+          return {
+            id: lessonData.id,
+            title_en: lessonData.title_en || lessonData.title || '',
+            title_ar: lessonData.title_ar || '',
+            title_fr: lessonData.title_fr || '',
+            description_en: lessonData.description_en || lessonData.description || '',
+            description_ar: lessonData.description_ar || '',
+            description_fr: lessonData.description_fr || '',
+            videoPath: lessonData.video_path || '',
+            thumbnailPath: lessonData.thumbnail_path || '',
+            duration: lessonData.duration,
+            isFree: courseData.is_free,
+            order: lessonData.lesson_order,
+            createdAt: lessonData.created_at,
+          };
+        }) || []
 
       const course = courseData as any;
       return {
         id: course.id,
+        title: course.title_en || course.title || '',
         title_en: course.title_en || course.title || '',
         title_ar: course.title_ar || '',
         title_fr: course.title_fr || '',
+        description: course.description_en || course.description || '',
         description_en: course.description_en || course.description || '',
         description_ar: course.description_ar || '',
         description_fr: course.description_fr || '',
@@ -68,18 +73,26 @@ export const useCourseData = (courseId: string | undefined) => {
         maxAge: courseData.max_age || 12,
         duration: 0, // Will be calculated from lessons duration
         lessons: courseData.lessons || videos.length,
+        cover_image: courseData.cover_image || '',
         coverImagePath: courseData.cover_image || '',
+        is_free: courseData.is_free,
         isFeatured: courseData.is_published,
         isFree: courseData.is_free,
+        is_published: courseData.is_published,
+        languages: courseData.languages || ['en'],
         videos,
         createdAt: courseData.created_at,
         learningObjectives: courseData.learning_objectives || [],
-        instructor: courseData.instructor_name
+        instructor: course.instructor_name_en || course.instructor_name
           ? {
-              name: courseData.instructor_name,
-              bio: courseData.instructor_bio || '',
-              avatar: courseData.instructor_avatar || undefined,
-              expertise: courseData.instructor_expertise || [],
+              name_en: course.instructor_name_en || course.instructor_name || '',
+              name_ar: course.instructor_name_ar || '',
+              name_fr: course.instructor_name_fr || '',
+              bio_en: course.instructor_bio_en || course.instructor_bio || '',
+              bio_ar: course.instructor_bio_ar || '',
+              bio_fr: course.instructor_bio_fr || '',
+              avatar: course.instructor_avatar || undefined,
+              expertise: course.instructor_expertise || [],
             }
           : undefined,
       }
@@ -108,9 +121,11 @@ export const useCoursesData = () => {
           const course = courseData as any;
           return {
             id: course.id,
+            title: course.title_en || course.title || '',
             title_en: course.title_en || course.title || '',
             title_ar: course.title_ar || '',
             title_fr: course.title_fr || '',
+            description: course.description_en || course.description || '',
             description_en: course.description_en || course.description || '',
             description_ar: course.description_ar || '',
             description_fr: course.description_fr || '',
@@ -119,9 +134,13 @@ export const useCoursesData = () => {
             maxAge: course.max_age || 12,
             duration: 0, // Will be calculated from lessons duration
             lessons: course.lessons || 0,
+            cover_image: course.cover_image || '',
             coverImagePath: course.cover_image || '',
+            is_free: course.is_free,
             isFeatured: course.is_published,
             isFree: course.is_free,
+            is_published: course.is_published,
+            languages: course.languages || ['en'],
             createdAt: course.created_at,
           };
         }) || []
@@ -151,9 +170,11 @@ export const useFeaturedCourses = () => {
           const course = courseData as any;
           return {
             id: course.id,
+            title: course.title_en || course.title || '',
             title_en: course.title_en || course.title || '',
             title_ar: course.title_ar || '',
             title_fr: course.title_fr || '',
+            description: course.description_en || course.description || '',
             description_en: course.description_en || course.description || '',
             description_ar: course.description_ar || '',
             description_fr: course.description_fr || '',
@@ -162,9 +183,13 @@ export const useFeaturedCourses = () => {
             maxAge: course.max_age || 12,
             duration: 0, // Will be calculated from lessons duration
             lessons: course.lessons || 0,
+            cover_image: course.cover_image || '',
             coverImagePath: course.cover_image || '',
+            is_free: course.is_free,
             isFeatured: true,
             isFree: course.is_free,
+            is_published: course.is_published,
+            languages: course.languages || ['en'],
             createdAt: course.created_at,
           };
         }) || []
@@ -188,12 +213,21 @@ export const useCourseCategories = () => {
       }
 
       return (
-        data?.map(category => ({
-          id: category.id,
-          name: category.name,
-          created_at: category.created_at,
-          updated_at: category.updated_at,
-        })) || []
+        data?.map(categoryData => {
+          const category = categoryData as any;
+          return {
+            id: category.id,
+            name_en: category.name_en || category.name || '',
+            name_ar: category.name_ar || '',
+            name_fr: category.name_fr || '',
+            description_en: category.description_en || '',
+            description_ar: category.description_ar || '',
+            description_fr: category.description_fr || '',
+            name: category.name, // Keep for backwards compatibility
+            created_at: category.created_at,
+            updated_at: category.updated_at,
+          };
+        }) || []
       )
     },
   })

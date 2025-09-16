@@ -70,7 +70,7 @@ const Courses = () => {
       throw error
     }
 
-    return data as Course[]
+    return data as any[] || []
   }
 
   const {

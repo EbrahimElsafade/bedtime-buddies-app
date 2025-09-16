@@ -41,20 +41,38 @@ export type Database = {
       course_categories: {
         Row: {
           created_at: string
+          description_ar: string | null
+          description_en: string | null
+          description_fr: string | null
           id: string
           name: string
+          name_ar: string | null
+          name_en: string | null
+          name_fr: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          description_fr?: string | null
           id?: string
           name: string
+          name_ar?: string | null
+          name_en?: string | null
+          name_fr?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          description_fr?: string | null
           id?: string
           name?: string
+          name_ar?: string | null
+          name_en?: string | null
+          name_fr?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -64,11 +82,17 @@ export type Database = {
           course_id: string
           created_at: string | null
           description: string
+          description_ar: string | null
+          description_en: string | null
+          description_fr: string | null
           duration: number
           id: string
           lesson_order: number
           thumbnail_path: string | null
           title: string
+          title_ar: string | null
+          title_en: string | null
+          title_fr: string | null
           updated_at: string | null
           video_path: string | null
           video_url: string | null
@@ -77,11 +101,17 @@ export type Database = {
           course_id: string
           created_at?: string | null
           description: string
+          description_ar?: string | null
+          description_en?: string | null
+          description_fr?: string | null
           duration: number
           id?: string
           lesson_order?: number
           thumbnail_path?: string | null
           title: string
+          title_ar?: string | null
+          title_en?: string | null
+          title_fr?: string | null
           updated_at?: string | null
           video_path?: string | null
           video_url?: string | null
@@ -90,11 +120,17 @@ export type Database = {
           course_id?: string
           created_at?: string | null
           description?: string
+          description_ar?: string | null
+          description_en?: string | null
+          description_fr?: string | null
           duration?: number
           id?: string
           lesson_order?: number
           thumbnail_path?: string | null
           title?: string
+          title_ar?: string | null
+          title_en?: string | null
+          title_fr?: string | null
           updated_at?: string | null
           video_path?: string | null
           video_url?: string | null
@@ -114,12 +150,20 @@ export type Database = {
           category: string
           cover_image: string | null
           created_at: string | null
-          description: string
+          description_ar: string | null
+          description_en: string
+          description_fr: string | null
           id: string
           instructor_avatar: string | null
           instructor_bio: string | null
+          instructor_bio_ar: string | null
+          instructor_bio_en: string | null
+          instructor_bio_fr: string | null
           instructor_expertise: string[] | null
           instructor_name: string | null
+          instructor_name_ar: string | null
+          instructor_name_en: string | null
+          instructor_name_fr: string | null
           is_free: boolean
           is_published: boolean
           languages: string[]
@@ -127,19 +171,29 @@ export type Database = {
           lessons: number | null
           max_age: number | null
           min_age: number | null
-          title: string
+          title_ar: string | null
+          title_en: string
+          title_fr: string | null
           updated_at: string | null
         }
         Insert: {
           category: string
           cover_image?: string | null
           created_at?: string | null
-          description: string
+          description_ar?: string | null
+          description_en: string
+          description_fr?: string | null
           id?: string
           instructor_avatar?: string | null
           instructor_bio?: string | null
+          instructor_bio_ar?: string | null
+          instructor_bio_en?: string | null
+          instructor_bio_fr?: string | null
           instructor_expertise?: string[] | null
           instructor_name?: string | null
+          instructor_name_ar?: string | null
+          instructor_name_en?: string | null
+          instructor_name_fr?: string | null
           is_free?: boolean
           is_published?: boolean
           languages?: string[]
@@ -147,19 +201,29 @@ export type Database = {
           lessons?: number | null
           max_age?: number | null
           min_age?: number | null
-          title: string
+          title_ar?: string | null
+          title_en: string
+          title_fr?: string | null
           updated_at?: string | null
         }
         Update: {
           category?: string
           cover_image?: string | null
           created_at?: string | null
-          description?: string
+          description_ar?: string | null
+          description_en?: string
+          description_fr?: string | null
           id?: string
           instructor_avatar?: string | null
           instructor_bio?: string | null
+          instructor_bio_ar?: string | null
+          instructor_bio_en?: string | null
+          instructor_bio_fr?: string | null
           instructor_expertise?: string[] | null
           instructor_name?: string | null
+          instructor_name_ar?: string | null
+          instructor_name_en?: string | null
+          instructor_name_fr?: string | null
           is_free?: boolean
           is_published?: boolean
           languages?: string[]
@@ -167,7 +231,9 @@ export type Database = {
           lessons?: number | null
           max_age?: number | null
           min_age?: number | null
-          title?: string
+          title_ar?: string | null
+          title_en?: string
+          title_fr?: string | null
           updated_at?: string | null
         }
         Relationships: []

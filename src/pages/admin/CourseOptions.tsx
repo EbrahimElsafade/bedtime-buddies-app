@@ -37,12 +37,21 @@ const CourseOptions = () => {
         .order('name')
 
       if (error) throw error
-      return data?.map(category => ({
-        id: category.id,
-        name: category.name,
-        created_at: category.created_at,
-        updated_at: category.updated_at,
-      })) || []
+      return data?.map(categoryData => {
+        const category = categoryData as any;
+        return {
+          id: category.id,
+          name: category.name_en || category.name || '',
+          name_en: category.name_en || category.name || '',
+          name_ar: category.name_ar || '',
+          name_fr: category.name_fr || '',
+          description_en: category.description_en || '',
+          description_ar: category.description_ar || '',
+          description_fr: category.description_fr || '',
+          created_at: category.created_at,
+          updated_at: category.updated_at,
+        };
+      }) || []
     },
   })
 
