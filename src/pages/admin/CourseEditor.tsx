@@ -1046,7 +1046,7 @@ const CourseEditor = () => {
                                     }
                                     required
                                   />
-                                  <Input
+                                  {/* <Input
                                     placeholder="Enter lesson title"
                                     value={lesson.title_ar}
                                     onChange={e =>
@@ -1067,7 +1067,7 @@ const CourseEditor = () => {
                                         e.target.value,
                                       )
                                     }
-                                  />
+                                  /> */}
                                 </div>
                               </div>
                               <div className="space-y-2">
@@ -1103,7 +1103,7 @@ const CourseEditor = () => {
                                   }
                                   className="min-h-[80px]"
                                 />
-                                <Textarea
+                                {/* <Textarea
                                   placeholder="Enter lesson description"
                                   value={lesson.description_ar}
                                   onChange={e =>
@@ -1126,7 +1126,7 @@ const CourseEditor = () => {
                                     )
                                   }
                                   className="min-h-[80px]"
-                                />
+                                /> */}
                               </div>
                             </div>
 
