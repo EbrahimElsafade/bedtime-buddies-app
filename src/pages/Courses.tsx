@@ -41,7 +41,7 @@ const Courses = () => {
           .includes(searchQuery.toLowerCase())
       return categoryMatch && searchMatch
     })
-  }, [searchQuery, activeCategory, courses])
+  }, [courses, activeCategory, lang, searchQuery])
 
   const handleCategoryChange = (category: string) => {
     setActiveCategory(category)
