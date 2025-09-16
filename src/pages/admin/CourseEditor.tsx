@@ -172,12 +172,12 @@ const CourseEditor = () => {
       }
 
       setCourseData({
-        title_en: course.title || '',
-        title_ar: course.title || '',
-        title_fr: course.title || '',
-        description_en: course.description || '',
-        description_ar: course.description || '',
-        description_fr: course.description || '',
+        title_en: course.title_en || '',
+        title_ar: course.title_ar || '',
+        title_fr: course.title_fr || '',
+        description_en: course.description_en || '',
+        description_ar: course.description_ar || '',
+        description_fr: course.description_fr || '',
         category: course.category || '',
         minAge: course.min_age || 3,
         maxAge: course.max_age || 12,
@@ -357,8 +357,12 @@ const CourseEditor = () => {
         const { data: newCourse, error: courseError } = await supabase
           .from('courses')
           .insert({
-            title: courseData.title_en,
-            description: courseData.description_en,
+            title_en: courseData.title_en,
+            title_ar: courseData.title_ar,
+            title_fr: courseData.title_fr,
+            description_en: courseData.description_en,
+            description_ar: courseData.description_ar,
+            description_fr: courseData.description_fr,
             category: courseData.category,
             cover_image: coverImageUrl,
             min_age: courseData.minAge,
@@ -381,8 +385,12 @@ const CourseEditor = () => {
         const { error: courseError } = await supabase
           .from('courses')
           .update({
-            title: courseData.title_en,
-            description: courseData.description_en,
+            title_en: courseData.title_en,
+            title_ar: courseData.title_ar,
+            title_fr: courseData.title_fr,
+            description_en: courseData.description_en,
+            description_ar: courseData.description_ar,
+            description_fr: courseData.description_fr,
             category: courseData.category,
             cover_image: coverImageUrl,
             min_age: courseData.minAge,
