@@ -1,8 +1,6 @@
 export type Category = {
   id: string;
-  name_en: string;
-  name_ar?: string;
-  name_fr?: string;
+  name: string;
   created_at: string;
   updated_at: string;
 };
@@ -43,15 +41,9 @@ export type Course = {
   createdAt: string;
   learningObjectives?: string[];
   instructor?: {
-    name_en: string;
-    name_ar?: string;
-    name_fr?: string;
-    bio_en: string;
-    bio_ar?: string;
-    bio_fr?: string;
+    name: string;
+    bio: string;
     avatar?: string;
-    expertise_en?: string[];
-    expertise_ar?: string[];
-    expertise_fr?: string[];
+    expertise?: string[];
   };
 };

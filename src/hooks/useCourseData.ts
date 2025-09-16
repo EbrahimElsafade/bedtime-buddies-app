@@ -1,10 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import { Course, CourseVideo, Category } from '@/types/course'
-import { Database } from '@/integrations/supabase/types';
+import { Database } from '@/integrations/supabase/types'
 
-type CourseRow = Database['public']['Tables']['courses']['Row'];
-
+type CourseRow = Database['public']['Tables']['courses']['Row']
 
 export const useCourseData = (courseId: string | undefined) => {
   return useQuery({
@@ -76,16 +75,10 @@ export const useCourseData = (courseId: string | undefined) => {
         learningObjectives: courseData.learning_objectives || [],
         instructor: courseData.instructor_name
           ? {
-              name_en: courseData.instructor_name,
-              name_ar: courseData.instructor_name,
-              name_fr: courseData.instructor_name,
-              bio_en: courseData.instructor_bio || '',
-              bio_ar: courseData.instructor_bio || '',
-              bio_fr: courseData.instructor_bio || '',
+              name: courseData.instructor_name,
+              bio: courseData.instructor_bio || '',
               avatar: courseData.instructor_avatar || undefined,
-              expertise_en: courseData.instructor_expertise || [],
-              expertise_ar: courseData.instructor_expertise || [],
-              expertise_fr: courseData.instructor_expertise || [],
+              expertise: courseData.instructor_expertise || [],
             }
           : undefined,
       }
@@ -190,9 +183,7 @@ export const useCourseCategories = () => {
       return (
         data?.map(category => ({
           id: category.id,
-          name_en: category.name,
-          name_ar: category.name,
-          name_fr: category.name,
+          name: category.name,
           created_at: category.created_at,
           updated_at: category.updated_at,
         })) || []

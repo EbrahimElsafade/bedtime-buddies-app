@@ -33,8 +33,12 @@ const Courses = () => {
       const categoryMatch =
         activeCategory === 'all' || course.category === activeCategory
       const searchMatch =
-        getLocalized(course, 'title', lang).toLowerCase().includes(searchQuery.toLowerCase()) ||
-        getLocalized(course, 'description', lang).toLowerCase().includes(searchQuery.toLowerCase())
+        getLocalized(course, 'title', lang)
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        getLocalized(course, 'description', lang)
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())
       return categoryMatch && searchMatch
     })
   }, [searchQuery, activeCategory, courses])
@@ -114,13 +118,13 @@ const Courses = () => {
                     <Button
                       key={category.id}
                       variant={
-                        activeCategory === category.name_en ? 'default' : 'ghost'
+                        activeCategory === category.name ? 'default' : 'ghost'
                       }
-                      className={`${activeCategory === category.name_en ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
-                      onClick={() => handleCategoryChange(category.name_en)}
+                      className={`${activeCategory === category.name ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
+                      onClick={() => handleCategoryChange(category.name)}
                     >
                       {getLocalized(category, 'name', lang)} (
-                      {courses.filter(c => c.category === category.name_en).length}
+                      {courses.filter(c => c.category === category.name).length}
                       )
                     </Button>
                   ))}
@@ -159,7 +163,9 @@ const Courses = () => {
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
                 {filteredCourses.map(course => {
                   const category = categories.find(
-                    cat => cat.id === course.category || cat.name_en === course.category || cat.name_ar === course.category || cat.name_fr === course.category,
+                    cat =>
+                      cat.id === course.category ||
+                      cat.name === course.category,
                   )
                   return (
                     <Link key={course.id} to={`/courses/${course.id}`}>
@@ -199,7 +205,9 @@ const Courses = () => {
                                   variant="secondary"
                                   className="text-dream-DEFAULT bg-dream-light/30 text-xs"
                                 >
-                                  {category ? getLocalized(category, 'name', lang) : 'General'}
+                                  {category
+                                    ? getLocalized(category, 'name', lang)
+                                    : 'General'}
                                 </Badge>
                                 <div className="text-dream-DEFAULT flex items-center gap-1 text-xs">
                                   <Clock className="h-3 w-3" />

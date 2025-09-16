@@ -40,7 +40,7 @@ const FeaturedCourses = () => {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {featuredCourses.map(course => {
             const category = categories.find(
-              cat => cat.id === course.category || cat.name_en === course.category || cat.name_ar === course.category || cat.name_fr === course.category,
+              cat => cat.id === course.category || cat.name === course.category,
             )
             return (
               <Link
@@ -86,7 +86,9 @@ const FeaturedCourses = () => {
                         variant="secondary"
                         className="text-dream-DEFAULT bg-dream-light/30"
                       >
-                        {getLocalized(category, 'name', lang) || course.category || 'General'}
+                        {getLocalized(category, 'name', lang) ||
+                          course.category ||
+                          'General'}
                       </Badge>
                     </div>
                     <div className="text-dream-DEFAULT flex items-center justify-between text-sm">

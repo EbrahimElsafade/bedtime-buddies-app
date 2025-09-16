@@ -39,9 +39,7 @@ const CourseOptions = () => {
       if (error) throw error
       return data?.map(category => ({
         id: category.id,
-        name_en: category.name,
-        name_ar: category.name,
-        name_fr: category.name,
+        name: category.name,
         created_at: category.created_at,
         updated_at: category.updated_at,
       })) || []
@@ -109,7 +107,7 @@ const CourseOptions = () => {
       queryClient.invalidateQueries({ queryKey: ['course-categories'] })
       toast({
         title: 'Category Removed',
-        description: `Category '${category?.name_en}' has been removed successfully`,
+        description: `Category '${category?.name}' has been removed successfully`,
       })
     },
   })
@@ -117,7 +115,7 @@ const CourseOptions = () => {
   const addCategory = () => {
     if (
       newCategory.trim() &&
-      !categories.some(cat => cat.name_en === newCategory.trim())
+      !categories.some(cat => cat.name === newCategory.trim())
     ) {
       addCategoryMutation.mutate(newCategory.trim())
     }
@@ -125,7 +123,7 @@ const CourseOptions = () => {
 
   const startEditCategory = (category: Category) => {
     setEditingCategoryId(category.id)
-    setEditingCategoryName(category.name_en)
+    setEditingCategoryName(category.name)
   }
 
   const saveEditCategory = () => {
@@ -222,7 +220,7 @@ const CourseOptions = () => {
                         variant="secondary"
                         className="flex items-center gap-1"
                       >
-                        {category.name_en}
+                        {category.name}
                         <Button
                           variant="ghost"
                           size="sm"
