@@ -171,24 +171,25 @@ const CourseEditor = () => {
         setCoverImagePreview(imageUrl)
       }
 
+      const c: any = course
       setCourseData({
-        title_en: course.title_en || '',
-        title_ar: course.title_ar || '',
-        title_fr: course.title_fr || '',
-        description_en: course.description_en || '',
-        description_ar: course.description_ar || '',
-        description_fr: course.description_fr || '',
-        category: course.category || '',
-        minAge: course.min_age || 3,
-        maxAge: course.max_age || 12,
-        isFree: course.is_free || true,
-        isFeatured: course.is_published || false,
-        coverImagePath: course.cover_image,
-        learningObjectives: course.learning_objectives || [],
-        instructorName: course.instructor_name || '',
-        instructorBio: course.instructor_bio || '',
-        instructorAvatar: course.instructor_avatar || '',
-        instructorExpertise: course.instructor_expertise || [],
+        title_en: c.title_en ?? c.title ?? '',
+        title_ar: c.title_ar ?? '',
+        title_fr: c.title_fr ?? '',
+        description_en: c.description_en ?? c.description ?? '',
+        description_ar: c.description_ar ?? '',
+        description_fr: c.description_fr ?? '',
+        category: c.category || '',
+        minAge: c.min_age ?? 3,
+        maxAge: c.max_age ?? 12,
+        isFree: c.is_free ?? true,
+        isFeatured: c.is_published ?? false,
+        coverImagePath: c.cover_image || null,
+        learningObjectives: c.learning_objectives || [],
+        instructorName: c.instructor_name || '',
+        instructorBio: c.instructor_bio || '',
+        instructorAvatar: c.instructor_avatar || '',
+        instructorExpertise: c.instructor_expertise || [],
       })
 
       // Process lessons for the form
@@ -375,7 +376,7 @@ const CourseEditor = () => {
             instructor_bio: courseData.instructorBio || null,
             instructor_avatar: courseData.instructorAvatar || null,
             instructor_expertise: courseData.instructorExpertise,
-          })
+          } as any)
           .select('id')
           .single()
 
@@ -403,7 +404,7 @@ const CourseEditor = () => {
             instructor_bio: courseData.instructorBio || null,
             instructor_avatar: courseData.instructorAvatar || null,
             instructor_expertise: courseData.instructorExpertise,
-          })
+          } as any)
           .eq('id', courseId)
 
         if (courseError) throw courseError
