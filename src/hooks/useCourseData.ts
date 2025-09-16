@@ -54,14 +54,15 @@ export const useCourseData = (courseId: string | undefined) => {
           createdAt: lesson.created_at,
         })) || []
 
+      const course = courseData as any;
       return {
-        id: courseData.id,
-        title_en: courseData.title,
-        title_ar: courseData.title,
-        title_fr: courseData.title,
-        description_en: courseData.description,
-        description_ar: courseData.description,
-        description_fr: courseData.description,
+        id: course.id,
+        title_en: course.title_en || course.title || '',
+        title_ar: course.title_ar || '',
+        title_fr: course.title_fr || '',
+        description_en: course.description_en || course.description || '',
+        description_ar: course.description_ar || '',
+        description_fr: course.description_fr || '',
         category: courseData.category || '',
         minAge: courseData.min_age || 3,
         maxAge: courseData.max_age || 12,
@@ -103,24 +104,27 @@ export const useCoursesData = () => {
       }
 
       return (
-        coursesData?.map(course => ({
-          id: course.id,
-          title_en: course.title,
-          title_ar: course.title,
-          title_fr: course.title,
-          description_en: course.description,
-          description_ar: course.description,
-          description_fr: course.description,
-          category: course.category || '',
-          minAge: course.min_age || 3,
-          maxAge: course.max_age || 12,
-          duration: 0, // Will be calculated from lessons duration
-          lessons: course.lessons || 0,
-          coverImagePath: course.cover_image || '',
-          isFeatured: course.is_published,
-          isFree: course.is_free,
-          createdAt: course.created_at,
-        })) || []
+        coursesData?.map(courseData => {
+          const course = courseData as any;
+          return {
+            id: course.id,
+            title_en: course.title_en || course.title || '',
+            title_ar: course.title_ar || '',
+            title_fr: course.title_fr || '',
+            description_en: course.description_en || course.description || '',
+            description_ar: course.description_ar || '',
+            description_fr: course.description_fr || '',
+            category: course.category || '',
+            minAge: course.min_age || 3,
+            maxAge: course.max_age || 12,
+            duration: 0, // Will be calculated from lessons duration
+            lessons: course.lessons || 0,
+            coverImagePath: course.cover_image || '',
+            isFeatured: course.is_published,
+            isFree: course.is_free,
+            createdAt: course.created_at,
+          };
+        }) || []
       )
     },
   })
@@ -143,24 +147,27 @@ export const useFeaturedCourses = () => {
       }
 
       return (
-        coursesData?.map(course => ({
-          id: course.id,
-          title_en: course.title,
-          title_ar: course.title,
-          title_fr: course.title,
-          description_en: course.description,
-          description_ar: course.description,
-          description_fr: course.description,
-          category: course.category || '',
-          minAge: course.min_age || 3,
-          maxAge: course.max_age || 12,
-          duration: 0, // Will be calculated from lessons duration
-          lessons: course.lessons || 0,
-          coverImagePath: course.cover_image || '',
-          isFeatured: true,
-          isFree: course.is_free,
-          createdAt: course.created_at,
-        })) || []
+        coursesData?.map(courseData => {
+          const course = courseData as any;
+          return {
+            id: course.id,
+            title_en: course.title_en || course.title || '',
+            title_ar: course.title_ar || '',
+            title_fr: course.title_fr || '',
+            description_en: course.description_en || course.description || '',
+            description_ar: course.description_ar || '',
+            description_fr: course.description_fr || '',
+            category: course.category || '',
+            minAge: course.min_age || 3,
+            maxAge: course.max_age || 12,
+            duration: 0, // Will be calculated from lessons duration
+            lessons: course.lessons || 0,
+            coverImagePath: course.cover_image || '',
+            isFeatured: true,
+            isFree: course.is_free,
+            createdAt: course.created_at,
+          };
+        }) || []
       )
     },
   })
