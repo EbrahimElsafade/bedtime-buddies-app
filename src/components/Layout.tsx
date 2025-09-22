@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
 import {
-  Moon,
   Sun,
   Menu,
   X,
@@ -17,6 +16,7 @@ import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
+import { DalfoonMascot } from './DalfoonMascot'
 import { cn } from '@/lib/utils'
 
 interface NavigationSettings {
@@ -128,16 +128,14 @@ const Layout = () => {
 
 
   return (
-    <div className="nightsky-gradient stars-bg flex min-h-screen flex-col pb-16 dark:text-white md:pb-0">
+    <div className="ocean-gradient bubbles-bg flex min-h-screen flex-col pb-16 dark:text-white md:pb-0">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-purple-900/20 bg-white/70 backdrop-blur-lg dark:bg-nightsky/70">
+      <header className="sticky top-0 z-50 border-b border-ocean-light/20 bg-white/70 backdrop-blur-lg dark:bg-ocean-dark/70">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <div className="bg-dream-DEFAULT mr-2 flex h-10 w-10 items-center justify-center rounded-full">
-              <Moon className="h-6 w-6 animate-float text-black dark:text-white" />
-            </div>
-            <h1 className="text-dream-DEFAULT font-bubbly text-xl">
+          <Link to="/" className="flex items-center space-x-2">
+            <DalfoonMascot size="sm" expression="happy" animate />
+            <h1 className="text-ocean-dark dark:text-white font-bubbly text-xl">
               {t('misc:layout.appName')}
             </h1>
           </Link>
@@ -151,8 +149,8 @@ const Layout = () => {
                 className={cn(
                   'rounded-full px-4 py-2 text-sm font-medium transition-colors',
                   isActive(item.path)
-                    ? 'bg-dream-DEFAULT/30 text-dream-DEFAULT shadow-md dark:text-white'
-                    : 'text-dream-DEFAULT hover:bg-dream-DEFAULT/10 dark:text-white dark:hover:bg-white/10',
+                    ? 'bg-coral-DEFAULT/30 text-coral-dark shadow-md dark:text-white'
+                    : 'text-ocean-dark hover:bg-ocean-light/10 dark:text-white dark:hover:bg-white/10',
                 )}
               >
                 {item.name}
@@ -171,11 +169,7 @@ const Layout = () => {
               className="rounded-full"
               aria-label={t('misc:accessibility.toggleTheme')}
             >
-              {isDarkMode ? (
-                <Sun className="h-5 w-5" />
-              ) : (
-                <Moon className="h-5 w-5" />
-              )}
+              <Sun className="h-5 w-5" />
             </Button>
 
             {isAuthenticated ? (
