@@ -128,14 +128,14 @@ const Layout = () => {
 
 
   return (
-    <div className="ocean-gradient bubbles-bg flex min-h-screen flex-col pb-16 dark:text-white md:pb-0">
+    <div className="ocean-gradient bubbles-bg flex min-h-screen flex-col pb-16 text-foreground md:pb-0">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-ocean-light/20 bg-white/70 backdrop-blur-lg dark:bg-ocean-dark/70">
+      <header className="sticky top-0 z-50 border-b border-ocean-light/20 bg-background/70 backdrop-blur-lg dark:bg-ocean-dark/70">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <DalfoonMascot size="sm" expression="happy" animate />
-            <h1 className="text-ocean-dark dark:text-white font-bubbly text-xl">
+            <h1 className="text-ocean-dark dark:text-foreground font-bubbly text-xl">
               {t('misc:layout.appName')}
             </h1>
           </Link>
@@ -149,8 +149,8 @@ const Layout = () => {
                 className={cn(
                   'rounded-full px-4 py-2 text-sm font-medium transition-colors',
                   isActive(item.path)
-                    ? 'bg-coral-DEFAULT/30 text-coral-dark shadow-md dark:text-white'
-                    : 'text-ocean-dark hover:bg-ocean-light/10 dark:text-white dark:hover:bg-white/10',
+                    ? 'bg-coral-DEFAULT/30 text-coral-dark shadow-md dark:text-foreground'
+                    : 'text-ocean-dark hover:bg-ocean-light/10 dark:text-foreground dark:hover:bg-foreground/10',
                 )}
               >
                 {item.name}
@@ -178,7 +178,7 @@ const Layout = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="text-dream-DEFAULT dark:text-white"
+                    className="text-ocean-dark dark:text-foreground"
                   >
                     {profile?.parent_name || t('auth:profile')}
                   </Button>
@@ -187,7 +187,7 @@ const Layout = () => {
                   variant="ghost"
                   size="sm"
                   onClick={logout}
-                  className="text-dream-DEFAULT dark:text-white"
+                  className="text-ocean-dark dark:text-foreground"
                 >
                   {t('auth:logout')}
                 </Button>
@@ -198,7 +198,7 @@ const Layout = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="text-dream-DEFAULT dark:text-white"
+                    className="text-ocean-dark dark:text-foreground"
                   >
                     {t('auth:login')}
                   </Button>
@@ -220,26 +220,26 @@ const Layout = () => {
       </main>
 
       {/* Footer */}
-      <footer className="hidden border-t border-purple-900/20 bg-white/10 py-6 dark:bg-nightsky/50 md:block">
+      <footer className="hidden border-t border-ocean-light/20 bg-background/10 py-6 dark:bg-ocean-dark/50 md:block">
         <div className="container mx-auto px-4 text-center">
           <div className="mb-4 flex justify-center gap-4">
             {navItems.slice(0, 4).map(item => (
               <Link
                 key={item.path}
                 to={item.path}
-                className="text-dream-DEFAULT text-sm hover:text-dream-dark dark:text-muted-foreground dark:hover:text-primary"
+                className="text-ocean-dark text-sm hover:text-ocean-DEFAULT dark:text-muted-foreground dark:hover:text-primary"
               >
                 {item.name}
               </Link>
             ))}
             <Link
               to="/subscription"
-              className="text-moon-DEFAULT text-sm hover:text-moon-dark"
+              className="text-coral-DEFAULT text-sm hover:text-coral-dark"
             >
               {t('misc:layout.subscribe')}
             </Link>
           </div>
-          <p className="text-dream-DEFAULT text-xs dark:text-muted-foreground">
+          <p className="text-ocean-dark text-xs dark:text-muted-foreground">
             © {new Date().getFullYear()} {t('misc:layout.appName')}.{' '}
             {t('misc:layout.copyright')}
           </p>
@@ -247,7 +247,7 @@ const Layout = () => {
       </footer>
 
       {/* Mobile Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 flex h-16 items-center justify-around border-t border-purple-900/20 bg-white px-2 dark:bg-nightsky-light md:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-50 flex h-16 items-center justify-around border-t border-ocean-light/20 bg-background px-2 dark:bg-ocean-dark md:hidden">
         {navItems.map(item => {
           const ItemIcon = item.icon
           return (
@@ -257,16 +257,16 @@ const Layout = () => {
               className={cn(
                 'flex w-1/5 flex-col items-center justify-center rounded-lg px-2 py-1',
                 isActive(item.path)
-                  ? 'text-dream-DEFAULT bg-dream-default/10'
-                  : 'text-dream-DEFAULT/70 dark:text-white/70',
+                  ? 'text-coral-DEFAULT bg-coral-DEFAULT/10'
+                  : 'text-ocean-dark/70 dark:text-foreground/70',
               )}
             >
               <ItemIcon
                 className={cn(
                   'h-5 w-5',
                   isActive(item.path)
-                    ? 'text-dream-DEFAULT'
-                    : 'text-dream-DEFAULT/70 dark:text-white/70',
+                    ? 'text-coral-DEFAULT'
+                    : 'text-ocean-dark/70 dark:text-foreground/70',
                 )}
               />
               <span className="mt-1 text-xs font-medium">{item.name}</span>

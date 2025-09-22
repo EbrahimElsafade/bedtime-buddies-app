@@ -47,7 +47,7 @@ export function DalfoonMascot({
         className={`
           ${sizeClasses[size]} 
           ${animate ? expressionClasses[expression] : ''} 
-          drop-shadow-lg transition-all duration-300
+          rounded-full drop-shadow-lg transition-all duration-300
         `}
       />
       
