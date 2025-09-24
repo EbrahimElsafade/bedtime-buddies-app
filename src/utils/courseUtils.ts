@@ -19,7 +19,17 @@ export const getCategoryText = (
   if (!category) return '';
   
   const langKey = `${field}_${language}`;
-  return category[langKey] || category[field] || category.name || '';
+  return category[langKey] || category[field] || category.name || category.name_en || '';
+};
+
+export const getLearningObjectives = (
+  course: Course | any,
+  language: string = 'en'
+): string[] => {
+  if (!course) return [];
+  
+  const langKey = `learning_objectives_${language}`;
+  return course[langKey] || course.learning_objectives || [];
 };
 
 export const getInstructorText = (

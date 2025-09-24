@@ -195,10 +195,7 @@ const Course = () => {
 
               <div className="mb-4 flex flex-wrap gap-2">
                 <Badge className="text-dream-DEFAULT border-none bg-dream-light/30">
-                  {course.category
-                    ? course.category.charAt(0).toUpperCase() +
-                      course.category.slice(1)
-                    : 'General'}
+                  {course.category || 'General'}
                 </Badge>
                 <Badge className="text-dream-DEFAULT border-none bg-moon-light/30">
                   {course.minAge}-{course.maxAge} {t('courses.years')}
@@ -276,19 +273,21 @@ const Course = () => {
                 </h2>
                 <p>{getLocalized(course, 'description', lang)}</p>
 
-                {course.learningObjectives &&
-                  course.learningObjectives.length > 0 && (
+{(() => {
+                  const objectives = (course as any)[`learning_objectives_${lang}`] || course.learningObjectives || [];
+                  return objectives && objectives.length > 0 && (
                     <>
                       <h2 className="text-dream-DEFAULT mb-3 mt-6 font-bubbly text-xl">
                         {t('course.whatYouLearn')}
                       </h2>
                       <ul className="list-disc pl-5">
-                        {course.learningObjectives.map((objective, index) => (
+                        {objectives.map((objective: string, index: number) => (
                           <li key={index}>{objective}</li>
                         ))}
                       </ul>
                     </>
-                  )}
+                  );
+                })()}
 
                 {course.instructor && (
                   <>

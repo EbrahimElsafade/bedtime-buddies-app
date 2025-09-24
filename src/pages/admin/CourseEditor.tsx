@@ -80,6 +80,8 @@ const CourseEditor = () => {
     isFeatured: false,
     coverImagePath: null as string | null,
     learningObjectives: [] as string[],
+    learningObjectivesAr: [] as string[],
+    learningObjectivesFr: [] as string[],
     instructorName: '',
     instructorBio: '',
     instructorAvatar: '',
@@ -87,6 +89,8 @@ const CourseEditor = () => {
   })
 
   const [newObjective, setNewObjective] = useState('')
+  const [newObjectiveAr, setNewObjectiveAr] = useState('')
+  const [newObjectiveFr, setNewObjectiveFr] = useState('')
   const [newExpertise, setNewExpertise] = useState('')
 
   // Course lessons/videos
@@ -185,7 +189,9 @@ const CourseEditor = () => {
         isFree: c.is_free ?? true,
         isFeatured: c.is_published ?? false,
         coverImagePath: c.cover_image || null,
-        learningObjectives: c.learning_objectives || [],
+        learningObjectives: c.learning_objectives || c.learning_objectives_en || [],
+        learningObjectivesAr: c.learning_objectives_ar || [],
+        learningObjectivesFr: c.learning_objectives_fr || [],
         instructorName: c.instructor_name || '',
         instructorBio: c.instructor_bio || '',
         instructorAvatar: c.instructor_avatar || '',
@@ -200,12 +206,12 @@ const CourseEditor = () => {
 
           return {
             id: lesson.id,
-            title_en: lesson.title || '',
-            title_ar: lesson.title || '',
-            title_fr: lesson.title || '',
-            description_en: lesson.description || '',
-            description_ar: lesson.description || '',
-            description_fr: lesson.description || '',
+            title_en: lesson.title_en || lesson.title || '',
+            title_ar: lesson.title_ar || '',
+            title_fr: lesson.title_fr || '',
+            description_en: lesson.description_en || lesson.description || '',
+            description_ar: lesson.description_ar || '',
+            description_fr: lesson.description_fr || '',
             videoPath: lesson.video_path || '',
             thumbnailPath: lesson.thumbnail_path || '',
             duration: lesson.duration || 0,
@@ -372,6 +378,9 @@ const CourseEditor = () => {
             is_published: courseData.isFeatured,
             lessons: courseLessons.length,
             learning_objectives: courseData.learningObjectives,
+            learning_objectives_en: courseData.learningObjectives,
+            learning_objectives_ar: courseData.learningObjectivesAr,
+            learning_objectives_fr: courseData.learningObjectivesFr,
             instructor_name: courseData.instructorName || null,
             instructor_bio: courseData.instructorBio || null,
             instructor_avatar: courseData.instructorAvatar || null,
@@ -400,6 +409,9 @@ const CourseEditor = () => {
             is_published: courseData.isFeatured,
             lessons: courseLessons.length,
             learning_objectives: courseData.learningObjectives,
+            learning_objectives_en: courseData.learningObjectives,
+            learning_objectives_ar: courseData.learningObjectivesAr,
+            learning_objectives_fr: courseData.learningObjectivesFr,
             instructor_name: courseData.instructorName || null,
             instructor_bio: courseData.instructorBio || null,
             instructor_avatar: courseData.instructorAvatar || null,
@@ -481,7 +493,13 @@ const CourseEditor = () => {
           .insert({
             course_id: courseId,
             title: lesson.title_en,
+            title_en: lesson.title_en,
+            title_ar: lesson.title_ar,
+            title_fr: lesson.title_fr,
             description: lesson.description_en,
+            description_en: lesson.description_en,
+            description_ar: lesson.description_ar,
+            description_fr: lesson.description_fr,
             video_url: lessonVideoUrl,
             video_path: lessonVideoPath,
             thumbnail_path: lessonThumbnailUrl,
@@ -783,73 +801,223 @@ const CourseEditor = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex gap-2">
-                  <Input
-                    placeholder="Add a learning objective..."
-                    value={newObjective}
-                    onChange={e => setNewObjective(e.target.value)}
-                    onKeyPress={e => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault()
-                        if (newObjective.trim()) {
-                          setCourseData({
-                            ...courseData,
-                            learningObjectives: [
-                              ...courseData.learningObjectives,
-                              newObjective.trim(),
-                            ],
-                          })
-                          setNewObjective('')
-                        }
-                      }
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      if (newObjective.trim()) {
-                        setCourseData({
-                          ...courseData,
-                          learningObjectives: [
-                            ...courseData.learningObjectives,
-                            newObjective.trim(),
-                          ],
-                        })
-                        setNewObjective('')
-                      }
-                    }}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                </div>
-                {courseData.learningObjectives.length > 0 && (
-                  <div className="space-y-2">
-                    {courseData.learningObjectives.map((objective, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between rounded-md border p-2"
-                      >
-                        <span className="text-sm">{objective}</span>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => {
+                <Tabs defaultValue="en" className="space-y-4">
+                  <TabsList>
+                    <TabsTrigger value="en">English</TabsTrigger>
+                    <TabsTrigger value="ar">Arabic</TabsTrigger>
+                    <TabsTrigger value="fr">French</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="en" className="space-y-4">
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Add a learning objective (English)..."
+                        value={newObjective}
+                        onChange={e => setNewObjective(e.target.value)}
+                        onKeyPress={e => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault()
+                            if (newObjective.trim()) {
+                              setCourseData({
+                                ...courseData,
+                                learningObjectives: [
+                                  ...courseData.learningObjectives,
+                                  newObjective.trim(),
+                                ],
+                              })
+                              setNewObjective('')
+                            }
+                          }
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          if (newObjective.trim()) {
                             setCourseData({
                               ...courseData,
-                              learningObjectives:
-                                courseData.learningObjectives.filter(
-                                  (_, i) => i !== index,
-                                ),
+                              learningObjectives: [
+                                ...courseData.learningObjectives,
+                                newObjective.trim(),
+                              ],
                             })
-                          }}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
+                            setNewObjective('')
+                          }
+                        }}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    {courseData.learningObjectives.length > 0 && (
+                      <div className="space-y-2">
+                        {courseData.learningObjectives.map((objective, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center justify-between rounded-md border p-2"
+                          >
+                            <span className="text-sm">{objective}</span>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setCourseData({
+                                  ...courseData,
+                                  learningObjectives:
+                                    courseData.learningObjectives.filter(
+                                      (_, i) => i !== index,
+                                    ),
+                                })
+                              }}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                )}
+                    )}
+                  </TabsContent>
+
+                  <TabsContent value="ar" className="space-y-4">
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Add a learning objective (Arabic)..."
+                        value={newObjectiveAr}
+                        onChange={e => setNewObjectiveAr(e.target.value)}
+                        onKeyPress={e => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault()
+                            if (newObjectiveAr.trim()) {
+                              setCourseData({
+                                ...courseData,
+                                learningObjectivesAr: [
+                                  ...courseData.learningObjectivesAr,
+                                  newObjectiveAr.trim(),
+                                ],
+                              })
+                              setNewObjectiveAr('')
+                            }
+                          }
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          if (newObjectiveAr.trim()) {
+                            setCourseData({
+                              ...courseData,
+                              learningObjectivesAr: [
+                                ...courseData.learningObjectivesAr,
+                                newObjectiveAr.trim(),
+                              ],
+                            })
+                            setNewObjectiveAr('')
+                          }
+                        }}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    {courseData.learningObjectivesAr.length > 0 && (
+                      <div className="space-y-2">
+                        {courseData.learningObjectivesAr.map((objective, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center justify-between rounded-md border p-2"
+                          >
+                            <span className="text-sm">{objective}</span>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setCourseData({
+                                  ...courseData,
+                                  learningObjectivesAr:
+                                    courseData.learningObjectivesAr.filter(
+                                      (_, i) => i !== index,
+                                    ),
+                                })
+                              }}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </TabsContent>
+
+                  <TabsContent value="fr" className="space-y-4">
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Add a learning objective (French)..."
+                        value={newObjectiveFr}
+                        onChange={e => setNewObjectiveFr(e.target.value)}
+                        onKeyPress={e => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault()
+                            if (newObjectiveFr.trim()) {
+                              setCourseData({
+                                ...courseData,
+                                learningObjectivesFr: [
+                                  ...courseData.learningObjectivesFr,
+                                  newObjectiveFr.trim(),
+                                ],
+                              })
+                              setNewObjectiveFr('')
+                            }
+                          }
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          if (newObjectiveFr.trim()) {
+                            setCourseData({
+                              ...courseData,
+                              learningObjectivesFr: [
+                                ...courseData.learningObjectivesFr,
+                                newObjectiveFr.trim(),
+                              ],
+                            })
+                            setNewObjectiveFr('')
+                          }
+                        }}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    {courseData.learningObjectivesFr.length > 0 && (
+                      <div className="space-y-2">
+                        {courseData.learningObjectivesFr.map((objective, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center justify-between rounded-md border p-2"
+                          >
+                            <span className="text-sm">{objective}</span>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setCourseData({
+                                  ...courseData,
+                                  learningObjectivesFr:
+                                    courseData.learningObjectivesFr.filter(
+                                      (_, i) => i !== index,
+                                    ),
+                                })
+                              }}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </TabsContent>
+                </Tabs>
               </CardContent>
             </Card>
 
@@ -1033,9 +1201,9 @@ const CourseEditor = () => {
                             <div className="grid gap-4 sm:grid-cols-2">
                               <div className="space-y-2">
                                 <Label>Lesson Title</Label>
-                                <div className="flex flex-wrap gap-4 md:flex-nowrap">
+                                <div className="space-y-2">
                                   <Input
-                                    placeholder="Enter lesson title"
+                                    placeholder="Lesson title (English)"
                                     value={lesson.title_en}
                                     onChange={e =>
                                       updateLessonField(
@@ -1046,8 +1214,8 @@ const CourseEditor = () => {
                                     }
                                     required
                                   />
-                                  {/* <Input
-                                    placeholder="Enter lesson title"
+                                  <Input
+                                    placeholder="Lesson title (Arabic)"
                                     value={lesson.title_ar}
                                     onChange={e =>
                                       updateLessonField(
@@ -1058,7 +1226,7 @@ const CourseEditor = () => {
                                     }
                                   />
                                   <Input
-                                    placeholder="Enter lesson title"
+                                    placeholder="Lesson title (French)"
                                     value={lesson.title_fr}
                                     onChange={e =>
                                       updateLessonField(
@@ -1067,7 +1235,7 @@ const CourseEditor = () => {
                                         e.target.value,
                                       )
                                     }
-                                  /> */}
+                                  />
                                 </div>
                               </div>
                               <div className="space-y-2">
@@ -1090,9 +1258,9 @@ const CourseEditor = () => {
 
                             <div className="space-y-2">
                               <Label>Lesson Description</Label>
-                              <div className="flex flex-wrap gap-4 md:flex-nowrap">
+                              <div className="space-y-2">
                                 <Textarea
-                                  placeholder="Enter lesson description"
+                                  placeholder="Lesson description (English)"
                                   value={lesson.description_en}
                                   onChange={e =>
                                     updateLessonField(
@@ -1103,8 +1271,8 @@ const CourseEditor = () => {
                                   }
                                   className="min-h-[80px]"
                                 />
-                                {/* <Textarea
-                                  placeholder="Enter lesson description"
+                                <Textarea
+                                  placeholder="Lesson description (Arabic)"
                                   value={lesson.description_ar}
                                   onChange={e =>
                                     updateLessonField(
@@ -1116,7 +1284,7 @@ const CourseEditor = () => {
                                   className="min-h-[80px]"
                                 />
                                 <Textarea
-                                  placeholder="Enter lesson description"
+                                  placeholder="Lesson description (French)"
                                   value={lesson.description_fr}
                                   onChange={e =>
                                     updateLessonField(
@@ -1126,7 +1294,7 @@ const CourseEditor = () => {
                                     )
                                   }
                                   className="min-h-[80px]"
-                                /> */}
+                                />
                               </div>
                             </div>
 

@@ -22,10 +22,14 @@ const CourseOptions = () => {
   const queryClient = useQueryClient()
 
   const [newCategory, setNewCategory] = useState('')
+  const [newCategoryAr, setNewCategoryAr] = useState('')
+  const [newCategoryFr, setNewCategoryFr] = useState('')
 
   // Edit states
   const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null)
   const [editingCategoryName, setEditingCategoryName] = useState('')
+  const [editingCategoryNameAr, setEditingCategoryNameAr] = useState('')
+  const [editingCategoryNameFr, setEditingCategoryNameFr] = useState('')
 
   // Fetch categories
   const { data: categories = [], isLoading: categoriesLoading } = useQuery({
@@ -57,10 +61,15 @@ const CourseOptions = () => {
 
   // Add category mutation
   const addCategoryMutation = useMutation({
-    mutationFn: async (name: string) => {
+    mutationFn: async ({ name, name_ar, name_fr }: { name: string; name_ar: string; name_fr: string }) => {
       const { data, error } = await supabase
         .from('course_categories')
-        .insert({ name })
+        .insert({ 
+          name,
+          name_en: name,
+          name_ar,
+          name_fr
+        })
         .select()
         .single()
 
@@ -70,6 +79,8 @@ const CourseOptions = () => {
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: ['course-categories'] })
       setNewCategory('')
+      setNewCategoryAr('')
+      setNewCategoryFr('')
       toast({
         title: 'Category Added',
         description: `Category '${data.name}' has been added successfully`,
@@ -79,10 +90,15 @@ const CourseOptions = () => {
 
   // Update category mutation
   const updateCategoryMutation = useMutation({
-    mutationFn: async ({ id, name }: { id: string; name: string }) => {
+    mutationFn: async ({ id, name, name_ar, name_fr }: { id: string; name: string; name_ar: string; name_fr: string }) => {
       const { data, error } = await supabase
         .from('course_categories')
-        .update({ name })
+        .update({ 
+          name,
+          name_en: name,
+          name_ar,
+          name_fr
+        })
         .eq('id', id)
         .select()
         .single()
@@ -94,6 +110,8 @@ const CourseOptions = () => {
       queryClient.invalidateQueries({ queryKey: ['course-categories'] })
       setEditingCategoryId(null)
       setEditingCategoryName('')
+      setEditingCategoryNameAr('')
+      setEditingCategoryNameFr('')
       toast({
         title: 'Category Updated',
         description: `Category '${data.name}' has been updated successfully`,
@@ -126,13 +144,19 @@ const CourseOptions = () => {
       newCategory.trim() &&
       !categories.some(cat => cat.name === newCategory.trim())
     ) {
-      addCategoryMutation.mutate(newCategory.trim())
+      addCategoryMutation.mutate({
+        name: newCategory.trim(),
+        name_ar: newCategoryAr.trim(),
+        name_fr: newCategoryFr.trim()
+      })
     }
   }
 
   const startEditCategory = (category: Category) => {
     setEditingCategoryId(category.id)
-    setEditingCategoryName(category.name)
+    setEditingCategoryName(category.name_en || category.name || '')
+    setEditingCategoryNameAr(category.name_ar || '')
+    setEditingCategoryNameFr(category.name_fr || '')
   }
 
   const saveEditCategory = () => {
@@ -140,6 +164,8 @@ const CourseOptions = () => {
       updateCategoryMutation.mutate({
         id: editingCategoryId,
         name: editingCategoryName.trim(),
+        name_ar: editingCategoryNameAr.trim(),
+        name_fr: editingCategoryNameFr.trim(),
       })
     }
   }
@@ -147,6 +173,8 @@ const CourseOptions = () => {
   const cancelEditCategory = () => {
     setEditingCategoryId(null)
     setEditingCategoryName('')
+    setEditingCategoryNameAr('')
+    setEditingCategoryNameFr('')
   }
 
   const removeCategory = (id: string) => {
@@ -174,20 +202,36 @@ const CourseOptions = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex gap-2">
-              <Input
-                placeholder="Add new category (e.g., Science, Math, Language)"
-                value={newCategory}
-                onChange={e => setNewCategory(e.target.value)}
-                onKeyPress={e => e.key === 'Enter' && addCategory()}
-              />
-              <Button
-                onClick={addCategory}
-                size="sm"
-                disabled={addCategoryMutation.isPending}
-              >
-                <Plus className="h-4 w-4" />
-              </Button>
+            <div className="space-y-3">
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Category name (English)"
+                  value={newCategory}
+                  onChange={e => setNewCategory(e.target.value)}
+                  onKeyPress={e => e.key === 'Enter' && addCategory()}
+                />
+                <Button
+                  onClick={addCategory}
+                  size="sm"
+                  disabled={addCategoryMutation.isPending}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+              {newCategory.trim() && (
+                <div className="grid grid-cols-2 gap-2">
+                  <Input
+                    placeholder="Category name (Arabic)"
+                    value={newCategoryAr}
+                    onChange={e => setNewCategoryAr(e.target.value)}
+                  />
+                  <Input
+                    placeholder="Category name (French)"
+                    value={newCategoryFr}
+                    onChange={e => setNewCategoryFr(e.target.value)}
+                  />
+                </div>
+              )}
             </div>
 
             {categoriesLoading ? (
@@ -197,57 +241,89 @@ const CourseOptions = () => {
                 {categories.map(category => (
                   <div key={category.id}>
                     {editingCategoryId === category.id ? (
-                      <div className="flex items-center gap-2 rounded-md border bg-white p-2">
-                        <Input
-                          value={editingCategoryName}
-                          onChange={e => setEditingCategoryName(e.target.value)}
-                          className="h-6 text-sm"
-                          onKeyPress={e =>
-                            e.key === 'Enter' && saveEditCategory()
-                          }
-                        />
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 w-6 p-0"
-                          onClick={saveEditCategory}
-                          disabled={updateCategoryMutation.isPending}
-                        >
-                          <Check className="h-3 w-3 text-green-600" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 w-6 p-0"
-                          onClick={cancelEditCategory}
-                        >
-                          <X className="h-3 w-3 text-red-600" />
-                        </Button>
+                      <div className="space-y-2 rounded-md border bg-white p-3">
+                        <div className="flex items-center gap-2">
+                          <Input
+                            placeholder="English"
+                            value={editingCategoryName}
+                            onChange={e => setEditingCategoryName(e.target.value)}
+                            className="h-8 text-sm"
+                            onKeyPress={e =>
+                              e.key === 'Enter' && saveEditCategory()
+                            }
+                          />
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            onClick={saveEditCategory}
+                            disabled={updateCategoryMutation.isPending}
+                          >
+                            <Check className="h-4 w-4 text-green-600" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            onClick={cancelEditCategory}
+                          >
+                            <X className="h-4 w-4 text-red-600" />
+                          </Button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Input
+                            placeholder="Arabic"
+                            value={editingCategoryNameAr}
+                            onChange={e => setEditingCategoryNameAr(e.target.value)}
+                            className="h-8 text-sm"
+                          />
+                          <Input
+                            placeholder="French"
+                            value={editingCategoryNameFr}
+                            onChange={e => setEditingCategoryNameFr(e.target.value)}
+                            className="h-8 text-sm"
+                          />
+                        </div>
                       </div>
                     ) : (
-                      <Badge
-                        variant="secondary"
-                        className="flex items-center gap-1"
-                      >
-                        {category.name}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-4 w-4 p-0 hover:bg-blue-500 hover:text-white"
-                          onClick={() => startEditCategory(category)}
-                        >
-                          <Edit2 className="h-3 w-3" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-4 w-4 p-0 hover:bg-destructive hover:text-destructive-foreground"
-                          onClick={() => removeCategory(category.id)}
-                          disabled={removeCategoryMutation.isPending}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </Badge>
+                      <div className="rounded-md border bg-secondary/20 p-2">
+                        <div className="mb-2 flex items-center justify-between">
+                          <div className="flex flex-col gap-1">
+                            <Badge variant="secondary" className="text-sm">
+                              EN: {category.name_en || category.name || 'N/A'}
+                            </Badge>
+                            {category.name_ar && (
+                              <Badge variant="outline" className="text-sm">
+                                AR: {category.name_ar}
+                              </Badge>
+                            )}
+                            {category.name_fr && (
+                              <Badge variant="outline" className="text-sm">
+                                FR: {category.name_fr}
+                              </Badge>
+                            )}
+                          </div>
+                          <div className="flex gap-1">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0 hover:bg-blue-500 hover:text-white"
+                              onClick={() => startEditCategory(category)}
+                            >
+                              <Edit2 className="h-3 w-3" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground"
+                              onClick={() => removeCategory(category.id)}
+                              disabled={removeCategoryMutation.isPending}
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
                     )}
                   </div>
                 ))}

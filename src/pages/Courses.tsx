@@ -14,6 +14,7 @@ import { useCoursesData, useCourseCategories } from '@/hooks/useCourseData'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
+import { getCategoryText } from '@/utils/courseUtils'
 
 const Courses = () => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -123,7 +124,7 @@ const Courses = () => {
                       className={`${activeCategory === category.name ? 'bg-dream-DEFAULT text-white' : 'text-dream-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
                       onClick={() => handleCategoryChange(category.name)}
                     >
-                      {getLocalized(category, 'name', lang)} (
+                      {getCategoryText(category, 'name', lang)} (
                       {courses.filter(c => c.category === category.name).length}
                       )
                     </Button>
@@ -206,7 +207,7 @@ const Courses = () => {
                                   className="text-dream-DEFAULT bg-dream-light/30 text-xs"
                                 >
                                   {category
-                                    ? getLocalized(category, 'name', lang)
+                                    ? getCategoryText(category, 'name', lang)
                                     : 'General'}
                                 </Badge>
                                 <div className="text-dream-DEFAULT flex items-center gap-1 text-xs">

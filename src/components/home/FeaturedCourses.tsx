@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next'
 import { useFeaturedCourses, useCourseCategories } from '@/hooks/useCourseData'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
+import { getCategoryText } from '@/utils/courseUtils'
 
 const FeaturedCourses = () => {
   const { t } = useTranslation(['misc', 'stories'])
@@ -86,7 +87,7 @@ const FeaturedCourses = () => {
                         variant="secondary"
                         className="text-dream-DEFAULT bg-dream-light/30"
                       >
-                        {getLocalized(category, 'name', lang) ||
+{getCategoryText(category, 'name', lang) ||
                           course.category ||
                           'General'}
                       </Badge>
