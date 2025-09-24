@@ -5,7 +5,7 @@ const Features = () => {
   const { t } = useTranslation('features');
 
   return (
-    <section className="py-8 md:py-12 px-4 bg-secondary/50">
+    <section className="py-8 md:py-12 px-4 bg-ocean-light/10">
       <div className="container mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-8 md:mb-12">
           <h2 className="text-xl md:text-2xl lg:text-3xl font-bubbly mb-3 md:mb-4 text-dream-DEFAULT">{t('title')}</h2>

@@ -23,7 +23,7 @@ const FeaturedCourses = () => {
   if (isLoading || !featuredCourses.length) return null
 
   return (
-    <section className="relative bg-secondary/50 px-4 py-12">
+    <section className="relative bg-ocean-light/10 px-4 py-12">
       <div className="container mx-auto">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-dream-DEFAULT font-bubbly text-2xl md:text-3xl">
@@ -31,7 +31,7 @@ const FeaturedCourses = () => {
           </h2>
           <Link
             to="/courses"
-            className="text-dream-DEFAULT flex items-center text-sm font-medium hover:text-dream-dark"
+            className="text-dream-DEFAULT hover:text-dream-dark flex items-center text-sm font-medium"
           >
             {t('misc:free.viewAll')}{' '}
             <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
@@ -49,7 +49,7 @@ const FeaturedCourses = () => {
                 to={`/courses/${course.id}`}
                 className="block"
               >
-                <Card className="story-card cursor-pointer overflow-hidden border-dream-light/20 bg-white/70 backdrop-blur-sm transition-transform hover:scale-105 dark:bg-nightsky-light/70">
+                <Card className="story-card border-dream-light/20 dark:bg-nightsky-light/70 cursor-pointer overflow-hidden bg-white/70 backdrop-blur-sm transition-transform hover:scale-105">
                   <div className="relative aspect-[3/2]">
                     <img
                       src={getImageUrl(course.coverImagePath)}
@@ -69,7 +69,7 @@ const FeaturedCourses = () => {
                         {t('misc:premium.tag')}
                       </div>
                     )}
-                    <div className="text-dream-DEFAULT absolute right-2 top-2 rounded-full bg-white/80 px-2 py-1 text-xs dark:bg-nightsky-light/80">
+                    <div className="text-dream-DEFAULT dark:bg-nightsky-light/80 absolute right-2 top-2 rounded-full bg-white/80 px-2 py-1 text-xs">
                       {course.minAge}-{course.maxAge} {t('misc:courses.years')}
                     </div>
                   </div>
@@ -87,7 +87,7 @@ const FeaturedCourses = () => {
                         variant="secondary"
                         className="text-dream-DEFAULT bg-dream-light/30"
                       >
-{getCategoryText(category, 'name', lang) ||
+                        {getCategoryText(category, 'name', lang) ||
                           course.category ||
                           'General'}
                       </Badge>
@@ -123,7 +123,7 @@ const FeaturedCourses = () => {
           className="opacity-10"
         >
           <path
-            fill="#8B5CF6"
+            fill="#7dd3fc"
             fillOpacity="1"
             d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,106.7C672,117,768,171,864,186.7C960,203,1056,181,1152,154.7C1248,128,1344,96,1392,80L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
           ></path>

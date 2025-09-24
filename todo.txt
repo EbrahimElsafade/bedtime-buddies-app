@@ -8,3 +8,6 @@
 - courses:
     - Published button rest and need to be fixed 
     - add translation to the courses at least for the title and the description 
+
+    - link a user as instructor to a course or set the instructor data manually
+    - localize the courses page

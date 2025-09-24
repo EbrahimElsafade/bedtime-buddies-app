@@ -102,7 +102,7 @@ const FeaturedStories = () => {
             className="opacity-10"
           >
             <path
-              fill="#8B5CF6"
+              fill="#7dd3fc"
               fillOpacity="1"
               d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,106.7C672,117,768,171,864,186.7C960,203,1056,181,1152,154.7C1248,128,1344,96,1392,80L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
             ></path>
@@ -113,7 +113,7 @@ const FeaturedStories = () => {
   }
 
   return (
-    <section className="relative bg-secondary/50 px-4 py-8 md:py-12">
+    <section className="relative bg-ocean-light/10 px-4 py-8 md:py-12">
       <div className="container mx-auto">
         <div className="mb-4 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center md:mb-6">
           <h2 className="text-dream-DEFAULT font-bubbly text-xl md:text-2xl lg:text-3xl">
@@ -220,7 +220,7 @@ const FeaturedStories = () => {
           className="opacity-10"
         >
           <path
-            fill="#8B5CF6"
+            fill="#7dd3fc"
             fillOpacity="1"
             d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,106.7C672,117,768,171,864,186.7C960,203,1056,181,1152,154.7C1248,128,1344,96,1392,80L1440,64L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"
           ></path>
