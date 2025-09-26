@@ -168,6 +168,9 @@ export type Database = {
           is_published: boolean
           languages: string[]
           learning_objectives: string[] | null
+          learning_objectives_ar: string[] | null
+          learning_objectives_en: string[] | null
+          learning_objectives_fr: string[] | null
           lessons: number | null
           max_age: number | null
           min_age: number | null
@@ -198,6 +201,9 @@ export type Database = {
           is_published?: boolean
           languages?: string[]
           learning_objectives?: string[] | null
+          learning_objectives_ar?: string[] | null
+          learning_objectives_en?: string[] | null
+          learning_objectives_fr?: string[] | null
           lessons?: number | null
           max_age?: number | null
           min_age?: number | null
@@ -228,6 +234,9 @@ export type Database = {
           is_published?: boolean
           languages?: string[]
           learning_objectives?: string[] | null
+          learning_objectives_ar?: string[] | null
+          learning_objectives_en?: string[] | null
+          learning_objectives_fr?: string[] | null
           lessons?: number | null
           max_age?: number | null
           min_age?: number | null
