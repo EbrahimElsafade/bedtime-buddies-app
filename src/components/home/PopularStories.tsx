@@ -94,7 +94,7 @@ const PopularStories = () => {
   }
 
   return (
-    <section className="relative overflow-hidden px-4 py-12">
+    <section className="relative bg-ocean-light/10 overflow-hidden px-4 py-12">
       <div className="container mx-auto">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-dream-DEFAULT font-bubbly text-2xl md:text-3xl">
@@ -194,7 +194,7 @@ const PopularStories = () => {
       </div>
 
       {/* Fun decorative elements specific to this section */}
-      <div className="absolute bottom-4 left-0 w-full">
+      <div className="absolute bottom-0 left-0 w-full">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1440 320"

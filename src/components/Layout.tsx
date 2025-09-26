@@ -1,15 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Outlet, Link, useLocation } from 'react-router-dom'
-import {
-  Sun,
-  Menu,
-  X,
-  Home,
-  Book,
-  BookOpen,
-  User,
-  Layers,
-} from 'lucide-react'
+import { Sun, Menu, X, Home, Book, BookOpen, User, Layers } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
@@ -125,8 +116,6 @@ const Layout = () => {
     return navigationSettings[item.key as keyof NavigationSettings] !== false
   })
 
-
-
   return (
     <div className="ocean-gradient bubbles-bg flex min-h-screen flex-col pb-16 text-foreground md:pb-0">
       {/* Header */}
@@ -135,7 +124,7 @@ const Layout = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <DalfoonMascot size="sm" expression="happy" animate />
-            <h1 className="text-ocean-dark dark:text-foreground font-bubbly text-xl">
+            <h1 className="font-bubbly text-xl text-ocean-dark dark:text-foreground">
               {t('misc:layout.appName')}
             </h1>
           </Link>
@@ -220,14 +209,14 @@ const Layout = () => {
       </main>
 
       {/* Footer */}
-      <footer className="hidden border-t border-ocean-light/20 bg-background/10 py-6 dark:bg-ocean-dark/50 md:block">
+      <footer className="hidden border-ocean-light/20 bg-gradient-to-b from-ocean-light/10 to-white/10 py-6 dark:bg-ocean-dark/50 md:block">
         <div className="container mx-auto px-4 text-center">
           <div className="mb-4 flex justify-center gap-4">
             {navItems.slice(0, 4).map(item => (
               <Link
                 key={item.path}
                 to={item.path}
-                className="text-ocean-dark text-sm hover:text-ocean-DEFAULT dark:text-muted-foreground dark:hover:text-primary"
+                className="hover:text-ocean-DEFAULT text-sm text-ocean-dark dark:text-muted-foreground dark:hover:text-primary"
               >
                 {item.name}
               </Link>
@@ -239,7 +228,7 @@ const Layout = () => {
               {t('misc:layout.subscribe')}
             </Link>
           </div>
-          <p className="text-ocean-dark text-xs dark:text-muted-foreground">
+          <p className="text-xs text-ocean-dark dark:text-muted-foreground">
             © {new Date().getFullYear()} {t('misc:layout.appName')}.{' '}
             {t('misc:layout.copyright')}
           </p>

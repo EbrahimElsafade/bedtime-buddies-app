@@ -11,3 +11,5 @@
 
     - link a user as instructor to a course or set the instructor data manually
     - localize the courses page
+
+

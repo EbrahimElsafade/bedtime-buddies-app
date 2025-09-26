@@ -7,7 +7,7 @@ const SubscribeBanner = () => {
   const { t } = useTranslation('misc');
 
   return (
-    <section className="py-12 px-4 bg-gradient-to-r from-dream-DEFAULT to-dream-dark text-black dark:text-white">
+    <section className="py-12 px-4 bg-ocean-light/10 text-black dark:text-white">
       <div className="container mx-auto">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-2xl md:text-3xl font-bubbly mb-4">{t('subscribe.title')}</h2>
