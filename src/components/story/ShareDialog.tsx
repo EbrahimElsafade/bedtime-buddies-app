@@ -36,7 +36,7 @@ export const ShareDialog = ({
   const shareUrl = window.location.href
   const shareTitle = `Check out this amazing story: ${storyTitle}`
   const shareDescription =
-    storyDescription || 'Discover wonderful bedtime stories on Wonder World!'
+    storyDescription || 'Discover wonderful bedtime stories on Dalfoon!'
 
   const copyToClipboard = async () => {
     try {
