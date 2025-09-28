@@ -25,4 +25,15 @@ i18n
     ns: ['common', 'navigation', 'auth', 'hero', 'stories', 'features', 'admin', 'misc', 'premium', 'subscription', 'notFound', 'games'],
   });
 
+// Handle RTL direction for Arabic
+i18n.on('languageChanged', (lng) => {
+  if (lng === 'ar') {
+    document.documentElement.dir = 'rtl';
+    document.documentElement.lang = 'ar';
+  } else {
+    document.documentElement.dir = 'ltr';
+    document.documentElement.lang = lng;
+  }
+});
+
 export default i18n;
