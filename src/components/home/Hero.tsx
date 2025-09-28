@@ -20,7 +20,7 @@ const Hero = () => {
         <div className="mx-auto max-w-4xl text-center">
           {/* Dalfoon mascot */}
           <div className="mb-6 flex justify-center">
-            <DalfoonMascot size="xl" expression="cheering" animate />
+            <DalfoonMascot size="xl" expression="cheering" animate={false} />
           </div>
 
           <h1 className="animate-slide-up mb-3 font-bubbly text-2xl leading-tight text-white drop-shadow-lg sm:text-3xl md:mb-4 md:text-4xl lg:text-6xl">

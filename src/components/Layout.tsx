@@ -123,7 +123,7 @@ const Layout = () => {
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <DalfoonMascot size="sm" expression="happy" animate />
+            <DalfoonMascot size="sm" expression="happy" animate={false} />
             <h1 className="font-bubbly text-xl text-ocean-dark dark:text-foreground">
               {t('misc:layout.appName')}
             </h1>
