@@ -166,11 +166,11 @@ const Course = () => {
       ></div>
 
       <div className="container mx-auto">
-        <Link
-          to="/courses"
-          className="mb-6 inline-flex items-center text-primary-foreground hover:underline"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" /> {t('button.backToCourses')}
+        <Link to="/courses">
+          <Button variant="outline" className="rounded-md shadow">
+            {t('backToStories')}
+            <ArrowLeft className="mr-2 h-4 w-4 rtl:rotate-180" /> {t('button.backToCourses')}
+          </Button>
         </Link>
 
         <div className="grid grid-cols-1 gap-8">
