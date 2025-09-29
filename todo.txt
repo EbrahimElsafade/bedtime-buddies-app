@@ -1,37 +1,11 @@
-- the profile page
-- suggestion (animate the images of the story)
-- don't forget to fix the seo of the app 
-
-- fix payment popup
-- fix auth routes translations 
-
-- courses:
-    - Published button rest and need to be fixed 
-    - add translation to the courses at least for the title and the description 
-
-    - link a user as instructor to a course or set the instructor data manually
-    - localize the courses page
-
-
-- remove dark mode
-
-- the icon
-    hero icon slowdown
-    remove the sign up 
-    navbar active color
-    less animations
-    secondary color is #f66d43
-
-- story page:
-    - the tabs => shadow and the active color
-    - badges color and date icon
-    - the move the arrow (next and previous) to the bottom of the controls
-    - make the arrow a bit bigger
-    - read story -- play video
-
-- mobile responsive
-    - change font size
-    - the navbar some padding from the bottom
-    - الملف الشخصي => حسابي
-
+- "subscription"
+- link a user as instructor to a course or set the instructor data manually
+-issues:
+    [ ] some buttons has winky styles [login, sign in, pwa popup, edit profile, ]
+    [ ] make courses card hight fixed
+    [ ] course objectives, instructors, and lessons data not localized
+    [ ] course duration calc
+    [ ] auth pages bg and localization
+    [ ] fix payment popup
+    [ ] don't forget to fix the seo of the app => mainly page title is enough
     
