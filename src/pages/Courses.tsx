@@ -78,168 +78,133 @@ const Courses = () => {
       ></div>
 
       <div className="container mx-auto max-w-7xl">
-        <h1 className="text-primary-foreground mb-4 font-bubbly text-2xl md:mb-6 md:text-3xl lg:text-4xl">
-          {t('courses.exploreTitle')}
-        </h1>
+        <div className="mb-4 text-center md:mb-6 lg:mb-8">
+          <h1 className="text-primary-foreground mb-2 font-bubbly text-2xl leading-tight md:mb-3 md:text-3xl lg:mb-4 lg:text-4xl">
+            {t('courses.exploreTitle')}
+          </h1>
+        </div>
 
-        <div className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-4">
-          {/* Sidebar Filters */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-24 rounded-lg bg-background/80 p-4 backdrop-blur-sm  md:p-6">
-              <h3 className="text-primary-foreground mb-3 font-bubbly text-lg md:mb-4 md:text-xl">
-                {t('courses.allCourses')}
-              </h3>
-
-              {/* Search */}
-              <div className="relative mb-4 md:mb-6">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
-                <Input
-                  type="search"
-                  placeholder={t('courses.searchPlaceholder')}
-                  className="pl-10 text-sm"
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                />
-              </div>
-
-              {/* Category Filters */}
-              <div className="mb-4 md:mb-6">
-                <h4 className="text-primary-foreground mb-2 text-sm font-medium md:text-base">
-                  Categories
-                </h4>
-                <div className="flex flex-col space-y-1">
-                  <Button
-                    variant={activeCategory === 'all' ? 'default' : 'ghost'}
-                    className={`${activeCategory === 'all' ? 'bg-primary-foreground text-background' : 'text-primary-foreground'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
-                    onClick={() => handleCategoryChange('all')}
-                  >
-                    {t('courses.allCourses')} ({courses.length})
-                  </Button>
-                  {categories.map(category => (
-                    <Button
-                      key={category.id}
-                      variant={
-                        activeCategory === category.name ? 'default' : 'ghost'
-                      }
-                      className={`${activeCategory === category.name ? 'bg-primary-foreground text-background' : 'text-primary-foreground'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
-                      onClick={() => handleCategoryChange(category.name)}
-                    >
-                      {getCategoryText(category, 'name', lang)} (
-                      {courses.filter(c => c.category === category.name).length}
-                      )
-                    </Button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Age Range Filters */}
-              {/* <div>
-                <h4 className="text-primary-foreground mb-2 text-sm font-medium md:text-base">
-                  {t('courses.years')}
-                </h4>
-                <div className="flex flex-wrap gap-1 md:gap-2">
-                  {Object.entries(ageCounts).map(([age, count]) => (
-                    <Badge
-                      key={age}
-                      variant="outline"
-                      className="border-primary bg-primary/20 text-xs"
-                    >
-                      {age} {t('courses.years')} ({count})
-                    </Badge>
-                  ))}
-                </div>
-              </div> */}
-            </div>
+        {/* Controls - match Stories page layout */}
+        <div className="mb-4 space-y-3 md:mb-6 md:space-y-4 lg:mb-8">
+          <div className="relative mx-auto max-w-md">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder={t('courses.searchPlaceholder')}
+              className="pl-10 text-sm"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
           </div>
 
-          {/* Courses Grid */}
-          <div className="lg:col-span-3">
-            {filteredCourses.length === 0 ? (
-              <div className="rounded-lg bg-background/70 py-8 text-center  md:py-12">
-                <p className="text-primary-foreground text-base md:text-lg">
-                  {t('courses.noResults')}
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-                {filteredCourses.map(course => {
-                  const category = categories.find(
-                    cat =>
-                      cat.id === course.category ||
-                      cat.name === course.category,
-                  )
-                  return (
-                    <Link key={course.id} to={`/courses/${course.id}`}>
-                      <Card className="story-card relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-background/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg ">
-                        <div className="relative h-48 overflow-hidden">
-                          <img
-                            src={getImageUrl(course.coverImagePath)}
-                            alt={getLocalized(course, 'title', lang)}
-                            className="h-full w-full object-cover"
-                            onError={e => {
-                              console.log(
-                                'Course image failed to load:',
-                                course.coverImagePath,
-                              )
-                              e.currentTarget.src =
-                                'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
-                            }}
-                          />
-                          {course.isFree ? (
-                            <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-background shadow-lg">
-                              {t('free.tag')}
-                            </div>
-                          ) : (
-                            <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-yellow-500 px-3 py-1.5 text-xs font-bold text-black shadow-lg">
-                              {t('premium.tag')}
-                            </div>
-                          )}
-                        </div>
-                        <div className="flex flex-1 flex-col">
-                          <CardHeader className="flex-1 pb-2">
-                            <div className="mb-2 flex items-start justify-between">
-                              <CardTitle className="text-primary-foreground line-clamp-2 flex-1 text-lg">
-                                {getLocalized(course, 'title', lang)}
-                              </CardTitle>
-                              <div className="ml-2 flex items-center gap-2">
-                                <Badge
-                                  variant="secondary"
-                                  className="text-primary-foreground bg-primary/30 text-xs"
-                                >
-                                  {category
-                                    ? getCategoryText(category, 'name', lang)
-                                    : 'General'}
-                                </Badge>
-                                <div className="text-primary-foreground flex items-center gap-1 text-xs">
-                                  <Clock className="h-3 w-3" />
-                                  <span>
-                                    {Math.floor(course.duration / 60)}{' '}
-                                    {t('duration')}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                            <CardDescription className="text-primary-foreground line-clamp-2 text-sm leading-relaxed ">
-                              {getLocalized(course, 'description', lang)}
-                            </CardDescription>
-                            <div className="text-primary-foreground mt-2 flex items-center text-xs ">
-                              <BookOpen className="mr-1 h-3 w-3" />
-                              <span>
-                                {course.lessons} {t('courses.lessons')} •{' '}
-                                {course.minAge}-{course.maxAge}{' '}
-                                {t('courses.years')}
-                              </span>
-                            </div>
-                          </CardHeader>
-                        </div>
-                      </Card>
-                    </Link>
-                  )
-                })}
-              </div>
-            )}
+          <div className="flex flex-wrap justify-center gap-2 md:gap-3">
+            <Button
+              variant={activeCategory === 'all' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => handleCategoryChange('all')}
+              className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
+            >
+              {t('courses.allCourses')}
+            </Button>
+            {categories.map(category => (
+              <Button
+                key={category.id}
+                variant={activeCategory === category.name ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => handleCategoryChange(category.name)}
+                className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
+              >
+                {getCategoryText(category, 'name', lang)}
+              </Button>
+            ))}
           </div>
         </div>
+
+        {/* Courses Grid */}
+        {filteredCourses.length === 0 ? (
+          <div className="rounded-lg bg-background/70 py-8 text-center  md:py-12">
+            <p className="text-primary-foreground text-base md:text-lg">
+              {t('courses.noResults')}
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {filteredCourses.map(course => {
+              const category = categories.find(
+                cat =>
+                  cat.id === course.category ||
+                  cat.name === course.category,
+              )
+              return (
+                <Link key={course.id} to={`/courses/${course.id}`}>
+                  <Card className="story-card relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-background/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg ">
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={getImageUrl(course.coverImagePath)}
+                        alt={getLocalized(course, 'title', lang)}
+                        className="h-full w-full object-cover"
+                        onError={e => {
+                          console.log(
+                            'Course image failed to load:',
+                            course.coverImagePath,
+                          )
+                          e.currentTarget.src =
+                            'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
+                        }}
+                      />
+                      {course.isFree ? (
+                        <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-background shadow-lg">
+                          {t('free.tag')}
+                        </div>
+                      ) : (
+                        <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-yellow-500 px-3 py-1.5 text-xs font-bold text-black shadow-lg">
+                          {t('premium.tag')}
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-1 flex-col">
+                      <CardHeader className="flex-1 pb-2">
+                        <div className="mb-2 flex items-start justify-between">
+                          <CardTitle className="text-primary-foreground line-clamp-2 flex-1 text-lg">
+                            {getLocalized(course, 'title', lang)}
+                          </CardTitle>
+                          <div className="ml-2 flex items-center gap-2">
+                            <Badge
+                              variant="secondary"
+                              className="text-primary-foreground bg-primary/30 text-xs"
+                            >
+                              {category
+                                ? getCategoryText(category, 'name', lang)
+                                : 'General'}
+                            </Badge>
+                            <div className="text-primary-foreground flex items-center gap-1 text-xs">
+                              <Clock className="h-3 w-3" />
+                              <span>
+                                {Math.floor(course.duration / 60)}{' '}
+                                {t('duration')}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <CardDescription className="text-primary-foreground line-clamp-2 text-sm leading-relaxed ">
+                          {getLocalized(course, 'description', lang)}
+                        </CardDescription>
+                        <div className="text-primary-foreground mt-2 flex items-center text-xs ">
+                          <BookOpen className="mr-1 h-3 w-3" />
+                          <span>
+                            {course.lessons} {t('courses.lessons')} •{' '}
+                            {course.minAge}-{course.maxAge}{' '}
+                            {t('courses.years')}
+                          </span>
+                        </div>
+                      </CardHeader>
+                    </div>
+                  </Card>
+                </Link>
+              )
+            })}
+          </div>
+        )}
       </div>
     </div>
   )
