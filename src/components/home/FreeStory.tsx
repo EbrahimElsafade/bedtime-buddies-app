@@ -76,12 +76,12 @@ const FreeStory = () => {
     <section className="bg-gradient-to-b from-ocean-light to-ocean-light/20 px-4 py-12">
       <div className="container mx-auto">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-dream-DEFAULT font-bubbly text-2xl md:text-3xl">
+          <h2 className="text-ocean-DEFAULT font-bubbly text-2xl md:text-3xl">
             {t('misc:free.story')}
           </h2>
           <Link
             to="/stories"
-            className="text-dream-DEFAULT flex items-center text-sm font-medium hover:text-dream-dark"
+            className="text-ocean-DEFAULT flex items-center text-sm font-medium hover:text-ocean-dark"
           >
             {t('misc:free.viewAll')}{' '}
             <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
@@ -99,13 +99,13 @@ const FreeStory = () => {
                 />
               </div>
               <div className="p-6 md:w-2/3">
-                <CardTitle className="text-dream-DEFAULT mb-2 text-xl md:text-2xl">
+                <CardTitle className="text-ocean-DEFAULT mb-2 text-xl md:text-2xl">
                   {storyTitle}
                 </CardTitle>
-                <CardDescription className="text-dream-DEFAULT mb-4 dark:text-foreground">
+                <CardDescription className="text-ocean-DEFAULT mb-4 dark:text-foreground">
                   {storyDescription}
                 </CardDescription>
-                <div className="text-dream-DEFAULT flex items-center text-sm dark:text-foreground">
+                <div className="text-ocean-DEFAULT flex items-center text-sm dark:text-foreground">
                   <span className="mr-4">
                     {freeStory.duration} {t('stories:duration')}
                   </span>

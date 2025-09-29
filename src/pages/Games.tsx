@@ -25,7 +25,7 @@ const Games = () => {
     <div className="py-4 md:py-8 lg:py-12 px-3 md:px-4" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="container mx-auto max-w-6xl">
         <div className="mb-4 md:mb-6 lg:mb-8 text-center">
-          <h1 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text   mb-2 md:mb-3 lg:mb-4 leading-tight">
+          <h1 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold bg-gradient-to-r from-ocean-DEFAULT to-purple-600 bg-clip-text   mb-2 md:mb-3 lg:mb-4 leading-tight">
             {t('title', { ns: 'games' })}
           </h1>
           <p className="text-xs md:text-sm lg:text-base text-muted-foreground max-w-2xl mx-auto px-2">

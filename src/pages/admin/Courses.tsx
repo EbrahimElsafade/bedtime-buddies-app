@@ -319,7 +319,7 @@ const Courses = () => {
                         {course.is_free ? (
                           <Badge
                             variant="default"
-                            className="bg-dream-DEFAULT hover:bg-dream-dark"
+                            className="bg-ocean-DEFAULT hover:bg-ocean-dark"
                           >
                             Free
                           </Badge>

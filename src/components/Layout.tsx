@@ -101,7 +101,7 @@ const Layout = () => {
       <header className="sticky top-0 z-50 border-b border-ocean-light/20 bg-background/70 backdrop-blur-lg">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
+          <Link to="/" className="flex items-center gap-4">
             <DalfoonMascot size="sm" expression="happy" animate={false} />
             <h1 className="font-bubbly text-xl text-ocean-dark">
               {t('misc:layout.appName')}
@@ -161,11 +161,11 @@ const Layout = () => {
                     {t('auth:login')}
                   </Button>
                 </Link>
-                <Link to="/register">
+                {/* <Link to="/register">
                   <Button variant="default" size="sm">
                     {t('auth:signUp')}
                   </Button>
-                </Link>
+                </Link> */}
               </div>
             )}
           </div>

@@ -66,12 +66,12 @@ const FeaturedStories = () => {
       <section className="relative bg-secondary/50 px-4 py-8 md:py-12">
         <div className="container mx-auto">
           <div className="mb-4 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center md:mb-6">
-            <h2 className="text-dream-DEFAULT font-bubbly text-xl md:text-2xl lg:text-3xl">
+            <h2 className="text-ocean-DEFAULT font-bubbly text-xl md:text-2xl lg:text-3xl">
               {t('stories:featured.title')}
             </h2>
             <Link
               to="/stories"
-              className="text-dream-DEFAULT flex items-center text-sm font-medium hover:text-dream-dark"
+              className="text-ocean-DEFAULT flex items-center text-sm font-medium hover:text-ocean-dark"
             >
               {t('misc:free.viewAll')}{' '}
               <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
@@ -81,7 +81,7 @@ const FeaturedStories = () => {
             {[1, 2, 3].map(i => (
               <Card
                 key={i}
-                className="story-card w-full h-80 animate-pulse overflow-hidden border-dream-light/20 bg-white/70 pb-4 backdrop-blur-sm dark:bg-nightsky-light/70 md:h-96 lg:h-[25rem]"
+                className="story-card w-full h-80 animate-pulse overflow-hidden border-ocean-light/20 bg-white/70 pb-4 backdrop-blur-sm dark:bg-nightsky-light/70 md:h-96 lg:h-[25rem]"
               >
                 <div className="h-40 bg-gray-200 md:h-48"></div>
                 <CardHeader className="px-3 pb-2 md:px-6">
@@ -116,12 +116,12 @@ const FeaturedStories = () => {
     <section className="relative bg-ocean-light/10 px-4 py-8 md:py-12">
       <div className="container mx-auto">
         <div className="mb-4 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center md:mb-6">
-          <h2 className="text-dream-DEFAULT font-bubbly text-xl md:text-2xl lg:text-3xl">
+          <h2 className="text-ocean-DEFAULT font-bubbly text-xl md:text-2xl lg:text-3xl">
             {t('stories:featured.title')}
           </h2>
           <Link
             to="/stories"
-            className="text-dream-DEFAULT flex shrink-0 items-center text-sm font-medium hover:text-dream-dark"
+            className="text-ocean-DEFAULT flex shrink-0 items-center text-sm font-medium hover:text-ocean-dark"
             onClick={handleViewAllClick}
           >
             {t('misc:free.viewAll')}{' '}
@@ -145,7 +145,7 @@ const FeaturedStories = () => {
 
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card flex w-full h-80 cursor-pointer flex-col overflow-hidden border-dream-light/20 bg-white/70 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/70 md:h-96 lg:h-[25rem]">
+                <Card className="story-card flex w-full h-80 cursor-pointer flex-col overflow-hidden border-ocean-light/20 bg-white/70 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/70 md:h-96 lg:h-[25rem]">
                   <div className="relative h-40 overflow-hidden md:h-48">
                     {imageUrl ? (
                       <img
@@ -178,13 +178,13 @@ const FeaturedStories = () => {
                   <div className="flex flex-1 flex-col">
                     <CardHeader className="flex-1 px-3 pb-2 pt-3 md:px-6 md:pt-6">
                       <div className="mb-2 flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
-                        <CardTitle className="text-dream-DEFAULT line-clamp-2 flex-1 text-base md:text-lg">
+                        <CardTitle className="text-ocean-DEFAULT line-clamp-2 flex-1 text-base md:text-lg">
                           {storyTitle}
                         </CardTitle>
                         <div className="flex shrink-0 items-center gap-2">
                           <Badge
                             variant="secondary"
-                            className="text-dream-DEFAULT bg-dream-light/30 text-xs"
+                            className="text-ocean-DEFAULT bg-ocean-light/30 text-xs"
                           >
                             {t(`stories:category.${story.category}`, {
                               defaultValue:
@@ -192,7 +192,7 @@ const FeaturedStories = () => {
                                 story.category.slice(1),
                             })}
                           </Badge>
-                          <div className="text-dream-DEFAULT flex items-center gap-1 text-xs">
+                          <div className="text-ocean-DEFAULT flex items-center gap-1 text-xs">
                             <Clock className="h-3 w-3" />
                             <span>
                               {story.duration} {t('misc:duration')}
@@ -200,7 +200,7 @@ const FeaturedStories = () => {
                           </div>
                         </div>
                       </div>
-                      <CardDescription className="text-dream-DEFAULT line-clamp-2 text-sm leading-relaxed dark:text-foreground">
+                      <CardDescription className="text-ocean-DEFAULT line-clamp-2 text-sm leading-relaxed dark:text-foreground">
                         {storyDescription}
                       </CardDescription>
                     </CardHeader>

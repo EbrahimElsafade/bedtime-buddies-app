@@ -105,9 +105,9 @@ const Course = () => {
     return (
       <div className="px-4 py-16 text-center">
         <div className="mb-4 flex items-center justify-center">
-          <Loader2 className="text-dream-DEFAULT h-8 w-8 animate-spin" />
+          <Loader2 className="text-ocean-DEFAULT h-8 w-8 animate-spin" />
         </div>
-        <h1 className="text-dream-DEFAULT font-bubbly text-2xl">
+        <h1 className="text-ocean-DEFAULT font-bubbly text-2xl">
           {t('course.loading')}
         </h1>
       </div>
@@ -118,16 +118,16 @@ const Course = () => {
   if (error) {
     return (
       <div className="px-4 py-16 text-center">
-        <h1 className="text-dream-DEFAULT mb-6 font-bubbly text-3xl">
+        <h1 className="text-ocean-DEFAULT mb-6 font-bubbly text-3xl">
           {t('course.error')}
         </h1>
-        <p className="text-dream-DEFAULT mb-8 dark:text-foreground">
+        <p className="text-ocean-DEFAULT mb-8 dark:text-foreground">
           {t('course.errorDesc')}
         </p>
         <Link to="/courses">
           <Button
             variant="outline"
-            className="border-dream-DEFAULT text-dream-DEFAULT"
+            className="border-ocean-DEFAULT text-ocean-DEFAULT"
           >
             <ArrowLeft className="mr-2 h-4 w-4" /> {t('button.backToCourses')}
           </Button>
@@ -140,16 +140,16 @@ const Course = () => {
   if (!course) {
     return (
       <div className="px-4 py-16 text-center">
-        <h1 className="text-dream-DEFAULT mb-6 font-bubbly text-3xl">
+        <h1 className="text-ocean-DEFAULT mb-6 font-bubbly text-3xl">
           {t('course.notFound')}
         </h1>
-        <p className="text-dream-DEFAULT mb-8 dark:text-foreground">
+        <p className="text-ocean-DEFAULT mb-8 dark:text-foreground">
           {t('course.notFoundDesc')}
         </p>
         <Link to="/courses">
           <Button
             variant="outline"
-            className="border-dream-DEFAULT text-dream-DEFAULT"
+            className="border-ocean-DEFAULT text-ocean-DEFAULT"
           >
             <ArrowLeft className="mr-2 h-4 w-4" /> {t('button.backToCourses')}
           </Button>
@@ -161,7 +161,7 @@ const Course = () => {
   return (
     <div className="relative px-4 py-12">
       {/* Decorative background elements */}
-      <div className="absolute left-10 top-20 h-20 w-20 animate-float rounded-full bg-dream-light/10"></div>
+      <div className="absolute left-10 top-20 h-20 w-20 animate-float rounded-full bg-ocean-light/10"></div>
       <div
         className="absolute bottom-20 right-10 h-16 w-16 animate-float rounded-full bg-moon-light/10"
         style={{ animationDelay: '1.5s' }}
@@ -170,7 +170,7 @@ const Course = () => {
       <div className="container mx-auto">
         <Link
           to="/courses"
-          className="text-dream-DEFAULT mb-6 inline-flex items-center hover:text-dream-dark"
+          className="text-ocean-DEFAULT mb-6 inline-flex items-center hover:text-ocean-dark"
         >
           <ArrowLeft className="mr-2 h-4 w-4" /> {t('button.backToCourses')}
         </Link>
@@ -179,7 +179,7 @@ const Course = () => {
           {/* Course Header */}
           <div className="flex flex-col items-start gap-8 md:flex-row">
             <div className="md:w-1/3">
-              <Card className="overflow-hidden border-dream-light/30">
+              <Card className="overflow-hidden border-ocean-light/30">
                 <img
                   src={getImageUrl(course.coverImagePath)}
                   alt={getLocalized(course, 'title', lang)}
@@ -189,19 +189,19 @@ const Course = () => {
             </div>
 
             <div className="md:w-2/3">
-              <h1 className="text-dream-DEFAULT mb-4 font-bubbly text-3xl md:text-4xl">
+              <h1 className="text-ocean-DEFAULT mb-4 font-bubbly text-3xl md:text-4xl">
                 {getLocalized(course, 'title', lang)}
               </h1>
 
               <div className="mb-4 flex flex-wrap gap-2">
-                <Badge className="text-dream-DEFAULT border-none bg-dream-light/30">
+                <Badge className="text-ocean-DEFAULT border-none bg-ocean-light/30">
                   {course.category || 'General'}
                 </Badge>
-                <Badge className="text-dream-DEFAULT border-none bg-moon-light/30">
+                <Badge className="text-ocean-DEFAULT border-none bg-moon-light/30">
                   {course.minAge}-{course.maxAge} {t('courses.years')}
                 </Badge>
                 {course.isFree ? (
-                  <Badge className="bg-dream-DEFAULT/80 border-none text-white">
+                  <Badge className="bg-ocean-DEFAULT/80 border-none text-white">
                     {t('free.tag')}
                   </Badge>
                 ) : (
@@ -211,7 +211,7 @@ const Course = () => {
                 )}
               </div>
 
-              <div className="text-dream-DEFAULT mb-6 flex flex-wrap gap-4 text-sm dark:text-foreground">
+              <div className="text-ocean-DEFAULT mb-6 flex flex-wrap gap-4 text-sm dark:text-foreground">
                 <div className="flex items-center">
                   <Clock className="mr-2 h-4 w-4" />
                   <span>
@@ -226,7 +226,7 @@ const Course = () => {
                 </div>
               </div>
 
-              <p className="text-dream-DEFAULT mb-6 dark:text-foreground">
+              <p className="text-ocean-DEFAULT mb-6 dark:text-foreground">
                 {getLocalized(course, 'description', lang)}
               </p>
 
@@ -235,8 +235,8 @@ const Course = () => {
                 className={cn(
                   'rounded-full px-8 py-2',
                   course.isFree
-                    ? 'bg-dream-DEFAULT text-white hover:bg-dream-dark'
-                    : 'bg-moon-DEFAULT text-dream-DEFAULT hover:bg-moon-dark dark:text-white',
+                    ? 'bg-ocean-DEFAULT text-white hover:bg-ocean-dark'
+                    : 'bg-moon-DEFAULT text-ocean-DEFAULT hover:bg-moon-dark dark:text-white',
                 )}
               >
                 {course.isFree
@@ -257,18 +257,18 @@ const Course = () => {
             className="w-full"
           >
             <TabsList className="mb-8">
-              <TabsTrigger value="overview" className="text-dream-DEFAULT">
+              <TabsTrigger value="overview" className="text-ocean-DEFAULT">
                 {t('course.overview')}
               </TabsTrigger>
-              <TabsTrigger value="content" className="text-dream-DEFAULT">
+              <TabsTrigger value="content" className="text-ocean-DEFAULT">
                 {t('course.content')}
               </TabsTrigger>
             </TabsList>
 
             {/* Overview Tab */}
             <TabsContent value="overview" className="space-y-8">
-              <div className="prose prose-dream text-dream-DEFAULT mb-8 max-w-none dark:text-foreground">
-                <h2 className="text-dream-DEFAULT mb-3 font-bubbly text-xl">
+              <div className="prose prose-dream text-ocean-DEFAULT mb-8 max-w-none dark:text-foreground">
+                <h2 className="text-ocean-DEFAULT mb-3 font-bubbly text-xl">
                   {t('course.about')}
                 </h2>
                 <p>{getLocalized(course, 'description', lang)}</p>
@@ -277,7 +277,7 @@ const Course = () => {
                   const objectives = (course as any)[`learning_objectives_${lang}`] || course.learningObjectives || [];
                   return objectives && objectives.length > 0 && (
                     <>
-                      <h2 className="text-dream-DEFAULT mb-3 mt-6 font-bubbly text-xl">
+                      <h2 className="text-ocean-DEFAULT mb-3 mt-6 font-bubbly text-xl">
                         {t('course.whatYouLearn')}
                       </h2>
                       <ul className="list-disc pl-5">
@@ -291,7 +291,7 @@ const Course = () => {
 
                 {course.instructor && (
                   <>
-                    <h2 className="text-dream-DEFAULT mb-3 mt-6 font-bubbly text-xl">
+                    <h2 className="text-ocean-DEFAULT mb-3 mt-6 font-bubbly text-xl">
                       {t('course.instructor')}
                     </h2>
                     <div className="flex items-start gap-4">
@@ -303,10 +303,10 @@ const Course = () => {
                         />
                       )}
                       <div>
-                        <h3 className="text-dream-DEFAULT font-medium">
+                        <h3 className="text-ocean-DEFAULT font-medium">
                           {getLocalized(course.instructor, 'name', lang)}
                         </h3>
-                        <p className="text-dream-DEFAULT/80 mt-1 text-sm">
+                        <p className="text-ocean-DEFAULT/80 mt-1 text-sm">
                           {getLocalized(course.instructor, 'bio', lang)}
                         </p>
                         {(() => {
@@ -362,16 +362,16 @@ const Course = () => {
                         )}
                       </div>
                       <div>
-                        <h3 className="text-dream-DEFAULT mb-2 font-bubbly text-xl">
+                        <h3 className="text-ocean-DEFAULT mb-2 font-bubbly text-xl">
                           {getLocalized(selectedVideo, 'title', lang)}
                         </h3>
-                        <div className="text-dream-DEFAULT mb-2 flex items-center text-sm dark:text-foreground">
+                        <div className="text-ocean-DEFAULT mb-2 flex items-center text-sm dark:text-foreground">
                           <Clock className="mr-1 h-4 w-4" />
                           <span>
                             {selectedVideo.duration} {t('duration')}
                           </span>
                         </div>
-                        <p className="text-dream-DEFAULT dark:text-foreground">
+                        <p className="text-ocean-DEFAULT dark:text-foreground">
                           {getLocalized(selectedVideo, 'description', lang)}
                         </p>
                       </div>
@@ -387,7 +387,7 @@ const Course = () => {
 
                 {/* Video List */}
                 <div className="lg:flex-1">
-                  <h3 className="text-dream-DEFAULT mb-4 font-bubbly text-xl">
+                  <h3 className="text-ocean-DEFAULT mb-4 font-bubbly text-xl">
                     {t('course.courseVideos')}
                   </h3>
 
@@ -397,9 +397,9 @@ const Course = () => {
                         <Card
                           key={video.id}
                           className={cn(
-                            'hover:border-dream-DEFAULT cursor-pointer transition-all',
+                            'hover:border-ocean-DEFAULT cursor-pointer transition-all',
                             selectedVideo?.id === video.id &&
-                              'border-dream-DEFAULT',
+                              'border-ocean-DEFAULT',
                           )}
                           onClick={() => handleVideoSelect(video)}
                         >
@@ -419,16 +419,16 @@ const Course = () => {
                                     </div>
                                   )}
                                 <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity hover:opacity-100">
-                                  <div className="bg-dream-DEFAULT flex h-8 w-8 items-center justify-center rounded-full">
+                                  <div className="bg-ocean-DEFAULT flex h-8 w-8 items-center justify-center rounded-full">
                                     <Play className="h-4 w-4 text-white" />
                                   </div>
                                 </div>
                               </div>
                               <div className="min-w-0 flex-1">
-                                <h4 className="text-dream-DEFAULT truncate text-sm font-medium">
+                                <h4 className="text-ocean-DEFAULT truncate text-sm font-medium">
                                   {getLocalized(video, 'title', lang)}
                                 </h4>
-                                <div className="text-dream-DEFAULT/70 mt-1 flex items-center text-xs">
+                                <div className="text-ocean-DEFAULT/70 mt-1 flex items-center text-xs">
                                   <Clock className="mx-1 h-3 w-3" />
                                   <span>
                                     {video.duration} {t('duration')}

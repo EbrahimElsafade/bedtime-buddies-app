@@ -64,7 +64,7 @@ export const StoryContent = ({
   return (
     <Card
       dir={storyDirection}
-      className="mb-4 overflow-hidden border-dream-light/20 bg-white/70 backdrop-blur-sm dark:bg-nightsky-light/70 md:mb-6"
+      className="mb-4 overflow-hidden border-ocean-light/20 bg-white/70 backdrop-blur-sm dark:bg-nightsky-light/70 md:mb-6"
     >
       <div className="grid">
         {/* Story Section Image */}

@@ -15,13 +15,13 @@ const EntertainmentStories = () => {
   if (!stories.length) return null;
 
   return (
-    <section className="py-8 md:py-12 px-4 bg-gradient-to-b from-transparent to-dream-light/10 relative">
+    <section className="py-8 md:py-12 px-4 bg-gradient-to-b from-transparent to-ocean-light/10 relative">
       <div className="container mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 gap-2">
-          <h2 className="text-xl md:text-2xl lg:text-3xl font-bubbly text-dream-DEFAULT">
+          <h2 className="text-xl md:text-2xl lg:text-3xl font-bubbly text-ocean-DEFAULT">
             {t('misc:entertainment.title')}
           </h2>
-          <Link to="/stories" className="text-dream-DEFAULT hover:text-dream-dark text-sm font-medium flex items-center shrink-0">
+          <Link to="/stories" className="text-ocean-DEFAULT hover:text-ocean-dark text-sm font-medium flex items-center shrink-0">
             {t('misc:free.viewAll')} <ArrowRight className="rtl:rotate-180 ms-1 h-4 w-4" />
           </Link>
         </div>
@@ -38,7 +38,7 @@ const EntertainmentStories = () => {
                       className="w-full h-full object-cover"
                     />
                     {story.isFree ? (
-                      <div className="absolute top-2 left-2 bg-dream-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
+                      <div className="absolute top-2 left-2 bg-ocean-DEFAULT text-white text-xs font-medium px-2 py-1 rounded-full">
                         {t('misc:free.tag')}
                       </div>
                     ) : (
@@ -48,9 +48,9 @@ const EntertainmentStories = () => {
                     )}
                   </div>
                   <div className="w-full md:w-2/3 p-4 md:p-6">
-                    <CardTitle className="text-lg md:text-xl mb-2 text-dream-DEFAULT">{story.title}</CardTitle>
-                    <CardDescription className="mb-3 md:mb-4 text-dream-DEFAULT dark:text-foreground text-sm md:text-base line-clamp-3">{story.description}</CardDescription>
-                    <div className="flex items-center text-sm text-dream-DEFAULT dark:text-foreground">
+                    <CardTitle className="text-lg md:text-xl mb-2 text-ocean-DEFAULT">{story.title}</CardTitle>
+                    <CardDescription className="mb-3 md:mb-4 text-ocean-DEFAULT dark:text-foreground text-sm md:text-base line-clamp-3">{story.description}</CardDescription>
+                    <div className="flex items-center text-sm text-ocean-DEFAULT dark:text-foreground">
                       <span className="mr-4">{story.duration} {t('misc:duration')}</span>
                     </div>
                   </div>
@@ -62,7 +62,7 @@ const EntertainmentStories = () => {
       </div>
       
       {/* Decorative elements */}
-      <div className="absolute top-0 right-0 w-16 h-16 md:w-24 md:h-24 bg-dream-light/10 rounded-full blur-xl"></div>
+      <div className="absolute top-0 right-0 w-16 h-16 md:w-24 md:h-24 bg-ocean-light/10 rounded-full blur-xl"></div>
       <div className="absolute bottom-0 left-0 w-20 h-20 md:w-32 md:h-32 bg-moon-light/10 rounded-full blur-xl"></div>
     </section>
   );

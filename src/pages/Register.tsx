@@ -98,7 +98,7 @@ const Register = () => {
   return (
     <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        <Card className="border-dream-light/20 bg-white/70 backdrop-blur-sm dark:bg-nightsky-light/70">
+        <Card className="border-ocean-light/20 bg-white/70 backdrop-blur-sm dark:bg-nightsky-light/70">
           <CardHeader className="text-center">
             <CardTitle className="font-bubbly text-2xl">
               Create an Account
@@ -155,7 +155,7 @@ const Register = () => {
 
                   <Button
                     type="button"
-                    className="bg-dream-DEFAULT w-full hover:bg-dream-dark"
+                    className="bg-ocean-DEFAULT w-full hover:bg-ocean-dark"
                     onClick={handleNextStep}
                   >
                     Next
@@ -250,7 +250,7 @@ const Register = () => {
                     </Button>
                     <Button
                       type="submit"
-                      className="bg-dream-DEFAULT flex-1 hover:bg-dream-dark"
+                      className="bg-ocean-DEFAULT flex-1 hover:bg-ocean-dark"
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -270,7 +270,7 @@ const Register = () => {
           <CardFooter className="text-center">
             <p className="text-sm text-muted-foreground">
               Already have an account?{' '}
-              <Link to="/login" className="text-dream-DEFAULT hover:underline">
+              <Link to="/login" className="text-ocean-DEFAULT hover:underline">
                 Sign in
               </Link>
             </p>

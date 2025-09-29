@@ -177,7 +177,7 @@ export const AudioPlayer = ({
 
   if (!audioSrc) {
     return (
-      <Card className="p-4 bg-white/90 dark:bg-nightsky-light/90 backdrop-blur-sm border-dream-light/20">
+      <Card className="p-4 bg-white/90 dark:bg-nightsky-light/90 backdrop-blur-sm border-ocean-light/20">
         <div className="text-center text-gray-500">No audio available</div>
       </Card>
     );

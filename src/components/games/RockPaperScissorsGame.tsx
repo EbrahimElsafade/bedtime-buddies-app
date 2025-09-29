@@ -145,17 +145,17 @@ const RockPaperScissorsGame = () => {
                     key={choice.name}
                     onClick={() => playGame(choice.name)}
                     disabled={isPlaying}
-                    className="group relative p-4 md:p-8 rounded-2xl border-3 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-300 dark:border-gray-600 hover:border-dream-light bg-gradient-to-br from-white to-gray-50 dark:from-nightsky-light dark:to-nightsky hover:from-dream-light/10 hover:to-purple-100/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="group relative p-4 md:p-8 rounded-2xl border-3 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-300 dark:border-gray-600 hover:border-ocean-light bg-gradient-to-br from-white to-gray-50 dark:from-nightsky-light dark:to-nightsky hover:from-ocean-light/10 hover:to-purple-100/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
                     <div className="flex flex-col items-center space-y-2 md:space-y-3">
                       <div className="text-3xl md:text-5xl group-hover:scale-110 transition-transform duration-300">
                         {choice.emoji}
                       </div>
-                      <div className="text-sm md:text-lg font-bold capitalize text-gray-700 dark:text-gray-200 group-hover:text-dream-DEFAULT transition-colors">
+                      <div className="text-sm md:text-lg font-bold capitalize text-gray-700 dark:text-gray-200 group-hover:text-ocean-DEFAULT transition-colors">
                         {t(`rockPaperScissors.${choice.name}`)}
                       </div>
                     </div>
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-dream-light/0 to-purple-500/0 group-hover:from-dream-light/10 group-hover:to-purple-500/10 transition-all duration-300"></div>
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-ocean-light/0 to-purple-500/0 group-hover:from-ocean-light/10 group-hover:to-purple-500/10 transition-all duration-300"></div>
                   </button>
                 );
               })}

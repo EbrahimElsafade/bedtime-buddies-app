@@ -69,14 +69,14 @@ const Subscription = () => {
             <TabsContent key={planId} value={planId}>
               <Card className={cn(
                 "mx-auto overflow-hidden border-2",
-                planId === 'quarterly' ? "border-dream-DEFAULT" : "border-border"
+                planId === 'quarterly' ? "border-ocean-DEFAULT" : "border-border"
               )}>
                 <CardHeader className={cn(
-                  planId === 'quarterly' ? "bg-dream-DEFAULT/10" : ""
+                  planId === 'quarterly' ? "bg-ocean-DEFAULT/10" : ""
                 )}>
                   {planId === 'quarterly' && (
                     <div className="mb-2">
-                      <span className="bg-dream-DEFAULT text-white text-xs py-1 px-3 rounded-full uppercase font-bold">
+                      <span className="bg-ocean-DEFAULT text-white text-xs py-1 px-3 rounded-full uppercase font-bold">
                         {t('mostPopular')}
                       </span>
                     </div>
@@ -92,7 +92,7 @@ const Subscription = () => {
                   <ul className="space-y-2">
                     {Object.values(t(`plans.${planId}.features`, { returnObjects: true }) as string[]).map((feature: string, index: number) => (
                       <li key={index} className="flex items-start">
-                        <Check className="h-5 w-5 text-dream-DEFAULT mr-2 mt-0.5" />
+                        <Check className="h-5 w-5 text-ocean-DEFAULT mr-2 mt-0.5" />
                         <span>{feature}</span>
                       </li>
                     ))}
@@ -119,7 +119,7 @@ const Subscription = () => {
                   <Button 
                     className={cn(
                       "w-full",
-                      planId === 'quarterly' ? "bg-dream-DEFAULT hover:bg-dream-dark" : ""
+                      planId === 'quarterly' ? "bg-ocean-DEFAULT hover:bg-ocean-dark" : ""
                     )}
                     onClick={handleSubscribe}
                   >
