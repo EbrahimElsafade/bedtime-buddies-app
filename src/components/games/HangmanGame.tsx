@@ -85,7 +85,7 @@ const HangmanGame = () => {
 
   const drawHangman = () => {
     return (
-      <div className="relative mx-auto h-40 w-32 rounded-lg border-4 border-gray-800 bg-background md:h-64 md:w-48">
+      <div className="relative mx-auto h-40 w-32 rounded-lg border-4 border-gray-800 bg-secondary md:h-64 md:w-48">
         <svg
           width="100%"
           height="100%"
@@ -194,7 +194,7 @@ const HangmanGame = () => {
 
         {gameStatus === 'lost' && (
           <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50">
-            <div className="text-center text-background">
+            <div className="text-center text-secondary">
               <div className="mb-2 text-2xl md:text-4xl">😔</div>
               <div className="text-sm font-bold text-red-400 md:text-xl">
                 TRY AGAIN!
@@ -208,7 +208,7 @@ const HangmanGame = () => {
 
   return (
     <div className="mx-auto w-full max-w-4xl px-2" dir={isRTL ? 'rtl' : 'ltr'}>
-      <Card className="overflow-hidden border-primary/20 bg-background/50 backdrop-blur-sm">
+      <Card className="overflow-hidden border-primary/20 bg-secondary/50 backdrop-blur-sm">
         <CardHeader className="px-4 py-4 text-center">
           <CardTitle className="from-primary bg-gradient-to-r to-primary-foreground bg-clip-text text-xl font-bold md:text-2xl">
             {t('hangman.title')}
@@ -278,9 +278,9 @@ const HangmanGame = () => {
                       className={`h-10 w-10 rounded-md text-sm font-bold transition-all duration-200 md:h-12 md:w-12 md:text-base ${
                         guessedLetters.includes(letter)
                           ? currentWord.includes(letter)
-                            ? 'bg-green-500 text-background shadow-lg'
-                            : 'bg-red-500 text-background shadow-lg'
-                          : 'bg-gradient-to-br from-purple-400 to-purple-600 text-background shadow-md hover:scale-105 hover:from-purple-500 hover:to-purple-700'
+                            ? 'bg-green-500 text-secondary shadow-lg'
+                            : 'bg-red-500 text-secondary shadow-lg'
+                          : 'bg-gradient-to-br from-purple-400 to-purple-600 text-secondary shadow-md hover:scale-105 hover:from-purple-500 hover:to-purple-700'
                       } ${
                         gameStatus !== 'playing'
                           ? 'cursor-not-allowed opacity-50'

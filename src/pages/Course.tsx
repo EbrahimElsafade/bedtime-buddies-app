@@ -193,11 +193,11 @@ const Course = () => {
 
               <div className="mb-4 flex max-w-60 flex-wrap gap-2 sm:max-w-none">
                 {course.isFree ? (
-                  <Badge className="bg-green-600 text-background">
+                  <Badge className="bg-green-600 text-secondary">
                     {t('free.tag')}
                   </Badge>
                 ) : (
-                  <Badge className="bg-accent text-background">
+                  <Badge className="bg-accent text-secondary">
                     {t('premium.tag')}
                   </Badge>
                 )}
@@ -235,7 +235,7 @@ const Course = () => {
 
               <Button
                 onClick={handleStartCourse}
-                className="rounded-full bg-accent px-8 py-2 text-background hover:bg-primary"
+                className="rounded-full bg-accent px-8 py-2 text-secondary hover:bg-primary"
               >
                 {course.isFree
                   ? t('button.startLearning')
@@ -367,7 +367,7 @@ const Course = () => {
                             allowFullScreen
                           ></iframe>
                         ) : (
-                          <div className="flex h-full items-center justify-center text-background">
+                          <div className="flex h-full items-center justify-center text-secondary">
                             <p>No video source available</p>
                           </div>
                         )}
@@ -426,12 +426,12 @@ const Course = () => {
                                   !course.isFree &&
                                   !isPremium && (
                                     <div className="absolute inset-0 flex items-center justify-center rounded bg-black/50">
-                                      <Lock className="h-6 w-6 text-background" />
+                                      <Lock className="h-6 w-6 text-secondary" />
                                     </div>
                                   )}
                                 <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity hover:opacity-100">
                                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-foreground">
-                                    <Play className="h-4 w-4 text-background" />
+                                    <Play className="h-4 w-4 text-secondary" />
                                   </div>
                                 </div>
                               </div>

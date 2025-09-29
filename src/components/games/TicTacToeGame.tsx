@@ -147,7 +147,7 @@ const TicTacToeGame = () => {
   const renderSquare = (i: number) => {
     return (
       <button
-        className="w-20 h-20 flex items-center justify-center text-2xl bg-background/70  hover:bg-background/90  border border-primary/30 rounded-md transition-colors"
+        className="w-20 h-20 flex items-center justify-center text-2xl bg-secondary/70  hover:bg-secondary/90  border border-primary/30 rounded-md transition-colors"
         onClick={() => handleClick(i)}
       >
         {board[i]}
@@ -157,7 +157,7 @@ const TicTacToeGame = () => {
 
   if (!gameStarted) {
     return (
-      <Card className="overflow-hidden border-primary/20 bg-background/50  backdrop-blur-sm">
+      <Card className="overflow-hidden border-primary/20 bg-secondary/50  backdrop-blur-sm">
         <CardHeader>
           <CardTitle className="text-xl">{t('ticTacToe.title')}</CardTitle>
           <CardDescription>{t('ticTacToe.description')}</CardDescription>
@@ -197,7 +197,7 @@ const TicTacToeGame = () => {
   }
 
   return (
-    <Card className="overflow-hidden border-primary/20 bg-background/50  backdrop-blur-sm">
+    <Card className="overflow-hidden border-primary/20 bg-secondary/50  backdrop-blur-sm">
       <CardHeader>
         <CardTitle className="text-xl">
           {t('ticTacToe.title')} - {gameMode === 'computer' ? t('ticTacToe.vsComputer') : t('ticTacToe.vsPlayer')}

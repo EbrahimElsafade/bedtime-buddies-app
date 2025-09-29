@@ -76,7 +76,7 @@ const Subscription = () => {
                 )}>
                   {planId === 'quarterly' && (
                     <div className="mb-2">
-                      <span className="bg-primary-foreground text-background text-xs py-1 px-3 rounded-full uppercase font-bold">
+                      <span className="bg-primary-foreground text-secondary text-xs py-1 px-3 rounded-full uppercase font-bold">
                         {t('mostPopular')}
                       </span>
                     </div>
@@ -135,28 +135,28 @@ const Subscription = () => {
           <h2 className="text-2xl font-bubbly mb-6">{t('faq.title')}</h2>
           
           <div className="space-y-4">
-            <div className="bg-background/70  p-6 rounded-xl backdrop-blur-sm">
+            <div className="bg-secondary/70  p-6 rounded-xl backdrop-blur-sm">
               <h3 className="text-lg font-semibold mb-2">{t('faq.included.question')}</h3>
               <p className="text-muted-foreground">
                 {t('faq.included.answer')}
               </p>
             </div>
             
-            <div className="bg-background/70  p-6 rounded-xl backdrop-blur-sm">
+            <div className="bg-secondary/70  p-6 rounded-xl backdrop-blur-sm">
               <h3 className="text-lg font-semibold mb-2">{t('faq.cancel.question')}</h3>
               <p className="text-muted-foreground">
                 {t('faq.cancel.answer')}
               </p>
             </div>
             
-            <div className="bg-background/70  p-6 rounded-xl backdrop-blur-sm">
+            <div className="bg-secondary/70  p-6 rounded-xl backdrop-blur-sm">
               <h3 className="text-lg font-semibold mb-2">{t('faq.gift.question')}</h3>
               <p className="text-muted-foreground">
                 {t('faq.gift.answer')}
               </p>
             </div>
             
-            <div className="bg-background/70  p-6 rounded-xl backdrop-blur-sm">
+            <div className="bg-secondary/70  p-6 rounded-xl backdrop-blur-sm">
               <h3 className="text-lg font-semibold mb-2">{t('faq.lifetime.question')}</h3>
               <p className="text-muted-foreground">
                 {t('faq.lifetime.answer')}

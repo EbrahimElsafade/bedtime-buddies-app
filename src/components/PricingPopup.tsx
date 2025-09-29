@@ -37,7 +37,7 @@ const PricingPopup = () => {
   
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      <div className="bg-background w-full max-w-md rounded-xl shadow-xl overflow-hidden relative transform transition-all">
+      <div className="bg-secondary w-full max-w-md rounded-xl shadow-xl overflow-hidden relative transform transition-all">
         <button 
           onClick={closePopup}
           className="absolute top-3 right-3 p-1 rounded-full hover:bg-secondary/80"
@@ -45,7 +45,7 @@ const PricingPopup = () => {
           <X className="h-5 w-5 text-primary" />
         </button>
         
-        <div className="bg-primary-foreground p-6 text-background">
+        <div className="bg-primary-foreground p-6 text-secondary">
           <h3 className="text-xl font-bubbly mb-2">✨ {t('popup.special')}</h3>
           <p className="text-sm opacity-90">
             {t('popup.limitedTime')}
@@ -100,7 +100,7 @@ const PricingPopup = () => {
           
           <div className="flex flex-col space-y-2">
             <Link to="/subscription" className="w-full">
-               <Button className="w-full bg-primary-foreground hover:bg-primary text-background">
+               <Button className="w-full bg-primary-foreground hover:bg-primary text-secondary">
                  {t('popup.subscribe')}
                </Button>
              </Link>

@@ -98,7 +98,7 @@ const Layout = () => {
   return (
     <div className="bg-gradient-to-b from-primary/30 to-primary/20 bubbles-bg flex min-h-screen flex-col pb-16 text-foreground md:pb-0">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-primary/20 bg-background/70 backdrop-blur-lg">
+      <header className="sticky top-0 z-50 border-b border-primary/20 bg-secondary/70 backdrop-blur-lg">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-4">
@@ -182,7 +182,7 @@ const Layout = () => {
       </footer>
 
       {/* Mobile Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 pb-2 flex h-16 items-center justify-around border-t border-primary/20 bg-background px-2 md:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-50 pb-2 flex h-16 items-center justify-around border-t border-primary/20 bg-secondary px-2 md:hidden">
         {navItems.map(item => {
           const ItemIcon = item.icon
           return (

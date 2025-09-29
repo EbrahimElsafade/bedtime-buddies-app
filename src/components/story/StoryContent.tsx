@@ -64,7 +64,7 @@ export const StoryContent = ({
   return (
     <Card
       dir={storyDirection}
-      className="mb-4 overflow-hidden border-primary/20 bg-background/70 backdrop-blur-sm md:mb-6"
+      className="mb-4 overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm md:mb-6"
     >
       <div className="grid">
         {/* Story Section Image */}
@@ -105,11 +105,11 @@ export const StoryContent = ({
           <div className="flex items-center justify-between p-4 pb-0">
             <Button
               size="icon"
-              variant='outline-accent'
+              variant='ghost'
               onClick={handlePrevSection}
               disabled={currentSectionIndex === 0}
               aria-label="Previous section"
-              className="h-8 w-8 md:h-10 md:w-10"
+              className="h-8 w-8 md:h-10 md:w-10 shadow-lg"
             >
               <ChevronLeft
                 className={
@@ -126,11 +126,11 @@ export const StoryContent = ({
 
             <Button
               size="icon"
-              variant='outline-accent'
+              variant='ghost'
               onClick={handleNextSection}
               disabled={currentSectionIndex === story.sections.length - 1}
               aria-label="Next section"
-              className="h-8 w-8 md:h-10 md:w-10"
+              className="h-8 w-8 md:h-10 md:w-10 shadow-lg"
             >
               <ChevronRight
                 className={

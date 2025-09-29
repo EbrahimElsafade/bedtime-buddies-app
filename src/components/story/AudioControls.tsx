@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Story, StorySection } from '@/types/story'
 import { getAudioUrl } from '@/utils/imageUtils'
-import { AutoplayToggle } from './AutoplayToggle'
 
 interface AudioControlsProps {
   story: Story
@@ -107,26 +106,48 @@ export const AudioControls = ({
     return null
   }
 
-  const togglePlayPause = () => {
-    if (!audioRef.current) return
+  const toggleIsPlay = () => {
+    const audio = audioRef.current
+    if (!audio) return
 
-    if (isPlaying) {
-      audioRef.current.pause()
-    } else {
-      audioRef.current.play()
+    // If currently playing, stop playback (toggle off)
+    if (!audio.paused) {
+      stopAudio()
+      audio.pause()
+      return
     }
-    setIsPlaying(!isPlaying)
+
+    // Start normal playback (no auto-advance)
+    setIsAutoplay(false)
+    setIsPlaying(true)
+    void audio.play().catch(() => {
+      setIsPlaying(false)
+    })
   }
 
   const toggleAutoplay = () => {
-    if (!audioRef.current) return
+    const audio = audioRef.current
+    if (!audio) return
 
-    if (isPlaying) {
-      audioRef.current.pause()
-    } else {
-      audioRef.current.play()
+    // If currently playing, stop playback (toggle off)
+    if (!audio.paused) {
+      stopAudio()
+      audio.pause()
+      return
     }
-    setIsPlaying(!isPlaying)
+
+    // Start autoplay (advance on end)
+    setIsPlaying(true)
+    setIsAutoplay(true)
+    void audio.play().catch(() => {
+      setIsPlaying(false)
+      setIsAutoplay(false)
+    })
+  }
+
+  const stopAudio = () => {
+    if (isPlaying) setIsPlaying(false)
+    if (isAutoplay) setIsAutoplay(false)
   }
 
   const handleSeek = (value: number[]) => {
@@ -169,12 +190,17 @@ export const AudioControls = ({
         />
       </div>
 
-      <div className="flex items-center justify-between px-4">
+      <div className="flex items-center justify-between pe-4">
         <div className="flex w-56 items-center justify-between">
           <Button
             variant="link"
             onClick={toggleAutoplay}
-            className="flex justify-between px-0 text-accent"
+            aria-pressed={isPlaying && isAutoplay}
+            className={`flex justify-between rounded-none border-e border-secondary px-2 ${
+              isPlaying && isAutoplay
+                ? 'text-primary'
+                : 'text-secondary'
+            }`}
           >
             {isPlaying ? (
               <svg
@@ -182,7 +208,7 @@ export const AudioControls = ({
                 viewBox="0 -960 960 960"
                 height="24px"
                 width="24px"
-                className="fill-accent"
+                className={`${isPlaying && isAutoplay ? 'fill-primary' : 'fill-secondary'}`}
               >
                 <path d="M360-320h80v-320h-80v320Zm160 0h80v-320h-80v320ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80h640v-480H160v480Zm0 0v-480 480Z" />
               </svg>
@@ -192,7 +218,7 @@ export const AudioControls = ({
                 viewBox="0 -960 960 960"
                 height="24px"
                 width="24px"
-                className="fill-accent"
+                className={`${isPlaying && isAutoplay ? 'fill-primary' : 'fill-secondary'}`}
               >
                 <path d="m380-300 280-180-280-180v360ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
               </svg>
@@ -201,12 +227,15 @@ export const AudioControls = ({
             {isPlaying ? 'stop video' : 'play video'}
           </Button>
 
-          <div className="h-10 w-0.5 bg-accent"></div>
-
           <Button
             variant="link"
-            onClick={togglePlayPause}
-            className="flex justify-between px-0 text-accent"
+            onClick={toggleIsPlay}
+            aria-pressed={isPlaying && !isAutoplay}
+            className={`flex justify-between rounded-none border-e border-secondary px-2 ${
+              isPlaying && !isAutoplay
+                ? 'text-primary'
+                : 'text-secondary'
+            }`}
           >
             {isPlaying ? (
               <Pause className="h-5 w-5" />
@@ -218,8 +247,8 @@ export const AudioControls = ({
           </Button>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="hidden items-center gap-4 space-x-2 text-background sm:flex">
+        <div className="flex items-center gap-2">
+          <div className="hidden items-center gap-4 space-x-2 text-secondary sm:flex">
             <Volume2 className="h-4 w-4" />
             <Slider
               value={[volume]}
@@ -230,10 +259,10 @@ export const AudioControls = ({
             />
           </div>
 
-          <div className="flex gap-2 text-sm">
-            <span className="text-accent"> {formatTime(currentTime)} </span>
-            <span className="text-accent"> / </span>
-            <span className="text-primary"> {formatTime(duration)} </span>
+          <div className="flex gap-2 text-sm text-secondary">
+            <span> {formatTime(currentTime)} </span>
+            <span> / </span>
+            <span> {formatTime(duration)} </span>
           </div>
         </div>
       </div>

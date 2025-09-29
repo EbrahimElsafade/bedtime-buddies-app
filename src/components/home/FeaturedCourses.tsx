@@ -49,7 +49,7 @@ const FeaturedCourses = () => {
                 to={`/courses/${course.id}`}
                 className="block"
               >
-                <Card className="story-card cursor-pointer overflow-hidden border-primary/20 bg-background/70 backdrop-blur-sm transition-transform hover:scale-105">
+                <Card className="story-card cursor-pointer overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-transform hover:scale-105">
                   <div className="relative aspect-[3/2]">
                     <img
                       src={getImageUrl(course.coverImagePath)}
@@ -61,15 +61,15 @@ const FeaturedCourses = () => {
                       }}
                     />
                     {course.isFree ? (
-                      <div className="absolute left-2 top-2 rounded-full bg-primary-foreground px-2 py-1 text-xs font-medium text-background">
+                      <div className="absolute left-2 top-2 rounded-full bg-primary-foreground px-2 py-1 text-xs font-medium text-secondary">
                         {t('misc:free.tag')}
                       </div>
                     ) : (
-                      <div className="bg-moon-DEFAULT absolute left-2 top-2 rounded-full px-2 py-1 text-xs font-medium text-background">
+                      <div className="bg-moon-DEFAULT absolute left-2 top-2 rounded-full px-2 py-1 text-xs font-medium text-secondary">
                         {t('misc:premium.tag')}
                       </div>
                     )}
-                    <div className="absolute right-2 top-2 rounded-full bg-background/80 px-2 py-1 text-xs text-primary-foreground">
+                    <div className="absolute right-2 top-2 rounded-full bg-secondary/80 px-2 py-1 text-xs text-primary-foreground">
                       {course.minAge}-{course.maxAge} {t('misc:courses.years')}
                     </div>
                   </div>

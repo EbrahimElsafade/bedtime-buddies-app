@@ -81,7 +81,7 @@ const RockPaperScissorsGame = () => {
   };
 
   return (
-    <Card className="overflow-hidden border-primary/20 bg-background/50 backdrop-blur-sm max-w-4xl mx-auto">
+    <Card className="overflow-hidden border-primary/20 bg-secondary/50 backdrop-blur-sm max-w-4xl mx-auto">
       <CardHeader className="text-center px-4 md:px-6">
         <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-primary-foreground bg-clip-text  ">
           {t('rockPaperScissors.title')}
@@ -167,7 +167,7 @@ const RockPaperScissorsGame = () => {
         <Button 
           onClick={resetGame} 
           variant="outline" 
-          className="w-full py-2 md:py-3 text-base md:text-lg font-semibold hover:bg-primary hover:text-background transition-all duration-300"
+          className="w-full py-2 md:py-3 text-base md:text-lg font-semibold hover:bg-primary hover:text-secondary transition-all duration-300"
         >
           {t('rockPaperScissors.resetGame')}
         </Button>

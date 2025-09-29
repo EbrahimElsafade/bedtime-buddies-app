@@ -133,7 +133,7 @@ const SnakeGame = () => {
 
   if (gameState === 'menu') {
     return (
-      <Card className="overflow-hidden border-primary/20 bg-background/80  backdrop-blur-sm shadow-xl">
+      <Card className="overflow-hidden border-primary/20 bg-secondary/80  backdrop-blur-sm shadow-xl">
         <CardHeader className="text-center bg-gradient-to-br from-primary/10 to-purple-100/50 ">
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary-foreground to-purple-600 bg-clip-text  ">
             {t('snake.title')}
@@ -155,7 +155,7 @@ const SnakeGame = () => {
         <CardFooter className="p-6" >
           <Button 
             onClick={resetGame}
-            className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-primary-foreground to-primary hover:from-primary hover:to-primary-foreground text-background shadow-lg hover:shadow-xl transition-all duration-300"
+            className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-primary-foreground to-primary hover:from-primary hover:to-primary-foreground text-secondary shadow-lg hover:shadow-xl transition-all duration-300"
           >
             {t('snake.startGame')}
           </Button>
@@ -166,7 +166,7 @@ const SnakeGame = () => {
 
   if (gameState === 'gameOver') {
     return (
-      <Card className="overflow-hidden border-primary/20 bg-background/80  backdrop-blur-sm shadow-xl">
+      <Card className="overflow-hidden border-primary/20 bg-secondary/80  backdrop-blur-sm shadow-xl">
         <CardHeader className="text-center bg-gradient-to-br from-red-50/50 to-red-100/30 ">
           <CardTitle className="text-2xl font-bold text-red-600 ">
             {t('snake.gameOver')}
@@ -192,7 +192,7 @@ const SnakeGame = () => {
         <CardFooter className="p-6">
           <Button 
             onClick={resetGame}
-            className="w-full py-3 text-lg font-semibold bg-primary-foreground hover:bg-primary text-background  shadow-lg hover:shadow-xl transition-all duration-300"
+            className="w-full py-3 text-lg font-semibold bg-primary-foreground hover:bg-primary text-secondary  shadow-lg hover:shadow-xl transition-all duration-300"
           >
             {t('snake.playAgain')}
           </Button>
@@ -202,7 +202,7 @@ const SnakeGame = () => {
   }
 
   return (
-    <Card className="overflow-hidden border-primary/20 bg-background/80  backdrop-blur-sm shadow-xl" dir="ltr">
+    <Card className="overflow-hidden border-primary/20 bg-secondary/80  backdrop-blur-sm shadow-xl" dir="ltr">
       <CardHeader className="bg-gradient-to-br from-primary/10 to-purple-100/50 ">
         <div className="flex justify-between items-center">
           <div className="bg-gradient-to-r from-primary/20 to-purple-100/50  rounded-lg px-4 py-2 border border-primary/20 ">
@@ -219,7 +219,7 @@ const SnakeGame = () => {
       <CardContent className="p-6" dir="ltr">
         <div className="relative bg-gradient-to-br from-gray-100 to-gray-200  rounded-lg p-4 mb-6 border-2 border-gray-300  shadow-inner">
           <div 
-            className="w-full h-full max-w-[min(70vw,70vh)] max-h-[min(70vw,70vh)] bg-background/90  grid gap-0 mx-auto border border-gray-200  rounded shadow-sm"
+            className="w-full h-full max-w-[min(70vw,70vh)] max-h-[min(70vw,70vh)] bg-secondary/90  grid gap-0 mx-auto border border-gray-200  rounded shadow-sm"
             style={{
               gridTemplate: `repeat(${gridSize}, 1fr) / repeat(${gridSize}, 1fr)`,
               aspectRatio: '1'

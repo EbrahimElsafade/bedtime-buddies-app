@@ -56,11 +56,11 @@ export const StoryInfo = ({
             {t(`category.${story.category}`, { lng: translationLang })}
           </Badge>
           {story.is_free ? (
-            <Badge className="bg-green-600 text-background">
+            <Badge className="bg-green-600 text-secondary">
               {t('type.free', { lng: translationLang })}
             </Badge>
           ) : (
-            <Badge className="bg-accent text-background">
+            <Badge className="bg-accent text-secondary">
               {t('type.premium', { lng: translationLang })}
             </Badge>
           )}

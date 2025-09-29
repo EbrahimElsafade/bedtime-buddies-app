@@ -15,7 +15,7 @@ const Features = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          <div className="bg-background/70  p-4 md:p-6 rounded-xl backdrop-blur-sm">
+          <div className="bg-secondary/70  p-4 md:p-6 rounded-xl backdrop-blur-sm">
             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary flex items-center justify-center mb-3 md:mb-4">
               <span className="text-xl md:text-2xl">🌙</span>
             </div>
@@ -25,7 +25,7 @@ const Features = () => {
             </p>
           </div>
 
-          <div className="bg-background/70  p-4 md:p-6 rounded-xl backdrop-blur-sm">
+          <div className="bg-secondary/70  p-4 md:p-6 rounded-xl backdrop-blur-sm">
             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary flex items-center justify-center mb-3 md:mb-4">
               <span className="text-xl md:text-2xl">🌎</span>
             </div>
@@ -35,7 +35,7 @@ const Features = () => {
             </p>
           </div>
 
-          <div className="bg-background/70  p-4 md:p-6 rounded-xl backdrop-blur-sm md:col-span-2 lg:col-span-1">
+          <div className="bg-secondary/70  p-4 md:p-6 rounded-xl backdrop-blur-sm md:col-span-2 lg:col-span-1">
             <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary flex items-center justify-center mb-3 md:mb-4">
               <span className="text-xl md:text-2xl">🎮</span>
             </div>

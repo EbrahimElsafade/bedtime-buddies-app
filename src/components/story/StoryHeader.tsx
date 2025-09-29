@@ -24,13 +24,13 @@ export const StoryHeader = ({
 
   return (
     <div className="mb-2 flex flex-wrap justify-between items-center">
-      <Button variant="outline" onClick={onBackClick} className="rounded-md shadow">
+      <Button variant="tertiary" onClick={onBackClick} className="rounded-md shadow">
         <ChevronLeft className="rtl:rotate-180 me-1 h-4 w-4" /> {t('backToStories')}
       </Button>
       
       <div className="flex items-center space-x-2">
         <Button 
-          variant="outline" 
+          variant="tertiary" 
           size="icon" 
           onClick={onToggleFavorite} 
           className={cn("rounded-md shadow", isFavorite && "text-red-500")}

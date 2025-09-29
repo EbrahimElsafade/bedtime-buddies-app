@@ -87,7 +87,7 @@ const Login = () => {
     return (
       <div className="py-12 px-4 flex items-center justify-center min-h-[80vh]">
         <div className="w-full max-w-md">
-          <Card className="border-primary/20 bg-background/70  backdrop-blur-sm">
+          <Card className="border-primary/20 bg-secondary/70  backdrop-blur-sm">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl font-bubbly">Reset Password</CardTitle>
               <CardDescription>We'll send you an email with reset instructions</CardDescription>
@@ -144,7 +144,7 @@ const Login = () => {
   return (
     <div className="py-12 px-4 flex items-center justify-center min-h-[80vh]">
       <div className="w-full max-w-md">
-        <Card className="border-primary/20 bg-background/70  backdrop-blur-sm">
+        <Card className="border-primary/20 bg-secondary/70  backdrop-blur-sm">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bubbly">Welcome Back</CardTitle>
             <CardDescription>Sign in to access your bedtime stories</CardDescription>
@@ -209,7 +209,7 @@ const Login = () => {
                   <span className="w-full border-t border-gray-300" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background  px-2 text-muted-foreground">
+                  <span className="bg-secondary  px-2 text-muted-foreground">
                     Or continue with
                   </span>
                 </div>

@@ -99,7 +99,7 @@ const Courses = () => {
 
           <div className="flex flex-wrap justify-center gap-2 md:gap-3">
             <Button
-              variant={activeCategory === 'all' ? 'accent' : 'outline-accent'}
+              variant={activeCategory === 'all' ? 'accent' : 'tertiary'}
               size="sm"
               onClick={() => handleCategoryChange('all')}
               className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
@@ -110,7 +110,7 @@ const Courses = () => {
               <Button
                 key={category.id}
                 variant={
-                  activeCategory === category.name ? 'accent' : 'outline-accent'
+                  activeCategory === category.name ? 'accent' : 'tertiary'
                 }
                 size="sm"
                 onClick={() => handleCategoryChange(category.name)}
@@ -124,7 +124,7 @@ const Courses = () => {
 
         {/* Courses Grid */}
         {filteredCourses.length === 0 ? (
-          <div className="rounded-lg bg-background/70 py-8 text-center md:py-12">
+          <div className="rounded-lg bg-secondary/70 py-8 text-center md:py-12">
             <p className="text-base text-primary-foreground md:text-lg">
               {t('courses.noResults')}
             </p>
@@ -138,7 +138,7 @@ const Courses = () => {
               )
               return (
                 <Link key={course.id} to={`/courses/${course.id}`}>
-                  <Card className="story-card relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-background/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg">
+                  <Card className="story-card relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-secondary/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg">
                     <div className="relative h-48 overflow-hidden">
                       <img
                         src={getImageUrl(course.coverImagePath)}
@@ -154,11 +154,11 @@ const Courses = () => {
                         }}
                       />
                       {course.isFree ? (
-                        <Badge className="absolute end-2 top-2 border-none bg-green-600 text-background">
+                        <Badge className="absolute end-2 top-2 border-none bg-green-600 text-secondary">
                           {t('free.tag')}
                         </Badge>
                       ) : (
-                        <Badge className="absolute end-2 top-2 bg-accent text-background">
+                        <Badge className="absolute end-2 top-2 bg-accent text-secondary">
                           {t('premium.tag')}
                         </Badge>
                       )}

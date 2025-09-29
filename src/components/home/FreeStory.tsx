@@ -89,7 +89,7 @@ const FreeStory = () => {
         </div>
 
         <Link to={`/stories/${freeStory.id}`}>
-          <Card className="story-card border-moon-light/50 cursor-pointer overflow-hidden border-2 bg-background/50 backdrop-blur-sm transition-shadow hover:shadow-lg">
+          <Card className="story-card border-moon-light/50 cursor-pointer overflow-hidden border-2 bg-secondary/50 backdrop-blur-sm transition-shadow hover:shadow-lg">
             <div className="md:flex">
               <div className="relative h-64 overflow-hidden md:h-64 md:w-1/3">
                 <img

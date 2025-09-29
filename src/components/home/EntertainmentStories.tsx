@@ -29,7 +29,7 @@ const EntertainmentStories = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
           {stories.map((story) => (
             <Link key={story.id} to={`/stories/${story.id}`}>
-              <Card className="story-card overflow-hidden border-moon-light/50 bg-background/50  backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow">
+              <Card className="story-card overflow-hidden border-moon-light/50 bg-secondary/50  backdrop-blur-sm cursor-pointer hover:shadow-lg transition-shadow">
                 <div className="flex flex-col md:flex-row">
                   <div className="w-full md:w-1/3 h-48 md:h-48 relative overflow-hidden">
                     <img 
@@ -38,11 +38,11 @@ const EntertainmentStories = () => {
                       className="w-full h-full object-cover"
                     />
                     {story.isFree ? (
-                      <div className="absolute top-2 left-2 bg-primary-foreground text-background text-xs font-medium px-2 py-1 rounded-full">
+                      <div className="absolute top-2 left-2 bg-primary-foreground text-secondary text-xs font-medium px-2 py-1 rounded-full">
                         {t('misc:free.tag')}
                       </div>
                     ) : (
-                      <div className="absolute top-2 left-2 bg-moon-DEFAULT text-background text-xs font-medium px-2 py-1 rounded-full">
+                      <div className="absolute top-2 left-2 bg-moon-DEFAULT text-secondary text-xs font-medium px-2 py-1 rounded-full">
                         {t('misc:premium.tag')}
                       </div>
                     )}

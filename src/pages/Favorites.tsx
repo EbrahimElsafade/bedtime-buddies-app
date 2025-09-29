@@ -137,7 +137,7 @@ const Favorites = () => {
 
               return (
                 <Link key={story.id} to={`/stories/${story.id}`}>
-                  <Card className="story-card h-[25rem] cursor-pointer overflow-hidden border-primary/20 bg-background/70 backdrop-blur-sm transition-all hover:shadow-lg hover:scale-105 ">
+                  <Card className="story-card h-[25rem] cursor-pointer overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-all hover:shadow-lg hover:scale-105 ">
                     <div className="relative h-48 overflow-hidden">
                       {imageUrl ? (
                         <img
@@ -156,14 +156,14 @@ const Favorites = () => {
                       
                       {/* Heart indicator */}
                       <div className="absolute top-2 left-2">
-                        <div className="bg-red-500 text-background p-2 rounded-full shadow-lg">
+                        <div className="bg-red-500 text-secondary p-2 rounded-full shadow-lg">
                           <Heart className="h-4 w-4 fill-current" />
                         </div>
                       </div>
                       
                       {/* Free/Premium badge */}
                       {story.is_free ? (
-                        <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-background shadow-lg">
+                        <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-secondary shadow-lg">
                           {t('misc:free.tag')}
                         </div>
                       ) : (
@@ -211,7 +211,7 @@ const Favorites = () => {
         {/* Quick Actions */}
         {favorites.length > 0 && (
           <div className="mt-12 text-center">
-            <div className="inline-block bg-background/80  backdrop-blur-sm rounded-lg p-6">
+            <div className="inline-block bg-secondary/80  backdrop-blur-sm rounded-lg p-6">
               <h3 className="text-lg font-bubbly text-primary-foreground mb-2">
                 {t('stories:favorites.quickActions')}
               </h3>

@@ -98,7 +98,7 @@ const Register = () => {
   return (
     <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        <Card className="border-primary/20 bg-background/70 backdrop-blur-sm ">
+        <Card className="border-primary/20 bg-secondary/70 backdrop-blur-sm ">
           <CardHeader className="text-center">
             <CardTitle className="font-bubbly text-2xl">
               Create an Account
@@ -166,7 +166,7 @@ const Register = () => {
                       <span className="w-full border-t border-gray-300" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-background px-2 text-muted-foreground ">
+                      <span className="bg-secondary px-2 text-muted-foreground ">
                         Or continue with
                       </span>
                     </div>

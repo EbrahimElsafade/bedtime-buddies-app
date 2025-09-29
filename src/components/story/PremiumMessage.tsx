@@ -13,7 +13,7 @@ export const PremiumMessage = ({ onSubscriptionClick, onLoginClick, isAuthentica
   const { t } = useTranslation('premium');
 
   return (
-    <Card className="p-8 text-center border-moon-DEFAULT/30 bg-background/70  backdrop-blur-sm">
+    <Card className="p-8 text-center border-moon-DEFAULT/30 bg-secondary/70  backdrop-blur-sm">
       <h3 className="text-2xl font-bubbly mb-4 text-moon-dark">{t('message.title')}</h3>
       <p className="mb-6 max-w-md mx-auto">
         {t('message.description')}

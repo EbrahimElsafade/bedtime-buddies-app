@@ -77,7 +77,7 @@ const PopularStories = () => {
             {[1, 2, 3].map(i => (
               <Card
                 key={i}
-                className="story-card  h-[25rem] w-full animate-pulse overflow-hidden border-primary/20 bg-background/70 pb-4 backdrop-blur-sm"
+                className="story-card  h-[25rem] w-full animate-pulse overflow-hidden border-primary/20 bg-secondary/70 pb-4 backdrop-blur-sm"
               >
                 <div className="h-48 bg-gray-200"></div>
                 <CardHeader className="pb-2">
@@ -126,7 +126,7 @@ const PopularStories = () => {
 
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card  relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-background/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg">
+                <Card className="story-card  relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-secondary/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg">
                   <div className="relative h-48 overflow-hidden">
                     {imageUrl ? (
                       <img
@@ -147,7 +147,7 @@ const PopularStories = () => {
                       </div>
                     )}
                     {story.is_free ? (
-                      <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-background shadow-lg">
+                      <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-secondary shadow-lg">
                         {t('misc:free.tag')}
                       </div>
                     ) : (

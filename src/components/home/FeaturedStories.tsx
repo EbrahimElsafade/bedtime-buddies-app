@@ -81,7 +81,7 @@ const FeaturedStories = () => {
             {[1, 2, 3].map(i => (
               <Card
                 key={i}
-                className="story-card h-80 w-full animate-pulse overflow-hidden border-primary/20 bg-background/70 pb-4 backdrop-blur-sm md:h-96 lg:h-[25rem]"
+                className="story-card h-80 w-full animate-pulse overflow-hidden border-primary/20 bg-secondary/70 pb-4 backdrop-blur-sm md:h-96 lg:h-[25rem]"
               >
                 <div className="h-40 bg-gray-200 md:h-48"></div>
                 <CardHeader className="px-3 pb-2 md:px-6">
@@ -145,7 +145,7 @@ const FeaturedStories = () => {
 
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card flex h-80 w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-background/70 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg md:h-96 lg:h-[25rem]">
+                <Card className="story-card flex h-80 w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-secondary/70 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg md:h-96 lg:h-[25rem]">
                   <div className="relative h-40 overflow-hidden md:h-48">
                     {imageUrl ? (
                       <img
@@ -166,7 +166,7 @@ const FeaturedStories = () => {
                       </div>
                     )}
                     {story.is_free ? (
-                      <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-2 py-1 text-xs font-bold text-background shadow-lg md:px-3 md:py-1.5">
+                      <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-2 py-1 text-xs font-bold text-secondary shadow-lg md:px-3 md:py-1.5">
                         {t('misc:free.tag')}
                       </div>
                     ) : (

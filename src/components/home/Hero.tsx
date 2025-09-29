@@ -23,20 +23,20 @@ const Hero = () => {
             <DolfoonMascot size="xl" expression="cheering" animate={false} />
           </div>
 
-          <h1 className="animate-slide-up mb-3 font-bubbly text-2xl leading-tight text-background drop-shadow-lg sm:text-3xl md:mb-4 md:text-4xl lg:text-6xl">
+          <h1 className="animate-slide-up mb-3 font-bubbly text-2xl leading-tight text-secondary drop-shadow-lg sm:text-3xl md:mb-4 md:text-4xl lg:text-6xl">
             {t('title')}
           </h1>
 
           {/* Tagline */}
           <p
-            className="animate-fade-in mb-4 font-rounded text-lg text-background/90 md:text-xl"
+            className="animate-fade-in mb-4 font-rounded text-lg text-secondary/90 md:text-xl"
             style={{ animationDelay: '0.1s' }}
           >
             {tCommon('tagline')}
           </p>
 
           <p
-            className="animate-fade-in mx-auto mb-6 max-w-2xl text-base leading-relaxed text-background/80 sm:text-lg md:mb-8 md:text-xl"
+            className="animate-fade-in mx-auto mb-6 max-w-2xl text-base leading-relaxed text-secondary/80 sm:text-lg md:mb-8 md:text-xl"
             style={{ animationDelay: '0.2s' }}
           >
             {t('subtitle')}
@@ -60,7 +60,7 @@ const Hero = () => {
               <Link to="/register" className="w-full sm:w-auto">
                 <Button
                   size="lg"
-                  variant="outline-accent"
+                  variant="tertiary"
                   className="w-full rounded-full sm:w-auto"
                 >
                   {t('signUpButton')}
@@ -81,15 +81,15 @@ const Hero = () => {
 
       {/* Additional ocean elements */}
       <div
-        className="absolute left-1/4 top-1/4 h-4 w-4 animate-bubble rounded-full bg-background/50"
+        className="absolute left-1/4 top-1/4 h-4 w-4 animate-bubble rounded-full bg-secondary/50"
         style={{ animationDelay: '0.5s' }}
       ></div>
       <div
-        className="absolute bottom-1/4 right-1/4 h-6 w-6 animate-float rounded-full bg-background/20"
+        className="absolute bottom-1/4 right-1/4 h-6 w-6 animate-float rounded-full bg-secondary/20"
         style={{ animationDelay: '1.5s' }}
       ></div>
       <div
-        className="absolute left-3/4 top-3/4 h-3 w-3 animate-wave rounded-full bg-background/40"
+        className="absolute left-3/4 top-3/4 h-3 w-3 animate-wave rounded-full bg-secondary/40"
         style={{ animationDelay: '2s' }}
       ></div>
     </section>

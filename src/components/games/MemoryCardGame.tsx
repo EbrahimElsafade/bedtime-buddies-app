@@ -132,7 +132,7 @@ const MemoryCardGame = () => {
   if (!gameStarted) {
     return (
       <div className="w-full max-w-2xl mx-auto px-2">
-        <Card className="overflow-hidden border-primary/20 bg-background/50 backdrop-blur-sm">
+        <Card className="overflow-hidden border-primary/20 bg-secondary/50 backdrop-blur-sm">
           <CardHeader className="text-center px-4 py-6">
             <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-primary-foreground bg-clip-text  ">
               {t('memory.title')}
@@ -163,7 +163,7 @@ const MemoryCardGame = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto px-2">
-      <Card className="overflow-hidden border-primary/20 bg-background/50 backdrop-blur-sm">
+      <Card className="overflow-hidden border-primary/20 bg-secondary/50 backdrop-blur-sm">
         <CardHeader className="text-center px-4 py-4">
           <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-primary-foreground bg-clip-text  ">
             {t('memory.title')}
@@ -212,7 +212,7 @@ const MemoryCardGame = () => {
                       ${card.isMatched 
                         ? 'bg-coral-soft border-coral-light opacity-75' 
                         : card.isFlipped 
-                          ? 'bg-background border-primary shadow-lg' 
+                          ? 'bg-secondary border-primary shadow-lg' 
                           : 'bg-gradient-to-br from-primary to-primary-foreground border-primary-foreground hover:from-primary-foreground hover:to-primary'
                       }
                       ${gameStatus !== 'playing' ? 'cursor-not-allowed' : 'cursor-pointer'}

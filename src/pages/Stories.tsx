@@ -148,7 +148,7 @@ const Stories = () => {
 
           <div className="flex flex-wrap justify-center gap-2 md:gap-3">
             <Button
-              variant={selectedCategory === 'all' ? 'accent' : 'outline-accent'}
+              variant={selectedCategory === 'all' ? 'accent' : 'tertiary'}
               size="sm"
               onClick={() => setSelectedCategory('all')}
               className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
@@ -159,7 +159,7 @@ const Stories = () => {
               <Button
                 key={category.id}
                 variant={
-                  selectedCategory === category.name ? 'accent' : 'outline-accent'
+                  selectedCategory === category.name ? 'accent' : 'tertiary'
                 }
                 size="sm"
                 onClick={() => setSelectedCategory(category.name)}
@@ -201,7 +201,7 @@ const Stories = () => {
 
               return (
                 <Link key={story.id} to={`/stories/${story.id}`}>
-                  <Card className="story-card flex h-80 min-w-80 max-w-96 cursor-pointer flex-col overflow-hidden border-primary/20 bg-background/70 backdrop-blur-sm transition-shadow hover:shadow-lg  md:h-96">
+                  <Card className="story-card flex h-80 min-w-80 max-w-96 cursor-pointer flex-col overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-shadow hover:shadow-lg  md:h-96">
                     <div className="relative h-56">
                       {imageUrl ? (
                         <img
@@ -224,7 +224,7 @@ const Stories = () => {
                         </div>
                       )}
                       {story.is_free ? (
-                        <div className="absolute right-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-background shadow-lg">
+                        <div className="absolute right-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-secondary shadow-lg">
                           {t('free.tag', { ns: 'misc' })}
                         </div>
                       ) : (

@@ -192,7 +192,7 @@ const PWAInstallPrompt = () => {
 
   return (
     <div className="fixed bottom-20 left-4 right-4 z-50 md:bottom-4 md:left-auto md:right-4 md:max-w-sm md:rtl:left-4 md:rtl:right-auto">
-      <Card className="border-primary/20 bg-background/95 shadow-xl backdrop-blur-sm">
+      <Card className="border-primary/20 bg-secondary/95 shadow-xl backdrop-blur-sm">
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
              <div className="rounded-lg bg-gradient-to-br from-primary/20 to-primary/50 p-2">
@@ -288,7 +288,7 @@ const PWAInstallPrompt = () => {
                        <span className="text-sm text-gray-700">
                          {t('pwa.step2', "Select 'Add to Home Screen")}
                        </span>
-                       <div className="flex items-center gap-1 rounded border bg-background px-2 py-1">
+                       <div className="flex items-center gap-1 rounded border bg-secondary px-2 py-1">
                          <Plus className="h-4 w-4 text-gray-600" />
                          <Home className="h-4 w-4 text-gray-600" />
                        </div>
