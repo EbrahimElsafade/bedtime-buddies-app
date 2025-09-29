@@ -98,12 +98,12 @@ const Layout = () => {
   return (
     <div className="ocean-gradient bubbles-bg flex min-h-screen flex-col pb-16 text-foreground md:pb-0">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-ocean-light/20 bg-background/70 backdrop-blur-lg">
+      <header className="sticky top-0 z-50 border-b border-primary/20 bg-background/70 backdrop-blur-lg">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-4">
             <DalfoonMascot size="sm" expression="happy" animate={false} />
-            <h1 className="font-bubbly text-xl text-ocean-dark">
+            <h1 className="font-bubbly text-xl text-primary">
               {t('misc:layout.appName')}
             </h1>
           </Link>
@@ -117,8 +117,8 @@ const Layout = () => {
                 className={cn(
                   'rounded-full px-4 py-2 text-sm font-medium transition-colors',
                   isActive(item.path)
-                    ? 'bg-coral-DEFAULT/30 text-coral-dark shadow-md'
-                    : 'text-ocean-dark hover:bg-ocean-light/10',
+                    ? 'bg-accent/10 text-accent shadow-md'
+                    : 'text-primary hover:bg-primary/10',
                 )}
               >
                 {item.name}
@@ -127,46 +127,23 @@ const Layout = () => {
           </nav>
 
           {/* Actions */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-2">
             <LanguageSwitcher />
 
             {isAuthenticated ? (
               <div className="hidden items-center space-x-2 md:flex">
                 <Link to="/profile">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-ocean-dark"
-                  >
+                  <Button variant="ghost" size="sm">
                     {profile?.parent_name || t('auth:profile')}
                   </Button>
                 </Link>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={logout}
-                  className="text-ocean-dark"
-                >
-                  {t('auth:logout')}
-                </Button>
               </div>
             ) : (
-              <div className="hidden items-center space-x-2 md:flex">
-                <Link to="/login">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-ocean-dark"
-                  >
-                    {t('auth:login')}
-                  </Button>
-                </Link>
-                {/* <Link to="/register">
-                  <Button variant="default" size="sm">
-                    {t('auth:signUp')}
-                  </Button>
-                </Link> */}
-              </div>
+              <Link to="/login" className='hidden md:block'>
+                <Button variant="link" size="sm">
+                  {t('auth:login')}
+                </Button>
+              </Link>
             )}
           </div>
         </div>
@@ -178,14 +155,14 @@ const Layout = () => {
       </main>
 
       {/* Footer */}
-      <footer className="hidden border-ocean-light/20 bg-gradient-to-b from-ocean-light/10 to-white/10 py-6 md:block">
+      <footer className="hidden border-primary/20 bg-gradient-to-b from-primary/10 to-white/10 py-6 md:block">
         <div className="container mx-auto px-4 text-center">
           <div className="mb-4 flex justify-center gap-4">
             {navItems.slice(0, 4).map(item => (
               <Link
                 key={item.path}
                 to={item.path}
-                className="hover:text-ocean-DEFAULT text-sm text-ocean-dark"
+                className="text-sm text-primary hover:text-primary-foreground"
               >
                 {item.name}
               </Link>
@@ -197,7 +174,7 @@ const Layout = () => {
               {t('misc:layout.subscribe')}
             </Link>
           </div>
-          <p className="text-xs text-ocean-dark">
+          <p className="text-xs text-primary">
             © {new Date().getFullYear()} {t('misc:layout.appName')}.{' '}
             {t('misc:layout.copyright')}
           </p>
@@ -205,7 +182,7 @@ const Layout = () => {
       </footer>
 
       {/* Mobile Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 flex h-16 items-center justify-around border-t border-ocean-light/20 bg-background px-2 md:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-50 pb-2 flex h-16 items-center justify-around border-t border-primary/20 bg-background px-2 md:hidden">
         {navItems.map(item => {
           const ItemIcon = item.icon
           return (
@@ -215,16 +192,16 @@ const Layout = () => {
               className={cn(
                 'flex w-1/5 flex-col items-center justify-center rounded-lg px-2 py-1',
                 isActive(item.path)
-                  ? 'text-coral-DEFAULT bg-coral-DEFAULT/10'
-                  : 'text-ocean-dark/70',
+                  ? 'text-accent'
+                    : 'text-primary',
               )}
             >
               <ItemIcon
                 className={cn(
                   'h-5 w-5',
                   isActive(item.path)
-                    ? 'text-coral-DEFAULT'
-                    : 'text-ocean-dark/70',
+                    ? 'text-accent'
+                    : 'text-primary',
                 )}
               />
               <span className="mt-1 text-xs font-medium">{item.name}</span>

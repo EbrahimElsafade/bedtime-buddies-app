@@ -87,7 +87,7 @@ const Login = () => {
     return (
       <div className="py-12 px-4 flex items-center justify-center min-h-[80vh]">
         <div className="w-full max-w-md">
-          <Card className="border-ocean-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm">
+          <Card className="border-primary/20 bg-background/70  backdrop-blur-sm">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl font-bubbly">Reset Password</CardTitle>
               <CardDescription>We'll send you an email with reset instructions</CardDescription>
@@ -119,7 +119,7 @@ const Login = () => {
                     </Button>
                     <Button
                       type="submit"
-                      className="flex-1 bg-ocean-DEFAULT hover:bg-ocean-dark"
+                      className="flex-1 bg-primary-foreground hover:bg-primary"
                       disabled={resetSubmitting}
                     >
                       {resetSubmitting ? (
@@ -144,7 +144,7 @@ const Login = () => {
   return (
     <div className="py-12 px-4 flex items-center justify-center min-h-[80vh]">
       <div className="w-full max-w-md">
-        <Card className="border-ocean-light/20 bg-white/70 dark:bg-nightsky-light/70 backdrop-blur-sm">
+        <Card className="border-primary/20 bg-background/70  backdrop-blur-sm">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bubbly">Welcome Back</CardTitle>
             <CardDescription>Sign in to access your bedtime stories</CardDescription>
@@ -168,7 +168,7 @@ const Login = () => {
                     <button
                       type="button"
                       onClick={() => setIsResetting(true)}
-                      className="text-xs text-ocean-DEFAULT hover:underline"
+                      className="text-xs text-primary-foreground hover:underline"
                     >
                       Forgot password?
                     </button>
@@ -188,7 +188,7 @@ const Login = () => {
                 
                 <Button
                   type="submit"
-                  className="w-full bg-ocean-DEFAULT hover:bg-ocean-dark"
+                  className="w-full bg-primary-foreground hover:bg-primary"
                   disabled={isLoading}
                 >
                   {isLoading ? (
@@ -209,7 +209,7 @@ const Login = () => {
                   <span className="w-full border-t border-gray-300" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white dark:bg-nightsky-light px-2 text-muted-foreground">
+                  <span className="bg-background  px-2 text-muted-foreground">
                     Or continue with
                   </span>
                 </div>
@@ -238,7 +238,7 @@ const Login = () => {
           <CardFooter className="text-center">
             <p className="text-sm text-muted-foreground">
               Don't have an account?{" "}
-              <Link to="/register" className="text-ocean-DEFAULT hover:underline">
+              <Link to="/register" className="text-primary-foreground hover:underline">
                 Sign up
               </Link>
             </p>

@@ -1,28 +1,29 @@
-
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { useTranslation } from "react-i18next";
+import { Link } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
+import { useTranslation } from 'react-i18next'
 
 const SubscribeBanner = () => {
-  const { t } = useTranslation('misc');
+  const { t } = useTranslation('misc')
 
   return (
-    <section className="py-12 px-4 bg-ocean-light/10 text-black dark:text-white">
+    <section className="bg-primary/10 px-4 py-12 text-primary-foreground">
       <div className="container mx-auto">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-bubbly mb-4">{t('subscribe.title')}</h2>
-          <p className="mb-6">
-            {t('subscribe.subtitle')}
-          </p>
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="mb-4 font-bubbly text-2xl md:text-3xl">
+            {t('subscribe.title')}
+          </h2>
+
+          <p className="mb-6">{t('subscribe.subtitle')}</p>
+
           <Link to="/subscription">
-            <Button size="lg" variant="outline" className="rounded-full border-white text-black dark:text-white bg-transparent/10 hover:bg-white hover:text-black dark:hover:text-black">
+            <Button size="lg" variant="accent">
               {t('subscribe.button')}
             </Button>
           </Link>
         </div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default SubscribeBanner;
+export default SubscribeBanner

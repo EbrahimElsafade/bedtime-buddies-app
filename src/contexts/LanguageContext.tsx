@@ -116,7 +116,7 @@ const translations = {
     'nav.home': 'الرئيسية',
     'nav.stories': 'القصص',
     'nav.games': 'الألعاب',
-    'nav.profile': 'الملف الشخصي',
+    'nav.profile': 'حسابي',
     duration: 'دقائق',
     'button.readStory': 'قراءة القصة',
     'button.readNow': 'اقرأ الآن',

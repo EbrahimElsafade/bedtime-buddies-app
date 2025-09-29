@@ -63,7 +63,7 @@ const Courses = () => {
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-ocean-DEFAULT">Loading courses...</div>
+        <div className="text-primary-foreground">Loading courses...</div>
       </div>
     )
   }
@@ -71,22 +71,22 @@ const Courses = () => {
   return (
     <div className="relative px-3 py-8 md:px-4 md:py-12">
       {/* Fun decorative elements */}
-      <div className="absolute left-10 top-20 hidden h-20 w-20 animate-float rounded-full bg-ocean-light/10 md:block"></div>
+      <div className="absolute left-10 top-20 hidden h-20 w-20 animate-float rounded-full bg-primary/10 md:block"></div>
       <div
         className="absolute bottom-20 right-10 hidden h-16 w-16 animate-float rounded-full bg-moon-light/10 md:block"
         style={{ animationDelay: '1.5s' }}
       ></div>
 
       <div className="container mx-auto max-w-7xl">
-        <h1 className="text-ocean-DEFAULT mb-4 font-bubbly text-2xl md:mb-6 md:text-3xl lg:text-4xl">
+        <h1 className="text-primary-foreground mb-4 font-bubbly text-2xl md:mb-6 md:text-3xl lg:text-4xl">
           {t('courses.exploreTitle')}
         </h1>
 
         <div className="grid grid-cols-1 gap-6 md:gap-8 lg:grid-cols-4">
           {/* Sidebar Filters */}
           <div className="lg:col-span-1">
-            <div className="sticky top-24 rounded-lg bg-white/80 p-4 backdrop-blur-sm dark:bg-nightsky-light/80 md:p-6">
-              <h3 className="text-ocean-DEFAULT mb-3 font-bubbly text-lg md:mb-4 md:text-xl">
+            <div className="sticky top-24 rounded-lg bg-background/80 p-4 backdrop-blur-sm  md:p-6">
+              <h3 className="text-primary-foreground mb-3 font-bubbly text-lg md:mb-4 md:text-xl">
                 {t('courses.allCourses')}
               </h3>
 
@@ -104,13 +104,13 @@ const Courses = () => {
 
               {/* Category Filters */}
               <div className="mb-4 md:mb-6">
-                <h4 className="text-ocean-DEFAULT mb-2 text-sm font-medium md:text-base">
+                <h4 className="text-primary-foreground mb-2 text-sm font-medium md:text-base">
                   Categories
                 </h4>
                 <div className="flex flex-col space-y-1">
                   <Button
                     variant={activeCategory === 'all' ? 'default' : 'ghost'}
-                    className={`${activeCategory === 'all' ? 'bg-ocean-DEFAULT text-white' : 'text-ocean-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
+                    className={`${activeCategory === 'all' ? 'bg-primary-foreground text-background' : 'text-primary-foreground'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
                     onClick={() => handleCategoryChange('all')}
                   >
                     {t('courses.allCourses')} ({courses.length})
@@ -121,7 +121,7 @@ const Courses = () => {
                       variant={
                         activeCategory === category.name ? 'default' : 'ghost'
                       }
-                      className={`${activeCategory === category.name ? 'bg-ocean-DEFAULT text-white' : 'text-ocean-DEFAULT'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
+                      className={`${activeCategory === category.name ? 'bg-primary-foreground text-background' : 'text-primary-foreground'} h-8 justify-start px-2 text-xs md:h-9 md:px-3 md:text-sm`}
                       onClick={() => handleCategoryChange(category.name)}
                     >
                       {getCategoryText(category, 'name', lang)} (
@@ -134,7 +134,7 @@ const Courses = () => {
 
               {/* Age Range Filters */}
               {/* <div>
-                <h4 className="text-ocean-DEFAULT mb-2 text-sm font-medium md:text-base">
+                <h4 className="text-primary-foreground mb-2 text-sm font-medium md:text-base">
                   {t('courses.years')}
                 </h4>
                 <div className="flex flex-wrap gap-1 md:gap-2">
@@ -142,7 +142,7 @@ const Courses = () => {
                     <Badge
                       key={age}
                       variant="outline"
-                      className="border-ocean-light bg-ocean-light/20 text-xs"
+                      className="border-primary bg-primary/20 text-xs"
                     >
                       {age} {t('courses.years')} ({count})
                     </Badge>
@@ -155,8 +155,8 @@ const Courses = () => {
           {/* Courses Grid */}
           <div className="lg:col-span-3">
             {filteredCourses.length === 0 ? (
-              <div className="rounded-lg bg-white/70 py-8 text-center dark:bg-nightsky-light/70 md:py-12">
-                <p className="text-ocean-DEFAULT text-base md:text-lg">
+              <div className="rounded-lg bg-background/70 py-8 text-center  md:py-12">
+                <p className="text-primary-foreground text-base md:text-lg">
                   {t('courses.noResults')}
                 </p>
               </div>
@@ -170,7 +170,7 @@ const Courses = () => {
                   )
                   return (
                     <Link key={course.id} to={`/courses/${course.id}`}>
-                      <Card className="story-card relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-ocean-light/20 bg-white/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/10">
+                      <Card className="story-card relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-background/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg ">
                         <div className="relative h-48 overflow-hidden">
                           <img
                             src={getImageUrl(course.coverImagePath)}
@@ -186,7 +186,7 @@ const Courses = () => {
                             }}
                           />
                           {course.isFree ? (
-                            <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-white shadow-lg">
+                            <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-background shadow-lg">
                               {t('free.tag')}
                             </div>
                           ) : (
@@ -198,19 +198,19 @@ const Courses = () => {
                         <div className="flex flex-1 flex-col">
                           <CardHeader className="flex-1 pb-2">
                             <div className="mb-2 flex items-start justify-between">
-                              <CardTitle className="text-ocean-DEFAULT line-clamp-2 flex-1 text-lg">
+                              <CardTitle className="text-primary-foreground line-clamp-2 flex-1 text-lg">
                                 {getLocalized(course, 'title', lang)}
                               </CardTitle>
                               <div className="ml-2 flex items-center gap-2">
                                 <Badge
                                   variant="secondary"
-                                  className="text-ocean-DEFAULT bg-ocean-light/30 text-xs"
+                                  className="text-primary-foreground bg-primary/30 text-xs"
                                 >
                                   {category
                                     ? getCategoryText(category, 'name', lang)
                                     : 'General'}
                                 </Badge>
-                                <div className="text-ocean-DEFAULT flex items-center gap-1 text-xs">
+                                <div className="text-primary-foreground flex items-center gap-1 text-xs">
                                   <Clock className="h-3 w-3" />
                                   <span>
                                     {Math.floor(course.duration / 60)}{' '}
@@ -219,10 +219,10 @@ const Courses = () => {
                                 </div>
                               </div>
                             </div>
-                            <CardDescription className="text-ocean-DEFAULT line-clamp-2 text-sm leading-relaxed dark:text-foreground">
+                            <CardDescription className="text-primary-foreground line-clamp-2 text-sm leading-relaxed ">
                               {getLocalized(course, 'description', lang)}
                             </CardDescription>
-                            <div className="text-ocean-DEFAULT mt-2 flex items-center text-xs dark:text-foreground">
+                            <div className="text-primary-foreground mt-2 flex items-center text-xs ">
                               <BookOpen className="mr-1 h-3 w-3" />
                               <span>
                                 {course.lessons} {t('courses.lessons')} •{' '}

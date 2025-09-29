@@ -43,7 +43,7 @@ const AdminLayout = () => {
             <div className="flex items-center justify-between p-4">
               <Link
                 to="/admin"
-                className="text-ocean-dark flex items-center text-xl font-bold"
+                className="text-primary flex items-center text-xl font-bold"
               >
                 <span>{t('dashboard.title')}</span>
               </Link>

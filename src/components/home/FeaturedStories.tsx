@@ -66,12 +66,12 @@ const FeaturedStories = () => {
       <section className="relative bg-secondary/50 px-4 py-8 md:py-12">
         <div className="container mx-auto">
           <div className="mb-4 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center md:mb-6">
-            <h2 className="text-ocean-DEFAULT font-bubbly text-xl md:text-2xl lg:text-3xl">
+            <h2 className="font-bubbly text-xl text-primary-foreground md:text-2xl lg:text-3xl">
               {t('stories:featured.title')}
             </h2>
             <Link
               to="/stories"
-              className="text-ocean-DEFAULT flex items-center text-sm font-medium hover:text-ocean-dark"
+              className="flex items-center text-sm font-medium text-primary-foreground hover:underline"
             >
               {t('misc:free.viewAll')}{' '}
               <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
@@ -81,7 +81,7 @@ const FeaturedStories = () => {
             {[1, 2, 3].map(i => (
               <Card
                 key={i}
-                className="story-card w-full h-80 animate-pulse overflow-hidden border-ocean-light/20 bg-white/70 pb-4 backdrop-blur-sm dark:bg-nightsky-light/70 md:h-96 lg:h-[25rem]"
+                className="story-card  h-80 w-full animate-pulse overflow-hidden border-primary/20 bg-background/70 pb-4 backdrop-blur-sm md:h-96 lg:h-[25rem]"
               >
                 <div className="h-40 bg-gray-200 md:h-48"></div>
                 <CardHeader className="px-3 pb-2 md:px-6">
@@ -113,15 +113,15 @@ const FeaturedStories = () => {
   }
 
   return (
-    <section className="relative bg-ocean-light/10 px-4 py-8 md:py-12">
+    <section className="relative bg-primary/10 px-4 py-8 md:py-12">
       <div className="container mx-auto">
-        <div className="mb-4 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center md:mb-6">
-          <h2 className="text-ocean-DEFAULT font-bubbly text-xl md:text-2xl lg:text-3xl">
+        <div className="mb-4 flex items-center justify-between gap-2 sm:flex-row sm:items-center md:mb-6">
+          <h2 className="text-lg font-bubbly text-primary-foreground md:text-3xl">
             {t('stories:featured.title')}
           </h2>
           <Link
             to="/stories"
-            className="text-ocean-DEFAULT flex shrink-0 items-center text-sm font-medium hover:text-ocean-dark"
+            className="flex shrink-0 items-center text-xs font-medium text-primary-foreground hover:underline md:text-sm"
             onClick={handleViewAllClick}
           >
             {t('misc:free.viewAll')}{' '}
@@ -129,7 +129,7 @@ const FeaturedStories = () => {
           </Link>
         </div>
 
-        <div className="grid relative z-40 grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
+        <div className="relative z-40 grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
           {featuredStories.map(story => {
             const imageUrl = getImageUrl(story.cover_image)
             const storyTitle = getMultilingualText(
@@ -145,7 +145,7 @@ const FeaturedStories = () => {
 
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card flex w-full h-80 cursor-pointer flex-col overflow-hidden border-ocean-light/20 bg-white/70 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/70 md:h-96 lg:h-[25rem]">
+                <Card className="story-card  flex h-80 w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-background/70 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg md:h-96 lg:h-[25rem]">
                   <div className="relative h-40 overflow-hidden md:h-48">
                     {imageUrl ? (
                       <img
@@ -166,7 +166,7 @@ const FeaturedStories = () => {
                       </div>
                     )}
                     {story.is_free ? (
-                      <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-2 py-1 text-xs font-bold text-white shadow-lg md:px-3 md:py-1.5">
+                      <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-2 py-1 text-xs font-bold text-background shadow-lg md:px-3 md:py-1.5">
                         {t('misc:free.tag')}
                       </div>
                     ) : (
@@ -178,13 +178,13 @@ const FeaturedStories = () => {
                   <div className="flex flex-1 flex-col">
                     <CardHeader className="flex-1 px-3 pb-2 pt-3 md:px-6 md:pt-6">
                       <div className="mb-2 flex flex-col gap-2 lg:flex-row lg:items-start lg:justify-between">
-                        <CardTitle className="text-ocean-DEFAULT line-clamp-2 flex-1 text-base md:text-lg">
+                        <CardTitle className="line-clamp-2 flex-1 text-base text-primary-foreground md:text-lg">
                           {storyTitle}
                         </CardTitle>
                         <div className="flex shrink-0 items-center gap-2">
                           <Badge
                             variant="secondary"
-                            className="text-ocean-DEFAULT bg-ocean-light/30 text-xs"
+                            className="bg-primary/30 text-xs text-primary-foreground"
                           >
                             {t(`stories:category.${story.category}`, {
                               defaultValue:
@@ -192,7 +192,7 @@ const FeaturedStories = () => {
                                 story.category.slice(1),
                             })}
                           </Badge>
-                          <div className="text-ocean-DEFAULT flex items-center gap-1 text-xs">
+                          <div className="flex items-center gap-1 text-xs text-primary-foreground">
                             <Clock className="h-3 w-3" />
                             <span>
                               {story.duration} {t('misc:duration')}
@@ -200,7 +200,7 @@ const FeaturedStories = () => {
                           </div>
                         </div>
                       </div>
-                      <CardDescription className="text-ocean-DEFAULT line-clamp-2 text-sm leading-relaxed dark:text-foreground">
+                      <CardDescription className="line-clamp-2 text-sm leading-relaxed text-primary-foreground ">
                         {storyDescription}
                       </CardDescription>
                     </CardHeader>

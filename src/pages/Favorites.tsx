@@ -68,7 +68,7 @@ const Favorites = () => {
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-4">
             <Heart className="h-8 w-8 text-red-500" />
-            <h1 className="text-3xl md:text-4xl font-bubbly text-ocean-DEFAULT">
+            <h1 className="text-3xl md:text-4xl font-bubbly text-primary-foreground">
               {t('stories:favorites.title')}
             </h1>
           </div>
@@ -96,7 +96,7 @@ const Favorites = () => {
           /* Empty State */
           <div className="text-center py-16">
             <div className="relative mb-8">
-              <div className="inline-block p-6 rounded-full bg-gradient-to-br from-pink-100 to-purple-100 dark:from-pink-900/20 dark:to-purple-900/20">
+              <div className="inline-block p-6 rounded-full bg-gradient-to-br from-pink-100 to-purple-100 ">
                 <Heart className="h-16 w-16 text-pink-400" />
               </div>
               <div className="absolute -top-2 -right-2">
@@ -104,7 +104,7 @@ const Favorites = () => {
               </div>
             </div>
             
-            <h2 className="text-2xl font-bubbly text-ocean-DEFAULT mb-4">
+            <h2 className="text-2xl font-bubbly text-primary-foreground mb-4">
               {t('stories:favorites.empty.title')}
             </h2>
             <p className="text-muted-foreground mb-8 max-w-md mx-auto">
@@ -114,7 +114,7 @@ const Favorites = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 onClick={() => navigate("/stories")}
-                className="bg-ocean-DEFAULT hover:bg-ocean-dark"
+                className="bg-primary-foreground hover:bg-primary"
               >
                 <BookOpen className="mr-2 h-4 w-4" />
                 {t('stories:browse')}
@@ -137,7 +137,7 @@ const Favorites = () => {
 
               return (
                 <Link key={story.id} to={`/stories/${story.id}`}>
-                  <Card className="story-card h-[25rem] cursor-pointer overflow-hidden border-ocean-light/20 bg-white/70 backdrop-blur-sm transition-all hover:shadow-lg hover:scale-105 dark:bg-nightsky-light/70">
+                  <Card className="story-card h-[25rem] cursor-pointer overflow-hidden border-primary/20 bg-background/70 backdrop-blur-sm transition-all hover:shadow-lg hover:scale-105 ">
                     <div className="relative h-48 overflow-hidden">
                       {imageUrl ? (
                         <img
@@ -149,21 +149,21 @@ const Favorites = () => {
                           }}
                         />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-ocean-light/30 to-purple-100/30">
-                          <BookOpen className="h-12 w-12 text-ocean-DEFAULT/60" />
+                        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/30 to-purple-100/30">
+                          <BookOpen className="h-12 w-12 text-primary-foreground/60" />
                         </div>
                       )}
                       
                       {/* Heart indicator */}
                       <div className="absolute top-2 left-2">
-                        <div className="bg-red-500 text-white p-2 rounded-full shadow-lg">
+                        <div className="bg-red-500 text-background p-2 rounded-full shadow-lg">
                           <Heart className="h-4 w-4 fill-current" />
                         </div>
                       </div>
                       
                       {/* Free/Premium badge */}
                       {story.is_free ? (
-                        <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-white shadow-lg">
+                        <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-background shadow-lg">
                           {t('misc:free.tag')}
                         </div>
                       ) : (
@@ -176,7 +176,7 @@ const Favorites = () => {
                     <div className="flex flex-1 flex-col">
                       <CardHeader className="flex-1 pb-2">
                         <div className="mb-2 flex items-start justify-between">
-                          <CardTitle className="text-ocean-DEFAULT line-clamp-2 flex-1 text-lg">
+                          <CardTitle className="text-primary-foreground line-clamp-2 flex-1 text-lg">
                             {storyTitle}
                           </CardTitle>
                         </div>
@@ -184,19 +184,19 @@ const Favorites = () => {
                         <div className="flex items-center gap-2 mb-2">
                           <Badge
                             variant="secondary"
-                            className="text-ocean-DEFAULT bg-ocean-light/30 text-xs"
+                            className="text-primary-foreground bg-primary/30 text-xs"
                           >
                             {t(`stories:category.${story.category}`, {
                               defaultValue: story.category.charAt(0).toUpperCase() + story.category.slice(1),
                             })}
                           </Badge>
-                          <div className="text-ocean-DEFAULT flex items-center gap-1 text-xs">
+                          <div className="text-primary-foreground flex items-center gap-1 text-xs">
                             <Clock className="h-3 w-3" />
                             <span>{story.duration} {t('misc:duration')}</span>
                           </div>
                         </div>
                         
-                        <CardDescription className="text-ocean-DEFAULT line-clamp-2 text-sm leading-relaxed dark:text-foreground">
+                        <CardDescription className="text-primary-foreground line-clamp-2 text-sm leading-relaxed ">
                           {storyDescription}
                         </CardDescription>
                       </CardHeader>
@@ -211,15 +211,15 @@ const Favorites = () => {
         {/* Quick Actions */}
         {favorites.length > 0 && (
           <div className="mt-12 text-center">
-            <div className="inline-block bg-white/80 dark:bg-nightsky-light/80 backdrop-blur-sm rounded-lg p-6">
-              <h3 className="text-lg font-bubbly text-ocean-DEFAULT mb-2">
+            <div className="inline-block bg-background/80  backdrop-blur-sm rounded-lg p-6">
+              <h3 className="text-lg font-bubbly text-primary-foreground mb-2">
                 {t('stories:favorites.quickActions')}
               </h3>
               <div className="flex flex-wrap gap-3 justify-center">
                 <Button 
                   variant="outline"
                   onClick={() => navigate("/stories")}
-                  className="border-ocean-light hover:bg-ocean-light/20"
+                  className="border-primary hover:bg-primary/20"
                 >
                   <BookOpen className="mr-2 h-4 w-4" />
                   {t('stories:findMore')}

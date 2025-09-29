@@ -62,12 +62,12 @@ const PopularStories = () => {
       <section className="relative overflow-hidden px-4 py-12">
         <div className="container mx-auto">
           <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-ocean-DEFAULT font-bubbly text-2xl md:text-3xl">
+            <h2 className="font-bubbly text-2xl text-primary-foreground md:text-3xl">
               {t('stories:popular')}
             </h2>
             <Link
               to="/stories"
-              className="text-ocean-DEFAULT flex items-center text-sm font-medium hover:text-ocean-dark"
+              className="flex items-center text-sm font-medium text-primary-foreground hover:underline"
             >
               {t('misc:free.viewAll')}{' '}
               <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
@@ -77,7 +77,7 @@ const PopularStories = () => {
             {[1, 2, 3].map(i => (
               <Card
                 key={i}
-                className="story-card h-[25rem] w-full animate-pulse overflow-hidden border-ocean-light/20 bg-white/70 pb-4 backdrop-blur-sm dark:bg-nightsky-light/70"
+                className="story-card  h-[25rem] w-full animate-pulse overflow-hidden border-primary/20 bg-background/70 pb-4 backdrop-blur-sm"
               >
                 <div className="h-48 bg-gray-200"></div>
                 <CardHeader className="pb-2">
@@ -94,15 +94,15 @@ const PopularStories = () => {
   }
 
   return (
-    <section className="relative bg-ocean-light/10 overflow-hidden px-4 py-12">
+    <section className="relative overflow-hidden bg-primary/10 px-4 py-12">
       <div className="container mx-auto">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-ocean-DEFAULT font-bubbly text-2xl md:text-3xl">
+          <h2 className="text-lg font-bubbly text-primary-foreground md:text-3xl">
             {t('stories:popular')}
           </h2>
           <Link
             to="/stories"
-            className="text-ocean-DEFAULT flex items-center text-sm font-medium hover:text-ocean-dark"
+            className="flex items-center text-xs font-medium text-primary-foreground hover:underline md:text-sm"
             onClick={handleViewAllClick}
           >
             {t('misc:free.viewAll')}{' '}
@@ -126,7 +126,7 @@ const PopularStories = () => {
 
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card relative z-20 w-full flex h-[25rem] cursor-pointer flex-col overflow-hidden border-ocean-light/20 bg-white/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/10">
+                <Card className="story-card  relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-background/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg">
                   <div className="relative h-48 overflow-hidden">
                     {imageUrl ? (
                       <img
@@ -147,7 +147,7 @@ const PopularStories = () => {
                       </div>
                     )}
                     {story.is_free ? (
-                      <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-white shadow-lg">
+                      <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-background shadow-lg">
                         {t('misc:free.tag')}
                       </div>
                     ) : (
@@ -159,13 +159,13 @@ const PopularStories = () => {
                   <div className="flex flex-1 flex-col">
                     <CardHeader className="flex-1 pb-2">
                       <div className="mb-2 flex items-start justify-between">
-                        <CardTitle className="text-ocean-DEFAULT line-clamp-2 flex-1 text-lg">
+                        <CardTitle className="line-clamp-2 flex-1 text-lg text-primary-foreground">
                           {storyTitle}
                         </CardTitle>
                         <div className="ml-2 flex items-center gap-2">
                           <Badge
                             variant="secondary"
-                            className="text-ocean-DEFAULT bg-ocean-light/30 text-xs"
+                            className="bg-primary/30 text-xs text-primary-foreground"
                           >
                             {t(`stories:category.${story.category}`, {
                               defaultValue:
@@ -173,7 +173,7 @@ const PopularStories = () => {
                                 story.category.slice(1),
                             })}
                           </Badge>
-                          <div className="text-ocean-DEFAULT flex items-center gap-1 text-xs">
+                          <div className="flex items-center gap-1 text-xs text-primary-foreground">
                             <Clock className="h-3 w-3" />
                             <span>
                               {story.duration} {t('misc:duration')}
@@ -181,7 +181,7 @@ const PopularStories = () => {
                           </div>
                         </div>
                       </div>
-                      <CardDescription className="text-ocean-DEFAULT line-clamp-2 text-sm leading-relaxed dark:text-foreground">
+                      <CardDescription className="line-clamp-2 text-sm leading-relaxed text-primary-foreground ">
                         {storyDescription}
                       </CardDescription>
                     </CardHeader>

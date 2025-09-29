@@ -241,7 +241,7 @@ const CourseOptions = () => {
                 {categories.map(category => (
                   <div key={category.id}>
                     {editingCategoryId === category.id ? (
-                      <div className="space-y-2 rounded-md border bg-white p-3">
+                      <div className="space-y-2 rounded-md border bg-background p-3">
                         <div className="flex items-center gap-2">
                           <Input
                             placeholder="English"
@@ -307,7 +307,7 @@ const CourseOptions = () => {
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-6 w-6 p-0 hover:bg-blue-500 hover:text-white"
+                              className="h-6 w-6 p-0 hover:bg-blue-500 hover:text-background"
                               onClick={() => startEditCategory(category)}
                             >
                               <Edit2 className="h-3 w-3" />

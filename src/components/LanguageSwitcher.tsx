@@ -21,12 +21,12 @@ const LanguageSwitcher = () => {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
+        <Button variant="outline" size="icon" >
           <GlobeIcon className="h-5 w-5" />
           <span className="sr-only">{t('accessibility.languageSelection')}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="bg-white/90 backdrop-blur-md">
+      <DropdownMenuContent align="end" className="bg-background/90 backdrop-blur-md">
         <DropdownMenuItem 
           className={i18n.language === 'en' ? 'font-bold' : ''} 
           onClick={() => changeLanguage('en')}

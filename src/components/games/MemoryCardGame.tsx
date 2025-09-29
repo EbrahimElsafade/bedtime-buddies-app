@@ -132,9 +132,9 @@ const MemoryCardGame = () => {
   if (!gameStarted) {
     return (
       <div className="w-full max-w-2xl mx-auto px-2">
-        <Card className="overflow-hidden border-ocean-light/20 bg-white/50 backdrop-blur-sm">
+        <Card className="overflow-hidden border-primary/20 bg-background/50 backdrop-blur-sm">
           <CardHeader className="text-center px-4 py-6">
-            <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-ocean-light to-ocean-DEFAULT bg-clip-text  ">
+            <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-primary-foreground bg-clip-text  ">
               {t('memory.title')}
             </CardTitle>
             <CardDescription className="text-sm md:text-base">{t('memory.description')}</CardDescription>
@@ -150,7 +150,7 @@ const MemoryCardGame = () => {
               </div>
               <Button 
                 onClick={initializeGame}
-                className="px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-semibold bg-gradient-to-r from-ocean-light to-ocean-DEFAULT hover:from-ocean-DEFAULT hover:to-ocean-dark w-full max-w-xs"
+                className="px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-semibold bg-gradient-to-r from-primary to-primary-foreground hover:from-primary-foreground hover:to-primary w-full max-w-xs"
               >
                 {t('memory.startGame')}
               </Button>
@@ -163,9 +163,9 @@ const MemoryCardGame = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto px-2">
-      <Card className="overflow-hidden border-ocean-light/20 bg-white/50 backdrop-blur-sm">
+      <Card className="overflow-hidden border-primary/20 bg-background/50 backdrop-blur-sm">
         <CardHeader className="text-center px-4 py-4">
-          <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-ocean-light to-ocean-DEFAULT bg-clip-text  ">
+          <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-primary-foreground bg-clip-text  ">
             {t('memory.title')}
           </CardTitle>
           <CardDescription className="text-sm md:text-base">{t('memory.description')}</CardDescription>
@@ -174,7 +174,7 @@ const MemoryCardGame = () => {
           <div className="space-y-4 md:space-y-6">
             <div className="grid grid-cols-3 gap-2 md:gap-4">
               <div className="text-center bg-gradient-to-r from-ocean-surface to-wave-light px-3 md:px-6 py-2 md:py-3 rounded-lg">
-                <div className="text-lg md:text-2xl font-bold text-ocean-dark">{moves}</div>
+                <div className="text-lg md:text-2xl font-bold text-primary">{moves}</div>
                 <div className="text-xs md:text-sm text-muted-foreground">{t('memory.moves')}</div>
               </div>
               <div className="text-center bg-gradient-to-r from-coral-soft to-coral-light px-3 md:px-6 py-2 md:py-3 rounded-lg">
@@ -212,8 +212,8 @@ const MemoryCardGame = () => {
                       ${card.isMatched 
                         ? 'bg-coral-soft border-coral-light opacity-75' 
                         : card.isFlipped 
-                          ? 'bg-white border-ocean-light shadow-lg' 
-                          : 'bg-gradient-to-br from-ocean-light to-ocean-DEFAULT border-ocean-DEFAULT hover:from-ocean-DEFAULT hover:to-ocean-dark'
+                          ? 'bg-background border-primary shadow-lg' 
+                          : 'bg-gradient-to-br from-primary to-primary-foreground border-primary-foreground hover:from-primary-foreground hover:to-primary'
                       }
                       ${gameStatus !== 'playing' ? 'cursor-not-allowed' : 'cursor-pointer'}
                     `}
@@ -238,7 +238,7 @@ const MemoryCardGame = () => {
         <CardFooter className="px-4 py-4">
           <Button 
             onClick={initializeGame} 
-            className="w-full py-3 text-base md:text-lg font-semibold bg-gradient-to-r from-ocean-light to-ocean-DEFAULT hover:from-ocean-DEFAULT hover:to-ocean-dark transition-all duration-300"
+            className="w-full py-3 text-base md:text-lg font-semibold bg-gradient-to-r from-primary to-primary-foreground hover:from-primary-foreground hover:to-primary transition-all duration-300"
           >
             {t('memory.playAgain')}
           </Button>

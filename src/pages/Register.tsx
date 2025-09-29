@@ -98,7 +98,7 @@ const Register = () => {
   return (
     <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        <Card className="border-ocean-light/20 bg-white/70 backdrop-blur-sm dark:bg-nightsky-light/70">
+        <Card className="border-primary/20 bg-background/70 backdrop-blur-sm ">
           <CardHeader className="text-center">
             <CardTitle className="font-bubbly text-2xl">
               Create an Account
@@ -155,7 +155,7 @@ const Register = () => {
 
                   <Button
                     type="button"
-                    className="bg-ocean-DEFAULT w-full hover:bg-ocean-dark"
+                    className="bg-primary-foreground w-full hover:bg-primary"
                     onClick={handleNextStep}
                   >
                     Next
@@ -166,7 +166,7 @@ const Register = () => {
                       <span className="w-full border-t border-gray-300" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-white px-2 text-muted-foreground dark:bg-nightsky-light">
+                      <span className="bg-background px-2 text-muted-foreground ">
                         Or continue with
                       </span>
                     </div>
@@ -250,7 +250,7 @@ const Register = () => {
                     </Button>
                     <Button
                       type="submit"
-                      className="bg-ocean-DEFAULT flex-1 hover:bg-ocean-dark"
+                      className="bg-primary-foreground flex-1 hover:bg-primary"
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -270,7 +270,7 @@ const Register = () => {
           <CardFooter className="text-center">
             <p className="text-sm text-muted-foreground">
               Already have an account?{' '}
-              <Link to="/login" className="text-ocean-DEFAULT hover:underline">
+              <Link to="/login" className="text-primary-foreground hover:underline">
                 Sign in
               </Link>
             </p>

@@ -133,21 +133,21 @@ const SnakeGame = () => {
 
   if (gameState === 'menu') {
     return (
-      <Card className="overflow-hidden border-ocean-light/20 bg-white/80 dark:bg-nightsky-light/80 backdrop-blur-sm shadow-xl">
-        <CardHeader className="text-center bg-gradient-to-br from-ocean-light/10 to-purple-100/50 dark:from-nightsky/50 dark:to-nightsky-light/30">
-          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-ocean-DEFAULT to-purple-600 bg-clip-text  ">
+      <Card className="overflow-hidden border-primary/20 bg-background/80  backdrop-blur-sm shadow-xl">
+        <CardHeader className="text-center bg-gradient-to-br from-primary/10 to-purple-100/50 ">
+          <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary-foreground to-purple-600 bg-clip-text  ">
             {t('snake.title')}
           </CardTitle>
-          <CardDescription className="text-gray-600 dark:text-gray-300">
+          <CardDescription className="text-gray-600 ">
             {t('snake.description')}
           </CardDescription>
         </CardHeader>
         <CardContent className="p-8">
           <div className="flex flex-col items-center space-y-6">
             {highScore > 0 && (
-              <div className="bg-gradient-to-r from-ocean-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-xl p-6 shadow-lg border border-ocean-light/20 dark:border-nightsky-light/30">
-                <div className="text-gray-600 dark:text-gray-300 text-sm mb-1 text-center">{t('snake.highScore')}</div>
-                <div className="text-3xl font-bold text-ocean-DEFAULT dark:text-ocean-light text-center">{highScore}</div>
+              <div className="bg-gradient-to-r from-primary/20 to-purple-100/50  rounded-xl p-6 shadow-lg border border-primary/20 ">
+                <div className="text-gray-600  text-sm mb-1 text-center">{t('snake.highScore')}</div>
+                <div className="text-3xl font-bold text-primary-foreground  text-center">{highScore}</div>
               </div>
             )}
           </div>
@@ -155,7 +155,7 @@ const SnakeGame = () => {
         <CardFooter className="p-6" >
           <Button 
             onClick={resetGame}
-            className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-ocean-DEFAULT to-ocean-dark hover:from-ocean-light hover:to-ocean-DEFAULT text-white shadow-lg hover:shadow-xl transition-all duration-300"
+            className="w-full py-3 text-lg font-semibold bg-gradient-to-r from-primary-foreground to-primary hover:from-primary hover:to-primary-foreground text-background shadow-lg hover:shadow-xl transition-all duration-300"
           >
             {t('snake.startGame')}
           </Button>
@@ -166,33 +166,33 @@ const SnakeGame = () => {
 
   if (gameState === 'gameOver') {
     return (
-      <Card className="overflow-hidden border-ocean-light/20 bg-white/80 dark:bg-nightsky-light/80 backdrop-blur-sm shadow-xl">
-        <CardHeader className="text-center bg-gradient-to-br from-red-50/50 to-red-100/30 dark:from-red-900/20 dark:to-red-800/10">
-          <CardTitle className="text-2xl font-bold text-red-600 dark:text-red-400">
+      <Card className="overflow-hidden border-primary/20 bg-background/80  backdrop-blur-sm shadow-xl">
+        <CardHeader className="text-center bg-gradient-to-br from-red-50/50 to-red-100/30 ">
+          <CardTitle className="text-2xl font-bold text-red-600 ">
             {t('snake.gameOver')}
           </CardTitle>
-          <CardDescription className="text-gray-600 dark:text-gray-300">
+          <CardDescription className="text-gray-600 ">
             {t('snake.score')} {score}
           </CardDescription>
         </CardHeader>
         <CardContent className="p-8">
           <div className="flex flex-col items-center space-y-6">
             {score === highScore && score > 0 && (
-              <div className="text-ocean-DEFAULT dark:text-ocean-light font-bold text-lg animate-bounce">
+              <div className="text-primary-foreground  font-bold text-lg animate-bounce">
                 🎉 {t('snake.newHighScore')}
               </div>
             )}
             
-            <div className="bg-gradient-to-r from-ocean-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-xl p-6 shadow-lg w-full max-w-sm border border-ocean-light/20 dark:border-nightsky-light/30">
-              <div className="text-gray-600 dark:text-gray-300 text-sm mb-1 text-center">{t('snake.highScore')}</div>
-              <div className="text-3xl font-bold text-ocean-DEFAULT dark:text-ocean-light text-center">{highScore}</div>
+            <div className="bg-gradient-to-r from-primary/20 to-purple-100/50  rounded-xl p-6 shadow-lg w-full max-w-sm border border-primary/20 ">
+              <div className="text-gray-600  text-sm mb-1 text-center">{t('snake.highScore')}</div>
+              <div className="text-3xl font-bold text-primary-foreground  text-center">{highScore}</div>
             </div>
           </div>
         </CardContent>
         <CardFooter className="p-6">
           <Button 
             onClick={resetGame}
-            className="w-full py-3 text-lg font-semibold bg-ocean-DEFAULT hover:bg-ocean-dark text-white dark:bg-gradient-to-r dark:from-ocean-DEFAULT dark:to-ocean-dark dark:hover:from-ocean-light dark:hover:to-ocean-DEFAULT shadow-lg hover:shadow-xl transition-all duration-300"
+            className="w-full py-3 text-lg font-semibold bg-primary-foreground hover:bg-primary text-background  shadow-lg hover:shadow-xl transition-all duration-300"
           >
             {t('snake.playAgain')}
           </Button>
@@ -202,24 +202,24 @@ const SnakeGame = () => {
   }
 
   return (
-    <Card className="overflow-hidden border-ocean-light/20 bg-white/80 dark:bg-nightsky-light/80 backdrop-blur-sm shadow-xl" dir="ltr">
-      <CardHeader className="bg-gradient-to-br from-ocean-light/10 to-purple-100/50 dark:from-nightsky/50 dark:to-nightsky-light/30">
+    <Card className="overflow-hidden border-primary/20 bg-background/80  backdrop-blur-sm shadow-xl" dir="ltr">
+      <CardHeader className="bg-gradient-to-br from-primary/10 to-purple-100/50 ">
         <div className="flex justify-between items-center">
-          <div className="bg-gradient-to-r from-ocean-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-lg px-4 py-2 border border-ocean-light/20 dark:border-nightsky-light/30">
-            <div className="text-sm text-gray-600 dark:text-gray-300">{t('snake.score')}</div>
-            <div className="text-2xl font-bold text-ocean-DEFAULT dark:text-ocean-light">{score}</div>
+          <div className="bg-gradient-to-r from-primary/20 to-purple-100/50  rounded-lg px-4 py-2 border border-primary/20 ">
+            <div className="text-sm text-gray-600 ">{t('snake.score')}</div>
+            <div className="text-2xl font-bold text-primary-foreground ">{score}</div>
           </div>
-          <div className="bg-gradient-to-r from-ocean-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-lg px-4 py-2 border border-ocean-light/20 dark:border-nightsky-light/30">
-            <div className="text-sm text-gray-600 dark:text-gray-300">{t('snake.highScore')}</div>
-            <div className="text-2xl font-bold text-ocean-DEFAULT dark:text-ocean-light">{highScore}</div>
+          <div className="bg-gradient-to-r from-primary/20 to-purple-100/50  rounded-lg px-4 py-2 border border-primary/20 ">
+            <div className="text-sm text-gray-600 ">{t('snake.highScore')}</div>
+            <div className="text-2xl font-bold text-primary-foreground ">{highScore}</div>
           </div>
         </div>
       </CardHeader>
       
       <CardContent className="p-6" dir="ltr">
-        <div className="relative bg-gradient-to-br from-gray-100 to-gray-200 dark:from-nightsky dark:to-nightsky-light rounded-lg p-4 mb-6 border-2 border-gray-300 dark:border-nightsky-light/50 shadow-inner">
+        <div className="relative bg-gradient-to-br from-gray-100 to-gray-200  rounded-lg p-4 mb-6 border-2 border-gray-300  shadow-inner">
           <div 
-            className="w-full h-full max-w-[min(70vw,70vh)] max-h-[min(70vw,70vh)] bg-white/90 dark:bg-nightsky-light/50 grid gap-0 mx-auto border border-gray-200 dark:border-nightsky-light/30 rounded shadow-sm"
+            className="w-full h-full max-w-[min(70vw,70vh)] max-h-[min(70vw,70vh)] bg-background/90  grid gap-0 mx-auto border border-gray-200  rounded shadow-sm"
             style={{
               gridTemplate: `repeat(${gridSize}, 1fr) / repeat(${gridSize}, 1fr)`,
               aspectRatio: '1'
@@ -239,8 +239,8 @@ const SnakeGame = () => {
                 key={index}
                 className={`${
                   index === 0 
-                    ? 'bg-gradient-to-br from-green-300 to-green-500 dark:from-green-400 dark:to-green-600' 
-                    : 'bg-gradient-to-br from-green-400 to-green-600 dark:from-green-500 dark:to-green-700'
+                    ? 'bg-gradient-to-br from-green-300 to-green-500 ' 
+                    : 'bg-gradient-to-br from-green-400 to-green-600 '
                 } rounded-sm shadow-sm`}
                 style={{
                   gridArea: `${segment.y} / ${segment.x}`
@@ -255,39 +255,39 @@ const SnakeGame = () => {
           <div></div>
           <button
             onClick={() => handleDirectionChange({ x: 0, y: -1 })}
-            className="p-4 bg-gradient-to-br from-ocean-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-lg hover:scale-105 transition-all duration-200 flex items-center justify-center border border-ocean-light/20 dark:border-nightsky-light/30 shadow-md"
+            className="p-4 bg-gradient-to-br from-primary/20 to-purple-100/50  rounded-lg hover:scale-105 transition-all duration-200 flex items-center justify-center border border-primary/20  shadow-md"
           >
-            <ArrowUp size={24} className="text-ocean-DEFAULT dark:text-ocean-light" />
+            <ArrowUp size={24} className="text-primary-foreground " />
           </button>
           <div></div>
           
           <button
             onClick={() => handleDirectionChange({ x: -1, y: 0 })}
-            className="p-4 bg-gradient-to-br from-ocean-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-lg hover:scale-105 transition-all duration-200 flex items-center justify-center border border-ocean-light/20 dark:border-nightsky-light/30 shadow-md"
+            className="p-4 bg-gradient-to-br from-primary/20 to-purple-100/50  rounded-lg hover:scale-105 transition-all duration-200 flex items-center justify-center border border-primary/20  shadow-md"
           >
-            <ArrowLeft size={24} className="text-ocean-DEFAULT dark:text-ocean-light" />
+            <ArrowLeft size={24} className="text-primary-foreground " />
           </button>
           <div></div>
           <button
             onClick={() => handleDirectionChange({ x: 1, y: 0 })}
-            className="p-4 bg-gradient-to-br from-ocean-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-lg hover:scale-105 transition-all duration-200 flex items-center justify-center border border-ocean-light/20 dark:border-nightsky-light/30 shadow-md"
+            className="p-4 bg-gradient-to-br from-primary/20 to-purple-100/50  rounded-lg hover:scale-105 transition-all duration-200 flex items-center justify-center border border-primary/20  shadow-md"
           >
-            <ArrowRight size={24} className="text-ocean-DEFAULT dark:text-ocean-light" />
+            <ArrowRight size={24} className="text-primary-foreground " />
           </button>
           
           <div></div>
           <button
             onClick={() => handleDirectionChange({ x: 0, y: 1 })}
-            className="p-4 bg-gradient-to-br from-ocean-light/20 to-purple-100/50 dark:from-nightsky-light/30 dark:to-nightsky/50 rounded-lg hover:scale-105 transition-all duration-200 flex items-center justify-center border border-ocean-light/20 dark:border-nightsky-light/30 shadow-md"
+            className="p-4 bg-gradient-to-br from-primary/20 to-purple-100/50  rounded-lg hover:scale-105 transition-all duration-200 flex items-center justify-center border border-primary/20  shadow-md"
           >
-            <ArrowDown size={24} className="text-ocean-DEFAULT dark:text-ocean-light" />
+            <ArrowDown size={24} className="text-primary-foreground " />
           </button>
           <div></div>
         </div>
 
         {/* Instructions */}
         <div className="text-center mt-6">
-          <p className="text-gray-600 dark:text-gray-300 text-sm">
+          <p className="text-gray-600  text-sm">
             {!gameStarted && gameState === 'playing' ? 
               'Press an arrow key to start!' : 
               'Use arrow keys to control the snake'

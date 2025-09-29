@@ -177,7 +177,7 @@ export const AudioPlayer = ({
 
   if (!audioSrc) {
     return (
-      <Card className="p-4 bg-white/90 dark:bg-nightsky-light/90 backdrop-blur-sm border-ocean-light/20">
+      <Card className="p-4 bg-background/90  backdrop-blur-sm border-primary/20">
         <div className="text-center text-gray-500">No audio available</div>
       </Card>
     );
@@ -248,7 +248,7 @@ export const AudioPlayer = ({
             </div>
           </div>
 
-          <h3 className="font-medium text-sm text-gray-700 dark:text-gray-300">
+          <h3 className="font-medium text-sm text-gray-700 ">
             {/* {title} */}
             autoplay
           </h3>

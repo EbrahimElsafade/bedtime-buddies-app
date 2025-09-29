@@ -164,7 +164,7 @@ export const AudioControls = ({
               variant="ghost"
               size="icon"
               onClick={togglePlayPause}
-              className="h-10 w-10 rounded-full text-white hover:translate-y-0 hover:bg-transparent/10"
+              className="h-10 w-10 rounded-full text-background hover:translate-y-0 hover:bg-transparent/10"
             >
               {isPlaying ? (
                 <Pause className="h-5 w-5" />
@@ -173,7 +173,7 @@ export const AudioControls = ({
               )}
             </Button>
 
-            <div className="hidden items-center gap-4 space-x-2 text-white sm:flex">
+            <div className="hidden items-center gap-4 space-x-2 text-background sm:flex">
               <Volume2 className="h-4 w-4" />
               <Slider
                 value={[volume]}
@@ -184,12 +184,12 @@ export const AudioControls = ({
               />
             </div>
 
-            <div className="text-sm text-white">
+            <div className="text-sm text-background">
               {formatTime(currentTime)} / {formatTime(duration)}
             </div>
           </div>
 
-          <div className="px-4 text-white">
+          <div className="px-4 text-background">
             <AutoplayToggle
               isAutoplay={isAutoplay}
               onAutoplayChange={setIsAutoplay}

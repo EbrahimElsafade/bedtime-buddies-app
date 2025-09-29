@@ -52,9 +52,9 @@ export function DalfoonMascot({
         <div className="pointer-events-none absolute inset-0">
           {showBubbles && (
             <>
-              <div className="absolute -right-1 -top-2 h-2 w-2 animate-bubble rounded-full bg-ocean-light opacity-70" />
+              <div className="absolute -right-1 -top-2 h-2 w-2 animate-bubble rounded-full bg-primary opacity-70" />
               <div className="bg-wave-DEFAULT animation-delay-150 absolute -top-4 left-1 h-1.5 w-1.5 animate-bubble rounded-full opacity-60" />
-              <div className="bg-ocean-DEFAULT animation-delay-300 absolute -top-3 right-2 h-1 w-1 animate-bubble rounded-full opacity-80" />
+              <div className="bg-primary-foreground animation-delay-300 absolute -top-3 right-2 h-1 w-1 animate-bubble rounded-full opacity-80" />
             </>
           )}
         </div>
@@ -62,7 +62,7 @@ export function DalfoonMascot({
 
       {/* Splash effect for cheering */}
       {expression === 'cheering' && animate && (
-        <div className="absolute -bottom-2 left-1/2 h-2 w-8 -translate-x-1/2 transform animate-splash rounded-full bg-gradient-to-r from-transparent via-ocean-light to-transparent opacity-50" />
+        <div className="absolute -bottom-2 left-1/2 h-2 w-8 -translate-x-1/2 transform animate-splash rounded-full bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
       )}
     </div>
   )

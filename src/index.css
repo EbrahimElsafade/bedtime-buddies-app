@@ -6,33 +6,33 @@
 
 @layer base {
   :root {
-    --background: 200 100% 97%;
-    --foreground: 207 93% 15%;
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
 
-    --card: 200 100% 99%;
-    --card-foreground: 207 93% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
 
-    --popover: 200 100% 99%;
-    --popover-foreground: 207 93% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 197 100% 45%;
-    --primary-foreground: 200 100% 98%;
+    --primary: 199 95% 74%;
+    --primary-foreground: 222 47% 11%;
 
-    --secondary: 200 95% 74%;
-    --secondary-foreground: 207 93% 25%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 200 50% 92%;
-    --muted-foreground: 207 50% 45%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 200 95% 74%;
-    --accent-foreground: 207 93% 15%;
+    --accent: 28 98% 70%;
+    --accent-foreground: 222 47% 11%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 200 30% 85%;
-    --input: 200 30% 85%;
-    --ring: 197 100% 45%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 199 95% 74%;
 
     --radius: 1rem;
   }
@@ -349,12 +349,6 @@
 .games-container .story-card:hover {
   transform: translateY(-5px) scale(1.01);
   box-shadow: 0 15px 30px rgba(245, 215, 123, 0.3);
-}
-
-/* Enhanced button hover effects */
-button:hover {
-  transform: translateY(-2px);
-  transition: all 0.2s ease;
 }
 
 /* Fun cursor effects for children */

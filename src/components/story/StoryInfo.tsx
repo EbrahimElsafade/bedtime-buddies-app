@@ -55,7 +55,7 @@ export const StoryInfo = ({
             {t(`category.${story.category}`, { lng: translationLang })}
           </span>
           {story.is_free ? (
-            <span className="bg-ocean-DEFAULT/20 text-ocean-DEFAULT rounded-full px-2 py-1 font-medium">
+            <span className="bg-primary-foreground/20 text-primary-foreground rounded-full px-2 py-1 font-medium">
               {t('type.free', { lng: translationLang })}
             </span>
           ) : (

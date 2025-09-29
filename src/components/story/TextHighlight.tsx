@@ -80,7 +80,7 @@ export const TextHighlight = ({
           key={index}
           className={`${
             index === currentWordIndex && isPlaying && !/^\s+$/.test(word)
-              ? "bg-yellow-200 dark:bg-yellow-800 rounded px-1 transition-colors duration-300"
+              ? "bg-yellow-200  rounded px-1 transition-colors duration-300"
               : ""
           }`}
         >

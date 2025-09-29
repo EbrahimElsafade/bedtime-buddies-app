@@ -92,7 +92,7 @@ const Stories = () => {
       >
         <div className="container mx-auto max-w-6xl">
           <div className="mb-4 text-center md:mb-6 lg:mb-8">
-            <h1 className="from-ocean-DEFAULT mb-2 bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
+            <h1 className="from-primary-foreground mb-2 bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
               {t('allStories')}
             </h1>
           </div>
@@ -119,7 +119,7 @@ const Stories = () => {
     >
       <div className="container mx-auto max-w-6xl">
         <div className="mb-4 text-center md:mb-6 lg:mb-8">
-          <h1 className="from-ocean-DEFAULT mb-2 bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
+          <h1 className="from-primary-foreground mb-2 bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
             {t('allStories')}
           </h1>
           <p className="mx-auto max-w-2xl px-2 text-xs text-muted-foreground md:text-sm lg:text-base">
@@ -201,7 +201,7 @@ const Stories = () => {
 
               return (
                 <Link key={story.id} to={`/stories/${story.id}`}>
-                  <Card className="story-card flex h-80 min-w-80 max-w-96 cursor-pointer flex-col overflow-hidden border-ocean-light/20 bg-white/70 backdrop-blur-sm transition-shadow hover:shadow-lg dark:bg-nightsky-light/70 md:h-96">
+                  <Card className="story-card flex h-80 min-w-80 max-w-96 cursor-pointer flex-col overflow-hidden border-primary/20 bg-background/70 backdrop-blur-sm transition-shadow hover:shadow-lg  md:h-96">
                     <div className="relative h-56">
                       {imageUrl ? (
                         <img
@@ -224,7 +224,7 @@ const Stories = () => {
                         </div>
                       )}
                       {story.is_free ? (
-                        <div className="absolute right-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-white shadow-lg">
+                        <div className="absolute right-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-background shadow-lg">
                           {t('free.tag', { ns: 'misc' })}
                         </div>
                       ) : (
@@ -236,13 +236,13 @@ const Stories = () => {
                     <div className="flex flex-1 flex-col p-3 md:p-4">
                       <CardHeader className="flex-1 p-0 pb-2">
                         <div className="mb-2 flex items-start justify-between">
-                          <CardTitle className="text-ocean-DEFAULT line-clamp-2 flex-1 text-sm md:text-base lg:text-lg">
+                          <CardTitle className="text-primary-foreground line-clamp-2 flex-1 text-sm md:text-base lg:text-lg">
                             {storyTitle}
                           </CardTitle>
                           <div className="ml-2 flex flex-shrink-0 items-center gap-2">
                             <Badge
                               variant="secondary"
-                              className="text-ocean-DEFAULT bg-ocean-light/30 text-xs"
+                              className="text-primary-foreground bg-primary/30 text-xs"
                             >
                               {t(`category.${story.category}`, {
                                 defaultValue:
@@ -250,7 +250,7 @@ const Stories = () => {
                                   story.category.slice(1),
                               })}
                             </Badge>
-                            <div className="text-ocean-DEFAULT flex items-center text-xs">
+                            <div className="text-primary-foreground flex items-center text-xs">
                               <Clock className="mx-1 h-3 w-3" />
                               <span>
                                 {t('duration', { duration: story.duration })}
@@ -258,7 +258,7 @@ const Stories = () => {
                             </div>
                           </div>
                         </div>
-                        <CardDescription className="text-ocean-DEFAULT line-clamp-2 text-xs leading-relaxed dark:text-foreground md:text-sm">
+                        <CardDescription className="text-primary-foreground line-clamp-2 text-xs leading-relaxed  md:text-sm">
                           {storyDescription}
                         </CardDescription>
                       </CardHeader>

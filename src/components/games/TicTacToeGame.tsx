@@ -147,7 +147,7 @@ const TicTacToeGame = () => {
   const renderSquare = (i: number) => {
     return (
       <button
-        className="w-20 h-20 flex items-center justify-center text-2xl bg-white/70 dark:bg-nightsky-light/70 hover:bg-white/90 dark:hover:bg-nightsky/90 border border-ocean-light/30 rounded-md transition-colors"
+        className="w-20 h-20 flex items-center justify-center text-2xl bg-background/70  hover:bg-background/90  border border-primary/30 rounded-md transition-colors"
         onClick={() => handleClick(i)}
       >
         {board[i]}
@@ -157,7 +157,7 @@ const TicTacToeGame = () => {
 
   if (!gameStarted) {
     return (
-      <Card className="overflow-hidden border-ocean-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+      <Card className="overflow-hidden border-primary/20 bg-background/50  backdrop-blur-sm">
         <CardHeader>
           <CardTitle className="text-xl">{t('ticTacToe.title')}</CardTitle>
           <CardDescription>{t('ticTacToe.description')}</CardDescription>
@@ -169,7 +169,7 @@ const TicTacToeGame = () => {
               <div className="grid grid-cols-2 gap-4">
                 <button
                   onClick={() => startGameWithMode('player')}
-                  className="p-6 rounded-lg border-2 transition-all hover:scale-105 border-gray-200 dark:border-gray-700 hover:border-ocean-light"
+                  className="p-6 rounded-lg border-2 transition-all hover:scale-105 border-gray-200  hover:border-primary"
                 >
                   <Users className="w-12 h-12 mx-auto mb-3" />
                   <div className="text-center">
@@ -180,7 +180,7 @@ const TicTacToeGame = () => {
                 
                 <button
                   onClick={() => startGameWithMode('computer')}
-                  className="p-6 rounded-lg border-2 transition-all hover:scale-105 border-gray-200 dark:border-gray-700 hover:border-ocean-light"
+                  className="p-6 rounded-lg border-2 transition-all hover:scale-105 border-gray-200  hover:border-primary"
                 >
                   <Bot className="w-12 h-12 mx-auto mb-3" />
                   <div className="text-center">
@@ -197,7 +197,7 @@ const TicTacToeGame = () => {
   }
 
   return (
-    <Card className="overflow-hidden border-ocean-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+    <Card className="overflow-hidden border-primary/20 bg-background/50  backdrop-blur-sm">
       <CardHeader>
         <CardTitle className="text-xl">
           {t('ticTacToe.title')} - {gameMode === 'computer' ? t('ticTacToe.vsComputer') : t('ticTacToe.vsPlayer')}
@@ -225,7 +225,7 @@ const TicTacToeGame = () => {
         <Button onClick={resetGame} variant="outline" className="flex-1">
           {t('ticTacToe.newGame')}
         </Button>
-        <Button onClick={backToMenu} className="flex-1 bg-ocean-DEFAULT hover:bg-ocean-dark">
+        <Button onClick={backToMenu} className="flex-1 bg-primary-foreground hover:bg-primary">
           {t('ticTacToe.backToMenu')}
         </Button>
       </CardFooter>

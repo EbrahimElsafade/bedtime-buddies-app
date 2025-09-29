@@ -81,38 +81,38 @@ const RockPaperScissorsGame = () => {
   };
 
   return (
-    <Card className="overflow-hidden border-ocean-light/20 bg-white/50 backdrop-blur-sm max-w-4xl mx-auto">
+    <Card className="overflow-hidden border-primary/20 bg-background/50 backdrop-blur-sm max-w-4xl mx-auto">
       <CardHeader className="text-center px-4 md:px-6">
-        <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-ocean-light to-ocean-DEFAULT bg-clip-text  ">
+        <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-primary-foreground bg-clip-text  ">
           {t('rockPaperScissors.title')}
         </CardTitle>
         <CardDescription className="text-sm md:text-base">{t('rockPaperScissors.description')}</CardDescription>
       </CardHeader>
       <CardContent className="px-4 md:px-6">
         <div className="flex flex-col items-center space-y-6 md:space-y-8">
-          <div className="flex justify-between w-full max-w-sm bg-gradient-to-r from-blue-50 to-purple-50 dark:from-nightsky-light to-nightsky rounded-xl p-4 md:p-6 shadow-lg">
+          <div className="flex justify-between w-full max-w-sm bg-gradient-to-r from-blue-50 to-purple-50  rounded-xl p-4 md:p-6 shadow-lg">
             <div className="text-center">
-              <div className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">{playerScore}</div>
-              <div className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-300">You</div>
+              <div className="text-2xl md:text-3xl font-bold text-blue-600 ">{playerScore}</div>
+              <div className="text-xs md:text-sm font-medium text-gray-600 ">You</div>
             </div>
             <div className="text-center flex items-center">
               <div className="text-xl md:text-2xl font-bold text-gray-500">VS</div>
             </div>
             <div className="text-center">
               <div className="text-2xl md:text-3xl font-bold text-red-500">{computerScore}</div>
-              <div className="text-xs md:text-sm font-medium text-gray-600 dark:text-gray-300">Computer</div>
+              <div className="text-xs md:text-sm font-medium text-gray-600 ">Computer</div>
             </div>
           </div>
 
           <div className="w-full max-w-xl">
             <div className="flex items-center justify-center space-x-6 md:space-x-12 mb-6 md:mb-8">
               <div className="text-center">
-                <div className="w-20 h-20 md:w-32 md:h-32 rounded-full border-4 border-ocean-light bg-gradient-to-br from-ocean-surface to-ocean-light flex items-center justify-center mb-2 md:mb-4 shadow-lg transition-all duration-300">
+                <div className="w-20 h-20 md:w-32 md:h-32 rounded-full border-4 border-primary bg-gradient-to-br from-ocean-surface to-primary flex items-center justify-center mb-2 md:mb-4 shadow-lg transition-all duration-300">
                   <div className="text-3xl md:text-6xl">
                     {isPlaying ? '🤔' : playerChoice ? getChoiceEmoji(playerChoice) : '❓'}
                   </div>
                 </div>
-                <div className="text-sm md:text-lg font-semibold text-ocean-dark">You</div>
+                <div className="text-sm md:text-lg font-semibold text-primary">You</div>
               </div>
               
               <div className="text-center">
@@ -145,17 +145,17 @@ const RockPaperScissorsGame = () => {
                     key={choice.name}
                     onClick={() => playGame(choice.name)}
                     disabled={isPlaying}
-                    className="group relative p-4 md:p-8 rounded-2xl border-3 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-300 dark:border-gray-600 hover:border-ocean-light bg-gradient-to-br from-white to-gray-50 dark:from-nightsky-light dark:to-nightsky hover:from-ocean-light/10 hover:to-purple-100/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                    className="group relative p-4 md:p-8 rounded-2xl border-3 transition-all duration-300 hover:scale-105 hover:shadow-xl border-gray-300  hover:border-primary bg-gradient-to-br from-white to-gray-50  hover:from-primary/10 hover:to-purple-100/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   >
                     <div className="flex flex-col items-center space-y-2 md:space-y-3">
                       <div className="text-3xl md:text-5xl group-hover:scale-110 transition-transform duration-300">
                         {choice.emoji}
                       </div>
-                      <div className="text-sm md:text-lg font-bold capitalize text-gray-700 dark:text-gray-200 group-hover:text-ocean-DEFAULT transition-colors">
+                      <div className="text-sm md:text-lg font-bold capitalize text-gray-700  group-hover:text-primary-foreground transition-colors">
                         {t(`rockPaperScissors.${choice.name}`)}
                       </div>
                     </div>
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-ocean-light/0 to-purple-500/0 group-hover:from-ocean-light/10 group-hover:to-purple-500/10 transition-all duration-300"></div>
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/0 to-purple-500/0 group-hover:from-primary/10 group-hover:to-purple-500/10 transition-all duration-300"></div>
                   </button>
                 );
               })}
@@ -167,7 +167,7 @@ const RockPaperScissorsGame = () => {
         <Button 
           onClick={resetGame} 
           variant="outline" 
-          className="w-full py-2 md:py-3 text-base md:text-lg font-semibold hover:bg-ocean-light hover:text-white transition-all duration-300"
+          className="w-full py-2 md:py-3 text-base md:text-lg font-semibold hover:bg-primary hover:text-background transition-all duration-300"
         >
           {t('rockPaperScissors.resetGame')}
         </Button>

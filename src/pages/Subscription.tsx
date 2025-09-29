@@ -69,14 +69,14 @@ const Subscription = () => {
             <TabsContent key={planId} value={planId}>
               <Card className={cn(
                 "mx-auto overflow-hidden border-2",
-                planId === 'quarterly' ? "border-ocean-DEFAULT" : "border-border"
+                planId === 'quarterly' ? "border-primary-foreground" : "border-border"
               )}>
                 <CardHeader className={cn(
-                  planId === 'quarterly' ? "bg-ocean-DEFAULT/10" : ""
+                  planId === 'quarterly' ? "bg-primary-foreground/10" : ""
                 )}>
                   {planId === 'quarterly' && (
                     <div className="mb-2">
-                      <span className="bg-ocean-DEFAULT text-white text-xs py-1 px-3 rounded-full uppercase font-bold">
+                      <span className="bg-primary-foreground text-background text-xs py-1 px-3 rounded-full uppercase font-bold">
                         {t('mostPopular')}
                       </span>
                     </div>
@@ -92,7 +92,7 @@ const Subscription = () => {
                   <ul className="space-y-2">
                     {Object.values(t(`plans.${planId}.features`, { returnObjects: true }) as string[]).map((feature: string, index: number) => (
                       <li key={index} className="flex items-start">
-                        <Check className="h-5 w-5 text-ocean-DEFAULT mr-2 mt-0.5" />
+                        <Check className="h-5 w-5 text-primary-foreground mr-2 mt-0.5" />
                         <span>{feature}</span>
                       </li>
                     ))}
@@ -119,7 +119,7 @@ const Subscription = () => {
                   <Button 
                     className={cn(
                       "w-full",
-                      planId === 'quarterly' ? "bg-ocean-DEFAULT hover:bg-ocean-dark" : ""
+                      planId === 'quarterly' ? "bg-primary-foreground hover:bg-primary" : ""
                     )}
                     onClick={handleSubscribe}
                   >
@@ -135,28 +135,28 @@ const Subscription = () => {
           <h2 className="text-2xl font-bubbly mb-6">{t('faq.title')}</h2>
           
           <div className="space-y-4">
-            <div className="bg-white/70 dark:bg-nightsky-light/70 p-6 rounded-xl backdrop-blur-sm">
+            <div className="bg-background/70  p-6 rounded-xl backdrop-blur-sm">
               <h3 className="text-lg font-semibold mb-2">{t('faq.included.question')}</h3>
               <p className="text-muted-foreground">
                 {t('faq.included.answer')}
               </p>
             </div>
             
-            <div className="bg-white/70 dark:bg-nightsky-light/70 p-6 rounded-xl backdrop-blur-sm">
+            <div className="bg-background/70  p-6 rounded-xl backdrop-blur-sm">
               <h3 className="text-lg font-semibold mb-2">{t('faq.cancel.question')}</h3>
               <p className="text-muted-foreground">
                 {t('faq.cancel.answer')}
               </p>
             </div>
             
-            <div className="bg-white/70 dark:bg-nightsky-light/70 p-6 rounded-xl backdrop-blur-sm">
+            <div className="bg-background/70  p-6 rounded-xl backdrop-blur-sm">
               <h3 className="text-lg font-semibold mb-2">{t('faq.gift.question')}</h3>
               <p className="text-muted-foreground">
                 {t('faq.gift.answer')}
               </p>
             </div>
             
-            <div className="bg-white/70 dark:bg-nightsky-light/70 p-6 rounded-xl backdrop-blur-sm">
+            <div className="bg-background/70  p-6 rounded-xl backdrop-blur-sm">
               <h3 className="text-lg font-semibold mb-2">{t('faq.lifetime.question')}</h3>
               <p className="text-muted-foreground">
                 {t('faq.lifetime.answer')}

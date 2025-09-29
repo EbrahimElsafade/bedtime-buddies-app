@@ -17,9 +17,9 @@ const NotFound = () => {
   }, [location.pathname, t]);
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center bg-gradient-to-b from-transparent to-ocean-light/10 px-4 py-12">
+    <div className="min-h-[80vh] flex items-center justify-center bg-gradient-to-b from-transparent to-primary/10 px-4 py-12">
       <div className="text-center max-w-md">
-        <div className="w-32 h-32 bg-ocean-light rounded-full mx-auto flex items-center justify-center mb-6">
+        <div className="w-32 h-32 bg-primary rounded-full mx-auto flex items-center justify-center mb-6">
           <span className="text-6xl">😴</span>
         </div>
         <h1 className="text-4xl md:text-5xl font-bubbly mb-4">{t('title')}</h1>
@@ -28,7 +28,7 @@ const NotFound = () => {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/">
-            <Button className="bg-ocean-DEFAULT hover:bg-ocean-dark">
+            <Button variant="default">
               {t('returnHome')}
             </Button>
           </Link>

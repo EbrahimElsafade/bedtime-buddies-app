@@ -23,15 +23,15 @@ const FeaturedCourses = () => {
   if (isLoading || !featuredCourses.length) return null
 
   return (
-    <section className="relative bg-ocean-light/10 px-4 py-12">
+    <section className="relative bg-primary/10 px-4 py-12">
       <div className="container mx-auto">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-ocean-DEFAULT font-bubbly text-2xl md:text-3xl">
+          <h2 className="font-bubbly text-lg text-primary-foreground md:text-3xl">
             {t('misc:courses.title')}
           </h2>
           <Link
             to="/courses"
-            className="text-ocean-DEFAULT hover:text-ocean-dark flex items-center text-sm font-medium"
+            className="flex items-center text-xs font-medium text-primary-foreground hover:underline md:text-sm"
           >
             {t('misc:free.viewAll')}{' '}
             <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
@@ -49,7 +49,7 @@ const FeaturedCourses = () => {
                 to={`/courses/${course.id}`}
                 className="block"
               >
-                <Card className="story-card border-ocean-light/20 dark:bg-nightsky-light/70 cursor-pointer overflow-hidden bg-white/70 backdrop-blur-sm transition-transform hover:scale-105">
+                <Card className="story-card cursor-pointer overflow-hidden border-primary/20 bg-background/70 backdrop-blur-sm transition-transform hover:scale-105">
                   <div className="relative aspect-[3/2]">
                     <img
                       src={getImageUrl(course.coverImagePath)}
@@ -61,23 +61,23 @@ const FeaturedCourses = () => {
                       }}
                     />
                     {course.isFree ? (
-                      <div className="bg-ocean-DEFAULT absolute left-2 top-2 rounded-full px-2 py-1 text-xs font-medium text-white">
+                      <div className="absolute left-2 top-2 rounded-full bg-primary-foreground px-2 py-1 text-xs font-medium text-background">
                         {t('misc:free.tag')}
                       </div>
                     ) : (
-                      <div className="bg-moon-DEFAULT absolute left-2 top-2 rounded-full px-2 py-1 text-xs font-medium text-white">
+                      <div className="bg-moon-DEFAULT absolute left-2 top-2 rounded-full px-2 py-1 text-xs font-medium text-background">
                         {t('misc:premium.tag')}
                       </div>
                     )}
-                    <div className="text-ocean-DEFAULT dark:bg-nightsky-light/80 absolute right-2 top-2 rounded-full bg-white/80 px-2 py-1 text-xs">
+                    <div className="absolute right-2 top-2 rounded-full bg-background/80 px-2 py-1 text-xs text-primary-foreground">
                       {course.minAge}-{course.maxAge} {t('misc:courses.years')}
                     </div>
                   </div>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-ocean-DEFAULT text-xl">
+                    <CardTitle className="text-xl text-primary-foreground">
                       {getLocalized(course, 'title', lang)}
                     </CardTitle>
-                    <CardDescription className="text-ocean-DEFAULT line-clamp-2 dark:text-foreground">
+                    <CardDescription className="line-clamp-2 text-primary-foreground">
                       {getLocalized(course, 'description', lang)}
                     </CardDescription>
                   </CardHeader>
@@ -85,14 +85,14 @@ const FeaturedCourses = () => {
                     <div className="mb-2 flex flex-wrap gap-2">
                       <Badge
                         variant="secondary"
-                        className="text-ocean-DEFAULT bg-ocean-light/30"
+                        className="bg-primary/30 text-primary-foreground"
                       >
                         {getCategoryText(category, 'name', lang) ||
                           course.category ||
                           'General'}
                       </Badge>
                     </div>
-                    <div className="text-ocean-DEFAULT flex items-center justify-between text-sm">
+                    <div className="flex items-center justify-between text-sm text-primary-foreground">
                       <div className="flex items-center">
                         <BookOpen className="mr-1 h-4 w-4" />
                         <span>

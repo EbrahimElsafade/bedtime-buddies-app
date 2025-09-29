@@ -347,7 +347,7 @@ const StoryOptions = () => {
                 {categories.map(category => (
                   <div key={category.id}>
                     {editingCategoryId === category.id ? (
-                      <div className="flex items-center gap-2 rounded-md border bg-white p-2">
+                      <div className="flex items-center gap-2 rounded-md border bg-background p-2">
                         <Input
                           value={editingCategoryName}
                           onChange={e => setEditingCategoryName(e.target.value)}
@@ -383,7 +383,7 @@ const StoryOptions = () => {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-4 w-4 p-0 hover:bg-blue-500 hover:text-white"
+                          className="h-4 w-4 p-0 hover:bg-blue-500 hover:text-background"
                           onClick={() => startEditCategory(category)}
                         >
                           <Edit2 className="h-3 w-3" />
@@ -445,7 +445,7 @@ const StoryOptions = () => {
                 {languages.map(language => (
                   <div key={language.id}>
                     {editingLanguageId === language.id ? (
-                      <div className="flex items-center gap-2 rounded-md border bg-white p-2">
+                      <div className="flex items-center gap-2 rounded-md border bg-background p-2">
                         <Input
                           value={editingLanguageCode}
                           onChange={e => setEditingLanguageCode(e.target.value)}
@@ -488,7 +488,7 @@ const StoryOptions = () => {
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-4 w-4 p-0 hover:bg-blue-500 hover:text-white"
+                          className="h-4 w-4 p-0 hover:bg-blue-500 hover:text-background"
                           onClick={() => startEditLanguage(language)}
                         >
                           <Edit2 className="h-3 w-3" />
