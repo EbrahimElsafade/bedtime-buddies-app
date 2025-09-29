@@ -44,8 +44,8 @@ const Games = () => {
             className={`${
               isMobile
                 ? 'grid h-auto grid-cols-2 gap-1 p-1 sm:grid-cols-3 lg:grid-cols-5'
-                : 'grid h-11 grid-cols-5 p-1'
-            } mb-4 w-full overflow-hidden rounded-lg bg-muted md:mb-6 lg:mb-8`}
+                : 'grid h-12 grid-cols-5 p-1'
+            } mb-4 w-full overflow-hidden rounded-lg bg-transparent shadow-none md:mb-6 lg:mb-8`}
           >
             <TabsTrigger
               value="tic-tac-toe"
@@ -53,7 +53,7 @@ const Games = () => {
                 isMobile
                   ? 'h-auto whitespace-normal break-words px-1 py-2 text-center text-[10px] sm:px-2 sm:text-xs'
                   : 'px-3 py-2 text-sm'
-              } rounded-md font-medium transition-all ${isRTL ? 'font-arabic' : ''}`}
+              } rounded-md font-medium transition-all bg-primary border-none ${isRTL ? 'font-arabic' : ''}`}
             >
               {isMobile && isRTL
                 ? 'إكس أو'
@@ -67,7 +67,7 @@ const Games = () => {
                 isMobile
                   ? 'h-auto whitespace-normal break-words px-1 py-2 text-center text-[10px] sm:px-2 sm:text-xs'
                   : 'px-3 py-2 text-sm'
-              } rounded-md font-medium transition-all ${isRTL ? 'font-arabic' : ''}`}
+              } rounded-md font-medium transition-all bg-primary border-none ${isRTL ? 'font-arabic' : ''}`}
             >
               {isMobile && isRTL
                 ? 'حجر ورقة'
@@ -81,7 +81,7 @@ const Games = () => {
                 isMobile
                   ? 'h-auto whitespace-normal break-words px-1 py-2 text-center text-[10px] sm:px-2 sm:text-xs'
                   : 'px-3 py-2 text-sm'
-              } rounded-md font-medium transition-all ${isRTL ? 'font-arabic' : ''}`}
+              } rounded-md font-medium transition-all bg-primary border-none ${isRTL ? 'font-arabic' : ''}`}
             >
               {isMobile && isRTL
                 ? 'كلمات'
@@ -93,7 +93,7 @@ const Games = () => {
                 isMobile
                   ? 'h-auto whitespace-normal px-1 py-2 text-center text-[10px] sm:px-2 sm:text-xs'
                   : 'px-3 py-2 text-sm'
-              } rounded-md font-medium transition-all ${isRTL ? 'font-arabic' : ''}`}
+              } rounded-md font-medium transition-all bg-primary border-none ${isRTL ? 'font-arabic' : ''}`}
             >
               {isMobile && isRTL ? 'ذاكرة' : t('memory.title', { ns: 'games' })}
             </TabsTrigger>
@@ -103,7 +103,7 @@ const Games = () => {
                 isMobile
                   ? 'col-span-2 h-auto whitespace-normal px-1 py-2 text-center text-[10px] sm:col-span-1 sm:px-2 sm:text-xs'
                   : 'px-3 py-2 text-sm'
-              } rounded-md font-medium transition-all ${isRTL ? 'font-arabic' : ''}`}
+              } rounded-md font-medium transition-all bg-primary border-none ${isRTL ? 'font-arabic' : ''}`}
             >
               {isMobile && isRTL ? 'ثعبان' : t('snake.title', { ns: 'games' })}
             </TabsTrigger>
