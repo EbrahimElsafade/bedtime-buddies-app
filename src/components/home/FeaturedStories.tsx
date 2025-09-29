@@ -66,7 +66,7 @@ const FeaturedStories = () => {
       <section className="relative bg-secondary/50 px-4 py-8 md:py-12">
         <div className="container mx-auto">
           <div className="mb-4 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center md:mb-6">
-            <h2 className="font-bubbly text-xl text-primary-foreground md:text-2xl lg:text-3xl">
+            <h2 className="text-xl text-primary-foreground md:text-2xl lg:text-3xl">
               {t('stories:featured.title')}
             </h2>
             <Link
@@ -81,7 +81,7 @@ const FeaturedStories = () => {
             {[1, 2, 3].map(i => (
               <Card
                 key={i}
-                className="story-card  h-80 w-full animate-pulse overflow-hidden border-primary/20 bg-background/70 pb-4 backdrop-blur-sm md:h-96 lg:h-[25rem]"
+                className="story-card h-80 w-full animate-pulse overflow-hidden border-primary/20 bg-background/70 pb-4 backdrop-blur-sm md:h-96 lg:h-[25rem]"
               >
                 <div className="h-40 bg-gray-200 md:h-48"></div>
                 <CardHeader className="px-3 pb-2 md:px-6">
@@ -116,7 +116,7 @@ const FeaturedStories = () => {
     <section className="relative bg-primary/10 px-4 py-8 md:py-12">
       <div className="container mx-auto">
         <div className="mb-4 flex items-center justify-between gap-2 sm:flex-row sm:items-center md:mb-6">
-          <h2 className="text-lg font-bubbly text-primary-foreground md:text-3xl">
+          <h2 className="font-bubbly text-lg text-primary-foreground md:text-3xl">
             {t('stories:featured.title')}
           </h2>
           <Link
@@ -145,7 +145,7 @@ const FeaturedStories = () => {
 
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card  flex h-80 w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-background/70 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg md:h-96 lg:h-[25rem]">
+                <Card className="story-card flex h-80 w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-background/70 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg md:h-96 lg:h-[25rem]">
                   <div className="relative h-40 overflow-hidden md:h-48">
                     {imageUrl ? (
                       <img
@@ -200,7 +200,7 @@ const FeaturedStories = () => {
                           </div>
                         </div>
                       </div>
-                      <CardDescription className="line-clamp-2 text-sm leading-relaxed text-primary-foreground ">
+                      <CardDescription className="line-clamp-2 text-sm leading-relaxed text-primary-foreground">
                         {storyDescription}
                       </CardDescription>
                     </CardHeader>

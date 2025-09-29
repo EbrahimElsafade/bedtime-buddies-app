@@ -73,15 +73,15 @@ const FreeStory = () => {
   )
 
   return (
-    <section className="bg-gradient-to-b from-primary to-primary/20 px-4 py-12">
+    <section className="bg-gradient-to-b from-primary/20 to-primary/15 px-4 py-12">
       <div className="container mx-auto">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="font-bubbly text-lg text-background md:text-3xl">
+          <h2 className="text-lg text-primary-foreground md:text-3xl">
             {t('misc:free.story')}
           </h2>
           <Link
             to="/stories"
-            className="flex items-center text-xs font-medium text-background hover:underline md:text-sm"
+            className="flex items-center text-xs font-medium text-primary-foreground hover:underline md:text-sm"
           >
             {t('misc:free.viewAll')}{' '}
             <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />

@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
-import { DalfoonMascot } from '@/components/DalfoonMascot'
+import { DolfoonMascot } from '@/components/DolfoonMascot'
 
 const Hero = () => {
   const { isAuthenticated } = useAuth()
@@ -11,16 +11,16 @@ const Hero = () => {
   const { t: tCommon } = useTranslation('common')
 
   return (
-    <section className="ocean-gradient relative overflow-hidden px-4 py-8 md:py-12 lg:py-20">
+    <section className="bg-gradient-to-b from-primary/40 to-primary/20 relative overflow-hidden px-4 py-8 md:py-12 lg:py-20">
       {/* Ocean background elements */}
       <div className="bubbles-bg absolute inset-0 opacity-20" />
       <div className="waves-bg absolute bottom-0 left-0 w-full opacity-30" />
 
       <div className="container relative z-10 mx-auto">
         <div className="mx-auto max-w-4xl text-center">
-          {/* Dalfoon mascot */}
+          {/* Dolfoon mascot */}
           <div className="mb-6 flex justify-center">
-            <DalfoonMascot size="xl" expression="cheering" animate={false} />
+            <DolfoonMascot size="xl" expression="cheering" animate={false} />
           </div>
 
           <h1 className="animate-slide-up mb-3 font-bubbly text-2xl leading-tight text-background drop-shadow-lg sm:text-3xl md:mb-4 md:text-4xl lg:text-6xl">

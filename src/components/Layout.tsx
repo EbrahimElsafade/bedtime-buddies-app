@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
-import { DalfoonMascot } from './DalfoonMascot'
+import { DolfoonMascot } from './DolfoonMascot'
 import { cn } from '@/lib/utils'
 
 interface NavigationSettings {
@@ -96,13 +96,13 @@ const Layout = () => {
   })
 
   return (
-    <div className="ocean-gradient bubbles-bg flex min-h-screen flex-col pb-16 text-foreground md:pb-0">
+    <div className="bg-gradient-to-b from-primary/30 to-primary/20 bubbles-bg flex min-h-screen flex-col pb-16 text-foreground md:pb-0">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-primary/20 bg-background/70 backdrop-blur-lg">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-4">
-            <DalfoonMascot size="sm" expression="happy" animate={false} />
+            <DolfoonMascot size="sm" expression="happy" animate={false} />
             <h1 className="font-bubbly text-xl text-accent">
               {t('misc:layout.appName')}
             </h1>

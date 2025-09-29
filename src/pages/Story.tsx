@@ -83,7 +83,7 @@ const Story = () => {
   const getStoryDescription = () => {
     return (
       getMultilingualText(story.description, currentLanguage, 'en') ||
-      'Discover wonderful bedtime stories on Dalfoon!'
+      'Discover wonderful bedtime stories on Dolfoon!'
     )
   }
 
