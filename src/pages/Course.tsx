@@ -168,8 +168,8 @@ const Course = () => {
       <div className="container mx-auto">
         <Link to="/courses">
           <Button variant="outline" className="rounded-md shadow">
-            {t('backToStories')}
-            <ArrowLeft className="mr-2 h-4 w-4 rtl:rotate-180" /> {t('button.backToCourses')}
+            <ArrowLeft className="mr-2 h-4 w-4 rtl:rotate-180" />
+            {t('button.backToCourses')}
           </Button>
         </Link>
 
