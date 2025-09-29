@@ -132,9 +132,9 @@ const MemoryCardGame = () => {
   if (!gameStarted) {
     return (
       <div className="w-full max-w-2xl mx-auto px-2">
-        <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+        <Card className="overflow-hidden border-ocean-light/20 bg-white/50 backdrop-blur-sm">
           <CardHeader className="text-center px-4 py-6">
-            <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text  ">
+            <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-ocean-light to-ocean-DEFAULT bg-clip-text  ">
               {t('memory.title')}
             </CardTitle>
             <CardDescription className="text-sm md:text-base">{t('memory.description')}</CardDescription>
@@ -150,7 +150,7 @@ const MemoryCardGame = () => {
               </div>
               <Button 
                 onClick={initializeGame}
-                className="px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-semibold bg-gradient-to-r from-dream-DEFAULT to-purple-600 hover:from-dream-dark hover:to-purple-700 w-full max-w-xs"
+                className="px-6 md:px-8 py-3 md:py-4 text-base md:text-lg font-semibold bg-gradient-to-r from-ocean-light to-ocean-DEFAULT hover:from-ocean-DEFAULT hover:to-ocean-dark w-full max-w-xs"
               >
                 {t('memory.startGame')}
               </Button>
@@ -163,9 +163,9 @@ const MemoryCardGame = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto px-2">
-      <Card className="overflow-hidden border-dream-light/20 bg-white/50 dark:bg-nightsky-light/50 backdrop-blur-sm">
+      <Card className="overflow-hidden border-ocean-light/20 bg-white/50 backdrop-blur-sm">
         <CardHeader className="text-center px-4 py-4">
-          <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-dream-DEFAULT to-purple-600 bg-clip-text  ">
+          <CardTitle className="text-xl md:text-2xl font-bold bg-gradient-to-r from-ocean-light to-ocean-DEFAULT bg-clip-text  ">
             {t('memory.title')}
           </CardTitle>
           <CardDescription className="text-sm md:text-base">{t('memory.description')}</CardDescription>
@@ -173,16 +173,16 @@ const MemoryCardGame = () => {
         <CardContent className="px-4">
           <div className="space-y-4 md:space-y-6">
             <div className="grid grid-cols-3 gap-2 md:gap-4">
-              <div className="text-center bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900 px-3 md:px-6 py-2 md:py-3 rounded-lg">
-                <div className="text-lg md:text-2xl font-bold text-blue-600 dark:text-blue-400">{moves}</div>
+              <div className="text-center bg-gradient-to-r from-ocean-surface to-wave-light px-3 md:px-6 py-2 md:py-3 rounded-lg">
+                <div className="text-lg md:text-2xl font-bold text-ocean-dark">{moves}</div>
                 <div className="text-xs md:text-sm text-muted-foreground">{t('memory.moves')}</div>
               </div>
-              <div className="text-center bg-gradient-to-r from-green-100 to-teal-100 dark:from-green-900 dark:to-teal-900 px-3 md:px-6 py-2 md:py-3 rounded-lg">
-                <div className="text-lg md:text-2xl font-bold text-green-600 dark:text-green-400">{matchedPairs}/{cardIcons.length}</div>
+              <div className="text-center bg-gradient-to-r from-coral-soft to-coral-light px-3 md:px-6 py-2 md:py-3 rounded-lg">
+                <div className="text-lg md:text-2xl font-bold text-coral-dark">{matchedPairs}/{cardIcons.length}</div>
                 <div className="text-xs md:text-sm text-muted-foreground">Pairs</div>
               </div>
-              <div className="text-center bg-gradient-to-r from-orange-100 to-red-100 dark:from-orange-900 dark:to-red-900 px-3 md:px-6 py-2 md:py-3 rounded-lg">
-                <div className="text-lg md:text-2xl font-bold text-orange-600 dark:text-orange-400">{formatTime(timeElapsed)}</div>
+              <div className="text-center bg-gradient-to-r from-sunshine-glow to-sunshine-light px-3 md:px-6 py-2 md:py-3 rounded-lg">
+                <div className="text-lg md:text-2xl font-bold text-sunshine-dark">{formatTime(timeElapsed)}</div>
                 <div className="text-xs md:text-sm text-muted-foreground">Time</div>
               </div>
             </div>
@@ -210,10 +210,10 @@ const MemoryCardGame = () => {
                     className={`
                       relative w-16 h-16 md:w-20 md:h-20 rounded-lg border-2 transition-all duration-300 transform hover:scale-105
                       ${card.isMatched 
-                        ? 'bg-green-100 dark:bg-green-900 border-green-400 opacity-75' 
+                        ? 'bg-coral-soft border-coral-light opacity-75' 
                         : card.isFlipped 
-                          ? 'bg-white dark:bg-nightsky-light border-dream-light shadow-lg' 
-                          : 'bg-gradient-to-br from-purple-400 to-purple-600 border-purple-500 hover:from-purple-500 hover:to-purple-700'
+                          ? 'bg-white border-ocean-light shadow-lg' 
+                          : 'bg-gradient-to-br from-ocean-light to-ocean-DEFAULT border-ocean-DEFAULT hover:from-ocean-DEFAULT hover:to-ocean-dark'
                       }
                       ${gameStatus !== 'playing' ? 'cursor-not-allowed' : 'cursor-pointer'}
                     `}
@@ -238,7 +238,7 @@ const MemoryCardGame = () => {
         <CardFooter className="px-4 py-4">
           <Button 
             onClick={initializeGame} 
-            className="w-full py-3 text-base md:text-lg font-semibold bg-gradient-to-r from-dream-DEFAULT to-purple-600 hover:from-dream-dark hover:to-purple-700 transition-all duration-300"
+            className="w-full py-3 text-base md:text-lg font-semibold bg-gradient-to-r from-ocean-light to-ocean-DEFAULT hover:from-ocean-DEFAULT hover:to-ocean-dark transition-all duration-300"
           >
             {t('memory.playAgain')}
           </Button>

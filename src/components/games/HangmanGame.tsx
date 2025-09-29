@@ -85,7 +85,7 @@ const HangmanGame = () => {
 
   const drawHangman = () => {
     return (
-      <div className="relative mx-auto h-40 w-32 rounded-lg border-4 border-gray-800 bg-white dark:border-gray-200 dark:bg-nightsky-light md:h-64 md:w-48">
+      <div className="relative mx-auto h-40 w-32 rounded-lg border-4 border-gray-800 bg-white md:h-64 md:w-48">
         <svg
           width="100%"
           height="100%"
@@ -208,9 +208,9 @@ const HangmanGame = () => {
 
   return (
     <div className="mx-auto w-full max-w-4xl px-2" dir={isRTL ? 'rtl' : 'ltr'}>
-      <Card className="overflow-hidden border-dream-light/20 bg-white/50 backdrop-blur-sm dark:bg-nightsky-light/50">
+      <Card className="overflow-hidden border-ocean-light/20 bg-white/50 backdrop-blur-sm">
         <CardHeader className="px-4 py-4 text-center">
-          <CardTitle className="from-dream-DEFAULT bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold md:text-2xl">
+          <CardTitle className="from-ocean-light bg-gradient-to-r to-ocean-DEFAULT bg-clip-text text-xl font-bold md:text-2xl">
             {t('hangman.title')}
           </CardTitle>
           <CardDescription className="text-sm md:text-base">
@@ -236,13 +236,13 @@ const HangmanGame = () => {
               {drawHangman()}
 
               <div className="mb-4 mt-2 text-center">
-                <div className="text-xs font-semibold text-gray-600 dark:text-gray-300 md:text-sm">
+                <div className="text-xs font-semibold text-gray-600 md:text-sm">
                   {t('hangman.title').toUpperCase()}
                 </div>
               </div>
 
               <div className="text-center">
-                <div className="text-sm font-semibold text-red-600 dark:text-red-400 md:text-lg">
+                <div className="text-sm font-semibold text-red-600 md:text-lg">
                   {t('hangman.incorrectGuesses')} {wrongGuesses} /{' '}
                   {maxWrongGuesses}
                 </div>
@@ -251,15 +251,15 @@ const HangmanGame = () => {
 
             <div className="w-full flex-1 space-y-4 md:space-y-6">
               <div className="text-center">
-                <div className="mb-4 rounded-lg border-2 border-dashed border-gray-300 bg-gradient-to-r from-white to-gray-100 p-4 font-mono text-2xl font-bold tracking-wider text-gray-800 shadow-inner dark:border-gray-600 dark:from-nightsky-light dark:to-nightsky dark:text-gray-200 md:mb-6 md:p-6 md:text-4xl">
+                <div className="mb-4 rounded-lg border-2 border-dashed border-gray-300 bg-gradient-to-r from-white to-gray-100 p-4 font-mono text-2xl font-bold tracking-wider text-gray-800 shadow-inner md:mb-6 md:p-6 md:text-4xl">
                   {displayWord()}
                 </div>
 
-                <div className="mb-4 rounded-lg border border-blue-200 bg-gradient-to-r from-blue-100 to-purple-100 p-3 shadow-lg dark:border-blue-700 dark:from-blue-900 dark:to-purple-900 md:mb-6 md:p-4">
-                  <div className="mb-1 text-xs font-medium text-blue-800 dark:text-blue-200 md:text-sm">
+                <div className="mb-4 rounded-lg border border-ocean-light bg-gradient-to-r from-ocean-surface to-wave-light p-3 shadow-lg md:mb-6 md:p-4">
+                  <div className="mb-1 text-xs font-medium text-ocean-dark md:text-sm">
                     {t('hangman.hint')}
                   </div>
-                  <div className="text-sm text-blue-700 dark:text-blue-300 md:text-base">
+                  <div className="text-sm text-ocean-dark md:text-base">
                     {hint}
                   </div>
                 </div>
@@ -298,7 +298,7 @@ const HangmanGame = () => {
         <CardFooter className="px-4 py-4">
           <Button
             onClick={initializeGame}
-            className="from-dream-DEFAULT w-full bg-gradient-to-r to-purple-600 py-3 text-base font-semibold transition-all duration-300 hover:from-dream-dark hover:to-purple-700 md:text-lg"
+            className="from-ocean-light w-full bg-gradient-to-r to-ocean-DEFAULT py-3 text-base font-semibold transition-all duration-300 hover:from-ocean-DEFAULT hover:to-ocean-dark md:text-lg"
           >
             {t('hangman.newGame')}
           </Button>

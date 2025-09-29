@@ -26,7 +26,7 @@ const LanguageSwitcher = () => {
           <span className="sr-only">{t('accessibility.languageSelection')}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="bg-white/90 dark:bg-nightsky-light/90 backdrop-blur-md">
+      <DropdownMenuContent align="end" className="bg-white/90 backdrop-blur-md">
         <DropdownMenuItem 
           className={i18n.language === 'en' ? 'font-bold' : ''} 
           onClick={() => changeLanguage('en')}

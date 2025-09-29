@@ -33,7 +33,7 @@ const AdminLayout = () => {
 
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="flex min-h-screen w-full bg-gray-50 dark:bg-gray-900">
+      <div className="flex min-h-screen w-full bg-gray-50">
         <Sidebar
           side={isRTL ? 'right' : 'left'}
           className="border-r border-border"
@@ -43,7 +43,7 @@ const AdminLayout = () => {
             <div className="flex items-center justify-between p-4">
               <Link
                 to="/admin"
-                className="text-dream-DEFAULT flex items-center text-xl font-bold"
+                className="text-ocean-dark flex items-center text-xl font-bold"
               >
                 <span>{t('dashboard.title')}</span>
               </Link>

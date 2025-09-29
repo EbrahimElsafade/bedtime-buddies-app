@@ -192,29 +192,29 @@ const PWAInstallPrompt = () => {
 
   return (
     <div className="fixed bottom-20 left-4 right-4 z-50 md:bottom-4 md:left-auto md:right-4 md:max-w-sm md:rtl:left-4 md:rtl:right-auto">
-      <Card className="border-primary/20 bg-white/95 shadow-xl backdrop-blur-sm dark:bg-gray-900/95">
+      <Card className="border-primary/20 bg-white/95 shadow-xl backdrop-blur-sm">
         <CardContent className="p-4">
           <div className="flex items-start gap-3">
-            <div className="rounded-lg bg-gradient-to-br from-primary/20 to-purple-100/50 p-2 dark:from-primary/30 dark:to-purple-900/30">
-              <Smartphone className="h-6 w-6 text-primary" />
-            </div>
+             <div className="rounded-lg bg-gradient-to-br from-primary/20 to-ocean-light/50 p-2">
+               <Smartphone className="h-6 w-6 text-primary" />
+             </div>
 
-            <div className="flex-1">
-              <h3 className="mb-1 font-semibold text-gray-900 dark:text-white">
-                {t('pwa.installApp')}
-              </h3>
+             <div className="flex-1">
+               <h3 className="mb-1 font-semibold text-gray-900">
+                 {t('pwa.installApp')}
+               </h3>
 
-              {!showIOSInstructions ? (
-                <>
-                  <p className="mb-3 text-sm text-gray-600 dark:text-gray-300">
-                    {deviceInfo.isIOS ? '' : t('pwa.installAppDescription')}
-                  </p>
+               {!showIOSInstructions ? (
+                 <>
+                   <p className="mb-3 text-sm text-gray-600">
+                     {deviceInfo.isIOS ? '' : t('pwa.installAppDescription')}
+                   </p>
 
-                  {deviceInfo.isIOS && (
-                    <div className="mb-3 rounded bg-blue-50 p-2 text-xs text-blue-700 dark:bg-blue-900/20 dark:text-blue-300">
-                      {t('pwa.installAppDescriptionIOS')}
-                    </div>
-                  )}
+                   {deviceInfo.isIOS && (
+                     <div className="mb-3 rounded bg-blue-50 p-2 text-xs text-blue-700">
+                       {t('pwa.installAppDescriptionIOS')}
+                     </div>
+                   )}
 
                   <div className="flex gap-2">
                     <Button
@@ -242,70 +242,70 @@ const PWAInstallPrompt = () => {
                       )}
                     </Button>
 
-                    <Button
-                      onClick={handleDismiss}
-                      disabled={isInstalling}
-                      variant="ghost"
-                      size="sm"
-                      className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
-                    >
-                      {t('pwa.later')}
-                    </Button>
+                     <Button
+                       onClick={handleDismiss}
+                       disabled={isInstalling}
+                       variant="ghost"
+                       size="sm"
+                       className="text-gray-600 hover:text-gray-800"
+                     >
+                       {t('pwa.later')}
+                     </Button>
                   </div>
                 </>
               ) : (
                 // Inline iOS Instructions
                 <div className="mt-3 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-sm font-semibold text-gray-900 dark:text-white">
-                      {t('pwa.installInstructions', 'Install Instructions')}
-                    </h4>
-                  </div>
+                   <div className="flex items-center justify-between">
+                     <h4 className="text-sm font-semibold text-gray-900">
+                       {t('pwa.installInstructions', 'Install Instructions')}
+                     </h4>
+                   </div>
 
-                  {/* Step 1 */}
-                  <div className="flex items-center gap-3 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20">
-                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-800">
-                      <span className="text-sm font-bold text-blue-600 dark:text-blue-300">
-                        1
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-700 dark:text-gray-300">
-                        {t('pwa.step1', 'Tap the share button')}
-                      </span>
-                      <Share className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                    </div>
-                  </div>
+                   {/* Step 1 */}
+                   <div className="flex items-center gap-3 rounded-lg bg-blue-50 p-3">
+                     <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
+                       <span className="text-sm font-bold text-blue-600">
+                         1
+                       </span>
+                     </div>
+                     <div className="flex items-center gap-2">
+                       <span className="text-sm text-gray-700">
+                         {t('pwa.step1', 'Tap the share button')}
+                       </span>
+                       <Share className="h-5 w-5 text-blue-600" />
+                     </div>
+                   </div>
 
-                  {/* Step 2 */}
-                  <div className="flex items-center gap-3 rounded-lg bg-green-50 p-3 dark:bg-green-900/20">
-                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-green-100 dark:bg-green-800">
-                      <span className="text-sm font-bold text-green-600 dark:text-green-300">
-                        2
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-700 dark:text-gray-300">
-                        {t('pwa.step2', "Select 'Add to Home Screen")}
-                      </span>
-                      <div className="flex items-center gap-1 rounded border bg-white px-2 py-1 dark:bg-gray-800">
-                        <Plus className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-                        <Home className="h-4 w-4 text-gray-600 dark:text-gray-400" />
-                      </div>
-                    </div>
-                  </div>
+                   {/* Step 2 */}
+                   <div className="flex items-center gap-3 rounded-lg bg-green-50 p-3">
+                     <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-green-100">
+                       <span className="text-sm font-bold text-green-600">
+                         2
+                       </span>
+                     </div>
+                     <div className="flex items-center gap-2">
+                       <span className="text-sm text-gray-700">
+                         {t('pwa.step2', "Select 'Add to Home Screen")}
+                       </span>
+                       <div className="flex items-center gap-1 rounded border bg-white px-2 py-1">
+                         <Plus className="h-4 w-4 text-gray-600" />
+                         <Home className="h-4 w-4 text-gray-600" />
+                       </div>
+                     </div>
+                   </div>
 
-                  {/* Step 3 */}
-                  <div className="flex items-center gap-3 rounded-lg bg-purple-50 p-3 dark:bg-purple-900/20">
-                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-800">
-                      <span className="text-sm font-bold text-purple-600 dark:text-purple-300">
-                        3
-                      </span>
-                    </div>
-                    <span className="text-sm text-gray-700 dark:text-gray-300">
-                      {t('pwa.step3', "Tap 'Add' to install")}
-                    </span>
-                  </div>
+                   {/* Step 3 */}
+                   <div className="flex items-center gap-3 rounded-lg bg-ocean-surface p-3">
+                     <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-ocean-light">
+                       <span className="text-sm font-bold text-ocean-dark">
+                         3
+                       </span>
+                     </div>
+                     <span className="text-sm text-gray-700">
+                       {t('pwa.step3', "Tap 'Add' to install")}
+                     </span>
+                   </div>
 
                   <Button onClick={handleDismiss} className="w-full">
                     {t('pwa.gotIt')}
@@ -314,13 +314,13 @@ const PWAInstallPrompt = () => {
               )}
             </div>
 
-            <Button
-              onClick={handleDismiss}
-              disabled={isInstalling}
-              variant="ghost"
-              size="sm"
-              className="p-1 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
-            >
+             <Button
+               onClick={handleDismiss}
+               disabled={isInstalling}
+               variant="ghost"
+               size="sm"
+               className="p-1 text-gray-400 hover:text-gray-600"
+             >
               <X className="h-4 w-4" />
             </Button>
           </div>
