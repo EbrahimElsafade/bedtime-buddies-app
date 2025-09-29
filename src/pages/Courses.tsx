@@ -69,17 +69,17 @@ const Courses = () => {
   }
 
   return (
-    <div className="relative px-3 py-8 md:px-4 md:py-12">
+    <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-3 py-8 md:px-4 md:py-12">
       {/* Fun decorative elements */}
       <div className="absolute left-10 top-20 hidden h-20 w-20 animate-float rounded-full bg-primary/10 md:block"></div>
       <div
-        className="absolute bottom-20 right-10 hidden h-16 w-16 animate-float rounded-full bg-moon-light/10 md:block"
+        className="bg-moon-light/10 absolute bottom-20 right-10 hidden h-16 w-16 animate-float rounded-full md:block"
         style={{ animationDelay: '1.5s' }}
       ></div>
 
       <div className="container mx-auto max-w-7xl">
         <div className="mb-4 text-center md:mb-6 lg:mb-8">
-          <h1 className="text-primary-foreground mb-2 font-bubbly text-2xl leading-tight md:mb-3 md:text-3xl lg:mb-4 lg:text-4xl">
+          <h1 className="mb-2 font-bubbly text-2xl leading-tight text-primary-foreground md:mb-3 md:text-3xl lg:mb-4 lg:text-4xl">
             {t('courses.exploreTitle')}
           </h1>
         </div>
@@ -99,7 +99,7 @@ const Courses = () => {
 
           <div className="flex flex-wrap justify-center gap-2 md:gap-3">
             <Button
-              variant={activeCategory === 'all' ? 'default' : 'outline'}
+              variant={activeCategory === 'all' ? 'accent' : 'outline-accent'}
               size="sm"
               onClick={() => handleCategoryChange('all')}
               className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
@@ -109,7 +109,9 @@ const Courses = () => {
             {categories.map(category => (
               <Button
                 key={category.id}
-                variant={activeCategory === category.name ? 'default' : 'outline'}
+                variant={
+                  activeCategory === category.name ? 'accent' : 'outline-accent'
+                }
                 size="sm"
                 onClick={() => handleCategoryChange(category.name)}
                 className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
@@ -122,8 +124,8 @@ const Courses = () => {
 
         {/* Courses Grid */}
         {filteredCourses.length === 0 ? (
-          <div className="rounded-lg bg-background/70 py-8 text-center  md:py-12">
-            <p className="text-primary-foreground text-base md:text-lg">
+          <div className="rounded-lg bg-background/70 py-8 text-center md:py-12">
+            <p className="text-base text-primary-foreground md:text-lg">
               {t('courses.noResults')}
             </p>
           </div>
@@ -132,12 +134,11 @@ const Courses = () => {
             {filteredCourses.map(course => {
               const category = categories.find(
                 cat =>
-                  cat.id === course.category ||
-                  cat.name === course.category,
+                  cat.id === course.category || cat.name === course.category,
               )
               return (
                 <Link key={course.id} to={`/courses/${course.id}`}>
-                  <Card className="story-card relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-background/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg ">
+                  <Card className="story-card relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-background/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg">
                     <div className="relative h-48 overflow-hidden">
                       <img
                         src={getImageUrl(course.coverImagePath)}
@@ -153,51 +154,68 @@ const Courses = () => {
                         }}
                       />
                       {course.isFree ? (
-                        <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-background shadow-lg">
+                        <Badge className="absolute end-2 top-2 border-none bg-green-600 text-background">
                           {t('free.tag')}
-                        </div>
+                        </Badge>
                       ) : (
-                        <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-yellow-500 px-3 py-1.5 text-xs font-bold text-black shadow-lg">
+                        <Badge className="absolute end-2 top-2 bg-accent text-background">
                           {t('premium.tag')}
-                        </div>
+                        </Badge>
                       )}
                     </div>
-                    <div className="flex flex-1 flex-col">
-                      <CardHeader className="flex-1 pb-2">
-                        <div className="mb-2 flex items-start justify-between">
-                          <CardTitle className="text-primary-foreground line-clamp-2 flex-1 text-lg">
-                            {getLocalized(course, 'title', lang)}
-                          </CardTitle>
-                          <div className="ml-2 flex items-center gap-2">
-                            <Badge
-                              variant="secondary"
-                              className="text-primary-foreground bg-primary/30 text-xs"
-                            >
-                              {category
-                                ? getCategoryText(category, 'name', lang)
-                                : 'General'}
-                            </Badge>
-                            <div className="text-primary-foreground flex items-center gap-1 text-xs">
-                              <Clock className="h-3 w-3" />
-                              <span>
-                                {Math.floor(course.duration / 60)}{' '}
-                                {t('duration')}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <CardDescription className="text-primary-foreground line-clamp-2 text-sm leading-relaxed ">
-                          {getLocalized(course, 'description', lang)}
-                        </CardDescription>
-                        <div className="text-primary-foreground mt-2 flex items-center text-xs ">
-                          <BookOpen className="mr-1 h-3 w-3" />
-                          <span>
-                            {course.lessons} {t('courses.lessons')} •{' '}
-                            {course.minAge}-{course.maxAge}{' '}
-                            {t('courses.years')}
-                          </span>
+
+                    <div className="grid gap-4">
+                      <CardHeader className="px-4 pt-4 ">
+                        <CardTitle className="line-clamp-2 flex-1 text-lg text-primary-foreground">
+                          {getLocalized(course, 'title', lang)}
+                        </CardTitle>
+
+                        <div className="grid grid-cols-2 gap-2">
+                          <Badge
+                            variant="secondary"
+                            className="bg-primary/30 text-xs text-primary-foreground"
+                          >
+                            {category
+                              ? getCategoryText(category, 'name', lang)
+                              : 'General'}
+                          </Badge>
+
+                          <Badge
+                            variant="secondary"
+                            className="flex items-center gap-2 bg-primary/30 text-xs text-primary-foreground"
+                          >
+                            <Clock className="h-3 w-3" />
+                            <span>
+                              {Math.floor(course.duration / 60)} {t('duration')}
+                            </span>
+                          </Badge>
+
+                          <Badge
+                            variant="secondary"
+                            className="flex items-center gap-2 bg-primary/30 text-xs text-primary-foreground"
+                          >
+                            <BookOpen className="mr-1 h-3 w-3" />
+                            <span>
+                              {course.lessons} {t('courses.lessons')}
+                            </span>
+                          </Badge>
+
+                          <Badge
+                            variant="secondary"
+                            className="flex items-center gap-2 bg-primary/30 text-xs text-primary-foreground"
+                          >
+                            <BookOpen className="mr-1 h-3 w-3" />
+                            <span>
+                              {course.minAge}-{course.maxAge}{' '}
+                              {t('courses.years')}
+                            </span>
+                          </Badge>
                         </div>
                       </CardHeader>
+
+                      <CardDescription className="line-clamp-2 px-4 text-sm leading-relaxed text-primary-foreground">
+                        {getLocalized(course, 'description', lang)}
+                      </CardDescription>
                     </div>
                   </Card>
                 </Link>

@@ -1,8 +1,7 @@
+import * as React from 'react'
+import * as TabsPrimitive from '@radix-ui/react-tabs'
 
-import * as React from "react"
-import * as TabsPrimitive from "@radix-ui/react-tabs"
-
-import { cn } from "@/lib/utils"
+import { cn } from '@/lib/utils'
 
 const Tabs = TabsPrimitive.Root
 
@@ -13,9 +12,9 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground w-full overflow-x-auto scrollbar-hide",
-      "scroll-smooth snap-x snap-mandatory",
-      className
+      'scrollbar-hide shadow-md inline-flex w-full items-center justify-start overflow-x-auto rounded-lg bg-primary p-1 text-muted-foreground',
+      'snap-x snap-mandatory scroll-smooth',
+      className,
     )}
     {...props}
   />
@@ -29,16 +28,16 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium ring-offset-background transition-all",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-      "disabled:pointer-events-none disabled:opacity-50",
-      "data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm",
-      "hover:bg-background/50 hover:text-foreground/80",
-      "min-w-0 flex-shrink-0 snap-start",
-      "touch-manipulation select-none",
+      'mx-1 inline-flex flex-1 items-center justify-center whitespace-nowrap rounded-md border-2 border-primary px-3 py-2 text-sm font-medium text-background ring-offset-background transition-all',
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+      'disabled:pointer-events-none disabled:opacity-50',
+      'data-[state=active]:border-accent  data-[state=active]:bg-background data-[state=active]:text-accent data-[state=active]:shadow-md',
+      'hover:bg-background/50 hover:text-foreground/80',
+      'min-w-0 flex-shrink-0 snap-start',
+      'touch-manipulation select-none',
       // Better support for Arabic text
-      "leading-tight text-center",
-      className
+      'text-center leading-tight',
+      className,
     )}
     {...props}
   />
@@ -52,9 +51,9 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-      "animate-in fade-in-50 slide-in-from-bottom-1 duration-200",
-      className
+      'mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+      'duration-200 animate-in fade-in-50 slide-in-from-bottom-1',
+      className,
     )}
     {...props}
   />

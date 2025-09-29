@@ -105,9 +105,9 @@ const Course = () => {
     return (
       <div className="px-4 py-16 text-center">
         <div className="mb-4 flex items-center justify-center">
-          <Loader2 className="text-primary-foreground h-8 w-8 animate-spin" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary-foreground" />
         </div>
-        <h1 className="text-primary-foreground font-bubbly text-2xl">
+        <h1 className="font-bubbly text-2xl text-primary-foreground">
           {t('course.loading')}
         </h1>
       </div>
@@ -118,12 +118,10 @@ const Course = () => {
   if (error) {
     return (
       <div className="px-4 py-16 text-center">
-        <h1 className="text-primary-foreground mb-6 font-bubbly text-3xl">
+        <h1 className="mb-6 font-bubbly text-3xl text-primary-foreground">
           {t('course.error')}
         </h1>
-        <p className="text-primary-foreground mb-8 ">
-          {t('course.errorDesc')}
-        </p>
+        <p className="mb-8 text-primary-foreground">{t('course.errorDesc')}</p>
         <Link to="/courses">
           <Button
             variant="outline"
@@ -140,10 +138,10 @@ const Course = () => {
   if (!course) {
     return (
       <div className="px-4 py-16 text-center">
-        <h1 className="text-primary-foreground mb-6 font-bubbly text-3xl">
+        <h1 className="mb-6 font-bubbly text-3xl text-primary-foreground">
           {t('course.notFound')}
         </h1>
-        <p className="text-primary-foreground mb-8 ">
+        <p className="mb-8 text-primary-foreground">
           {t('course.notFoundDesc')}
         </p>
         <Link to="/courses">
@@ -159,18 +157,18 @@ const Course = () => {
   }
 
   return (
-    <div className="relative px-4 py-12">
+    <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-12">
       {/* Decorative background elements */}
       <div className="absolute left-10 top-20 h-20 w-20 animate-float rounded-full bg-primary/10"></div>
       <div
-        className="absolute bottom-20 right-10 h-16 w-16 animate-float rounded-full bg-moon-light/10"
+        className="bg-moon-light/10 absolute bottom-20 right-10 h-16 w-16 animate-float rounded-full"
         style={{ animationDelay: '1.5s' }}
       ></div>
 
       <div className="container mx-auto">
         <Link
           to="/courses"
-          className="text-primary-foreground mb-6 inline-flex items-center hover:underline"
+          className="mb-6 inline-flex items-center text-primary-foreground hover:underline"
         >
           <ArrowLeft className="mr-2 h-4 w-4" /> {t('button.backToCourses')}
         </Link>
@@ -189,55 +187,55 @@ const Course = () => {
             </div>
 
             <div className="md:w-2/3">
-              <h1 className="text-primary-foreground mb-4 font-bubbly text-3xl md:text-4xl">
+              <h1 className="mb-4 font-bubbly text-3xl text-primary-foreground md:text-4xl">
                 {getLocalized(course, 'title', lang)}
               </h1>
 
-              <div className="mb-4 flex flex-wrap gap-2">
-                <Badge className="text-primary-foreground border-none bg-primary/30">
-                  {course.category || 'General'}
-                </Badge>
-                <Badge className="text-primary-foreground border-none bg-moon-light/30">
-                  {course.minAge}-{course.maxAge} {t('courses.years')}
-                </Badge>
+              <div className="mb-4 flex max-w-60 flex-wrap gap-2 sm:max-w-none">
                 {course.isFree ? (
-                  <Badge className="bg-primary-foreground/80 border-none text-background">
+                  <Badge className="bg-green-600 text-background">
                     {t('free.tag')}
                   </Badge>
                 ) : (
-                  <Badge className="bg-moon-DEFAULT/80 border-none text-background">
+                  <Badge className="bg-accent text-background">
                     {t('premium.tag')}
                   </Badge>
                 )}
-              </div>
 
-              <div className="text-primary-foreground mb-6 flex flex-wrap gap-4 text-sm ">
-                <div className="flex items-center">
+                <Badge variant="secondary" className="px-4 py-2 shadow-md">
+                  {course.category || 'General'}
+                </Badge>
+                <Badge variant="secondary" className="px-4 py-2 shadow-md">
+                  {course.minAge}-{course.maxAge} {t('courses.years')}
+                </Badge>
+
+                <Badge
+                  variant="secondary"
+                  className="flex items-center px-4 py-2 shadow-md"
+                >
                   <Clock className="mr-2 h-4 w-4" />
                   <span>
                     {course.duration} {t('duration')}
                   </span>
-                </div>
-                <div className="flex items-center">
+                </Badge>
+                <Badge
+                  variant="secondary"
+                  className="flex items-center px-4 py-2 shadow-md"
+                >
                   <BookOpen className="mr-2 h-4 w-4" />
                   <span>
                     {course.lessons} {t('courses.lessons')}
                   </span>
-                </div>
+                </Badge>
               </div>
 
-              <p className="text-primary-foreground mb-6 ">
+              <p className="mb-6 text-primary-foreground">
                 {getLocalized(course, 'description', lang)}
               </p>
 
               <Button
                 onClick={handleStartCourse}
-                className={cn(
-                  'rounded-full px-8 py-2',
-                  course.isFree
-                    ? 'bg-primary-foreground text-background hover:bg-primary'
-                    : 'bg-moon-DEFAULT text-primary-foreground hover:bg-moon-dark ',
-                )}
+                className="rounded-full bg-accent px-8 py-2 text-background hover:bg-primary"
               >
                 {course.isFree
                   ? t('button.startLearning')
@@ -257,41 +255,45 @@ const Course = () => {
             className="w-full"
           >
             <TabsList className="mb-8">
-              <TabsTrigger value="overview" className="text-primary-foreground">
-                {t('course.overview')}
-              </TabsTrigger>
-              <TabsTrigger value="content" className="text-primary-foreground">
-                {t('course.content')}
-              </TabsTrigger>
+              <TabsTrigger value="overview">{t('course.overview')}</TabsTrigger>
+              <TabsTrigger value="content">{t('course.content')}</TabsTrigger>
             </TabsList>
 
             {/* Overview Tab */}
             <TabsContent value="overview" className="space-y-8">
-              <div className="prose prose-dream text-primary-foreground mb-8 max-w-none ">
-                <h2 className="text-primary-foreground mb-3 font-bubbly text-xl">
+              <div className="prose prose-dream mb-8 max-w-none text-primary-foreground">
+                <h2 className="mb-3 font-bubbly text-xl text-primary-foreground">
                   {t('course.about')}
                 </h2>
                 <p>{getLocalized(course, 'description', lang)}</p>
 
-{(() => {
-                  const objectives = (course as any)[`learning_objectives_${lang}`] || course.learningObjectives || [];
-                  return objectives && objectives.length > 0 && (
-                    <>
-                      <h2 className="text-primary-foreground mb-3 mt-6 font-bubbly text-xl">
-                        {t('course.whatYouLearn')}
-                      </h2>
-                      <ul className="list-disc pl-5">
-                        {objectives.map((objective: string, index: number) => (
-                          <li key={index}>{objective}</li>
-                        ))}
-                      </ul>
-                    </>
-                  );
+                {(() => {
+                  const objectives =
+                    (course as any)[`learning_objectives_${lang}`] ||
+                    course.learningObjectives ||
+                    []
+                  return (
+                    objectives &&
+                    objectives.length > 0 && (
+                      <>
+                        <h2 className="mb-3 mt-6 font-bubbly text-xl text-primary-foreground">
+                          {t('course.whatYouLearn')}
+                        </h2>
+                        <ul className="list-disc pl-5">
+                          {objectives.map(
+                            (objective: string, index: number) => (
+                              <li key={index}>{objective}</li>
+                            ),
+                          )}
+                        </ul>
+                      </>
+                    )
+                  )
                 })()}
 
                 {course.instructor && (
                   <>
-                    <h2 className="text-primary-foreground mb-3 mt-6 font-bubbly text-xl">
+                    <h2 className="mb-3 mt-6 font-bubbly text-xl text-primary-foreground">
                       {t('course.instructor')}
                     </h2>
                     <div className="flex items-start gap-4">
@@ -303,27 +305,36 @@ const Course = () => {
                         />
                       )}
                       <div>
-                        <h3 className="text-primary-foreground font-medium">
+                        <h3 className="font-medium text-primary-foreground">
                           {getLocalized(course.instructor, 'name', lang)}
                         </h3>
-                        <p className="text-primary-foreground/80 mt-1 text-sm">
+                        <p className="mt-1 text-sm text-primary-foreground/80">
                           {getLocalized(course.instructor, 'bio', lang)}
                         </p>
                         {(() => {
-                          const expertise = getLocalized(course.instructor, 'expertise', lang);
-                          return Array.isArray(expertise) && expertise.length > 0 && (
-                            <div className="mt-2 flex flex-wrap gap-1">
-                              {expertise.map((skill: string, index: number) => (
-                                <Badge
-                                  key={index}
-                                  variant="secondary"
-                                  className="text-xs"
-                                >
-                                  {skill}
-                                </Badge>
-                              ))}
-                            </div>
-                          );
+                          const expertise = getLocalized(
+                            course.instructor,
+                            'expertise',
+                            lang,
+                          )
+                          return (
+                            Array.isArray(expertise) &&
+                            expertise.length > 0 && (
+                              <div className="mt-2 flex flex-wrap gap-1">
+                                {expertise.map(
+                                  (skill: string, index: number) => (
+                                    <Badge
+                                      key={index}
+                                      variant="secondary"
+                                      className="text-xs"
+                                    >
+                                      {skill}
+                                    </Badge>
+                                  ),
+                                )}
+                              </div>
+                            )
+                          )
                         })()}
                       </div>
                     </div>
@@ -362,16 +373,16 @@ const Course = () => {
                         )}
                       </div>
                       <div>
-                        <h3 className="text-primary-foreground mb-2 font-bubbly text-xl">
+                        <h3 className="mb-2 font-bubbly text-xl text-primary-foreground">
                           {getLocalized(selectedVideo, 'title', lang)}
                         </h3>
-                        <div className="text-primary-foreground mb-2 flex items-center text-sm ">
+                        <div className="mb-2 flex items-center text-sm text-primary-foreground">
                           <Clock className="mr-1 h-4 w-4" />
                           <span>
                             {selectedVideo.duration} {t('duration')}
                           </span>
                         </div>
-                        <p className="text-primary-foreground ">
+                        <p className="text-primary-foreground">
                           {getLocalized(selectedVideo, 'description', lang)}
                         </p>
                       </div>
@@ -387,7 +398,7 @@ const Course = () => {
 
                 {/* Video List */}
                 <div className="lg:flex-1">
-                  <h3 className="text-primary-foreground mb-4 font-bubbly text-xl">
+                  <h3 className="mb-4 font-bubbly text-xl text-primary-foreground">
                     {t('course.courseVideos')}
                   </h3>
 
@@ -397,7 +408,7 @@ const Course = () => {
                         <Card
                           key={video.id}
                           className={cn(
-                            'hover:border-primary-foreground cursor-pointer transition-all',
+                            'cursor-pointer transition-all hover:border-primary-foreground',
                             selectedVideo?.id === video.id &&
                               'border-primary-foreground',
                           )}
@@ -419,16 +430,16 @@ const Course = () => {
                                     </div>
                                   )}
                                 <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity hover:opacity-100">
-                                  <div className="bg-primary-foreground flex h-8 w-8 items-center justify-center rounded-full">
+                                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-foreground">
                                     <Play className="h-4 w-4 text-background" />
                                   </div>
                                 </div>
                               </div>
                               <div className="min-w-0 flex-1">
-                                <h4 className="text-primary-foreground truncate text-sm font-medium">
+                                <h4 className="truncate text-sm font-medium text-primary-foreground">
                                   {getLocalized(video, 'title', lang)}
                                 </h4>
-                                <div className="text-primary-foreground/70 mt-1 flex items-center text-xs">
+                                <div className="mt-1 flex items-center text-xs text-primary-foreground/70">
                                   <Clock className="mx-1 h-3 w-3" />
                                   <span>
                                     {video.duration} {t('duration')}

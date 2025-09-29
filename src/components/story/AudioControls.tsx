@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Play, Pause, Volume2 } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Story, StorySection } from '@/types/story'
@@ -117,6 +118,17 @@ export const AudioControls = ({
     setIsPlaying(!isPlaying)
   }
 
+  const toggleAutoplay = () => {
+    if (!audioRef.current) return
+
+    if (isPlaying) {
+      audioRef.current.pause()
+    } else {
+      audioRef.current.play()
+    }
+    setIsPlaying(!isPlaying)
+  }
+
   const handleSeek = (value: number[]) => {
     if (audioRef.current) {
       audioRef.current.currentTime = value[0]
@@ -157,43 +169,71 @@ export const AudioControls = ({
         />
       </div>
 
-      <div className=" ">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={togglePlayPause}
-              className="h-10 w-10 rounded-full text-background hover:translate-y-0 hover:bg-transparent/10"
-            >
-              {isPlaying ? (
-                <Pause className="h-5 w-5" />
-              ) : (
-                <Play className="h-5 w-5" />
-              )}
-            </Button>
+      <div className="flex items-center justify-between px-4">
+        <div className="flex w-56 items-center justify-between">
+          <Button
+            variant="link"
+            onClick={toggleAutoplay}
+            className="flex justify-between px-0 text-accent"
+          >
+            {isPlaying ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 -960 960 960"
+                height="24px"
+                width="24px"
+                className="fill-accent"
+              >
+                <path d="M360-320h80v-320h-80v320Zm160 0h80v-320h-80v320ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80h640v-480H160v480Zm0 0v-480 480Z" />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 -960 960 960"
+                height="24px"
+                width="24px"
+                className="fill-accent"
+              >
+                <path d="m380-300 280-180-280-180v360ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+              </svg>
+            )}
 
-            <div className="hidden items-center gap-4 space-x-2 text-background sm:flex">
-              <Volume2 className="h-4 w-4" />
-              <Slider
-                value={[volume]}
-                max={1}
-                step={0.1}
-                onValueChange={handleVolumeChange}
-                className="w-24"
-              />
-            </div>
+            {isPlaying ? 'stop video' : 'play video'}
+          </Button>
 
-            <div className="text-sm text-background">
-              {formatTime(currentTime)} / {formatTime(duration)}
-            </div>
+          <div className="h-10 w-0.5 bg-accent"></div>
+
+          <Button
+            variant="link"
+            onClick={togglePlayPause}
+            className="flex justify-between px-0 text-accent"
+          >
+            {isPlaying ? (
+              <Pause className="h-5 w-5" />
+            ) : (
+              <Play className="h-5 w-5" />
+            )}
+
+            {isPlaying ? 'stop story' : 'read story'}
+          </Button>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <div className="hidden items-center gap-4 space-x-2 text-background sm:flex">
+            <Volume2 className="h-4 w-4" />
+            <Slider
+              value={[volume]}
+              max={1}
+              step={0.1}
+              onValueChange={handleVolumeChange}
+              className="w-24"
+            />
           </div>
 
-          <div className="px-4 text-background">
-            <AutoplayToggle
-              isAutoplay={isAutoplay}
-              onAutoplayChange={setIsAutoplay}
-            />
+          <div className="flex gap-2 text-sm">
+            <span className="text-accent"> {formatTime(currentTime)} </span>
+            <span className="text-accent"> / </span>
+            <span className="text-primary"> {formatTime(duration)} </span>
           </div>
         </div>
       </div>

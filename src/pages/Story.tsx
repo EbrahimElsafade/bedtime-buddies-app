@@ -88,7 +88,7 @@ const Story = () => {
   }
 
   return (
-    <div className="px-4 py-8">
+    <div className="px-4 py-8 bg-gradient-to-b min-h-[82.7svh] from-primary/20 to-primary/10">
       <div className="container mx-auto max-w-4xl">
         <StoryHeader
           onBackClick={() => navigate('/stories')}

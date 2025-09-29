@@ -147,7 +147,7 @@ const Profile = () => {
   }
 
   return (
-    <div className="py-12 px-4">
+    <div className="py-12 px-4 bg-gradient-to-b min-h-[82.7svh] from-primary/20 to-primary/10">
       <div className="container mx-auto max-w-3xl">
         <h1 className="text-3xl md:text-4xl font-bubbly mb-6">{t('common:myProfile')}</h1>
         

@@ -64,7 +64,7 @@ export const StoryContent = ({
   return (
     <Card
       dir={storyDirection}
-      className="mb-4 overflow-hidden border-primary/20 bg-background/70 backdrop-blur-sm  md:mb-6"
+      className="mb-4 overflow-hidden border-primary/20 bg-background/70 backdrop-blur-sm md:mb-6"
     >
       <div className="grid">
         {/* Story Section Image */}
@@ -86,7 +86,7 @@ export const StoryContent = ({
             </div>
           )}
 
-          <div className="absolute bottom-0 w-full bg-red-500 bg-transparent/50">
+          <div className="absolute bottom-0 w-full bg-transparent/50">
             <AudioControls
               story={story}
               currentSection={currentSection}
@@ -100,6 +100,49 @@ export const StoryContent = ({
           </div>
         </div>
 
+        {/* Section Navigation - only show if not in single story audio mode or if no sections */}
+        {(story.audio_mode !== 'single_story' || story.sections.length > 1) && (
+          <div className="flex items-center justify-between p-4 pb-0">
+            <Button
+              size="icon"
+              variant='outline-accent'
+              onClick={handlePrevSection}
+              disabled={currentSectionIndex === 0}
+              aria-label="Previous section"
+              className="h-8 w-8 md:h-10 md:w-10"
+            >
+              <ChevronLeft
+                className={
+                  storyDirection === 'rtl'
+                    ? 'h-4 w-4 rotate-180 md:h-5 md:w-5'
+                    : 'h-4 w-4 md:h-5 md:w-5'
+                }
+              />
+            </Button>
+
+            <span className="px-2 text-xs text-muted-foreground md:text-sm">
+              {currentSectionIndex + 1} / {story.sections.length || 1}
+            </span>
+
+            <Button
+              size="icon"
+              variant='outline-accent'
+              onClick={handleNextSection}
+              disabled={currentSectionIndex === story.sections.length - 1}
+              aria-label="Next section"
+              className="h-8 w-8 md:h-10 md:w-10"
+            >
+              <ChevronRight
+                className={
+                  storyDirection === 'rtl'
+                    ? 'h-4 w-4 rotate-180 md:h-5 md:w-5'
+                    : 'h-4 w-4 md:h-5 md:w-5'
+                }
+              />
+            </Button>
+          </div>
+        )}
+
         {/* Story Section Text */}
         <div className="flex w-full flex-col p-4 md:p-6">
           <div className="flex-grow">
@@ -110,50 +153,6 @@ export const StoryContent = ({
               duration={audioDuration}
             />
           </div>
-
-          {/* Section Navigation - only show if not in single story audio mode or if no sections */}
-          {(story.audio_mode !== 'single_story' ||
-            story.sections.length > 1) && (
-            <div className="mt-auto flex items-center justify-between">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handlePrevSection}
-                disabled={currentSectionIndex === 0}
-                aria-label="Previous section"
-                className="h-8 w-8 md:h-10 md:w-10"
-              >
-                <ChevronLeft
-                  className={
-                    storyDirection === 'rtl'
-                      ? 'h-4 w-4 rotate-180 md:h-5 md:w-5'
-                      : 'h-4 w-4 md:h-5 md:w-5'
-                  }
-                />
-              </Button>
-
-              <span className="px-2 text-xs text-muted-foreground md:text-sm">
-                {currentSectionIndex + 1} / {story.sections.length || 1}
-              </span>
-
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={handleNextSection}
-                disabled={currentSectionIndex === story.sections.length - 1}
-                aria-label="Next section"
-                className="h-8 w-8 md:h-10 md:w-10"
-              >
-                <ChevronRight
-                  className={
-                    storyDirection === 'rtl'
-                      ? 'h-4 w-4 rotate-180 md:h-5 md:w-5'
-                      : 'h-4 w-4 md:h-5 md:w-5'
-                  }
-                />
-              </Button>
-            </div>
-          )}
         </div>
       </div>
     </Card>

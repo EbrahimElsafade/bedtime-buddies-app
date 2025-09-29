@@ -103,7 +103,7 @@ const Layout = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-4">
             <DalfoonMascot size="sm" expression="happy" animate={false} />
-            <h1 className="font-bubbly text-xl text-primary">
+            <h1 className="font-bubbly text-xl text-accent">
               {t('misc:layout.appName')}
             </h1>
           </Link>
@@ -133,7 +133,7 @@ const Layout = () => {
             {isAuthenticated ? (
               <div className="hidden items-center space-x-2 md:flex">
                 <Link to="/profile">
-                  <Button variant="ghost" size="sm">
+                  <Button variant="outline" size="sm">
                     {profile?.parent_name || t('auth:profile')}
                   </Button>
                 </Link>

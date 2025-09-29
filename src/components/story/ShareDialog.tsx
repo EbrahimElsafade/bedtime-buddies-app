@@ -52,9 +52,9 @@ export const ShareDialog = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          variant="ghost"
+          variant="outline"
           size="icon"
-          className="rounded-full"
+          className="rounded-md shadow"
           aria-label="Share story"
         >
           <Share className="h-5 w-5" />
@@ -69,7 +69,10 @@ export const ShareDialog = ({
 
         <div className="space-y-6 pt-2">
           {/* URL Input with Copy Button */}
-          <div dir='ltr' className="flex items-center gap-2 rounded-lg bg-muted p-3">
+          <div
+            dir="ltr"
+            className="flex items-center gap-2 rounded-lg bg-muted p-3"
+          >
             <input
               className="flex-1 border-none bg-transparent font-mono text-sm text-muted-foreground outline-none"
               value={shareUrl}

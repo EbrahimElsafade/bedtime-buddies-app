@@ -1,6 +1,7 @@
 import { Story } from '@/types/story'
 import { getMultilingualText } from '@/utils/multilingualUtils'
 import { useTranslation } from 'react-i18next'
+import { Badge } from '../ui/badge'
 
 interface StoryInfoProps {
   story: Story
@@ -48,20 +49,20 @@ export const StoryInfo = ({
         </h1>
 
         <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-          <span className="rounded-full bg-secondary/50 px-2 py-1">
+          <Badge variant="secondary">
             {story.duration} {t('duration', { lng: translationLang })}
-          </span>
-          <span className="rounded-full bg-secondary/50 px-2 py-1">
+          </Badge>
+          <Badge variant="secondary">
             {t(`category.${story.category}`, { lng: translationLang })}
-          </span>
+          </Badge>
           {story.is_free ? (
-            <span className="bg-primary-foreground/20 text-primary-foreground rounded-full px-2 py-1 font-medium">
+            <Badge className="bg-green-600 text-background">
               {t('type.free', { lng: translationLang })}
-            </span>
+            </Badge>
           ) : (
-            <span className="bg-moon-DEFAULT/20 rounded-full px-2 py-1 font-medium text-moon-dark">
+            <Badge className="bg-accent text-background">
               {t('type.premium', { lng: translationLang })}
-            </span>
+            </Badge>
           )}
         </div>
       </div>

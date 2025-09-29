@@ -1,6 +1,7 @@
 {
   "name": "دالفون - Dalfoon",
   "short_name": "Dalfoon",
+  "id": "/",
   "description": "دالفون.. صديقك للقصص والتعلّم واللعب - Your friend for stories, learning, and play",
   "start_url": "/",
   "display": "standalone",

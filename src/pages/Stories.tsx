@@ -114,12 +114,12 @@ const Stories = () => {
 
   return (
     <div
-      className="px-3 py-4 md:px-4 md:py-8 lg:py-12"
+      className="px-3 bg-gradient-to-b min-h-[82.7svh] from-primary/20 to-primary/10  py-4 md:px-4 md:py-8 lg:py-12"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <div className="container mx-auto max-w-6xl">
+      <div className="container  mx-auto max-w-6xl">
         <div className="mb-4 text-center md:mb-6 lg:mb-8">
-          <h1 className="from-primary-foreground mb-2 bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
+          <h1 className="mb-2  text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
             {t('allStories')}
           </h1>
           <p className="mx-auto max-w-2xl px-2 text-xs text-muted-foreground md:text-sm lg:text-base">
@@ -148,7 +148,7 @@ const Stories = () => {
 
           <div className="flex flex-wrap justify-center gap-2 md:gap-3">
             <Button
-              variant={selectedCategory === 'all' ? 'default' : 'outline'}
+              variant={selectedCategory === 'all' ? 'accent' : 'outline-accent'}
               size="sm"
               onClick={() => setSelectedCategory('all')}
               className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
@@ -159,7 +159,7 @@ const Stories = () => {
               <Button
                 key={category.id}
                 variant={
-                  selectedCategory === category.name ? 'default' : 'outline'
+                  selectedCategory === category.name ? 'accent' : 'outline-accent'
                 }
                 size="sm"
                 onClick={() => setSelectedCategory(category.name)}
