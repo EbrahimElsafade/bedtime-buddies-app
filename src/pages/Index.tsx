@@ -49,7 +49,7 @@ const Index = () => {
   })
 
   useEffect(() => {
-    document.title = 'Dolfoon - Kids Entertainment'
+    document.title = 'Dolphoon - Kids Entertainment'
   }, [])
 
   // Handle RTL layout for Arabic

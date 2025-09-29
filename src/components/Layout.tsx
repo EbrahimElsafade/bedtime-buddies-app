@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
-import { DolfoonMascot } from './DolfoonMascot'
+import { DolphoonMascot } from './DolphoonMascot'
 import { cn } from '@/lib/utils'
 
 interface NavigationSettings {
@@ -96,13 +96,13 @@ const Layout = () => {
   })
 
   return (
-    <div className="bg-gradient-to-b from-primary/30 to-primary/20 bubbles-bg flex min-h-screen flex-col pb-16 text-foreground md:pb-0">
+    <div className="bubbles-bg flex min-h-screen flex-col bg-gradient-to-b from-primary/30 to-primary/20 pb-16 text-foreground md:pb-0">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-primary/20 bg-secondary/70 backdrop-blur-lg">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-4">
-            <DolfoonMascot size="sm" expression="happy" animate={false} />
+            <DolphoonMascot size="sm" expression="happy" animate={false} />
             <h1 className="font-bubbly text-xl text-accent">
               {t('misc:layout.appName')}
             </h1>
@@ -133,14 +133,14 @@ const Layout = () => {
             {isAuthenticated ? (
               <div className="hidden items-center space-x-2 md:flex">
                 <Link to="/profile">
-                  <Button variant="outline" size="sm">
+                  <Button variant="ghost" size="sm" className="rounded-sm">
                     {profile?.parent_name || t('auth:profile')}
                   </Button>
                 </Link>
               </div>
             ) : (
-              <Link to="/login" className='hidden md:block'>
-                <Button variant="link" size="sm">
+              <Link to="/login" className="hidden md:block">
+                <Button variant="ghost" size="sm">
                   {t('auth:login')}
                 </Button>
               </Link>
@@ -182,7 +182,7 @@ const Layout = () => {
       </footer>
 
       {/* Mobile Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 pb-2 flex h-16 items-center justify-around border-t border-primary/20 bg-secondary px-2 md:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-50 flex h-16 items-center justify-around border-t border-primary/20 bg-secondary px-2 pb-2 md:hidden">
         {navItems.map(item => {
           const ItemIcon = item.icon
           return (
@@ -191,17 +191,13 @@ const Layout = () => {
               to={item.path}
               className={cn(
                 'flex w-1/5 flex-col items-center justify-center rounded-lg px-2 py-1',
-                isActive(item.path)
-                  ? 'text-accent'
-                    : 'text-primary',
+                isActive(item.path) ? 'text-accent' : 'text-primary',
               )}
             >
               <ItemIcon
                 className={cn(
                   'h-5 w-5',
-                  isActive(item.path)
-                    ? 'text-accent'
-                    : 'text-primary',
+                  isActive(item.path) ? 'text-accent' : 'text-primary',
                 )}
               />
               <span className="mt-1 text-xs font-medium">{item.name}</span>

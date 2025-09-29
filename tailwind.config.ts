@@ -62,7 +62,7 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Dolfoon custom colors
+				// Dolphoon custom colors
 				ocean: {
 					DEFAULT: '#00A8E8', // Aqua Blue - main ocean color
 					light: '#7DD3FC', // Light aqua blue

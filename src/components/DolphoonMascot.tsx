@@ -1,19 +1,19 @@
 import { useState, useEffect } from 'react'
-import dolfoonLogo from '@/assets/dolfoon-logo.png'
+import dolphoonLogo from '@/assets/dolphoon-logo.png'
 
-interface DolfoonMascotProps {
+interface DolphoonMascotProps {
   expression?: 'happy' | 'curious' | 'cheering' | 'motivating'
   size?: 'sm' | 'md' | 'lg' | 'xl'
   animate?: boolean
   className?: string
 }
 
-export function DolfoonMascot({
+export function DolphoonMascot({
   expression = 'happy',
   size = 'md',
   animate = true,
   className = '',
-}: DolfoonMascotProps) {
+}: DolphoonMascotProps) {
   const [showBubbles, setShowBubbles] = useState(false)
 
   useEffect(() => {
@@ -42,8 +42,8 @@ export function DolfoonMascot({
   return (
     <div className={`relative inline-block ${className}`}>
       <img
-        src={dolfoonLogo}
-        alt="Dolfoon the dolphin"
+        src={dolphoonLogo}
+        alt="Dolphoon the dolphin"
         className={` ${sizeClasses[size]} ${animate ? expressionClasses[expression] : ''} rounded-full drop-shadow-lg transition-all duration-1000`}
       />
 

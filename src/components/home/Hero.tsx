@@ -3,7 +3,7 @@ import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
-import { DolfoonMascot } from '@/components/DolfoonMascot'
+import { DolphoonMascot } from '@/components/DolphoonMascot'
 
 const Hero = () => {
   const { isAuthenticated } = useAuth()
@@ -11,40 +11,27 @@ const Hero = () => {
   const { t: tCommon } = useTranslation('common')
 
   return (
-    <section className="bg-gradient-to-b from-primary/40 to-primary/20 relative overflow-hidden px-4 py-8 md:py-12 lg:py-20">
+    <section className="relative overflow-hidden bg-gradient-to-b from-primary/40 to-primary/20 px-4 py-8 md:py-12">
       {/* Ocean background elements */}
       <div className="bubbles-bg absolute inset-0 opacity-20" />
       <div className="waves-bg absolute bottom-0 left-0 w-full opacity-30" />
 
       <div className="container relative z-10 mx-auto">
-        <div className="mx-auto max-w-4xl text-center">
-          {/* Dolfoon mascot */}
-          <div className="mb-6 flex justify-center">
-            <DolfoonMascot size="xl" expression="cheering" animate={false} />
+        <div className="mx-auto max-w-4xl grid gap-12 text-center">
+          {/* Dolphoon mascot */}
+          <div className="flex justify-center">
+            <DolphoonMascot size="xl" expression="cheering" animate={false} />
           </div>
 
-          <h1 className="animate-slide-up mb-3 font-bubbly text-2xl leading-tight text-secondary drop-shadow-lg sm:text-3xl md:mb-4 md:text-4xl lg:text-6xl">
+          <h1 className="animate-slide-up font-bubbly text-2xl leading-tight text-secondary drop-shadow-lg sm:text-3xl md:text-4xl lg:text-6xl">
             {t('title')}
           </h1>
 
-          {/* Tagline */}
-          <p
-            className="animate-fade-in mb-4 font-rounded text-lg text-secondary/90 md:text-xl"
-            style={{ animationDelay: '0.1s' }}
-          >
-            {tCommon('tagline')}
-          </p>
-
-          <p
-            className="animate-fade-in mx-auto mb-6 max-w-2xl text-base leading-relaxed text-secondary/80 sm:text-lg md:mb-8 md:text-xl"
-            style={{ animationDelay: '0.2s' }}
-          >
+          <p className="mx-auto max-w-2xl text-base leading-relaxed text-primary-foreground sm:text-lg md:text-xl">
             {t('subtitle')}
           </p>
-          <div
-            className="animate-fade-in flex flex-col items-center justify-center gap-3 sm:flex-row md:gap-4"
-            style={{ animationDelay: '0.4s' }}
-          >
+
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row md:gap-4">
             <Link to="/stories" className="w-full sm:w-auto">
               <Button
                 size="lg"

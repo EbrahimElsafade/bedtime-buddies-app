@@ -28,7 +28,7 @@ export const StoryHeader = ({
         <ChevronLeft className="rtl:rotate-180 me-1 h-4 w-4" /> {t('backToStories')}
       </Button>
       
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-4">
         <Button 
           variant="tertiary" 
           size="icon" 

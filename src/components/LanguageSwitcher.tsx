@@ -21,7 +21,7 @@ const LanguageSwitcher = () => {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" >
+        <Button variant="ghost" size="icon" className="rounded-sm">
           <GlobeIcon className="h-5 w-5" />
           <span className="sr-only">{t('accessibility.languageSelection')}</span>
         </Button>
