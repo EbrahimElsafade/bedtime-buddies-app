@@ -1,0 +1,27 @@
+{
+  "name": "Dolphoon",
+  "titles": {
+    "home": "Dolphoon - Histoires interactives pour le coucher",
+    "stories": "Dolphoon - Histoires interactives pour le coucher",
+    "courses": "Dolphoon - Cours éducatifs",
+    "games": "Dolphoon - Jeux éducatifs",
+    "profile": "Dolphoon - Profil utilisateur",
+    "favorites": "Dolphoon - Favoris",
+    "login": "Dolphoon - Connexion",
+    "register": "Dolphoon - Inscription",
+    "notFound": "Dolphoon - Page non trouvée",
+    "admin": "Dolphoon - Administration"
+  },
+  "descriptions": {
+    "home": "Découvrez un monde magique d'histoires interactives, de cours éducatifs et de jeux amusants conçus pour rendre l'apprentissage agréable pour les enfants.",
+    "stories": "Parcourez notre collection d'histoires interactives. Chaque histoire est conçue pour captiver les enfants tout en enseignant des leçons précieuses et en stimulant l'imagination.",
+    "courses": "Explorez nos cours éducatifs conçus pour les enfants. De l'art à la musique en passant par la narration et la créativité, trouvez le parcours d'apprentissage parfait pour votre enfant.",
+    "games": "Jouez à des jeux éducatifs qui rendent l'apprentissage amusant. Nos jeux interactifs aident les enfants à développer des compétences tout en s'amusant.",
+    "profile": "Gérez votre profil, suivez vos progrès et personnalisez votre expérience d'apprentissage.",
+    "favorites": "Accédez à vos histoires, cours et jeux préférés en un seul endroit. Créez votre collection personnalisée de contenu éducatif.",
+    "login": "Connectez-vous à votre compte pour accéder à du contenu personnalisé, sauvegarder vos progrès et suivre votre parcours d'apprentissage.",
+    "register": "Créez votre compte pour débloquer un monde d'histoires interactives, de cours éducatifs et de jeux amusants pour les enfants.",
+    "notFound": "Page non trouvée. Retournez à notre collection d'histoires interactives, de cours éducatifs et de jeux pour enfants.",
+    "admin": "Interface d'administration pour gérer le contenu sur la plateforme."
+  }
+}

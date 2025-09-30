@@ -1,0 +1,27 @@
+{
+  "name": "Dolphoon",
+  "titles": {
+    "home": "Dolphoon - Interactive Dolphoon",
+    "stories": "Dolphoon - Interactive Dolphoon",
+    "courses": "Dolphoon - Educational Courses",
+    "games": "Dolphoon - Educational Games",
+    "profile": "Dolphoon - User Profile",
+    "favorites": "Dolphoon - Favorites",
+    "login": "Dolphoon - Login",
+    "register": "Dolphoon - Register",
+    "notFound": "Dolphoon - Not Found",
+    "admin": "Dolphoon - Admin"
+  },
+  "descriptions": {
+    "home": "Discover a magical world of interactive Dolphoon, educational courses, and fun games designed to make learning enjoyable for children.",
+    "stories": "Browse our collection of interactive Dolphoon. Each story is crafted to engage children while teaching valuable lessons and fostering imagination.",
+    "courses": "Explore our educational courses designed for children. From art and music to storytelling and creativity, find the perfect learning journey for your child.",
+    "games": "Play educational games that make learning fun. Our interactive games help children develop skills while having a great time.",
+    "profile": "Manage your Dolphoon profile, track your progress, and customize your learning experience.",
+    "favorites": "Access your favorite stories, courses, and games in one place. Create your personalized collection of educational content.",
+    "login": "Sign in to your Dolphoon account to access personalized content, save your progress, and track your learning journey.",
+    "register": "Create your Dolphoon account to unlock a world of interactive stories, educational courses, and fun games for children.",
+    "notFound": "Page not found. Return to our collection of interactive stories, educational courses, and games for children.",
+    "admin": "Administrative interface for managing content on Dolphoon platform."
+  }
+}
