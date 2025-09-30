@@ -22,7 +22,8 @@ export default function LanguageProvider({ children }: { children: React.ReactNo
   }
 
   const t = (key: string, options?: Record<string, unknown>): string => {
-    return i18n.t(key, options as any)
+    const result = i18n.t(key, options as any)
+    return typeof result === 'string' ? result : String(result)
   }
 
   return (
