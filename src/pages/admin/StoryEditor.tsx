@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
@@ -30,6 +30,7 @@ const APP_LANGUAGES = [
 
 const StoryEditor = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { id } = useParams<{ id: string }>()
   const isEditing = id !== 'new' && !!id
 
@@ -134,6 +135,37 @@ const StoryEditor = () => {
     enabled: isEditing && !!id && id !== 'new',
     staleTime: Infinity,
   })
+
+  useEffect(() => {
+    // Cleanup function to revoke object URLs when component unmounts
+    return () => {
+      // Cleanup cover image preview
+      if (coverImagePreview && coverImagePreview.startsWith('blob:')) {
+        URL.revokeObjectURL(coverImagePreview)
+      }
+      
+      // Cleanup story audio previews
+      Object.values(storyAudioPreviews).forEach(url => {
+        if (url && url.startsWith('blob:')) {
+          URL.revokeObjectURL(url)
+        }
+      })
+      
+      // Cleanup section image and voice previews
+      storySections.forEach(section => {
+        if (section.imagePreview?.startsWith('blob:')) {
+          URL.revokeObjectURL(section.imagePreview)
+        }
+        if (section.voicePreviews) {
+          Object.values(section.voicePreviews).forEach(url => {
+            if (url && url.startsWith('blob:')) {
+              URL.revokeObjectURL(url)
+            }
+          })
+        }
+      })
+    }
+  }, [coverImagePreview, storyAudioPreviews, storySections])
 
   useEffect(() => {
     console.log(
@@ -738,8 +770,32 @@ const StoryEditor = () => {
         if (sectionError) throw sectionError
       }
 
+      // Reset all state after successful submission
+      setCoverImageFile(null)
+      setCoverImagePreview(null)
+      setStoryAudioFiles({})
+      setStoryAudioPreviews({})
+      setStoryData({
+        title: { en: '', ar: '', fr: '' },
+        description: { en: '', ar: '', fr: '' },
+        category: '',
+        duration: 5,
+        is_free: true,
+        is_published: false,
+        languages: ['en'],
+        cover_image: null,
+        audio_mode: 'per_section',
+        story_audio: {},
+      })
+      setStorySections([])
+
+      // Invalidate queries to ensure fresh data on next load
+      await queryClient.invalidateQueries({ queryKey: ['admin-story'] })
+      await queryClient.invalidateQueries({ queryKey: ['stories'] })
+
       toast.success(`Story ${isEditing ? 'updated' : 'created'} successfully!`)
       navigate('/admin/stories')
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error('Error saving story:', error)
       toast.error(
