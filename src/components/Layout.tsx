@@ -96,7 +96,7 @@ const Layout = () => {
   })
 
   return (
-    <div className="flex min-h-screen flex-col pb-16 text-foreground md:pb-0">
+    <div className="flex min-h-screen flex-col pb-16 md:pb-0 text-foreground">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-primary/20 bg-secondary/70 backdrop-blur-lg">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">

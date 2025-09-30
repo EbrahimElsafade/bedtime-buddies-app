@@ -196,9 +196,9 @@ const HangmanGame = () => {
           <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/50">
             <div className="text-center text-secondary">
               <div className="mb-2 text-2xl md:text-4xl">😔</div>
-              <div className="text-sm font-bold text-red-400 md:text-xl">
+              <p className="text-sm font-bold text-red-400 md:text-xl">
                 TRY AGAIN!
-              </div>
+              </p>
             </div>
           </div>
         )}

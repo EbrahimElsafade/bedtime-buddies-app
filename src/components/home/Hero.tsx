@@ -13,7 +13,7 @@ const Hero = () => {
   return (
     <section className="relative overflow-hidden px-4 py-8 md:py-12">
       <div className="container relative z-10 mx-auto">
-        <div className="mx-auto grid max-w-4xl gap-12 text-center">
+        <div className="mx-auto grid max-w-4xl gap-8 md:gap-12 text-center">
           {/* Dolphoon mascot */}
           <div className="flex justify-center">
             <DolphoonMascot size="xl" expression="cheering" animate={false} />
@@ -27,7 +27,7 @@ const Hero = () => {
             {t('subtitle')}
           </p>
 
-          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row md:gap-4">
+          <div className="flex flex-col items-center justify-center gap-2 sm:flex-row md:gap-4">
             <Link to="/stories" className="w-full sm:w-auto">
               <Button
                 size="lg"

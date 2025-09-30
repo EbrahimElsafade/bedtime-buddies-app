@@ -102,7 +102,7 @@ export const StoryContent = ({
 
         {/* Section Navigation - only show if not in single story audio mode or if no sections */}
         {(story.audio_mode !== 'single_story' || story.sections.length > 1) && (
-          <div className="flex items-center justify-between p-4 pb-0">
+          <div className="flex items-center justify-between p-4 md:p-6 pb-0">
             <Button
               size="icon"
               variant='ghost'

@@ -59,7 +59,7 @@ const PopularStories = () => {
               <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 md:gap-6 md:grid-cols-3">
             {[1, 2, 3].map(i => (
               <Card
                 key={i}
@@ -148,7 +148,7 @@ const PopularStories = () => {
                         <CardTitle className="line-clamp-2 flex-1 text-lg text-primary-foreground">
                           {storyTitle}
                         </CardTitle>
-                        <div className="ml-2 flex items-center gap-2">
+                        <div className="ml-2 flex items-center gap-1 md:gap-2">
                           <Badge
                             variant="secondary"
                             className="bg-primary/30 text-xs text-primary-foreground"
@@ -159,12 +159,12 @@ const PopularStories = () => {
                                 story.category.slice(1),
                             })}
                           </Badge>
-                          <div className="flex items-center gap-1 text-xs text-primary-foreground">
+                          <p className="flex items-center gap-1 text-xs text-primary-foreground">
                             <Clock className="h-3 w-3" />
                             <span>
                               {story.duration} {t('misc:duration')}
                             </span>
-                          </div>
+                          </p>
                         </div>
                       </div>
                       <CardDescription className="line-clamp-2 text-sm leading-relaxed text-primary-foreground">
