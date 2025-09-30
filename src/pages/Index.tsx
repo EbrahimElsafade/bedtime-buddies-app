@@ -69,7 +69,7 @@ const Index = () => {
       <FunElements />
 
       {/* PricingPopup - Making sure it's rendered for non-authenticated users */}
-      <PricingPopup />
+      {/* <PricingPopup /> */}
 
       {/* Component Sections */}
       <Hero />
