@@ -9,6 +9,7 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
+    lng: 'ar', // Force Arabic as default
     fallbackLng: 'ar',
     debug: false,
     interpolation: {
@@ -16,7 +17,9 @@ i18n
     },
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],
-      caches: ['localStorage']
+      caches: ['localStorage'],
+      lookupLocalStorage: 'i18nextLng',
+      lookupFromPathIndex: 0,
     },
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json',
