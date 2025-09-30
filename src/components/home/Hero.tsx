@@ -20,7 +20,7 @@ const Hero = () => {
           </div>
 
           <h1 className="animate-slide-up font-bubbly text-2xl leading-tight text-secondary drop-shadow-lg sm:text-3xl md:text-4xl lg:text-6xl">
-            {t('title')}
+            <span className="text-accent">{t('name')}</span> {t('title')}
           </h1>
 
           <p className="mx-auto max-w-2xl text-base leading-relaxed text-primary-foreground sm:text-lg md:text-xl">
