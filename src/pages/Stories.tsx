@@ -110,14 +110,14 @@ const Stories = () => {
 
   return (
     <div className="min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-3 py-4 md:px-4 md:py-8 lg:py-12">
-      <div className="container mx-auto max-w-6xl">
+      <div className="container mx-auto max-w-7xl">
         <div className="mb-4 text-center md:mb-6 lg:mb-8">
           <h1 className="mb-2 text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
             {t('allStories')}
           </h1>
-          <p className="mx-auto max-w-2xl px-2 text-xs text-muted-foreground md:text-sm lg:text-base">
+          {/* <p className="mx-auto max-w-2xl px-2 text-xs text-muted-foreground md:text-sm lg:text-base">
             {t('browseCollection')}
-          </p>
+          </p> */}
         </div>
         {/* Search and Filter Section */}
         <div className="mb-4 space-y-3 md:mb-6 md:space-y-4 lg:mb-8">

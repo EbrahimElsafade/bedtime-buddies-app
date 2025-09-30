@@ -72,11 +72,6 @@ const Courses = () => {
   return (
     <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-3 py-8 md:px-4 md:py-12">
       {/* Fun decorative elements */}
-      <div className="absolute left-10 top-20 hidden h-20 w-20 animate-float rounded-full bg-primary/10 md:block"></div>
-      <div
-        className="bg-moon-light/10 absolute bottom-20 right-10 hidden h-16 w-16 animate-float rounded-full md:block"
-        style={{ animationDelay: '1.5s' }}
-      ></div>
 
       <div className="container mx-auto max-w-7xl">
         <div className="mb-4 text-center md:mb-6 lg:mb-8">
@@ -123,8 +118,6 @@ const Courses = () => {
             </TabsList>
           </Tabs>
         </div>
-
-        {document.documentElement.dir}
 
         {/* Courses Grid */}
         {filteredCourses.length === 0 ? (
