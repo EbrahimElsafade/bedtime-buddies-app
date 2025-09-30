@@ -112,11 +112,7 @@ const FreeStory = () => {
                   <span>
                     {freeStory.languages
                       .map((lang: string) => {
-                        if (lang === 'en') return 'English'
-                        if (lang === 'ar-eg') return 'مصري'
-                        if (lang === 'ar-fos7a') return 'فصحى'
-                        if (lang === 'fr') return 'français'
-                        return ''
+                        return t(`languages.${lang}`)
                       })
                       .join(', ')}
                   </span>

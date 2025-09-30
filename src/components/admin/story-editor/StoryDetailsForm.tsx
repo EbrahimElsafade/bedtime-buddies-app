@@ -78,10 +78,10 @@ export const StoryDetailsForm = ({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description-en">Description (English)</Label>
+              <Label htmlFor="description-en">{t('admin:story_editor.description_label.en')}</Label>
               <Textarea
                 id="description-en"
-                placeholder="Enter story description in English"
+                placeholder={t('admin:story_editor.description_placeholder.en')}
                 value={storyData.description.en || ''}
                 onChange={e => onDescriptionChange('en', e.target.value)}
                 className="min-h-[100px]"
@@ -92,10 +92,10 @@ export const StoryDetailsForm = ({
 
           <TabsContent value="ar" className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title-ar">Title (Arabic)</Label>
+              <Label htmlFor="title-ar">{t('admin:story_editor.title_label.ar')}</Label>
               <Input
                 id="title-ar"
-                placeholder="Enter story title in Arabic"
+                placeholder={t('admin:story_editor.title_placeholder.ar')}
                 value={storyData.title.ar || ''}
                 onChange={e => onTitleChange('ar', e.target.value)}
                 dir="rtl"
@@ -103,10 +103,10 @@ export const StoryDetailsForm = ({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description-ar">Description (Arabic)</Label>
+              <Label htmlFor="description-ar">{t('admin:story_editor.description_label.ar')}</Label>
               <Textarea
                 id="description-ar"
-                placeholder="Enter story description in Arabic"
+                placeholder={t('admin:story_editor.description_placeholder.ar')}
                 value={storyData.description.ar || ''}
                 onChange={e => onDescriptionChange('ar', e.target.value)}
                 className="min-h-[100px] text-right"

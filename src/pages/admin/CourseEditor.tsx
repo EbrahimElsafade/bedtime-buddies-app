@@ -557,11 +557,11 @@ const CourseEditor = () => {
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-2">
-                  <Label htmlFor="title">Title</Label>
+                  <Label htmlFor="title">{t('admin:course_editor.title_label')}</Label>
                   <div className="flex flex-wrap gap-4 md:flex-nowrap">
                     <Input
                       id="title"
-                      placeholder="Enter course title in English"
+                      placeholder={t('admin:course_editor.title_placeholder.en')}
                       value={courseData.title_en}
                       onChange={e =>
                         setCourseData({
@@ -573,7 +573,7 @@ const CourseEditor = () => {
                     />
                     <Input
                       id="title"
-                      placeholder="Enter course title in Arabic"
+                      placeholder={t('admin:course_editor.title_placeholder.ar')}
                       value={courseData.title_ar}
                       onChange={e =>
                         setCourseData({
@@ -584,7 +584,7 @@ const CourseEditor = () => {
                     />
                     <Input
                       id="title"
-                      placeholder="Enter course title in French"
+                      placeholder={t('admin:course_editor.title_placeholder.fr')}
                       value={courseData.title_fr}
                       onChange={e =>
                         setCourseData({
@@ -598,7 +598,7 @@ const CourseEditor = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="description">{t('admin:course_editor.description_label')}</Label>
                   <div className="flex flex-wrap gap-4 md:flex-nowrap">
                     <Textarea
                       id="description"
@@ -1239,11 +1239,11 @@ const CourseEditor = () => {
                                 </div>
                               </div>
                               <div className="space-y-2">
-                                <Label>Duration (minutes)</Label>
+                                <Label>{t('course_editor.duration_label')}</Label>
                                 <Input
                                   type="number"
                                   min="1"
-                                  placeholder="Duration in minutes"
+                                  placeholder={t('course_editor.duration_placeholder')}
                                   value={lesson.duration}
                                   onChange={e =>
                                     updateLessonField(
@@ -1257,10 +1257,10 @@ const CourseEditor = () => {
                             </div>
 
                             <div className="space-y-2">
-                              <Label>Lesson Description</Label>
+                              <Label>{t('course_editor.lesson_description_label')}</Label>
                               <div className="space-y-2">
                                 <Textarea
-                                  placeholder="Lesson description (English)"
+                                  placeholder={t('course_editor.lesson_description_placeholder.en')}
                                   value={lesson.description_en}
                                   onChange={e =>
                                     updateLessonField(
@@ -1272,7 +1272,7 @@ const CourseEditor = () => {
                                   className="min-h-[80px]"
                                 />
                                 <Textarea
-                                  placeholder="Lesson description (Arabic)"
+                                  placeholder={t('course_editor.lesson_description_placeholder.ar')}
                                   value={lesson.description_ar}
                                   onChange={e =>
                                     updateLessonField(

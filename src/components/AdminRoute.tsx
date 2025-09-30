@@ -2,6 +2,7 @@
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRef, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 // import { logger } from '@/utils/logger'
 
 interface AdminRouteProps {
@@ -9,6 +10,7 @@ interface AdminRouteProps {
 }
 
 const AdminRoute = ({ children }: AdminRouteProps) => {
+  const { t } = useTranslation()
   const { isAuthenticated, isLoading, profile, user, isProfileLoaded } = useAuth()
   const location = useLocation()
   const mountTimeRef = useRef(Date.now())
@@ -57,7 +59,7 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <div className="mb-4 h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-primary"></div>
-          <p className="text-gray-600">Verifying admin access...</p>
+          <p className="text-gray-600">{t('admin:common.verifying_access')}</p>
         </div>
       </div>
     )

@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import {
@@ -51,6 +52,7 @@ type User = {
 };
 
 const Users = () => {
+  const { t } = useTranslation('admin');
   const [searchTerm, setSearchTerm] = useState("");
   const [sortField, setSortField] = useState<keyof User>("created_at");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
@@ -250,11 +252,11 @@ const Users = () => {
                             <DropdownMenuItem onClick={() => toggleAdmin(user)}>
                               {user.role === "admin" ? (
                                 <>
-                                  <ShieldOff className="mr-2 h-4 w-4" /> Remove Admin
+                                  <ShieldOff className="mr-2 h-4 w-4" /> {t('users.removeAdmin')}
                                 </>
                               ) : (
                                 <>
-                                  <ShieldCheck className="mr-2 h-4 w-4" /> Make Admin
+                                  <ShieldCheck className="mr-2 h-4 w-4" /> {t('users.makeAdmin')}
                                 </>
                               )}
                             </DropdownMenuItem>
@@ -266,7 +268,7 @@ const Users = () => {
                 )}
               </TableBody>
               <TableCaption>
-                Showing {filteredUsers.length} of {users.length} users
+                {t('users.showing_users', { showing: filteredUsers.length, total: users.length })}
               </TableCaption>
             </Table>
           </div>

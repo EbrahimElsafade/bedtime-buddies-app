@@ -18,6 +18,43 @@
     "settings": "Settings",
     "logout": "Logout"
   },
+  "common": {
+    "verifying_access": "Verifying admin access..."
+  },
+  "course_editor": {
+    "title_label": "Title",
+    "title_placeholder": {
+      "en": "Enter course title in English",
+      "ar": "Enter course title in Arabic",
+      "fr": "Enter course title in French"
+    },
+    "description_label": "Description",
+    "duration_label": "Duration (minutes)",
+    "duration_placeholder": "Duration in minutes",
+    "lesson_description_label": "Lesson Description",
+    "lesson_description_placeholder": {
+      "en": "Lesson description (English)",
+      "ar": "Lesson description (Arabic)"
+    }
+  },
+  "story_editor": {
+    "title_label": {
+      "en": "Title (English)",
+      "ar": "Title (Arabic)"
+    },
+    "title_placeholder": {
+      "en": "Enter story title in English",
+      "ar": "Enter story title in Arabic"
+    },
+    "description_label": {
+      "en": "Description (English)",
+      "ar": "Description (Arabic)"
+    },
+    "description_placeholder": {
+      "en": "Enter story description in English",
+      "ar": "Enter story description in Arabic"
+    }
+  },
   "users": {
     "title": "User Management",
     "totalUsers": "Total Users",
@@ -38,7 +75,8 @@
     "active": "Active",
     "inactive": "Inactive",
     "premium": "Premium",
-    "free": "Free"
+    "free": "Free",
+    "showing_users": "Showing {{showing}} of {{total}} users"
   },
   "stories": {
     "title": "Story Management",
@@ -110,7 +148,48 @@
   },
   "settings": {
     "title": "Admin Settings",
+    "description": "Configure system-wide settings and preferences",
     "general": "General Settings",
+    "tabs": {
+      "appearance": "Appearance",
+      "notifications": "Notifications",
+      "advanced": "Advanced"
+    },
+    "features": {
+      "stories": {
+        "label": "Enable Stories Feature",
+        "description": "Allow users to access the stories section"
+      },
+      "courses": {
+        "label": "Enable Courses Feature",
+        "description": "Allow users to access the educational courses section"
+      },
+      "games": {
+        "label": "Enable Games Feature",
+        "description": "Allow users to access the games section (coming soon)"
+      }
+    },
+    "appearance": {
+      "title": "Appearance Settings",
+      "description": "Customize the look and feel of the application",
+      "coming_soon": "Appearance settings coming soon"
+    },
+    "notifications": {
+      "title": "Notification Settings",
+      "description": "Configure email and system notifications",
+      "email": {
+        "label": "Email Notifications",
+        "description": "Send email notifications for important events"
+      }
+    },
+    "advanced": {
+      "title": "Advanced Settings",
+      "description": "Configure advanced system settings",
+      "auto_publish": {
+        "label": "Auto-publish Content",
+        "description": "Automatically publish content after creation (not recommended)"
+      }
+    },
     "siteTitle": "Site Title",
     "siteDescription": "Site Description",
     "contactEmail": "Contact Email",
@@ -146,6 +225,21 @@
     "languageAddedDesc": "Language '{{language}}' has been added successfully", 
     "languageRemoved": "Language Removed",
     "languageRemovedDesc": "Language '{{language}}' has been removed successfully"
+  },
+  "common": {
+    "verifying_access": "Verifying admin access..."
+  },
+  "users": {
+    "showing_users": "Showing {{showing}} of {{total}} users"
+  },
+  "course_editor": {
+    "duration_label": "Duration (minutes)",
+    "duration_placeholder": "Duration in minutes",
+    "lesson_description_label": "Lesson Description",
+    "lesson_description_placeholder": {
+      "en": "Lesson description (English)",
+      "ar": "Lesson description (Arabic)"
+    }
   },
   "forms": {
     "required": "This field is required",

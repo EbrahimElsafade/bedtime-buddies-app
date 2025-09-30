@@ -1,5 +1,12 @@
 {
   "appName": "Dolphoon",
+  "languages": {
+    "en": "English",
+    "ar-eg": "مصري",
+    "ar-fos7a": "فصحى",
+    "fr": "français",
+    "default_language": "Default Language"
+  },
   "tagline": "Your friend for stories, learning, and play",
   "home": "Home",
   "stories": "Stories",

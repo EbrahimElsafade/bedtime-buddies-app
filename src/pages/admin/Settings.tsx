@@ -45,16 +45,16 @@ const Settings = () => {
       <header className="mb-8">
         <h1 className="text-3xl font-bold">{t('settings.title')}</h1>
         <p className="text-muted-foreground">
-          Configure system-wide settings and preferences
+          {t('settings.description')}
         </p>
       </header>
 
       <Tabs defaultValue="general">
         <TabsList className="mb-6">
           <TabsTrigger value="general">{t('settings.general')}</TabsTrigger>
-          <TabsTrigger value="appearance">Appearance</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-          <TabsTrigger value="advanced">Advanced</TabsTrigger>
+          <TabsTrigger value="appearance">{t('settings.tabs.appearance')}</TabsTrigger>
+          <TabsTrigger value="notifications">{t('settings.tabs.notifications')}</TabsTrigger>
+          <TabsTrigger value="advanced">{t('settings.tabs.advanced')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="general">
@@ -76,14 +76,14 @@ const Settings = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="defaultLanguage">Default Language</Label>
+                <Label htmlFor="defaultLanguage">{t('settings.default_language')}</Label>
                 <select
                   id="defaultLanguage"
                   className="flex h-10 w-full rounded-md border border-input bg-secondary px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   value={settings.defaultLanguage}
                   onChange={(e) => updateSetting("defaultLanguage", e.target.value)}
                 >
-                  <option value="en">English</option>
+                  <option value="en">{t('languages.english')}</option>
                   <option value="ar-eg">مصري</option>
                   <option value="ar-fos7a">فصحى</option>
                   <option value="fr">Français</option>
@@ -95,10 +95,10 @@ const Settings = () => {
               <div className="flex justify-between items-center">
                 <div>
                   <Label htmlFor="enableStoriesFeature" className="text-base">
-                    {t('settings.enableRegistration')}
+                    {t('settings.features.stories.label')}
                   </Label>
                   <p className="text-sm text-muted-foreground">
-                    Allow users to access the stories section
+                    {t('settings.features.stories.description')}
                   </p>
                 </div>
                 <Switch
@@ -113,10 +113,10 @@ const Settings = () => {
               <div className="flex justify-between items-center">
                 <div>
                   <Label htmlFor="enableCoursesFeature" className="text-base">
-                    Enable Courses Feature
+                    {t('settings.features.courses.label')}
                   </Label>
                   <p className="text-sm text-muted-foreground">
-                    Allow users to access the educational courses section
+                    {t('settings.features.courses.description')}
                   </p>
                 </div>
                 <Switch
@@ -131,10 +131,10 @@ const Settings = () => {
               <div className="flex justify-between items-center">
                 <div>
                   <Label htmlFor="enableGamesFeature" className="text-base">
-                    Enable Games Feature
+                    {t('settings.features.games.label')}
                   </Label>
                   <p className="text-sm text-muted-foreground">
-                    Allow users to access the games section (coming soon)
+                    {t('settings.features.games.description')}
                   </p>
                 </div>
                 <Switch
@@ -155,14 +155,14 @@ const Settings = () => {
         <TabsContent value="appearance">
           <Card>
             <CardHeader>
-              <CardTitle>Appearance Settings</CardTitle>
+              <CardTitle>{t('settings.appearance.title')}</CardTitle>
               <CardDescription>
-                Customize the look and feel of the application
+                {t('settings.appearance.description')}
               </CardDescription>
             </CardHeader>
             <CardContent>
               <p className="text-center py-8 text-muted-foreground">
-                Appearance settings coming soon
+                {t('settings.appearance.coming_soon')}
               </p>
             </CardContent>
           </Card>
@@ -171,19 +171,19 @@ const Settings = () => {
         <TabsContent value="notifications">
           <Card>
             <CardHeader>
-              <CardTitle>Notification Settings</CardTitle>
+              <CardTitle>{t('settings.notifications.title')}</CardTitle>
               <CardDescription>
-                Configure email and system notifications
+                {t('settings.notifications.description')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex justify-between items-center">
                 <div>
                   <Label htmlFor="emailNotifications" className="text-base">
-                    Email Notifications
+                    {t('settings.notifications.email.label')}
                   </Label>
                   <p className="text-sm text-muted-foreground">
-                    Send email notifications for important events
+                    {t('settings.notifications.email.description')}
                   </p>
                 </div>
                 <Switch
@@ -204,19 +204,19 @@ const Settings = () => {
         <TabsContent value="advanced">
           <Card>
             <CardHeader>
-              <CardTitle>Advanced Settings</CardTitle>
+              <CardTitle>{t('settings.advanced.title')}</CardTitle>
               <CardDescription>
-                Configure advanced system settings
+                {t('settings.advanced.description')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex justify-between items-center">
                 <div>
                   <Label htmlFor="autoPublishContent" className="text-base">
-                    Auto-publish Content
+                    {t('settings.advanced.auto_publish.label')}
                   </Label>
                   <p className="text-sm text-muted-foreground">
-                    Automatically publish content after creation (not recommended)
+                    {t('settings.advanced.auto_publish.description')}
                   </p>
                 </div>
                 <Switch
