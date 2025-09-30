@@ -3,48 +3,15 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Switch } from '@/components/ui/switch'
-import { Label } from '@/components/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Badge } from '@/components/ui/badge'
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion'
-import {
-  ArrowLeft,
-  Plus,
-  Trash2,
-  Upload,
-  Loader2,
-  X,
-  Image,
-} from 'lucide-react'
+import { ArrowLeft, Loader2 } from 'lucide-react'
 import { getImageUrl } from '@/utils/imageUtils'
 import { Story, StorySection } from '@/types/story'
-import { VoiceFileUpload } from '@/components/admin/VoiceFileUpload'
-import { StoryAudioUpload } from '@/components/admin/StoryAudioUpload'
+import { StoryDetailsForm } from '@/components/admin/story-editor/StoryDetailsForm'
+import { StoryLanguageManager } from '@/components/admin/story-editor/StoryLanguageManager'
+import { StoryPublishControls } from '@/components/admin/story-editor/StoryPublishControls'
+import { StoryAudioSettings } from '@/components/admin/story-editor/StoryAudioSettings'
+import { StorySectionsList } from '@/components/admin/story-editor/StorySectionsList'
 
 interface StorySectionForm extends Omit<StorySection, 'id'> {
   id?: string
@@ -808,570 +775,91 @@ const StoryEditor = () => {
       ) : (
         <form onSubmit={handleSubmit}>
           <div className="mb-8 grid gap-6">
-            {/* Story Details Card - Updated for multilingual support with fixed tabs */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Story Details</CardTitle>
-                <CardDescription>
-                  Basic information about the story in multiple languages
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Multilingual Title and Description with Fixed Tabs */}
-                <Tabs defaultValue="en" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="en">English</TabsTrigger>
-                    <TabsTrigger value="ar">Arabic</TabsTrigger>
-                    <TabsTrigger value="fr">French</TabsTrigger>
-                  </TabsList>
+            {/* Story Details Card */}
+            <StoryDetailsForm
+              storyData={{
+                title: storyData.title,
+                description: storyData.description,
+                category: storyData.category,
+                cover_image: storyData.cover_image,
+              }}
+              categories={categories}
+              categoriesLoading={categoriesLoading}
+              coverImagePreview={coverImagePreview}
+              onTitleChange={updateStoryTitle}
+              onDescriptionChange={updateStoryDescription}
+              onCategoryChange={value =>
+                setStoryData({ ...storyData, category: value })
+              }
+              onCoverImageChange={handleCoverImageChange}
+              onClearCoverImage={() => {
+                console.log('Clearing image preview')
+                setCoverImagePreview(null)
+                setCoverImageFile(null)
+                setStoryData({ ...storyData, cover_image: null })
+              }}
+            />
 
-                  <TabsContent value="en" className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="title-en">Title (English)</Label>
-                      <Input
-                        id="title-en"
-                        placeholder="Enter story title in English"
-                        value={storyData.title.en || ''}
-                        onChange={e => updateStoryTitle('en', e.target.value)}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="description-en">
-                        Description (English)
-                      </Label>
-                      <Textarea
-                        id="description-en"
-                        placeholder="Enter story description in English"
-                        value={storyData.description.en || ''}
-                        onChange={e =>
-                          updateStoryDescription('en', e.target.value)
-                        }
-                        className="min-h-[100px]"
-                        required
-                      />
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="ar" className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="title-ar">Title (Arabic)</Label>
-                      <Input
-                        id="title-ar"
-                        placeholder="Enter story title in Arabic"
-                        value={storyData.title.ar || ''}
-                        onChange={e => updateStoryTitle('ar', e.target.value)}
-                        dir="rtl"
-                        className="text-right"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="description-ar">
-                        Description (Arabic)
-                      </Label>
-                      <Textarea
-                        id="description-ar"
-                        placeholder="Enter story description in Arabic"
-                        value={storyData.description.ar || ''}
-                        onChange={e =>
-                          updateStoryDescription('ar', e.target.value)
-                        }
-                        className="min-h-[100px] text-right"
-                        dir="rtl"
-                      />
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="fr" className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="title-fr">Title (French)</Label>
-                      <Input
-                        id="title-fr"
-                        placeholder="Enter story title in French"
-                        value={storyData.title.fr || ''}
-                        onChange={e => updateStoryTitle('fr', e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="description-fr">
-                        Description (French)
-                      </Label>
-                      <Textarea
-                        id="description-fr"
-                        placeholder="Enter story description in French"
-                        value={storyData.description.fr || ''}
-                        onChange={e =>
-                          updateStoryDescription('fr', e.target.value)
-                        }
-                        className="min-h-[100px]"
-                      />
-                    </div>
-                  </TabsContent>
-                </Tabs>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="category">Category</Label>
-                    <Select
-                      value={storyData.category}
-                      onValueChange={value =>
-                        setStoryData({ ...storyData, category: value })
-                      }
-                    >
-                      <SelectTrigger id="category">
-                        <SelectValue placeholder="Select category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Categories</SelectLabel>
-                          {categoriesLoading ? (
-                            <div className="px-2 py-1 text-sm text-muted-foreground">
-                              Loading categories...
-                            </div>
-                          ) : categories && categories.length > 0 ? (
-                            categories.map(category => (
-                              <SelectItem
-                                key={category.id}
-                                value={category.name}
-                              >
-                                {category.name}
-                              </SelectItem>
-                            ))
-                          ) : (
-                            <div className="px-2 py-1 text-sm text-muted-foreground">
-                              No categories available
-                            </div>
-                          )}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="cover-image">Cover Image</Label>
-                    <div className="flex flex-col items-center gap-4">
-                      {coverImagePreview ? (
-                        <div className="relative aspect-square w-full max-w-[200px] overflow-hidden rounded-md border">
-                          <img
-                            src={coverImagePreview}
-                            alt="Cover preview"
-                            className="h-full w-full object-cover"
-                          />
-                          <Button
-                            type="button"
-                            size="icon"
-                            variant="destructive"
-                            className="absolute right-2 top-2 h-6 w-6"
-                            onClick={() => {
-                              console.log('Clearing image preview')
-                              setCoverImagePreview(null)
-                              setCoverImageFile(null)
-                              setStoryData({ ...storyData, cover_image: null })
-                            }}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="flex aspect-square w-full max-w-[200px] flex-col items-center justify-center rounded-md border border-dashed border-muted-foreground/50 bg-muted">
-                          <Upload className="mb-2 h-8 w-8 text-muted-foreground" />
-                          <p className="text-center text-sm text-muted-foreground">
-                            Click to upload or
-                            <br />
-                            drag and drop
-                          </p>
-                        </div>
-                      )}
-                      <Input
-                        id="cover-image"
-                        type="file"
-                        accept="image/*"
-                        onChange={handleCoverImageChange}
-                        className={coverImagePreview ? 'hidden' : ''}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="duration">Duration (minutes)</Label>
-                      <Input
-                        id="duration"
-                        type="number"
-                        min="1"
-                        value={storyData.duration}
-                        onChange={e =>
-                          setStoryData({
-                            ...storyData,
-                            duration: parseInt(e.target.value) || 5,
-                          })
-                        }
-                        required
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="is-free">Free Story</Label>
-                      <Switch
-                        id="is-free"
-                        checked={storyData.is_free}
-                        onCheckedChange={checked =>
-                          setStoryData({ ...storyData, is_free: checked })
-                        }
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="is-published">Published</Label>
-                      <Switch
-                        id="is-published"
-                        checked={storyData.is_published}
-                        onCheckedChange={checked =>
-                          setStoryData({ ...storyData, is_published: checked })
-                        }
-                      />
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <StoryPublishControls
+                duration={storyData.duration}
+                isFree={storyData.is_free}
+                isPublished={storyData.is_published}
+                onDurationChange={duration =>
+                  setStoryData({ ...storyData, duration })
+                }
+                onFreeChange={is_free =>
+                  setStoryData({ ...storyData, is_free })
+                }
+                onPublishedChange={is_published =>
+                  setStoryData({ ...storyData, is_published })
+                }
+              />
+            </div>
 
             {/* Languages Card */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Section Languages</CardTitle>
-                <CardDescription>
-                  Manage available languages for story sections
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent className="space-y-4">
-                <div className="flex flex-wrap gap-2">
-                  {storyData.languages.map(language => {
-                    const langOption = languages?.find(
-                      opt => opt.code === language,
-                    )
-                    return (
-                      <Badge
-                        key={language}
-                        variant="secondary"
-                        className="flex gap-6 rounded-md px-4 py-3 text-sm"
-                      >
-                        {langOption?.name || language}
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="icon"
-                          className="size-6"
-                          onClick={() => handleRemoveLanguage(language)}
-                          disabled={storyData.languages.length === 1}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      </Badge>
-                    )
-                  })}
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <Select onValueChange={handleAddLanguage}>
-                    <SelectTrigger className="w-[200px]">
-                      <SelectValue placeholder="Add language" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Languages</SelectLabel>
-                        {languagesLoading ? (
-                          <div className="px-2 py-1 text-sm text-muted-foreground">
-                            Loading languages...
-                          </div>
-                        ) : languages && languages.length > 0 ? (
-                          languages.map(language => (
-                            <SelectItem
-                              key={language.id}
-                              value={language.code}
-                              disabled={storyData.languages.includes(
-                                language.code,
-                              )}
-                            >
-                              {language.name}
-                            </SelectItem>
-                          ))
-                        ) : (
-                          <div className="px-2 py-1 text-sm text-muted-foreground">
-                            No languages available
-                          </div>
-                        )}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                  <Button type="button" variant="outline" size="sm">
-                    <Plus className="mr-1 h-4 w-4" /> Add Language
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
+            <StoryLanguageManager
+              selectedLanguages={storyData.languages}
+              availableLanguages={languages}
+              languagesLoading={languagesLoading}
+              onAddLanguage={handleAddLanguage}
+              onRemoveLanguage={handleRemoveLanguage}
+            />
 
             {/* Audio Settings Card */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Audio Settings</CardTitle>
-                <CardDescription>
-                  Configure how audio is handled for this story
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <Label
-                      htmlFor="audio-mode"
-                      className="text-base font-medium"
-                    >
-                      Audio Mode
-                    </Label>
-                    <p className="text-sm text-muted-foreground">
-                      Choose between single audio for the whole story or
-                      separate audio for each section
-                    </p>
-                  </div>
-                  <Switch
-                    id="audio-mode"
-                    checked={storyData.audio_mode === 'single_story'}
-                    onCheckedChange={checked =>
-                      setStoryData({
-                        ...storyData,
-                        audio_mode: checked ? 'single_story' : 'per_section',
-                      })
-                    }
-                  />
-                </div>
-
-                <div className="text-sm text-muted-foreground">
-                  Mode:{' '}
-                  <span className="font-medium">
-                    {storyData.audio_mode === 'single_story'
-                      ? 'Single audio for whole story'
-                      : 'Audio per section'}
-                  </span>
-                </div>
-
-                {/* Single Story Audio Upload - Now per language using new component */}
-                {storyData.audio_mode === 'single_story' && (
-                  <div className="space-y-4">
-                    <Label>Story Audio (Per Language)</Label>
-                    <Tabs
-                      defaultValue={storyData.languages[0]}
-                      className="w-full"
-                    >
-                      <TabsList>
-                        {storyData.languages.map(lang => {
-                          const langOption = languages?.find(
-                            opt => opt.code === lang,
-                          )
-                          return (
-                            <TabsTrigger key={lang} value={lang}>
-                              {langOption?.name || lang}
-                            </TabsTrigger>
-                          )
-                        })}
-                      </TabsList>
-                      {storyData.languages.map(lang => {
-                        const langOption = languages?.find(
-                          opt => opt.code === lang,
-                        )
-                        return (
-                          <TabsContent key={lang} value={lang}>
-                            <StoryAudioUpload
-                              language={lang}
-                              languageName={langOption?.name || lang}
-                              storyAudioFiles={storyAudioFiles}
-                              storyAudioPreviews={storyAudioPreviews}
-                              existingStoryAudio={storyData.story_audio}
-                              onStoryAudioChange={handleStoryAudioChange}
-                              onRemoveStoryAudio={handleRemoveStoryAudio}
-                            />
-                          </TabsContent>
-                        )
-                      })}
-                    </Tabs>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            <StoryAudioSettings
+              audioMode={storyData.audio_mode}
+              languages={storyData.languages}
+              availableLanguages={languages}
+              storyAudioFiles={storyAudioFiles}
+              storyAudioPreviews={storyAudioPreviews}
+              existingStoryAudio={storyData.story_audio}
+              onAudioModeChange={mode =>
+                setStoryData({ ...storyData, audio_mode: mode })
+              }
+              onStoryAudioChange={handleStoryAudioChange}
+              onRemoveStoryAudio={handleRemoveStoryAudio}
+            />
 
             {/* Story Sections Card */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Story Sections</CardTitle>
-                <CardDescription>
-                  Create sections with text, audio, and images for each language
-                </CardDescription>
-                <Button type="button" onClick={addNewSection} className="mt-2">
-                  <Plus className="mr-1 h-4 w-4" /> Add Section
-                </Button>
-              </CardHeader>
-              <CardContent>
-                {storySections.length === 0 ? (
-                  <div className="rounded-md border py-8 text-center">
-                    <p className="text-muted-foreground">
-                      No sections added yet. Click "Add Section" to get started.
-                    </p>
-                  </div>
-                ) : (
-                  <Accordion type="multiple" className="space-y-4">
-                    {storySections.map((section, sectionIndex) => (
-                      <AccordionItem
-                        key={sectionIndex}
-                        value={`section-${sectionIndex}`}
-                      >
-                        <AccordionTrigger className="hover:no-underline">
-                          <div className="mr-4 flex w-full items-center justify-between">
-                            <span className="font-medium">
-                              Section {section.order}
-                            </span>
-                            <span
-                              role="button"
-                              className="rounded-xl border bg-red-500 p-2"
-                              onClick={e => {
-                                e.stopPropagation()
-                                deleteSection(sectionIndex)
-                              }}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </span>
-                          </div>
-                        </AccordionTrigger>
-                        <AccordionContent className="pt-4">
-                          <div className="space-y-6">
-                            {/* Section Image */}
-                            <div className="space-y-2">
-                              <Label>Section Image</Label>
-                              <div className="flex items-center gap-4">
-                                {section.imagePreview ? (
-                                  <div className="relative h-32 w-32 overflow-hidden rounded-md border">
-                                    <img
-                                      src={section.imagePreview}
-                                      alt="Section preview"
-                                      className="h-full w-full object-cover"
-                                    />
-                                    <Button
-                                      type="button"
-                                      size="icon"
-                                      variant="destructive"
-                                      className="absolute right-1 top-1 h-6 w-6"
-                                      onClick={() => {
-                                        const updatedSections = [
-                                          ...storySections,
-                                        ]
-                                        updatedSections[
-                                          sectionIndex
-                                        ].imageFile = null
-                                        updatedSections[
-                                          sectionIndex
-                                        ].imagePreview = null
-                                        setStorySections(updatedSections)
-                                      }}
-                                    >
-                                      <X className="h-3 w-3" />
-                                    </Button>
-                                  </div>
-                                ) : (
-                                  <div className="flex h-32 w-32 flex-col items-center justify-center rounded-md border border-dashed border-muted-foreground/50 bg-muted">
-                                    <Image className="mb-1 h-6 w-6 text-muted-foreground" />
-                                    <p className="text-center text-xs text-muted-foreground">
-                                      Upload Image
-                                    </p>
-                                  </div>
-                                )}
-                                <Input
-                                  type="file"
-                                  accept="image/*"
-                                  onChange={e =>
-                                    handleSectionImageChange(sectionIndex, e)
-                                  }
-                                  className="flex-1"
-                                />
-                              </div>
-                            </div>
-
-                            {/* Language-specific content */}
-                            <Tabs
-                              defaultValue={storyData.languages[0]}
-                              className="w-full"
-                            >
-                              <TabsList>
-                                {storyData.languages.map(lang => {
-                                  const langOption = languages?.find(
-                                    opt => opt.code === lang,
-                                  )
-                                  return (
-                                    <TabsTrigger key={lang} value={lang}>
-                                      {langOption?.name || lang}
-                                    </TabsTrigger>
-                                  )
-                                })}
-                              </TabsList>
-                              {storyData.languages.map(lang => {
-                                const langOption = languages?.find(
-                                  opt => opt.code === lang,
-                                )
-                                return (
-                                  <TabsContent
-                                    key={lang}
-                                    value={lang}
-                                    className="space-y-4"
-                                  >
-                                    {/* Text content */}
-                                    <div className="space-y-2">
-                                      <Label>
-                                        Text Content ({langOption?.name || lang}
-                                        )
-                                      </Label>
-                                      <Textarea
-                                        placeholder={`Enter section text in ${lang}`}
-                                        value={section.texts[lang] || ''}
-                                        onChange={e =>
-                                          updateSectionText(
-                                            sectionIndex,
-                                            lang,
-                                            e.target.value,
-                                          )
-                                        }
-                                        className="min-h-[120px]"
-                                      />
-                                    </div>
-
-                                    {/* Voice upload - only show if in per_section mode, now using new component */}
-                                    {storyData.audio_mode === 'per_section' && (
-                                      <VoiceFileUpload
-                                        language={lang}
-                                        languageName={langOption?.name || lang}
-                                        sectionIndex={sectionIndex}
-                                        voiceFiles={section.voiceFiles}
-                                        voicePreviews={section.voicePreviews}
-                                        existingVoiceUrls={section.voices}
-                                        onVoiceFileChange={
-                                          handleSectionVoiceChange
-                                        }
-                                        onRemoveVoiceFile={
-                                          handleRemoveSectionVoice
-                                        }
-                                      />
-                                    )}
-                                  </TabsContent>
-                                )
-                              })}
-                            </Tabs>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
-                )}
-              </CardContent>
-            </Card>
+            <StorySectionsList
+              sections={storySections}
+              languages={storyData.languages}
+              availableLanguages={languages}
+              audioMode={storyData.audio_mode}
+              onAddSection={addNewSection}
+              onDeleteSection={deleteSection}
+              onUpdateSectionText={updateSectionText}
+              onSectionImageChange={handleSectionImageChange}
+              onClearSectionImage={(sectionIndex: number) => {
+                const updatedSections = [...storySections]
+                updatedSections[sectionIndex].imageFile = null
+                updatedSections[sectionIndex].imagePreview = null
+                setStorySections(updatedSections)
+              }}
+              onSectionVoiceChange={handleSectionVoiceChange}
+              onRemoveSectionVoice={handleRemoveSectionVoice}
+            />
           </div>
 
           <div className="flex justify-end gap-4">
