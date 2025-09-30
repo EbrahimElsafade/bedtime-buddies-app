@@ -210,7 +210,7 @@ const HangmanGame = () => {
     <div className="mx-auto w-full max-w-4xl px-2" dir={isRTL ? 'rtl' : 'ltr'}>
       <Card className="overflow-hidden border-primary/20 bg-secondary/50 backdrop-blur-sm">
         <CardHeader className="px-4 py-4 text-center">
-          <CardTitle className="from-primary bg-gradient-to-r to-primary-foreground bg-clip-text text-xl font-bold md:text-2xl">
+          <CardTitle className="bg-gradient-to-r from-primary to-primary-foreground bg-clip-text text-xl font-bold md:text-2xl">
             {t('hangman.title')}
           </CardTitle>
           <CardDescription className="text-sm md:text-base">
@@ -280,7 +280,7 @@ const HangmanGame = () => {
                           ? currentWord.includes(letter)
                             ? 'bg-green-500 text-secondary shadow-lg'
                             : 'bg-red-500 text-secondary shadow-lg'
-                          : 'bg-gradient-to-br from-purple-400 to-purple-600 text-secondary shadow-md hover:scale-105 hover:from-purple-500 hover:to-purple-700'
+                          : 'bg-gradient-to-br from-primary/70 to-primary/50 text-secondary shadow-md hover:scale-105 hover:from-primary/80 hover:to-primary/60'
                       } ${
                         gameStatus !== 'playing'
                           ? 'cursor-not-allowed opacity-50'
@@ -298,7 +298,7 @@ const HangmanGame = () => {
         <CardFooter className="px-4 py-4">
           <Button
             onClick={initializeGame}
-            className="from-primary w-full bg-gradient-to-r to-primary-foreground py-3 text-base font-semibold transition-all duration-300 hover:from-primary-foreground hover:to-primary md:text-lg"
+            className="w-full bg-gradient-to-r from-primary/50 to-primary-foreground py-3 text-base font-semibold transition-all duration-300 hover:from-primary-foreground hover:to-primary/50 hover:text-secondary md:text-lg"
           >
             {t('hangman.newGame')}
           </Button>

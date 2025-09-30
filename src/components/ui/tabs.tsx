@@ -12,8 +12,8 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      'scrollbar-hide inline-flex w-full items-center justify-start overflow-x-auto rounded-lg bg-secondary p-1 text-muted-foreground shadow-md',
-      'snap-x snap-mandatory scroll-smooth',
+      'flex w-full flex-wrap items-center justify-start gap-2 rounded-lg bg-transparent p-1 shadow-md sm:bg-secondary',
+      // 'snap-x snap-mandatory scroll-smooth',
       className,
     )}
     {...props}
@@ -28,12 +28,12 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      'mx-1 inline-flex flex-1 items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-all',
+      'mx-1 inline-flex flex-1 items-center justify-center whitespace-nowrap rounded-md bg-secondary px-3 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-all sm:bg-transparent',
       'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
       'disabled:pointer-events-none disabled:opacity-50',
-      'data-[state=active]:bg-accent data-[state=active]:text-secondary data-[state=active]:hover:shadow-xl data-[state=active]:shadow-md',
+      'data-[state=active]:bg-accent data-[state=active]:text-secondary data-[state=active]:shadow-md data-[state=active]:hover:shadow-xl',
       'hover:bg-secondary/50 hover:text-foreground/80',
-      'min-w-0 flex-shrink-0 snap-start',
+      'min-w-24 flex-shrink-0 snap-start',
       'touch-manipulation select-none',
       // Better support for Arabic text
       'text-center leading-tight',
