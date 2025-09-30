@@ -1,0 +1,28 @@
+{
+  "courses": {
+    "exploreTitle": "Explorez Nos Cours",
+    "searchPlaceholder": "Rechercher des cours...",
+    "allCourses": "Tous les Cours",
+    "noResults": "Aucun cours ne correspond à vos critères de recherche",
+    "lessons": "Leçons",
+    "years": "Ans"
+  },
+  "course": {
+    "content": "Contenu du Cours",
+    "overview": "Aperçu",
+    "about": "À Propos de ce Cours",
+    "whatYouLearn": "Ce que Vous Apprendrez",
+    "instructor": "Instructeur"
+  },
+  "button": {
+    "backToCourses": "Retour aux Cours",
+    "startLearning": "Commencer l'Apprentissage"
+  },
+  "free": {
+    "tag": "Gratuit"
+  },
+  "premium": {
+    "tag": "Premium"
+  },
+  "duration": "min"
+}

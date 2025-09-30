@@ -1,0 +1,28 @@
+{
+  "courses": {
+    "exploreTitle": "Explore Our Courses",
+    "searchPlaceholder": "Search courses...",
+    "allCourses": "All Courses",
+    "noResults": "No courses found matching your search criteria",
+    "lessons": "Lessons",
+    "years": "Years"
+  },
+  "course": {
+    "content": "Course Content",
+    "overview": "Overview",
+    "about": "About This Course",
+    "whatYouLearn": "What You'll Learn",
+    "instructor": "Instructor"
+  },
+  "button": {
+    "backToCourses": "Back to Courses",
+    "startLearning": "Start Learning"
+  },
+  "free": {
+    "tag": "Free"
+  },
+  "premium": {
+    "tag": "Premium"
+  },
+  "duration": "min"
+}

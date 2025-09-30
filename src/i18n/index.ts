@@ -25,7 +25,7 @@ i18n
       loadPath: '/locales/{{lng}}/{{ns}}.json',
     },
     defaultNS: 'common',
-    ns: ['common', 'navigation', 'auth', 'hero', 'stories', 'features', 'admin', 'misc', 'premium', 'subscription', 'notFound', 'games'],
+    ns: ['common', 'navigation', 'auth', 'hero', 'stories', 'features', 'admin', 'misc', 'premium', 'subscription', 'notFound', 'games', 'courses'],
   });
 
 // Handle RTL direction for Arabic

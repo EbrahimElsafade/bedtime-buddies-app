@@ -11,16 +11,16 @@ import {
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useCoursesData, useCourseCategories } from '@/hooks/useCourseData'
-import { useLanguage } from '@/contexts/LanguageContext'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 import { getCategoryText } from '@/utils/courseUtils'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useTranslation } from 'react-i18next'
 
 const Courses = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState<string>('all')
-  const { t } = useLanguage()
+  const { t } = useTranslation('courses')
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
 
   const { data: courses = [], isLoading } = useCoursesData()

@@ -1,0 +1,28 @@
+{
+  "courses": {
+    "exploreTitle": "استكشف دوراتنا",
+    "searchPlaceholder": "البحث عن الدورات...",
+    "allCourses": "جميع الدورات",
+    "noResults": "لم يتم العثور على دورات تطابق معايير البحث",
+    "lessons": "دروس",
+    "years": "سنوات"
+  },
+  "course": {
+    "content": "محتوى الدورة",
+    "overview": "نظرة عامة",
+    "about": "عن هذه الدورة",
+    "whatYouLearn": "ماذا ستتعلم",
+    "instructor": "المدرب"
+  },
+  "button": {
+    "backToCourses": "العودة إلى الدورات",
+    "startLearning": "ابدأ التعلم"
+  },
+  "free": {
+    "tag": "مجاني"
+  },
+  "premium": {
+    "tag": "مميز"
+  },
+  "duration": "دقيقة"
+}

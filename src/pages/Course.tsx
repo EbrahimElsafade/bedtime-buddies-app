@@ -14,10 +14,11 @@ import { cn } from '@/lib/utils'
 import HLSVideoPlayer from '@/components/course/HLSVideoPlayer'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
+import { useTranslation } from 'react-i18next'
 
 const Course = () => {
   const { id: courseId } = useParams<{ id: string }>()
-  const { t } = useLanguage()
+  const { t } = useTranslation('courses')
   const { isAuthenticated, profile } = useAuth()
   const { toast } = useToast()
   const [activeTab, setActiveTab] = useState('overview')
@@ -277,7 +278,7 @@ const Course = () => {
                         <h2 className="mb-3 mt-6 font-bubbly text-xl text-primary-foreground">
                           {t('course.whatYouLearn')}
                         </h2>
-                        <ul className="list-disc pl-5">
+                        <ul className="list-decimal ps-5" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
                           {objectives.map(
                             (objective: string, index: number) => (
                               <li key={index}>{objective}</li>
@@ -290,7 +291,7 @@ const Course = () => {
                 })()}
 
                 {course.instructor && (
-                  <>
+                  <div dir={lang === 'ar' ? 'rtl' : 'ltr'}>
                     <h2 className="mb-3 mt-6 font-bubbly text-xl text-primary-foreground">
                       {t('course.instructor')}
                     </h2>
@@ -336,7 +337,7 @@ const Course = () => {
                         })()}
                       </div>
                     </div>
-                  </>
+                  </div>
                 )}
               </div>
             </TabsContent>
