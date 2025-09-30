@@ -178,8 +178,8 @@ const Profile = () => {
           {t('common:myProfile')}
         </h1>
 
-        <Tabs defaultValue="profile" className="mb-8">
-          <TabsList className="grid w-full grid-cols-3">
+        <Tabs defaultValue="profile" className="w-full">
+          <TabsList>
             <TabsTrigger value="profile">{t('common:profile')}</TabsTrigger>
             <TabsTrigger value="favorites">{t('common:favorites')}</TabsTrigger>
             <TabsTrigger value="subscription">

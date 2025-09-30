@@ -26,7 +26,6 @@ const Course = () => {
   const { data: course, isLoading, error } = useCourseData(courseId)
   const isPremium = profile?.is_premium || false
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
-  const isRTL = lang === 'ar'
 
   const tabsRef = useRef<HTMLDivElement>(null)
 
@@ -250,7 +249,6 @@ const Course = () => {
           <Tabs
             ref={tabsRef}
             value={activeTab}
-            dir={isRTL ? 'rtl' : 'ltr'}
             onValueChange={setActiveTab}
             className="w-full"
           >

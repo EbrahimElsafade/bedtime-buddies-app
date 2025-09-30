@@ -97,7 +97,7 @@ const FeaturedStories = () => {
   }
 
   return (
-    <section className="relative bg-primary/10 px-4 py-8 md:py-12">
+    <section className="relative  px-4 py-8 md:py-12">
       <div className="container mx-auto">
         <div className="mb-4 flex items-center justify-between gap-2 sm:flex-row sm:items-center md:mb-6">
           <h2 className="font-bubbly text-lg text-primary-foreground md:text-3xl">

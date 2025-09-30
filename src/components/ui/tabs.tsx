@@ -12,7 +12,7 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      'flex w-full flex-wrap items-center justify-start gap-2 rounded-lg bg-transparent p-1 shadow-md sm:bg-secondary',
+      'flex w-full flex-wrap flex-row ltr:flex-row-reverse items-center justify-start gap-2 rounded-lg bg-transparent p-1 shadow-md sm:bg-secondary',
       // 'snap-x snap-mandatory scroll-smooth',
       className,
     )}

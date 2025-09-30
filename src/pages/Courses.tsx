@@ -15,6 +15,7 @@ import { useLanguage } from '@/contexts/LanguageContext'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 import { getCategoryText } from '@/utils/courseUtils'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 const Courses = () => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -97,29 +98,30 @@ const Courses = () => {
             />
           </div>
 
-          <div className="flex flex-wrap justify-center gap-2 md:gap-3">
-            <Button
-              variant={activeCategory === 'all' ? 'accent' : 'tertiary'}
-              size="sm"
-              onClick={() => handleCategoryChange('all')}
-              className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
-            >
-              {t('courses.allCourses')}
-            </Button>
-            {categories.map(category => (
-              <Button
-                key={category.id}
-                variant={
-                  activeCategory === category.name ? 'accent' : 'tertiary'
-                }
-                size="sm"
-                onClick={() => handleCategoryChange(category.name)}
+          <Tabs
+            defaultValue="all"
+            className="w-full"
+            onValueChange={handleCategoryChange}
+            value={activeCategory}
+          >
+            <TabsList className="mb-4 w-full justify-start gap-2 overflow-x-auto p-1 md:mb-6 lg:mb-8">
+              <TabsTrigger
+                value="all"
                 className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
               >
-                {getCategoryText(category, 'name', lang)}
-              </Button>
-            ))}
-          </div>
+                {t('courses.allCourses')}
+              </TabsTrigger>
+              {categories.map(category => (
+                <TabsTrigger
+                  key={category.id}
+                  value={category.name}
+                  className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
+                >
+                  {getCategoryText(category, 'name', lang)}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
         </div>
 
         {/* Courses Grid */}
@@ -165,7 +167,7 @@ const Courses = () => {
                     </div>
 
                     <div className="grid gap-4">
-                      <CardHeader className="px-4 pt-4 ">
+                      <CardHeader className="px-4 pt-4">
                         <CardTitle className="line-clamp-2 flex-1 text-lg text-primary-foreground">
                           {getLocalized(course, 'title', lang)}
                         </CardTitle>

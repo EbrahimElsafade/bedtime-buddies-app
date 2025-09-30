@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getMultilingualText } from '@/utils/multilingualUtils'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 const Stories = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -27,8 +28,6 @@ const Stories = () => {
   useEffect(() => {
     document.title = `${t('layout.appName', { ns: 'misc' })} - ${t('allStories')}`
   }, [t])
-
-  const isRTL = i18n.language === 'ar'
 
   const { data: stories = [], isLoading } = useQuery({
     queryKey: ['stories', language],
@@ -86,13 +85,10 @@ const Stories = () => {
 
   if (isLoading) {
     return (
-      <div
-        className="px-3 py-4 md:px-4 md:py-8 lg:py-12"
-        dir={isRTL ? 'rtl' : 'ltr'}
-      >
+      <div className="px-3 py-4 md:px-4 md:py-8 lg:py-12">
         <div className="container mx-auto max-w-6xl">
           <div className="mb-4 text-center md:mb-6 lg:mb-8">
-            <h1 className="from-primary-foreground mb-2 bg-gradient-to-r to-purple-600 bg-clip-text text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
+            <h1 className="mb-2 bg-gradient-to-r from-primary-foreground to-purple-600 bg-clip-text text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
               {t('allStories')}
             </h1>
           </div>
@@ -113,66 +109,49 @@ const Stories = () => {
   }
 
   return (
-    <div
-      className="px-3 bg-gradient-to-b min-h-[82.7svh] from-primary/20 to-primary/10  py-4 md:px-4 md:py-8 lg:py-12"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
-      <div className="container  mx-auto max-w-6xl">
+    <div className="min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-3 py-4 md:px-4 md:py-8 lg:py-12">
+      <div className="container mx-auto max-w-6xl">
         <div className="mb-4 text-center md:mb-6 lg:mb-8">
-          <h1 className="mb-2  text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
+          <h1 className="mb-2 text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
             {t('allStories')}
           </h1>
           <p className="mx-auto max-w-2xl px-2 text-xs text-muted-foreground md:text-sm lg:text-base">
             {t('browseCollection')}
           </p>
         </div>
-
         {/* Search and Filter Section */}
         <div className="mb-4 space-y-3 md:mb-6 md:space-y-4 lg:mb-8">
           <div className="relative mx-auto max-w-md">
-            <Search
-              className={`absolute top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground ${
-                isRTL ? 'right-3' : 'left-3'
-              }`}
-            />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground rtl:left-auto rtl:right-3" />
             <Input
               type="text"
               placeholder={t('searchStories')}
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className={`w-full ${
-                isRTL ? 'pr-10 text-right' : 'pl-10'
-              } py-2 text-sm md:text-base`}
+              className="w-full py-2 ps-10 text-start text-sm md:text-base"
             />
           </div>
 
-          <div className="flex flex-wrap justify-center gap-2 md:gap-3">
-            <Button
-              variant={selectedCategory === 'all' ? 'accent' : 'tertiary'}
-              size="sm"
-              onClick={() => setSelectedCategory('all')}
-              className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
-            >
-              {t('allCategories')}
-            </Button>
-            {categories.map(category => (
-              <Button
-                key={category.id}
-                variant={
-                  selectedCategory === category.name ? 'accent' : 'tertiary'
-                }
-                size="sm"
-                onClick={() => setSelectedCategory(category.name)}
-                className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
-              >
-                {t(`category.${category.name}`, {
-                  defaultValue:
-                    category.name.charAt(0).toUpperCase() +
-                    category.name.slice(1),
-                })}
-              </Button>
-            ))}
-          </div>
+          <Tabs
+            defaultValue="all"
+            className="w-full"
+            onValueChange={setSelectedCategory}
+            value={selectedCategory}
+          >
+            <TabsList className="mb-4 w-full justify-start gap-2 overflow-x-auto p-1 md:mb-6 lg:mb-8">
+              <TabsTrigger value="all">{t('allCategories')}</TabsTrigger>
+
+              {categories.map(category => (
+                <TabsTrigger key={category.id} value={category.name}>
+                  {t(`category.${category.name}`, {
+                    defaultValue:
+                      category.name.charAt(0).toUpperCase() +
+                      category.name.slice(1),
+                  })}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
         </div>
 
         {/* Stories Grid */}
@@ -201,7 +180,7 @@ const Stories = () => {
 
               return (
                 <Link key={story.id} to={`/stories/${story.id}`}>
-                  <Card className="story-card flex h-80 min-w-80 max-w-96 cursor-pointer flex-col overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-shadow hover:shadow-lg  md:h-96">
+                  <Card className="story-card flex h-80 min-w-80 max-w-96 cursor-pointer flex-col overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-shadow hover:shadow-lg md:h-96">
                     <div className="relative h-56">
                       {imageUrl ? (
                         <img
@@ -236,13 +215,13 @@ const Stories = () => {
                     <div className="flex flex-1 flex-col p-3 md:p-4">
                       <CardHeader className="flex-1 p-0 pb-2">
                         <div className="mb-2 flex items-start justify-between">
-                          <CardTitle className="text-primary-foreground line-clamp-2 flex-1 text-sm md:text-base lg:text-lg">
+                          <CardTitle className="line-clamp-2 flex-1 text-sm text-primary-foreground md:text-base lg:text-lg">
                             {storyTitle}
                           </CardTitle>
                           <div className="ml-2 flex flex-shrink-0 items-center gap-2">
                             <Badge
                               variant="secondary"
-                              className="text-primary-foreground bg-primary/30 text-xs"
+                              className="bg-primary/30 text-xs text-primary-foreground"
                             >
                               {t(`category.${story.category}`, {
                                 defaultValue:
@@ -250,7 +229,7 @@ const Stories = () => {
                                   story.category.slice(1),
                               })}
                             </Badge>
-                            <div className="text-primary-foreground flex items-center text-xs">
+                            <div className="flex items-center text-xs text-primary-foreground">
                               <Clock className="mx-1 h-3 w-3" />
                               <span>
                                 {t('duration', { duration: story.duration })}
@@ -258,7 +237,7 @@ const Stories = () => {
                             </div>
                           </div>
                         </div>
-                        <CardDescription className="text-primary-foreground line-clamp-2 text-xs leading-relaxed  md:text-sm">
+                        <CardDescription className="line-clamp-2 text-xs leading-relaxed text-primary-foreground md:text-sm">
                           {storyDescription}
                         </CardDescription>
                       </CardHeader>

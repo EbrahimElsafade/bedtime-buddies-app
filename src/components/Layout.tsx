@@ -96,7 +96,7 @@ const Layout = () => {
   })
 
   return (
-    <div className="bubbles-bg flex min-h-screen flex-col bg-gradient-to-b from-primary/30 to-primary/20 pb-16 text-foreground md:pb-0">
+    <div className="flex min-h-screen flex-col pb-16 text-foreground md:pb-0">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-primary/20 bg-secondary/70 backdrop-blur-lg">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -155,7 +155,7 @@ const Layout = () => {
       </main>
 
       {/* Footer */}
-      <footer className="hidden border-primary/20 bg-gradient-to-b from-primary/10 to-white/10 py-6 md:block">
+      <footer className="hidden border-primary/20 bg-gradient-to-b from-primary/10 to-primary/5 py-6 md:block">
         <div className="container mx-auto px-4 text-center">
           <div className="mb-4 flex justify-center gap-4">
             {navItems.slice(0, 4).map(item => (

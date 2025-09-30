@@ -96,7 +96,7 @@ const Register = () => {
   }
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
+    <div className="flex min-h-[80vh] bg-gradient-to-b from-primary/20 to-primary/10 items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <Card className="border-primary/20 bg-secondary/70 backdrop-blur-sm">
           <CardHeader className="text-center">
@@ -221,9 +221,7 @@ const Register = () => {
                     <Select
                       value={language}
                       onValueChange={value =>
-                        setLanguage(
-                          value as 'en' | 'ar-eg' | 'ar-su' | 'ar-fos7a' | 'fr',
-                        )
+                        setLanguage(value as 'en' | 'ar-eg' | 'ar-su' | 'fr')
                       }
                     >
                       <SelectTrigger>

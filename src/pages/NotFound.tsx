@@ -17,7 +17,7 @@ const NotFound = () => {
   }, [location.pathname, t]);
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center bg-gradient-to-b from-transparent to-primary/10 px-4 py-12">
+    <div className="min-h-svh flex items-center justify-center bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-12">
       <div className="text-center max-w-md">
         <div className="w-32 h-32 bg-primary rounded-full mx-auto flex items-center justify-center mb-6">
           <span className="text-6xl">😴</span>

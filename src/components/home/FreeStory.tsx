@@ -73,7 +73,7 @@ const FreeStory = () => {
   )
 
   return (
-    <section className="bg-gradient-to-b from-primary/20 to-primary/15 px-4 py-12">
+    <section className="px-4 py-12">
       <div className="container mx-auto">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-lg text-primary-foreground md:text-3xl">

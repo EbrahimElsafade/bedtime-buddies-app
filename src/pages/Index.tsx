@@ -64,9 +64,9 @@ const Index = () => {
   }, [i18n.language])
 
   return (
-    <div className="relative flex flex-col">
+    <div className="relative flex flex-col bg-gradient-to-b from-primary/25 to-primary/10">
       {/* Fun floating elements */}
-      <FunElements />
+      {/* <FunElements /> */}
 
       {/* PricingPopup - Making sure it's rendered for non-authenticated users */}
       {/* <PricingPopup /> */}

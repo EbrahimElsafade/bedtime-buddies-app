@@ -85,7 +85,7 @@ const Login = () => {
 
   if (isResetting) {
     return (
-      <div className="py-12 px-4 flex items-center justify-center min-h-[80vh]">
+      <div className="py-12 px-4 bg-gradient-to-b from-primary/20 to-primary/10 flex items-center justify-center min-h-[82.7vh]">
         <div className="w-full max-w-md">
           <Card className="border-primary/20 bg-secondary/70  backdrop-blur-sm">
             <CardHeader className="text-center">
@@ -142,7 +142,7 @@ const Login = () => {
   }
 
   return (
-    <div className="py-12 px-4 flex items-center justify-center min-h-[80vh]">
+    <div className="py-12 px-4 bg-gradient-to-b from-primary/20 to-primary/10 flex items-center justify-center min-h-[82.7vh]">
       <div className="w-full max-w-md">
         <Card className="border-primary/20 bg-secondary/70  backdrop-blur-sm">
           <CardHeader className="text-center">

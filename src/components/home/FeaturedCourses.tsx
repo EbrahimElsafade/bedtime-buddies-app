@@ -23,7 +23,7 @@ const FeaturedCourses = () => {
   if (isLoading || !featuredCourses.length) return null
 
   return (
-    <section className="relative bg-primary/10 px-4 py-12">
+    <section className="relative  px-4 py-12">
       <div className="container mx-auto">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="font-bubbly text-lg text-primary-foreground md:text-3xl">
