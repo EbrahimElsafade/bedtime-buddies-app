@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
@@ -62,6 +62,30 @@ const StoryEditor = () => {
 
   // Story sections
   const [storySections, setStorySections] = useState<StorySectionForm[]>([])
+
+  // Section management functions
+  const addNewSection = useCallback(() => {
+    const newSection: StorySectionForm = {
+      order: storySections.length + 1,
+      texts: storyData.languages.reduce(
+        (acc, lang) => {
+          acc[lang] = ''
+          return acc
+        },
+        {} as Record<string, string>,
+      ),
+      voices: storyData.languages.reduce(
+        (acc, lang) => {
+          acc[lang] = ''
+          return acc
+        },
+        {} as Record<string, string>,
+      ),
+      imagePreview: null,
+    }
+
+    setStorySections(prev => [...prev, newSection])
+  }, [storyData.languages, storySections.length])
 
   // Fetch categories from database
   const { data: categories, isLoading: categoriesLoading } = useQuery({
@@ -344,7 +368,7 @@ const StoryEditor = () => {
     ) {
       addNewSection()
     }
-  }, [storyData.languages, isEditing])
+  }, [storyData.languages, isEditing, storySections.length, addNewSection])
 
   // Set default category when categories are loaded and no category is set
   useEffect(() => {
@@ -377,7 +401,7 @@ const StoryEditor = () => {
         story_audio: updatedStoryAudio,
       }))
     }
-  }, [storyData.languages])
+  }, [storyData.languages, storyData.story_audio])
 
   // Handle file input change for cover image
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -503,30 +527,6 @@ const StoryEditor = () => {
         [language]: value,
       },
     }))
-  }
-
-  // Section management functions
-  const addNewSection = () => {
-    const newSection: StorySectionForm = {
-      order: storySections.length + 1,
-      texts: storyData.languages.reduce(
-        (acc, lang) => {
-          acc[lang] = ''
-          return acc
-        },
-        {} as Record<string, string>,
-      ),
-      voices: storyData.languages.reduce(
-        (acc, lang) => {
-          acc[lang] = ''
-          return acc
-        },
-        {} as Record<string, string>,
-      ),
-      imagePreview: null,
-    }
-
-    setStorySections([...storySections, newSection])
   }
 
   const deleteSection = (index: number) => {
