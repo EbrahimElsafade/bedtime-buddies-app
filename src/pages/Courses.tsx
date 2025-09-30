@@ -27,7 +27,7 @@ const Courses = () => {
   const { data: categories = [] } = useCourseCategories()
 
   useEffect(() => {
-    document.title = 'Bedtime Stories - Learn with Courses'
+    document.title = 'Dolphoon - Learn with Courses'
   }, [])
 
   const filteredCourses = useMemo(() => {
@@ -123,6 +123,8 @@ const Courses = () => {
             </TabsList>
           </Tabs>
         </div>
+
+        {document.documentElement.dir}
 
         {/* Courses Grid */}
         {filteredCourses.length === 0 ? (

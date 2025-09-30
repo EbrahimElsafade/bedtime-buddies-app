@@ -45,13 +45,13 @@ const Course = () => {
 
   useEffect(() => {
     if (course) {
-      document.title = `${getLocalized(course, 'title', lang)} | Bedtime Stories`
+      document.title = `${getLocalized(course, 'title', lang)} | Dolphoon`
       // Set the first video as selected by default if there are videos
       if (course.videos && course.videos.length > 0) {
         setSelectedVideo(course.videos[0])
       }
     } else {
-      document.title = 'Course Not Found | Bedtime Stories'
+      document.title = 'Course Not Found | Dolphoon'
     }
   }, [course, lang])
 

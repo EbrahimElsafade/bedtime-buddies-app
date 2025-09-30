@@ -20,7 +20,7 @@ const Subscription = () => {
   const [isGift, setIsGift] = useState(false);
   
   useEffect(() => {
-    document.title = `Bedtime Stories - ${t('title')}`;
+    document.title = `Dolphoon - ${t('title')}`;
   }, [t]);
   
   const planIds: PlanType[] = ['monthly', 'quarterly', 'yearly', 'lifetime'];

@@ -27,7 +27,7 @@ const Settings = () => {
     enableGamesFeature: false,
     autoPublishContent: false,
     defaultLanguage: "ar-eg",
-    siteTitle: "Bedtime Stories",
+    siteTitle: "Dolphoon",
     emailNotifications: true,
   });
 

@@ -23,7 +23,7 @@ const Favorites = () => {
   
   // Set page title
   useEffect(() => {
-    document.title = "Bedtime Stories - My Favorites";
+    document.title = "Dolphoon - My Favorites";
   }, []);
   
   // Check authentication and redirect if needed

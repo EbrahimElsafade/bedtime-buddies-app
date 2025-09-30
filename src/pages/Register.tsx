@@ -105,7 +105,7 @@ const Register = () => {
             </CardTitle>
             <CardDescription>
               {currentStep === 1
-                ? 'Join us for magical bedtime stories'
+                ? 'Join us for magical Dolphoon'
                 : 'Tell us about your little one'}
             </CardDescription>
           </CardHeader>

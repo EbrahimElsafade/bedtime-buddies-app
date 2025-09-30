@@ -28,7 +28,7 @@ const Story = () => {
   useEffect(() => {
     if (story) {
       const storyTitle = getMultilingualText(story.title, currentLanguage, 'en')
-      document.title = `${storyTitle} - Bedtime Stories`
+      document.title = `${storyTitle} - Dolphoon`
     }
   }, [story, currentLanguage])
 
@@ -83,7 +83,7 @@ const Story = () => {
   const getStoryDescription = () => {
     return (
       getMultilingualText(story.description, currentLanguage, 'en') ||
-      'Discover wonderful bedtime stories on Dolphoon!'
+      'Discover wonderful Dolphoon on Dolphoon!'
     )
   }
 

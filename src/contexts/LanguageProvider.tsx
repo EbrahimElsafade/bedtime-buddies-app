@@ -5,6 +5,7 @@ import LanguageContext, { type Language } from './language-context'
 export default function LanguageProvider({ children }: { children: React.ReactNode }) {
   const initial = (i18n.language?.split('-')[0] || 'en') as Language
   const [language, setLanguageState] = useState<Language>(initial)
+  const direction = language === 'ar' ? 'rtl' : 'ltr'
 
   useEffect(() => {
     const handler = (lng: string) => {
@@ -17,6 +18,12 @@ export default function LanguageProvider({ children }: { children: React.ReactNo
     }
   }, [])
 
+  useEffect(() => {
+    // Update document language and direction
+    document.documentElement.lang = language
+    document.documentElement.dir = direction
+  }, [language, direction])
+
   const setLanguage = (lng: Language) => {
     i18n.changeLanguage(lng)
   }
@@ -27,7 +34,7 @@ export default function LanguageProvider({ children }: { children: React.ReactNo
   }
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, direction, setLanguage, t }}>
       {children}
     </LanguageContext.Provider>
   )

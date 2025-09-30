@@ -147,7 +147,7 @@ const Login = () => {
         <Card className="border-primary/20 bg-secondary/70  backdrop-blur-sm">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bubbly">Welcome Back</CardTitle>
-            <CardDescription>Sign in to access your bedtime stories</CardDescription>
+            <CardDescription>Sign in to access your Dolphoon</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit}>
