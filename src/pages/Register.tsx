@@ -98,7 +98,7 @@ const Register = () => {
   return (
     <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
-        <Card className="border-primary/20 bg-secondary/70 backdrop-blur-sm ">
+        <Card className="border-primary/20 bg-secondary/70 backdrop-blur-sm">
           <CardHeader className="text-center">
             <CardTitle className="font-bubbly text-2xl">
               Create an Account
@@ -155,7 +155,7 @@ const Register = () => {
 
                   <Button
                     type="button"
-                    className="bg-primary-foreground w-full hover:bg-primary"
+                    className="w-full bg-primary-foreground hover:bg-primary"
                     onClick={handleNextStep}
                   >
                     Next
@@ -166,7 +166,7 @@ const Register = () => {
                       <span className="w-full border-t border-gray-300" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-secondary px-2 text-muted-foreground ">
+                      <span className="bg-secondary px-2 text-muted-foreground">
                         Or continue with
                       </span>
                     </div>
@@ -221,7 +221,9 @@ const Register = () => {
                     <Select
                       value={language}
                       onValueChange={value =>
-                        setLanguage(value as 'en' | 'ar-eg' | 'ar-fos7a' | 'fr')
+                        setLanguage(
+                          value as 'en' | 'ar-eg' | 'ar-su' | 'ar-fos7a' | 'fr',
+                        )
                       }
                     >
                       <SelectTrigger>
@@ -229,8 +231,8 @@ const Register = () => {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="en">English</SelectItem>
-                        <SelectItem value="ar-eg">مصري</SelectItem>
-                        <SelectItem value="ar-fos7a">فصحى</SelectItem>
+                        <SelectItem value="ar-eg">العربية -مصر</SelectItem>
+                        <SelectItem value="ar-su">العربية الفصحي</SelectItem>
                         <SelectItem value="fr">français</SelectItem>
                       </SelectContent>
                     </Select>
@@ -250,7 +252,7 @@ const Register = () => {
                     </Button>
                     <Button
                       type="submit"
-                      className="bg-primary-foreground flex-1 hover:bg-primary"
+                      className="flex-1 bg-primary-foreground hover:bg-primary"
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -270,7 +272,10 @@ const Register = () => {
           <CardFooter className="text-center">
             <p className="text-sm text-muted-foreground">
               Already have an account?{' '}
-              <Link to="/login" className="text-primary-foreground hover:underline">
+              <Link
+                to="/login"
+                className="text-primary-foreground hover:underline"
+              >
                 Sign in
               </Link>
             </p>

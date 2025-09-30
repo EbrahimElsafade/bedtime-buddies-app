@@ -2,8 +2,8 @@
   "appName": "Dolphoon",
   "languages": {
     "en": "English",
-    "ar-eg": "مصري",
-    "ar-fos7a": "فصحى",
+    "ar-eg": "العربية -مصر",
+    "ar-su": "العربية",
     "fr": "français",
     "default_language": "Default Language"
   },

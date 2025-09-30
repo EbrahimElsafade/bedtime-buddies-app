@@ -19,22 +19,6 @@ const FeaturedStories = () => {
   const { t, i18n } = useTranslation(['misc', 'stories'])
   const { language } = useLanguage()
 
-  // Map website language to story language codes
-  const getStoryLanguageCode = (websiteLanguage: string) => {
-    switch (websiteLanguage) {
-      case 'ar':
-        return 'ar-eg' // Default to Egyptian Arabic for Arabic website language
-      case 'en':
-        return 'en'
-      case 'fr':
-        return 'fr'
-      default:
-        return 'en'
-    }
-  }
-
-  const currentStoryLanguage = getStoryLanguageCode(language)
-
   const { data: featuredStories = [], isLoading } = useQuery({
     queryKey: ['featured-stories', language],
     queryFn: async () => {

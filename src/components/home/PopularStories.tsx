@@ -19,20 +19,6 @@ const PopularStories = () => {
   const { t, i18n } = useTranslation(['misc', 'stories'])
   const { language } = useLanguage()
 
-  // Map website language to story language codes
-  const getStoryLanguageCode = (websiteLanguage: string) => {
-    switch (websiteLanguage) {
-      case 'ar':
-        return 'ar-eg' // Default to Egyptian Arabic for Arabic website language
-      case 'en':
-        return 'en'
-      case 'fr':
-        return 'fr'
-      default:
-        return 'en'
-    }
-  }
-
   const { data: popularStories = [], isLoading } = useQuery({
     queryKey: ['popular-stories', language],
     queryFn: async () => {
@@ -77,7 +63,7 @@ const PopularStories = () => {
             {[1, 2, 3].map(i => (
               <Card
                 key={i}
-                className="story-card  h-[25rem] w-full animate-pulse overflow-hidden border-primary/20 bg-secondary/70 pb-4 backdrop-blur-sm"
+                className="story-card h-[25rem] w-full animate-pulse overflow-hidden border-primary/20 bg-secondary/70 pb-4 backdrop-blur-sm"
               >
                 <div className="h-48 bg-gray-200"></div>
                 <CardHeader className="pb-2">
@@ -97,7 +83,7 @@ const PopularStories = () => {
     <section className="relative overflow-hidden bg-primary/10 px-4 py-12">
       <div className="container mx-auto">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg font-bubbly text-primary-foreground md:text-3xl">
+          <h2 className="font-bubbly text-lg text-primary-foreground md:text-3xl">
             {t('stories:popular')}
           </h2>
           <Link
@@ -126,7 +112,7 @@ const PopularStories = () => {
 
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
-                <Card className="story-card  relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-secondary/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg">
+                <Card className="story-card relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-secondary/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg">
                   <div className="relative h-48 overflow-hidden">
                     {imageUrl ? (
                       <img
@@ -181,7 +167,7 @@ const PopularStories = () => {
                           </div>
                         </div>
                       </div>
-                      <CardDescription className="line-clamp-2 text-sm leading-relaxed text-primary-foreground ">
+                      <CardDescription className="line-clamp-2 text-sm leading-relaxed text-primary-foreground">
                         {storyDescription}
                       </CardDescription>
                     </CardHeader>

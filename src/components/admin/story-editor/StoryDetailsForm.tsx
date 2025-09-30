@@ -20,6 +20,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Upload, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 interface StoryDetailsFormProps {
   storyData: {
@@ -49,6 +50,8 @@ export const StoryDetailsForm = ({
   onCoverImageChange,
   onClearCoverImage,
 }: StoryDetailsFormProps) => {
+  const { t } = useTranslation()
+
   return (
     <Card>
       <CardHeader>
@@ -68,10 +71,10 @@ export const StoryDetailsForm = ({
 
           <TabsContent value="en" className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title-en">Title (English)</Label>
+              <Label htmlFor="title-en">{t('admin:story_editor.title_label.en', 'Title (English)')}</Label>
               <Input
                 id="title-en"
-                placeholder="Enter story title in English"
+                placeholder={t('admin:story_editor.title_placeholder.en', 'Enter story title in English')}
                 value={storyData.title.en || ''}
                 onChange={e => onTitleChange('en', e.target.value)}
                 required

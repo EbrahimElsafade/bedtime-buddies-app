@@ -18,10 +18,13 @@ export const LanguageSelector = ({ languages, currentLanguage, onLanguageChange 
             <TabsTrigger value="en">English</TabsTrigger>
           )}
           {languages.includes('ar-eg') && (
-            <TabsTrigger value="ar-eg">مصري</TabsTrigger>
+            <TabsTrigger value="ar-eg">العربية -مصر</TabsTrigger>
+          )}
+          {languages.includes('ar-su') && (
+            <TabsTrigger value="ar-su">العربية</TabsTrigger>
           )}
           {languages.includes('ar-fos7a') && (
-            <TabsTrigger value="ar-fos7a">فصحى</TabsTrigger>
+            <TabsTrigger value="ar-fos7a">العربية</TabsTrigger>
           )}
           {languages.includes('fr') && (
             <TabsTrigger value="fr">français</TabsTrigger>

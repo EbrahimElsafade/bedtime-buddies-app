@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Plus, X } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
 
 interface StoryLanguageManagerProps {
   selectedLanguages: string[]
@@ -34,6 +35,20 @@ export const StoryLanguageManager = ({
   onAddLanguage,
   onRemoveLanguage,
 }: StoryLanguageManagerProps) => {
+  const { toast } = useToast()
+
+  const handleRemoveLanguage = (language: string) => {
+    if (selectedLanguages.length === 1) {
+      toast({
+        title: 'Cannot remove language',
+        description: 'At least one language must be maintained for the story section.',
+        variant: 'destructive'
+      })
+      return
+    }
+    
+    onRemoveLanguage(language)
+  }
   return (
     <Card>
       <CardHeader>
@@ -61,7 +76,7 @@ export const StoryLanguageManager = ({
                   variant="destructive"
                   size="icon"
                   className="size-6"
-                  onClick={() => onRemoveLanguage(language)}
+                  onClick={() => handleRemoveLanguage(language)}
                   disabled={selectedLanguages.length === 1}
                 >
                   <X className="h-3 w-3" />
