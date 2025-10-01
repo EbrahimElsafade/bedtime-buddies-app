@@ -191,7 +191,7 @@ export const AudioControls = ({
       </div>
 
       <div className="flex items-center justify-between pe-4">
-        <div className="flex w-56 items-center justify-between">
+        <div className="flex  items-center justify-between">
           <Button
             variant="link"
             onClick={toggleAutoplay}
