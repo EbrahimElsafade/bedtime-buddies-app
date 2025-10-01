@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -29,7 +30,7 @@ const Profile = () => {
   const navigate = useNavigate()
   const { user, profile, isAuthenticated, isLoading, updateProfile, logout } =
     useAuth()
-  const { t, i18n } = useTranslation(['common', 'auth'])
+  const { t, i18n } = useTranslation(['common', 'auth', 'meta'])
   const { language } = useLanguage()
 
   const [name, setName] = useState('')
@@ -41,7 +42,7 @@ const Profile = () => {
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
 
-  // Sync i18next with LanguageContext
+  // Set page title
   useEffect(() => {
     const langMap: Record<string, string> = {
       en: 'en',
@@ -53,21 +54,6 @@ const Profile = () => {
       i18n.changeLanguage(i18nLang)
     }
   }, [language, i18n])
-
-  // Debug logging
-  useEffect(() => {
-    console.log('Profile page - Auth state:', {
-      isAuthenticated,
-      isLoading,
-      hasUser: !!user,
-      hasProfile: !!profile,
-    })
-  }, [user, profile, isAuthenticated, isLoading])
-
-  // Set page title
-  useEffect(() => {
-    document.title = `${t('common:appName')} - ${t('common:profile')}`
-  }, [t, language])
 
   // Check authentication and redirect if needed
   useEffect(() => {
@@ -173,6 +159,14 @@ const Profile = () => {
 
   return (
     <div className="min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-12">
+      <Helmet>
+        <title>{t('meta:titles.profile')}</title>
+        <meta name="description" content={t('meta:descriptions.profile')} />
+        <meta property="og:title" content={t('meta:titles.profile')} />
+        <meta property="og:description" content={t('meta:descriptions.profile')} />
+        <meta name="robots" content="noindex" />
+      </Helmet>
+
       <div className="container mx-auto max-w-3xl">
         <h1 className="mb-6 font-bubbly text-3xl md:text-4xl">
           {t('common:myProfile')}
@@ -238,16 +232,11 @@ const Profile = () => {
                       {t('common:preferredLanguage')}
                     </Label>
                     {isEditing ? (
-                      <Select
+                        <Select
                         value={profileLanguage}
                         onValueChange={value =>
                           setProfileLanguage(
-                            value as
-                              | 'en'
-                              | 'ar-eg'
-                              | 'ar-su'
-                              | 'ar-fos7a'
-                              | 'fr',
+                            value as 'en' | 'ar-eg' | 'ar-fos7a' | 'fr',
                           )
                         }
                       >
@@ -257,7 +246,6 @@ const Profile = () => {
                         <SelectContent>
                           <SelectItem value="en">English</SelectItem>
                           <SelectItem value="ar-eg">العربية -مصر</SelectItem>
-                          <SelectItem value="ar-su">العربية الفصحي</SelectItem>
                           <SelectItem value="ar-fos7a">
                             العربية الفصحي
                           </SelectItem>

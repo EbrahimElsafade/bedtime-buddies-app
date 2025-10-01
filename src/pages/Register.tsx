@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -19,11 +20,13 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useAuth } from '@/contexts/AuthContext'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
 
 const Register = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation(['auth', 'meta'])
   const {
     register: signUp,
     loginWithGoogle,
@@ -97,6 +100,14 @@ const Register = () => {
 
   return (
     <div className="flex min-h-[80vh] bg-gradient-to-b from-primary/20 to-primary/10 items-center justify-center px-4 py-12">
+      <Helmet>
+        <title>{t('meta:titles.login')}</title>
+        <meta name="description" content={t('meta:descriptions.login')} />
+        <meta property="og:title" content={t('meta:titles.login')} />
+        <meta property="og:description" content={t('meta:descriptions.login')} />
+        <meta name="robots" content="noindex" />
+      </Helmet>
+
       <div className="w-full max-w-md">
         <Card className="border-primary/20 bg-secondary/70 backdrop-blur-sm">
           <CardHeader className="text-center">
@@ -221,7 +232,7 @@ const Register = () => {
                     <Select
                       value={language}
                       onValueChange={value =>
-                        setLanguage(value as 'en' | 'ar-eg' | 'ar-su' | 'fr')
+                        setLanguage(value as 'en' | 'ar-eg' | 'ar-fos7a' | 'fr')
                       }
                     >
                       <SelectTrigger>
@@ -230,7 +241,7 @@ const Register = () => {
                       <SelectContent>
                         <SelectItem value="en">English</SelectItem>
                         <SelectItem value="ar-eg">العربية -مصر</SelectItem>
-                        <SelectItem value="ar-su">العربية الفصحي</SelectItem>
+                        <SelectItem value="ar-fos7a">العربية الفصحي</SelectItem>
                         <SelectItem value="fr">français</SelectItem>
                       </SelectContent>
                     </Select>

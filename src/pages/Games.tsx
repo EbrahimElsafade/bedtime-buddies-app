@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { Helmet } from 'react-helmet-async'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
@@ -10,14 +11,18 @@ import MemoryCardGame from '@/components/games/MemoryCardGame'
 import SnakeGame from '@/components/games/SnakeGame'
 
 const Games = () => {
-  const { t } = useTranslation(['games', 'common', 'navigation'])
-
-  useEffect(() => {
-    document.title = `${t('layout.appName', { ns: 'common' })} - ${t('games', { ns: 'navigation' })}`
-  }, [t])
+  const { t } = useTranslation(['games', 'common', 'navigation', 'meta'])
 
   return (
     <div className="min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-3 py-4 md:px-4 md:py-8 lg:py-12">
+      <Helmet>
+        <title>{t('meta:titles.games')}</title>
+        <meta name="description" content={t('meta:descriptions.games')} />
+        <meta property="og:title" content={t('meta:titles.games')} />
+        <meta property="og:description" content={t('meta:descriptions.games')} />
+        <meta property="og:type" content="website" />
+      </Helmet>
+
       <div className="container mx-auto max-w-6xl">
         <div className="mb-4 text-center md:mb-6 lg:mb-8">
           <h1 className="mb-2 bg-gradient-to-r from-primary-foreground to-purple-600 bg-clip-text text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">

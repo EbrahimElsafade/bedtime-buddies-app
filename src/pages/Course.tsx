@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { ArrowLeft, Clock, BookOpen, Play, Lock, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -18,7 +19,7 @@ import { useTranslation } from 'react-i18next'
 
 const Course = () => {
   const { id: courseId } = useParams<{ id: string }>()
-  const { t } = useTranslation('courses')
+  const { t } = useTranslation(['courses', 'meta'])
   const { isAuthenticated, profile } = useAuth()
   const { toast } = useToast()
   const [activeTab, setActiveTab] = useState('overview')
@@ -158,6 +159,17 @@ const Course = () => {
 
   return (
     <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-12">
+      <Helmet>
+        <title>{getLocalized(course, 'title', lang)} - {t('meta:name')}</title>
+        <meta name="description" content={getLocalized(course, 'description', lang)} />
+        <meta property="og:title" content={`${getLocalized(course, 'title', lang)} - ${t('meta:name')}`} />
+        <meta property="og:description" content={getLocalized(course, 'description', lang)} />
+        <meta property="og:type" content="article" />
+        {course.coverImagePath && (
+          <meta property="og:image" content={getImageUrl(course.coverImagePath)} />
+        )}
+      </Helmet>
+
       {/* Decorative background elements */}
       <div className="absolute left-10 top-20 h-20 w-20 animate-float rounded-full bg-primary/10"></div>
       <div

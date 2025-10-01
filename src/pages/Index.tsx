@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
+import { Helmet } from 'react-helmet-async'
 import PricingPopup from '@/components/PricingPopup'
 import Hero from '@/components/home/Hero'
 import FreeStory from '@/components/home/FreeStory'
@@ -10,7 +11,6 @@ import FeaturedStories from '@/components/home/FeaturedStories'
 import Features from '@/components/home/Features'
 import SubscribeBanner from '@/components/home/SubscribeBanner'
 import PopularStories from '@/components/home/PopularStories'
-import EntertainmentStories from '@/components/home/EntertainmentStories'
 import FeaturedCourses from '@/components/home/FeaturedCourses'
 import FunElements from '@/components/home/FunElements'
 
@@ -27,7 +27,7 @@ interface HomePageSettings {
 
 const Index = () => {
   const { isAuthenticated } = useAuth()
-  const { i18n } = useTranslation()
+  const { i18n, t } = useTranslation(['meta'])
 
   // Fetch home page appearance settings
   const { data: homePageSettings } = useQuery({
@@ -49,11 +49,6 @@ const Index = () => {
   })
 
   useEffect(() => {
-    document.title = 'Dolphoon - Kids Entertainment'
-  }, [])
-
-  // Handle RTL layout for Arabic
-  useEffect(() => {
     if (i18n.language === 'ar') {
       document.documentElement.dir = 'rtl'
       document.documentElement.lang = 'ar'
@@ -65,6 +60,15 @@ const Index = () => {
 
   return (
     <div className="relative flex flex-col bg-gradient-to-b from-primary/25 to-primary/10">
+      <Helmet>
+        <title>{t('meta:titles.home')}</title>
+        <meta name="description" content={t('meta:descriptions.home')} />
+        <meta property="og:title" content={t('meta:titles.home')} />
+        <meta property="og:description" content={t('meta:descriptions.home')} />
+        <meta property="og:type" content="website" />
+        <link rel="canonical" href={window.location.origin} />
+      </Helmet>
+
       {/* Fun floating elements */}
       {/* <FunElements /> */}
 

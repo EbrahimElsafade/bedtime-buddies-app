@@ -1,6 +1,6 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { Helmet } from 'react-helmet-async';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,17 +14,12 @@ import { getMultilingualText } from "@/utils/multilingualUtils";
 const Favorites = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, isLoading } = useAuth();
-  const { t, i18n } = useTranslation(['stories', 'misc', 'common']);
+  const { t, i18n } = useTranslation(['stories', 'misc', 'common', 'meta']);
   const { language } = useLanguage();
   
   // Mock favorites data - in real app this would come from API
   const [favorites] = useState([]);
   const [isLoadingFavorites, setIsLoadingFavorites] = useState(false);
-  
-  // Set page title
-  useEffect(() => {
-    document.title = "Dolphoon - My Favorites";
-  }, []);
   
   // Check authentication and redirect if needed
   useEffect(() => {
@@ -63,6 +58,14 @@ const Favorites = () => {
 
   return (
     <div className="py-12 px-4">
+      <Helmet>
+        <title>{t('meta:titles.favorites')}</title>
+        <meta name="description" content={t('meta:descriptions.favorites')} />
+        <meta property="og:title" content={t('meta:titles.favorites')} />
+        <meta property="og:description" content={t('meta:descriptions.favorites')} />
+        <meta name="robots" content="noindex" />
+      </Helmet>
+
       <div className="container mx-auto max-w-6xl">
         {/* Header */}
         <div className="mb-8">

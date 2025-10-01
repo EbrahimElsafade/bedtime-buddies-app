@@ -44,6 +44,7 @@ import {
 } from 'lucide-react'
 import { getImageUrl } from '@/utils/imageUtils'
 import { CourseVideo } from '@/types/course'
+import { useTranslation } from 'react-i18next'
 
 interface CourseLessonForm extends Omit<CourseVideo, 'id'> {
   id?: string
@@ -58,6 +59,7 @@ const CourseEditor = () => {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
   const isEditing = id !== 'new' && !!id
+  const { t } = useTranslation(['admin', 'common'])
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null)

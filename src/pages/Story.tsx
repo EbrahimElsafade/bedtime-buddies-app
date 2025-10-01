@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { useAuth } from '@/contexts/AuthContext'
 import { useStoryData } from '@/hooks/useStoryData'
 import { useStoryLanguage } from '@/hooks/useStoryLanguage'
@@ -25,12 +26,20 @@ const Story = () => {
   const currentLanguageKey = currentLanguage[0] + currentLanguage[1]
   const currentStoryDir = currentLanguageKey === 'ar' ? 'rtl' : 'ltr'
 
-  useEffect(() => {
-    if (story) {
-      const storyTitle = getMultilingualText(story.title, currentLanguage, 'en')
-      document.title = `${storyTitle} - Dolphoon`
-    }
-  }, [story, currentLanguage])
+  // Get title and description for current language
+  const getStoryTitle = () => {
+    return (
+      getMultilingualText(story?.title, currentLanguage, 'en') ||
+      'Untitled Story'
+    )
+  }
+
+  const getStoryDescription = () => {
+    return (
+      getMultilingualText(story?.description, currentLanguage, 'en') ||
+      'Discover wonderful Dolphoon on Dolphoon!'
+    )
+  }
 
   useEffect(() => {
     if (error || (!isLoading && !story)) {
@@ -72,23 +81,19 @@ const Story = () => {
   const canAccessStory =
     story.is_free || (isAuthenticated && profile?.is_premium)
 
-  // Get title and description for current language
-  const getStoryTitle = () => {
-    return (
-      getMultilingualText(story.title, currentLanguage, 'en') ||
-      'Untitled Story'
-    )
-  }
-
-  const getStoryDescription = () => {
-    return (
-      getMultilingualText(story.description, currentLanguage, 'en') ||
-      'Discover wonderful Dolphoon on Dolphoon!'
-    )
-  }
-
   return (
     <div className="px-4 py-8 bg-gradient-to-b min-h-[82.7svh] from-primary/20 to-primary/10">
+      <Helmet>
+        <title>{getStoryTitle()} - Dolphoon</title>
+        <meta name="description" content={getStoryDescription()} />
+        <meta property="og:title" content={`${getStoryTitle()} - Dolphoon`} />
+        <meta property="og:description" content={getStoryDescription()} />
+        <meta property="og:type" content="article" />
+        {story && story.cover_image && (
+          <meta property="og:image" content={story.cover_image} />
+        )}
+      </Helmet>
+      
       <div className="container mx-auto max-w-4xl">
         <StoryHeader
           onBackClick={() => navigate('/stories')}

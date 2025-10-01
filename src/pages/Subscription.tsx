@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Helmet } from 'react-helmet-async';
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,13 +16,9 @@ type PlanType = 'monthly' | 'quarterly' | 'yearly' | 'lifetime';
 const Subscription = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const { t } = useTranslation('subscription');
+  const { t } = useTranslation(['subscription', 'meta']);
   const [selectedPlan, setSelectedPlan] = useState<PlanType>('quarterly');
   const [isGift, setIsGift] = useState(false);
-  
-  useEffect(() => {
-    document.title = `Dolphoon - ${t('title')}`;
-  }, [t]);
   
   const planIds: PlanType[] = ['monthly', 'quarterly', 'yearly', 'lifetime'];
   
@@ -43,6 +40,13 @@ const Subscription = () => {
   
   return (
     <div className="py-12 px-4">
+      <Helmet>
+        <title>{t('meta:titles.subscription')}</title>
+        <meta name="description" content={t('meta:descriptions.subscription')} />
+        <meta property="og:title" content={t('meta:titles.subscription')} />
+        <meta property="og:description" content={t('meta:descriptions.subscription')} />
+      </Helmet>
+
       <div className="container mx-auto max-w-5xl">
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-bubbly mb-4">{t('title')}</h1>
