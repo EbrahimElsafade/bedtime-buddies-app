@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { ThemeProvider } from "next-themes";
+import { HelmetProvider } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import AdminLayout from "@/components/AdminLayout";
 import AdminRoute from "@/components/AdminRoute";
@@ -44,8 +45,9 @@ function App() {
         <LanguageProvider>
           <AuthProvider>
             <TooltipProvider>
-              <Toaster />
-              <BrowserRouter>
+              <HelmetProvider>
+                <Toaster />
+                <BrowserRouter>
                 <PWAInstallPrompt />
                 <Routes>
                   {/* Public Routes with Layout */}
@@ -90,6 +92,7 @@ function App() {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
+              </HelmetProvider>
             </TooltipProvider>
           </AuthProvider>
         </LanguageProvider>
