@@ -196,10 +196,8 @@ export const AudioControls = ({
             variant="link"
             onClick={toggleAutoplay}
             aria-pressed={isPlaying && isAutoplay}
-            className={`flex justify-between rounded-none border-e border-secondary px-2 ${
-              isPlaying && isAutoplay
-                ? 'text-primary'
-                : 'text-secondary'
+            className={`flex justify-between rounded-none border-e border-secondary px-2 text-secondary ${
+              isPlaying && isAutoplay ? 'bg-accent' : 'text-secondary'
             }`}
           >
             {isPlaying ? (
@@ -208,7 +206,7 @@ export const AudioControls = ({
                 viewBox="0 -960 960 960"
                 height="24px"
                 width="24px"
-                className={`${isPlaying && isAutoplay ? 'fill-primary' : 'fill-secondary'}`}
+                className="fill-secondary"
               >
                 <path d="M360-320h80v-320h-80v320Zm160 0h80v-320h-80v320ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80h640v-480H160v480Zm0 0v-480 480Z" />
               </svg>
@@ -218,7 +216,7 @@ export const AudioControls = ({
                 viewBox="0 -960 960 960"
                 height="24px"
                 width="24px"
-                className={`${isPlaying && isAutoplay ? 'fill-primary' : 'fill-secondary'}`}
+                className="fill-secondary"
               >
                 <path d="m380-300 280-180-280-180v360ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
               </svg>
@@ -231,10 +229,8 @@ export const AudioControls = ({
             variant="link"
             onClick={toggleIsPlay}
             aria-pressed={isPlaying && !isAutoplay}
-            className={`flex justify-between rounded-none border-e border-secondary px-2 ${
-              isPlaying && !isAutoplay
-                ? 'text-primary'
-                : 'text-secondary'
+            className={`flex justify-between rounded-none border-e border-secondary px-2 text-secondary ${
+              isPlaying && !isAutoplay ? 'bg-accent' : 'text-secondary'
             }`}
           >
             {isPlaying ? (

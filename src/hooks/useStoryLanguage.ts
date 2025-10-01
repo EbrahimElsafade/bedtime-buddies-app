@@ -4,7 +4,7 @@ import { Story } from '@/types/story'
 
 export const useStoryLanguage = (story: Story | undefined) => {
   const [currentLanguage, setCurrentLanguage] = useState<
-    'en' | 'ar-eg' | 'ar-fos7a' | 'fr'
+    'en' | 'ar-eg' | 'ar-fos7a' | 'ar-su' | 'fr'
   >('ar-fos7a')
 
   const { profile } = useAuth()
@@ -18,6 +18,7 @@ export const useStoryLanguage = (story: Story | undefined) => {
         (preferredLang === 'en' ||
           preferredLang === 'ar-eg' ||
           preferredLang === 'ar-fos7a' ||
+          preferredLang === 'ar-su' ||
           preferredLang === 'fr') &&
         story.languages.includes(preferredLang)
       ) {
@@ -29,6 +30,7 @@ export const useStoryLanguage = (story: Story | undefined) => {
           firstLang === 'en' ||
           firstLang === 'ar-eg' ||
           firstLang === 'ar-fos7a' ||
+          firstLang === 'ar-su' ||
           firstLang === 'fr'
         ) {
           setCurrentLanguage(firstLang)
