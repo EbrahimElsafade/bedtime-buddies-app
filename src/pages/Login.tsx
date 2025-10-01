@@ -198,7 +198,7 @@ const Login = () => {
                 
                 <Button
                   type="submit"
-                  className="w-full bg-primary-foreground hover:bg-primary"
+                  className="w-full "
                   disabled={isLoading}
                 >
                   {isLoading ? (

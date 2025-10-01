@@ -99,7 +99,7 @@ const Register = () => {
   }
 
   return (
-    <div className="flex min-h-[80vh] bg-gradient-to-b from-primary/20 to-primary/10 items-center justify-center px-4 py-12">
+    <div className="flex min-h-[82.7vh] bg-gradient-to-b from-primary/20 to-primary/10 items-center justify-center px-4 py-12">
       <Helmet>
         <title>{t('meta:titles.login')}</title>
         <meta name="description" content={t('meta:descriptions.login')} />
@@ -166,7 +166,7 @@ const Register = () => {
 
                   <Button
                     type="button"
-                    className="w-full bg-primary-foreground hover:bg-primary"
+                    className="w-full "
                     onClick={handleNextStep}
                   >
                     Next
