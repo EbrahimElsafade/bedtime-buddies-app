@@ -1,8 +1,6 @@
 import { useEffect } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
-import { useIsMobile } from '@/hooks/use-mobile'
 import TicTacToeGame from '@/components/games/TicTacToeGame'
 import RockPaperScissorsGame from '@/components/games/RockPaperScissorsGame'
 import HangmanGame from '@/components/games/HangmanGame'
