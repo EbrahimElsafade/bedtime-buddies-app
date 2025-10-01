@@ -33,7 +33,7 @@ const Login = () => {
     setError("");
     
     if (!email || !password) {
-      setError("Please enter both email and password");
+      setError(t('auth:messages.enterEmailPassword'));
       return;
     }
     
@@ -42,7 +42,7 @@ const Login = () => {
       // Navigation will happen automatically via the useEffect
     } catch (err: any) {
       // Error is handled by the login function with toast
-      setError(err.message || "Invalid email or password");
+      setError(err.message || t('auth:messages.invalidCredentials'));
     }
   };
 
@@ -68,7 +68,7 @@ const Login = () => {
     e.preventDefault();
     
     if (!resetEmail) {
-      toast.error("Please enter your email address");
+      toast.error(t('auth:messages.enterEmail'));
       return;
     }
     
@@ -91,18 +91,18 @@ const Login = () => {
         <div className="w-full max-w-md">
           <Card className="border-primary/20 bg-secondary/70  backdrop-blur-sm">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bubbly">Reset Password</CardTitle>
-              <CardDescription>We'll send you an email with reset instructions</CardDescription>
+              <CardTitle className="text-2xl font-bubbly">{t('auth:resetPassword.title')}</CardTitle>
+              <CardDescription>{t('auth:resetPassword.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleResetPassword}>
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="resetEmail">Email</Label>
+                    <Label htmlFor="resetEmail">{t('auth:common.emailLabel')}</Label>
                     <Input
                       id="resetEmail"
                       type="email"
-                      placeholder="hello@example.com"
+                      placeholder={t('auth:common.emailPlaceholder')}
                       value={resetEmail}
                       onChange={(e) => setResetEmail(e.target.value)}
                       required
@@ -117,7 +117,7 @@ const Login = () => {
                       onClick={() => setIsResetting(false)}
                       disabled={resetSubmitting}
                     >
-                      Cancel
+                      {t('auth:resetPassword.cancel')}
                     </Button>
                     <Button
                       type="submit"
@@ -127,10 +127,10 @@ const Login = () => {
                       {resetSubmitting ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Sending...
+                          {t('auth:resetPassword.sending')}
                         </>
                       ) : (
-                        "Send Instructions"
+                        t('auth:resetPassword.sendButton')
                       )}
                     </Button>
                   </div>
@@ -156,31 +156,31 @@ const Login = () => {
       <div className="w-full max-w-md">
         <Card className="border-primary/20 bg-secondary/70  backdrop-blur-sm">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bubbly">Welcome Back</CardTitle>
-            <CardDescription>Sign in to access your Dolphoon</CardDescription>
+            <CardTitle className="text-2xl font-bubbly">{t('auth:login_page.title')}</CardTitle>
+            <CardDescription>{t('auth:login_page.description')}</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit}>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t('auth:common.emailLabel')}</Label>
                   <Input
                     id="email"
                     type="email"
-                    placeholder="hello@example.com"
+                    placeholder={t('auth:common.emailPlaceholder')}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">{t('auth:common.passwordLabel')}</Label>
                     <button
                       type="button"
                       onClick={() => setIsResetting(true)}
                       className="text-xs text-primary-foreground hover:underline"
                     >
-                      Forgot password?
+                      {t('auth:login_page.forgotPassword')}
                     </button>
                   </div>
                   <Input
@@ -204,10 +204,10 @@ const Login = () => {
                   {isLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Signing in...
+                      {t('auth:login_page.signingIn')}
                     </>
                   ) : (
-                    "Sign In"
+                    t('auth:login_page.signInButton')
                   )}
                 </Button>
               </div>
@@ -220,7 +220,7 @@ const Login = () => {
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
                   <span className="bg-secondary  px-2 text-muted-foreground">
-                    Or continue with
+                    {t('auth:common.orContinueWith')}
                   </span>
                 </div>
               </div>
@@ -232,7 +232,7 @@ const Login = () => {
                   onClick={handleGoogleLogin}
                   disabled={isLoading}
                 >
-                  Google
+                  {t('auth:common.google')}
                 </Button>
                 <Button 
                   variant="outline" 
@@ -240,16 +240,16 @@ const Login = () => {
                   onClick={handleAppleLogin}
                   disabled={isLoading}
                 >
-                  Apple
+                  {t('auth:common.apple')}
                 </Button>
               </div>
             </div>
           </CardContent>
           <CardFooter className="text-center">
             <p className="text-sm text-muted-foreground">
-              Don't have an account?{" "}
+              {t('auth:login_page.noAccount')}{" "}
               <Link to="/register" className="text-primary-foreground hover:underline">
-                Sign up
+                {t('auth:login_page.signUpLink')}
               </Link>
             </p>
           </CardFooter>

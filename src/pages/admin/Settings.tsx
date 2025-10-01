@@ -84,9 +84,9 @@ const Settings = () => {
                   onChange={(e) => updateSetting("defaultLanguage", e.target.value)}
                 >
                   <option value="en">{t('languages.english')}</option>
-                  <option value="ar-eg">العربية -مصر</option>
-                  <option value="ar-su">العربية الفصحي</option>
-                  <option value="ar-fos7a">العربية الفصحي</option>
+                  <option value="ar-eg">مصري</option>
+                  <option value="ar-su">فصحي</option>
+                  <option value="ar-fos7a">فصحي</option>
                   <option value="fr">Français</option>
                 </select>
               </div>

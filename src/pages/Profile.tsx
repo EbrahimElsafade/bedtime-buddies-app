@@ -103,15 +103,15 @@ const Profile = () => {
       case 'en':
         return 'English'
       case 'ar-eg':
-        return 'العربية -مصر'
+        return 'مصري'
       case 'ar-fos7a':
-        return 'العربية الفصحي'
+        return 'فصحي'
       case 'ar-su':
-        return 'العربية الفصحي'
+        return 'فصحي'
       case 'fr':
         return 'français'
       default:
-        return 'العربية الفصحي'
+        return 'فصحي'
     }
   }
 
@@ -245,9 +245,9 @@ const Profile = () => {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="en">English</SelectItem>
-                          <SelectItem value="ar-eg">العربية -مصر</SelectItem>
+                          <SelectItem value="ar-eg">مصري</SelectItem>
                           <SelectItem value="ar-fos7a">
-                            العربية الفصحي
+                            فصحي
                           </SelectItem>
                           <SelectItem value="fr">français</SelectItem>
                         </SelectContent>

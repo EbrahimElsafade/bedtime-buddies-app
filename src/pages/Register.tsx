@@ -54,12 +54,12 @@ const Register = () => {
 
   const handleNextStep = () => {
     if (!name || !email || !password) {
-      setError('Please fill all required fields')
+      setError(t('auth:register.errors.requiredFields'))
       return
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters')
+      setError(t('auth:register.errors.passwordLength'))
       return
     }
 
@@ -76,7 +76,7 @@ const Register = () => {
       // Redirect will happen through the useEffect if authentication is successful
       // Otherwise, user will stay on the page to verify their email
     } catch (err: any) {
-      setError(err.message || 'Failed to create account')
+      setError(err.message || t('auth:register.errors.createFailed'))
     }
   }
 
@@ -112,12 +112,12 @@ const Register = () => {
         <Card className="border-primary/20 bg-secondary/70 backdrop-blur-sm">
           <CardHeader className="text-center">
             <CardTitle className="font-bubbly text-2xl">
-              Create an Account
+              {t('auth:register.title')}
             </CardTitle>
             <CardDescription>
               {currentStep === 1
-                ? 'Join us for magical Dolphoon'
-                : 'Tell us about your little one'}
+                ? t('auth:register.step1Description')
+                : t('auth:register.step2Description')}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -125,40 +125,40 @@ const Register = () => {
               {currentStep === 1 ? (
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Your Name</Label>
+                    <Label htmlFor="name">{t('auth:register.nameLabel')}</Label>
                     <Input
                       id="name"
                       value={name}
                       onChange={e => setName(e.target.value)}
-                      placeholder="John Smith"
+                      placeholder={t('auth:register.namePlaceholder')}
                       required
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">{t('auth:common.emailLabel')}</Label>
                     <Input
                       id="email"
                       type="email"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
-                      placeholder="hello@example.com"
+                      placeholder={t('auth:common.emailPlaceholder')}
                       required
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">{t('auth:common.passwordLabel')}</Label>
                     <Input
                       id="password"
                       type="password"
                       value={password}
                       onChange={e => setPassword(e.target.value)}
-                      placeholder="••••••••"
+                      placeholder={t('auth:common.passwordPlaceholder')}
                       required
                     />
                     <p className="text-xs text-muted-foreground">
-                      Password must be at least 6 characters
+                      {t('auth:register.passwordHint')}
                     </p>
                   </div>
 
@@ -169,7 +169,7 @@ const Register = () => {
                     className="w-full "
                     onClick={handleNextStep}
                   >
-                    Next
+                    {t('auth:register.nextButton')}
                   </Button>
 
                   <div className="relative">
@@ -178,7 +178,7 @@ const Register = () => {
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
                       <span className="bg-secondary px-2 text-muted-foreground">
-                        Or continue with
+                        {t('auth:common.orContinueWith')}
                       </span>
                     </div>
                   </div>
@@ -190,7 +190,7 @@ const Register = () => {
                       onClick={handleGoogleSignUp}
                       disabled={isLoading}
                     >
-                      Google
+                      {t('auth:common.google')}
                     </Button>
                     <Button
                       variant="outline"
@@ -198,24 +198,24 @@ const Register = () => {
                       onClick={handleAppleSignUp}
                       disabled={isLoading}
                     >
-                      Apple
+                      {t('auth:common.apple')}
                     </Button>
                   </div>
                 </div>
               ) : (
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="childName">Child's Name (Optional)</Label>
+                    <Label htmlFor="childName">{t('auth:register.childNameLabel')}</Label>
                     <Input
                       id="childName"
                       value={childName}
                       onChange={e => setChildName(e.target.value)}
-                      placeholder="Adam"
+                      placeholder={t('auth:register.childNamePlaceholder')}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="childAge">Child's Age (Optional)</Label>
+                    <Label htmlFor="childAge">{t('auth:register.childAgeLabel')}</Label>
                     <Input
                       id="childAge"
                       type="number"
@@ -223,12 +223,12 @@ const Register = () => {
                       max="12"
                       value={childAge}
                       onChange={e => setChildAge(e.target.value)}
-                      placeholder="6"
+                      placeholder={t('auth:register.childAgePlaceholder')}
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="language">Preferred Language</Label>
+                    <Label htmlFor="language">{t('auth:register.languageLabel')}</Label>
                     <Select
                       value={language}
                       onValueChange={value =>
@@ -236,13 +236,13 @@ const Register = () => {
                       }
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select language" />
+                        <SelectValue placeholder={t('auth:register.languagePlaceholder')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="en">English</SelectItem>
-                        <SelectItem value="ar-eg">العربية -مصر</SelectItem>
-                        <SelectItem value="ar-fos7a">العربية الفصحي</SelectItem>
-                        <SelectItem value="fr">français</SelectItem>
+                        <SelectItem value="en">{t('auth:register.languages.en')}</SelectItem>
+                        <SelectItem value="ar-eg">{t('auth:register.languages.ar-eg')}</SelectItem>
+                        <SelectItem value="ar-fos7a">{t('auth:register.languages.ar-fos7a')}</SelectItem>
+                        <SelectItem value="fr">{t('auth:register.languages.fr')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -257,7 +257,7 @@ const Register = () => {
                       onClick={() => setCurrentStep(1)}
                       disabled={isLoading}
                     >
-                      Back
+                      {t('auth:register.backButton')}
                     </Button>
                     <Button
                       type="submit"
@@ -267,10 +267,10 @@ const Register = () => {
                       {isLoading ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Creating...
+                          {t('auth:register.creating')}
                         </>
                       ) : (
-                        'Create Account'
+                        t('auth:register.createButton')
                       )}
                     </Button>
                   </div>
@@ -280,12 +280,12 @@ const Register = () => {
           </CardContent>
           <CardFooter className="text-center">
             <p className="text-sm text-muted-foreground">
-              Already have an account?{' '}
+              {t('auth:register.haveAccount')}{' '}
               <Link
                 to="/login"
                 className="text-primary-foreground hover:underline"
               >
-                Sign in
+                {t('auth:register.signInLink')}
               </Link>
             </p>
           </CardFooter>
