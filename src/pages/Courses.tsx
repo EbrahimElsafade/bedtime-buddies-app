@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Link } from 'react-router-dom'
+import { Helmet } from 'react-helmet-async'
 import { Search, BookOpen, Clock } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -20,15 +21,11 @@ import { useTranslation } from 'react-i18next'
 const Courses = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState<string>('all')
-  const { t } = useTranslation('courses')
+  const { t } = useTranslation(['courses', 'meta'])
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
 
   const { data: courses = [], isLoading } = useCoursesData()
   const { data: categories = [] } = useCourseCategories()
-
-  useEffect(() => {
-    document.title = 'Dolphoon - Learn with Courses'
-  }, [])
 
   const filteredCourses = useMemo(() => {
     return courses.filter(course => {
@@ -71,6 +68,14 @@ const Courses = () => {
 
   return (
     <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-3 py-8 md:px-4 md:py-12">
+      <Helmet>
+        <title>{t('meta:titles.courses')}</title>
+        <meta name="description" content={t('meta:descriptions.courses')} />
+        <meta property="og:title" content={t('meta:titles.courses')} />
+        <meta property="og:description" content={t('meta:descriptions.courses')} />
+        <meta property="og:type" content="website" />
+      </Helmet>
+
       {/* Fun decorative elements */}
 
       <div className="container mx-auto max-w-7xl">

@@ -1,16 +1,18 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { Helmet } from 'react-helmet-async';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslation } from 'react-i18next';
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation(['auth', 'meta']);
   const { login, loginWithGoogle, loginWithApple, isAuthenticated, isLoading, resetPassword } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -143,6 +145,14 @@ const Login = () => {
 
   return (
     <div className="py-12 px-4 bg-gradient-to-b from-primary/20 to-primary/10 flex items-center justify-center min-h-[82.7vh]">
+      <Helmet>
+        <title>{t('meta:titles.login')}</title>
+        <meta name="description" content={t('meta:descriptions.login')} />
+        <meta property="og:title" content={t('meta:titles.login')} />
+        <meta property="og:description" content={t('meta:descriptions.login')} />
+        <meta name="robots" content="noindex" />
+      </Helmet>
+
       <div className="w-full max-w-md">
         <Card className="border-primary/20 bg-secondary/70  backdrop-blur-sm">
           <CardHeader className="text-center">

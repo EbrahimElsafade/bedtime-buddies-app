@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { Helmet } from 'react-helmet-async'
 import { supabase } from '@/integrations/supabase/client'
 import {
   Card,
@@ -21,12 +22,8 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 const Stories = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
-  const { t, i18n } = useTranslation(['stories', 'misc'])
+  const { t, i18n } = useTranslation(['stories', 'misc', 'meta'])
   const { language } = useLanguage()
-
-  useEffect(() => {
-    document.title = `${t('layout.appName', { ns: 'misc' })} - ${t('allStories')}`
-  }, [t])
 
   const { data: stories = [], isLoading } = useQuery({
     queryKey: ['stories', language],
@@ -109,6 +106,14 @@ const Stories = () => {
 
   return (
     <div className="min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-3 py-4 md:px-4 md:py-8 lg:py-12">
+      <Helmet>
+        <title>{t('meta:titles.stories')}</title>
+        <meta name="description" content={t('meta:descriptions.stories')} />
+        <meta property="og:title" content={t('meta:titles.stories')} />
+        <meta property="og:description" content={t('meta:descriptions.stories')} />
+        <meta property="og:type" content="website" />
+      </Helmet>
+
       <div className="container mx-auto max-w-7xl">
         <div className="mb-4 text-center md:mb-6 lg:mb-8">
           <h1 className="mb-2 text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
