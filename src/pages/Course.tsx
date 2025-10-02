@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { ArrowLeft, Clock, BookOpen, Play, Lock, Loader2 } from 'lucide-react'
+import { ArrowLeft, Clock, BookOpen, Play, Lock, Loader2, Heart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useToast } from '@/components/ui/use-toast'
 import { CourseVideo } from '@/types/course'
 import { useCourseData } from '@/hooks/useCourseData'
+import { useCourseFavorites } from '@/hooks/useFavorites'
 import { useAuth } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
 import HLSVideoPlayer from '@/components/course/HLSVideoPlayer'
@@ -25,6 +26,7 @@ const Course = () => {
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
 
   const { data: course, isLoading, error } = useCourseData(courseId)
+  const { isFavorite, addFavorite, removeFavorite } = useCourseFavorites()
   const isPremium = profile?.is_premium || false
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
 
@@ -198,9 +200,42 @@ const Course = () => {
             </div>
 
             <div className="md:w-2/3">
-              <h1 className="mb-4 font-bubbly text-3xl text-primary-foreground md:text-4xl">
-                {getLocalized(course, 'title', lang)}
-              </h1>
+              <div className="mb-4 flex items-start justify-between gap-4">
+                <h1 className="flex-1 font-bubbly text-3xl text-primary-foreground md:text-4xl">
+                  {getLocalized(course, 'title', lang)}
+                </h1>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    if (!isAuthenticated) {
+                      toast({
+                        title: t('toast.loginRequired'),
+                        description: t('toast.pleaseLoginToStart'),
+                        variant: 'destructive',
+                      })
+                      return
+                    }
+                    if (courseId) {
+                      if (isFavorite(courseId)) {
+                        removeFavorite(courseId)
+                      } else {
+                        addFavorite(courseId)
+                      }
+                    }
+                  }}
+                  className="flex-shrink-0"
+                >
+                  <Heart
+                    className={cn(
+                      'h-6 w-6',
+                      courseId && isFavorite(courseId)
+                        ? 'fill-red-500 text-red-500'
+                        : 'text-primary-foreground',
+                    )}
+                  />
+                </Button>
+              </div>
 
               <div className="mb-4 flex max-w-60 flex-wrap gap-2 sm:max-w-none">
                 {course.isFree ? (

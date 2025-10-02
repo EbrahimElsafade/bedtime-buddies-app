@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import { useAuth } from '@/contexts/AuthContext'
 import { useStoryData } from '@/hooks/useStoryData'
 import { useStoryLanguage } from '@/hooks/useStoryLanguage'
+import { useStoryFavorites } from '@/hooks/useFavorites'
 import { StoryHeader } from '@/components/story/StoryHeader'
 import { LanguageSelector } from '@/components/story/LanguageSelector'
 import { StoryInfo } from '@/components/story/StoryInfo'
@@ -17,11 +18,11 @@ const Story = () => {
   const navigate = useNavigate()
   const { isAuthenticated, profile } = useAuth()
 
-  const [isFavorite, setIsFavorite] = useState(false)
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0)
 
   const { data: story, isLoading, error } = useStoryData(id)
   const { currentLanguage, setCurrentLanguage } = useStoryLanguage(story)
+  const { isFavorite, addFavorite, removeFavorite } = useStoryFavorites()
   const currentLanguageKey = currentLanguage[0] + currentLanguage[1]
   const currentStoryDir = currentLanguageKey === 'ar' ? 'rtl' : 'ltr'
 
@@ -70,10 +71,17 @@ const Story = () => {
   const currentSection = story.sections[currentSectionIndex]
 
   const toggleFavorite = () => {
-    if (isAuthenticated) {
-      setIsFavorite(!isFavorite)
-    } else {
+    if (!isAuthenticated) {
       navigate('/login')
+      return
+    }
+    
+    if (!id) return
+    
+    if (isFavorite(id)) {
+      removeFavorite(id)
+    } else {
+      addFavorite(id)
     }
   }
 
@@ -96,7 +104,7 @@ const Story = () => {
       <div className="container mx-auto max-w-4xl">
         <StoryHeader
           onBackClick={() => navigate('/stories')}
-          isFavorite={isFavorite}
+          isFavorite={id ? isFavorite(id) : false}
           onToggleFavorite={toggleFavorite}
           storyTitle={getStoryTitle()}
           storyDescription={getStoryDescription()}
