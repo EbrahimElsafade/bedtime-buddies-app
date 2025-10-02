@@ -12,7 +12,7 @@ export const useStoryLanguage = (story: Story | undefined) => {
   useEffect(() => {
     if (story) {
       // Set preferred language if available - with proper type checking
-      const preferredLang = profile?.preferred_language
+      const preferredLang = profile?.preferred_language as 'en' | 'ar-eg' | 'ar-fos7a' | 'ar-su' | 'fr' | undefined;
       if (
         preferredLang &&
         (preferredLang === 'en' ||

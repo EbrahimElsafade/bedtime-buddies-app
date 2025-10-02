@@ -4,22 +4,23 @@ import { Helmet } from 'react-helmet-async';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from "react-i18next";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Clock, Heart, BookOpen } from "lucide-react";
+import { Clock, Heart, BookOpen, GraduationCap } from "lucide-react";
 import { getImageUrl } from "@/utils/imageUtils";
 import { getMultilingualText } from "@/utils/multilingualUtils";
+import { useStoryFavorites, useCourseFavorites } from "@/hooks/useFavorites";
 
 const Favorites = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, isLoading } = useAuth();
-  const { t, i18n } = useTranslation(['stories', 'misc', 'common', 'meta']);
+  const { t, i18n } = useTranslation(['stories', 'courses', 'misc', 'common', 'meta']);
   const { language } = useLanguage();
   
-  // Mock favorites data - in real app this would come from API
-  const [favorites] = useState([]);
-  const [isLoadingFavorites, setIsLoadingFavorites] = useState(false);
+  const { favorites: storyFavorites, isLoading: isLoadingStories } = useStoryFavorites();
+  const { favorites: courseFavorites, isLoading: isLoadingCourses } = useCourseFavorites();
   
   // Check authentication and redirect if needed
   useEffect(() => {
@@ -80,8 +81,22 @@ const Favorites = () => {
           </p>
         </div>
 
-        {/* Content */}
-        {isLoadingFavorites ? (
+        {/* Tabs */}
+        <Tabs defaultValue="stories" className="w-full">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
+            <TabsTrigger value="stories" className="gap-2">
+              <BookOpen className="h-4 w-4" />
+              {t('stories:title')} ({storyFavorites.length})
+            </TabsTrigger>
+            <TabsTrigger value="courses" className="gap-2">
+              <GraduationCap className="h-4 w-4" />
+              {t('courses:title')} ({courseFavorites.length})
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Stories Tab */}
+          <TabsContent value="stories">
+            {isLoadingStories ? (
           /* Loading State */
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -93,9 +108,9 @@ const Favorites = () => {
                   <div className="h-4 bg-gray-200 rounded w-3/4"></div>
                 </CardHeader>
               </Card>
-            ))}
-          </div>
-        ) : favorites.length === 0 ? (
+              ))}
+            </div>
+          ) : storyFavorites.length === 0 ? (
           /* Empty State */
           <div className="text-center py-16">
             <div className="relative mb-8">
@@ -130,10 +145,10 @@ const Favorites = () => {
               </Button>
             </div>
           </div>
-        ) : (
-          /* Favorites Grid */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {favorites.map((story: any) => {
+          ) : (
+            /* Story Favorites Grid */
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {storyFavorites.map((story) => {
               const imageUrl = getImageUrl(story.cover_image);
               const storyTitle = getMultilingualText(story.title, i18n.language, 'en');
               const storyDescription = getMultilingualText(story.description, i18n.language, 'en');
@@ -210,9 +225,154 @@ const Favorites = () => {
             })}
           </div>
         )}
+          </TabsContent>
+
+          {/* Courses Tab */}
+          <TabsContent value="courses">
+            {isLoadingCourses ? (
+              /* Loading State */
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <Card key={i} className="h-[25rem] animate-pulse">
+                    <div className="h-48 bg-gray-200 rounded-t-lg"></div>
+                    <CardHeader className="pb-2">
+                      <div className="h-6 bg-gray-200 rounded mb-2"></div>
+                      <div className="h-4 bg-gray-200 rounded mb-1"></div>
+                      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    </CardHeader>
+                  </Card>
+                ))}
+              </div>
+            ) : courseFavorites.length === 0 ? (
+              /* Empty State */
+              <div className="text-center py-16">
+                <div className="relative mb-8">
+                  <div className="inline-block p-6 rounded-full bg-gradient-to-br from-pink-100 to-purple-100">
+                    <Heart className="h-16 w-16 text-pink-400" />
+                  </div>
+                  <div className="absolute -top-2 -right-2">
+                    <GraduationCap className="h-8 w-8 text-purple-400 animate-bounce" />
+                  </div>
+                </div>
+                
+                <h2 className="text-2xl font-bubbly text-primary-foreground mb-4">
+                  {t('stories:favorites.empty.title')}
+                </h2>
+                <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+                  {t('courses:favorites.empty.description', { defaultValue: 'Start adding courses to your favorites to see them here!' })}
+                </p>
+                
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button 
+                    onClick={() => navigate("/courses")}
+                    className="bg-primary-foreground hover:bg-primary"
+                  >
+                    <GraduationCap className="mr-2 h-4 w-4" />
+                    {t('courses:browse', { defaultValue: 'Browse Courses' })}
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    onClick={() => navigate("/")}
+                  >
+                    {t('common:backHome')}
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              /* Course Favorites Grid */
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {courseFavorites.map((course) => {
+                  const imageUrl = getImageUrl(course.cover_image);
+                  const courseTitle = i18n.language === 'ar' 
+                    ? (course.title_ar || course.title_en || course.title)
+                    : i18n.language === 'fr' 
+                    ? (course.title_fr || course.title_en || course.title)
+                    : (course.title_en || course.title);
+                  const courseDescription = i18n.language === 'ar' 
+                    ? (course.description_ar || course.description_en || course.description)
+                    : i18n.language === 'fr' 
+                    ? (course.description_fr || course.description_en || course.description)
+                    : (course.description_en || course.description);
+
+                  return (
+                    <Link key={course.id} to={`/courses/${course.id}`}>
+                      <Card className="story-card h-[25rem] cursor-pointer overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-all hover:shadow-lg hover:scale-105">
+                        <div className="relative h-48 overflow-hidden">
+                          {imageUrl ? (
+                            <img
+                              src={imageUrl}
+                              alt={courseTitle}
+                              className="h-full w-full object-cover"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/30 to-purple-100/30">
+                              <GraduationCap className="h-12 w-12 text-primary-foreground/60" />
+                            </div>
+                          )}
+                          
+                          {/* Heart indicator */}
+                          <div className="absolute top-2 left-2">
+                            <div className="bg-red-500 text-secondary p-2 rounded-full shadow-lg">
+                              <Heart className="h-4 w-4 fill-current" />
+                            </div>
+                          </div>
+                          
+                          {/* Free/Premium badge */}
+                          {course.is_free ? (
+                            <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-secondary shadow-lg">
+                              {t('misc:free.tag')}
+                            </div>
+                          ) : (
+                            <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-yellow-500 px-3 py-1.5 text-xs font-bold text-black shadow-lg">
+                              {t('misc:premium.tag')}
+                            </div>
+                          )}
+                        </div>
+                        
+                        <div className="flex flex-1 flex-col">
+                          <CardHeader className="flex-1 pb-2">
+                            <div className="mb-2 flex items-start justify-between">
+                              <CardTitle className="text-primary-foreground line-clamp-2 flex-1 text-lg">
+                                {courseTitle}
+                              </CardTitle>
+                            </div>
+                            
+                            <div className="flex items-center gap-2 mb-2">
+                              <Badge
+                                variant="secondary"
+                                className="text-primary-foreground bg-primary/30 text-xs"
+                              >
+                                {t(`courses:category.${course.category}`, {
+                                  defaultValue: course.category.charAt(0).toUpperCase() + course.category.slice(1),
+                                })}
+                              </Badge>
+                              {course.lessons && (
+                                <div className="text-primary-foreground flex items-center gap-1 text-xs">
+                                  <BookOpen className="h-3 w-3" />
+                                  <span>{course.lessons} {t('courses:lessons', { defaultValue: 'lessons' })}</span>
+                                </div>
+                              )}
+                            </div>
+                            
+                            <CardDescription className="text-primary-foreground line-clamp-2 text-sm leading-relaxed">
+                              {courseDescription}
+                            </CardDescription>
+                          </CardHeader>
+                        </div>
+                      </Card>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
         
         {/* Quick Actions */}
-        {favorites.length > 0 && (
+        {(storyFavorites.length > 0 || courseFavorites.length > 0) && (
           <div className="mt-12 text-center">
             <div className="inline-block bg-secondary/80  backdrop-blur-sm rounded-lg p-6">
               <h3 className="text-lg font-bubbly text-primary-foreground mb-2">
@@ -226,6 +386,14 @@ const Favorites = () => {
                 >
                   <BookOpen className="mr-2 h-4 w-4" />
                   {t('stories:findMore')}
+                </Button>
+                <Button 
+                  variant="outline"
+                  onClick={() => navigate("/courses")}
+                  className="border-primary hover:bg-primary/20"
+                >
+                  <GraduationCap className="mr-2 h-4 w-4" />
+                  {t('courses:findMore', { defaultValue: 'Find More Courses' })}
                 </Button>
               </div>
             </div>
