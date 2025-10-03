@@ -1,10 +1,11 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuthOperations } from '@/hooks/useAuth';
 import { useProfileManagement } from '@/hooks/useProfileManagement';
 import { AuthContextType } from '@/types/auth';
 import { logger } from '@/utils/logger';
+import { toast } from 'sonner';
 
 // Create the context with a default value to prevent undefined context errors
 const defaultContextValue: AuthContextType = {
@@ -38,20 +39,144 @@ const debounce = (func: Function, wait: number) => {
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const {
-    user,
-    setUser,
-    session,
-    setSession,
-    isLoading: authLoading,
-    setIsLoading: setAuthLoading,
-    login,
-    loginWithGoogle,
-    loginWithApple,
-    register,
-    logout,
-    resetPassword
-  } = useAuthOperations();
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const [authLoading, setAuthLoading] = useState<boolean>(true);
+
+  // Auth operations
+  const login = async (email: string, password: string) => {
+    setAuthLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) throw error;
+
+      if (data && data.user) {
+        setUser(data.user);
+        setSession(data.session);
+        logger.info("Login successful, session established");
+      }
+      
+      toast.success('Logged in successfully');
+    } catch (error: any) {
+      logger.error('Login error:', error.message);
+      toast.error(error.message || 'Failed to sign in');
+      throw error;
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const loginWithGoogle = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/login`
+        }
+      });
+      
+      if (error) throw error;
+    } catch (error: any) {
+      logger.error('Google login error:', error.message);
+      toast.error(error.message || 'Failed to sign in with Google');
+      throw error;
+    }
+  };
+
+  const loginWithApple = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'apple',
+        options: {
+          redirectTo: `${window.location.origin}/login`
+        }
+      });
+      
+      if (error) throw error;
+    } catch (error: any) {
+      logger.error('Apple login error:', error.message);
+      toast.error(error.message || 'Failed to sign in with Apple');
+      throw error;
+    }
+  };
+
+  const register = async (
+    email: string, 
+    password: string, 
+    parentName: string, 
+    childName?: string, 
+    preferredLanguage: 'en' | 'ar-eg' | 'ar-fos7a' | 'fr' = 'ar-fos7a'
+  ) => {
+    setAuthLoading(true);
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            parent_name: parentName,
+            child_name: childName,
+            preferred_language: preferredLanguage,
+          },
+          emailRedirectTo: `${window.location.origin}/login`
+        }
+      });
+      
+      if (error) throw error;
+      
+      if (data && data.user) {
+        setUser(data.user);
+        setSession(data.session);
+        logger.info("Registration successful, session established");
+      }
+      
+      toast.success('Registration successful! Please check your email to verify your account.');
+    } catch (error: any) {
+      logger.error('Registration error:', error.message);
+      toast.error(error.message || 'Failed to register');
+      throw error;
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      setAuthLoading(true);
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
+      setUser(null);
+      setSession(null);
+      logger.info("Logout successful, session cleared");
+      toast.success('Logged out successfully');
+    } catch (error: any) {
+      logger.error('Logout error:', error.message);
+      toast.error('Failed to sign out');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const resetPassword = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      
+      if (error) throw error;
+      
+      toast.success('Password reset instructions sent to your email');
+    } catch (error: any) {
+      logger.error('Password reset error:', error.message);
+      toast.error(error.message || 'Failed to send reset password instructions');
+      throw error;
+    }
+  };
 
   const {
     profile,
