@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { ArrowLeft, Clock, BookOpen, Play, Lock, Loader2, Heart } from 'lucide-react'
+import { ArrowLeft, Clock, BookOpen, Play, Lock, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -16,9 +16,11 @@ import HLSVideoPlayer from '@/components/course/HLSVideoPlayer'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 import { useTranslation } from 'react-i18next'
+import { CourseHeader } from '@/components/course/CourseHeader'
 
 const Course = () => {
   const { id: courseId } = useParams<{ id: string }>()
+  const navigate = useNavigate()
   const { t } = useTranslation(['courses', 'meta'])
   const { isAuthenticated, profile } = useAuth()
   const { toast } = useToast()
@@ -179,12 +181,29 @@ const Course = () => {
       ></div>
 
       <div className="container mx-auto">
-        <Link to="/courses">
-          <Button variant="outline" className="mb-2 rounded-md shadow">
-            <ArrowLeft className="mr-2 h-4 w-4 rtl:rotate-180" />
-            {t('button.backToCourses')}
-          </Button>
-        </Link>
+        <CourseHeader
+          onBackClick={() => navigate('/courses')}
+          isFavorite={courseId ? isFavorite(courseId) : false}
+          onToggleFavorite={() => {
+            if (!isAuthenticated) {
+              toast({
+                title: t('toast.loginRequired'),
+                description: t('toast.pleaseLoginToStart'),
+                variant: 'destructive',
+              })
+              return
+            }
+            if (courseId) {
+              if (isFavorite(courseId)) {
+                removeFavorite(courseId)
+              } else {
+                addFavorite(courseId)
+              }
+            }
+          }}
+          courseTitle={getLocalized(course, 'title', lang)}
+          courseDescription={getLocalized(course, 'description', lang)}
+        />
 
         <div className="grid grid-cols-1 gap-8">
           {/* Course Header */}
@@ -200,42 +219,9 @@ const Course = () => {
             </div>
 
             <div className="md:w-2/3">
-              <div className="mb-4 flex items-start justify-between gap-4">
-                <h1 className="flex-1 font-bubbly text-3xl text-primary-foreground md:text-4xl">
-                  {getLocalized(course, 'title', lang)}
-                </h1>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => {
-                    if (!isAuthenticated) {
-                      toast({
-                        title: t('toast.loginRequired'),
-                        description: t('toast.pleaseLoginToStart'),
-                        variant: 'destructive',
-                      })
-                      return
-                    }
-                    if (courseId) {
-                      if (isFavorite(courseId)) {
-                        removeFavorite(courseId)
-                      } else {
-                        addFavorite(courseId)
-                      }
-                    }
-                  }}
-                  className="flex-shrink-0"
-                >
-                  <Heart
-                    className={cn(
-                      'h-6 w-6',
-                      courseId && isFavorite(courseId)
-                        ? 'fill-red-500 text-red-500'
-                        : 'text-primary-foreground',
-                    )}
-                  />
-                </Button>
-              </div>
+              <h1 className="mb-4 font-bubbly text-3xl text-primary-foreground md:text-4xl">
+                {getLocalized(course, 'title', lang)}
+              </h1>
 
               <div className="mb-4 flex max-w-60 flex-wrap gap-2 sm:max-w-none">
                 {course.isFree ? (
