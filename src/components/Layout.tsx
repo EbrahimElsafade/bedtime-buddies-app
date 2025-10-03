@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 import { DolphoonMascot } from './DolphoonMascot'
 import { cn } from '@/lib/utils'
+import { useIsIOS } from '@/hooks/use-ios-detect'
 
 interface NavigationSettings {
   home: boolean
@@ -20,6 +21,7 @@ interface NavigationSettings {
 
 const Layout = () => {
   const { isAuthenticated, user, profile, logout } = useAuth()
+  const isIOS = useIsIOS() // Add iOS detection
   const { t } = useTranslation(['navigation', 'auth', 'misc'])
   const location = useLocation()
 
@@ -96,7 +98,7 @@ const Layout = () => {
   })
 
   return (
-    <div className="flex min-h-screen flex-col pb-16 md:pb-0 text-foreground">
+    <div className="flex min-h-screen flex-col pb-16 text-foreground md:pb-0">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-primary/20 bg-secondary/70 backdrop-blur-lg">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -182,7 +184,12 @@ const Layout = () => {
       </footer>
 
       {/* Mobile Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 flex h-16 items-center justify-around border-t border-primary/20 bg-secondary px-2 pb-2 md:hidden">
+      <div
+        className={cn(
+          'fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-primary/20 bg-secondary px-2 md:hidden',
+          useIsIOS() ? 'h-[4.5rem] pb-6' : 'h-16 pb-2', // Add extra padding for iOS home indicator
+        )}
+      >
         {navItems.map(item => {
           const ItemIcon = item.icon
           return (
