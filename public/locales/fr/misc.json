@@ -1,4 +1,3 @@
-
 {
   "courses": {
     "featured": "Cours en Vedette",
@@ -77,6 +76,13 @@
     "english": "English",
     "arabic": "العربية",
     "french": "Français"
+  },
+  "lang": {
+    "ar-eg": "Arabe égyptien",
+    "ar-fos7a": "Arabe classique",
+    "ar-su": "Arabe classique",
+    "fr": "Français",
+    "en": "Anglais"
   },
   "accessibility": {
     "languageSelection": "Sélectionner la langue",

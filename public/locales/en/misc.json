@@ -1,4 +1,3 @@
-
 {
   "courses": {
     "featured": "Featured Courses",
@@ -78,6 +77,13 @@
     "arabic": "العربية",
     "french": "Français"
   },
+  "lang": {
+    "ar-eg": "Egyptian Arabic",
+    "ar-fos7a": "Classical Arabic",
+    "ar-su": "Classical Arabic",
+    "fr": "French",
+    "en": "English"
+  },
   "accessibility": {
     "languageSelection": "Select language",
     "toggleTheme": "Toggle theme",
@@ -125,7 +131,7 @@
   },
   "duration": "min",
   "subscribe": {
-    "title": "Subscribe for Premium Content", 
+    "title": "Subscribe for Premium Content",
     "subtitle": "Unlock all stories, games, and courses with our premium subscription",
     "button": "Subscribe Now"
   }

@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Clock } from 'lucide-react'
 import { Card, CardTitle, CardDescription } from '@/components/ui/card'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getMultilingualText } from '@/utils/multilingualUtils'
+import { Badge } from '../ui/badge'
 
 interface HomePageSettings {
   freeStory: string
@@ -106,16 +107,16 @@ const FreeStory = () => {
                   {storyDescription}
                 </CardDescription>
                 <div className="flex items-center text-sm text-primary-foreground">
-                  <span className="mr-4">
+                  <Badge variant="secondary" className='gap-2'>
+                    <Clock className="h-3 w-3" />
                     {freeStory.duration} {t('stories:duration')}
-                  </span>
-                  <span>
-                    {freeStory.languages
-                      .map((lang: string) => {
-                        return t(`languages.${lang}`)
-                      })
-                      .join(', ')}
-                  </span>
+                  </Badge>
+
+                  {freeStory.languages.map((lang: string) => (
+                    <Badge key={lang}  className="mx-1">
+                      {t(`lang.${lang}`)}
+                    </Badge>
+                  ))}
                 </div>
               </div>
             </div>
