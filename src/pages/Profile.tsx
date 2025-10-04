@@ -338,16 +338,16 @@ const Profile = () => {
                           onClick={() => navigate(`/story/${story.id}`)}
                         >
                           <CardContent className="p-4">
-                            <div className="flex gap-3">
-                              {story.cover_image && (
-                                <img
-                                  src={story.cover_image}
-                                  alt={storyTitle}
-                                  className="h-16 w-16 rounded object-cover"
-                                />
-                              )}
+                            {story.cover_image && (
+                              <img
+                                src={story.cover_image}
+                                alt={storyTitle}
+                                className="mb-3 h-32 w-full rounded object-cover"
+                              />
+                            )}
+                            <div className="flex items-start justify-between gap-2">
                               <div className="flex-1">
-                                <h4 className="font-medium">
+                                <h4 className="mb-1 font-medium">
                                   {storyTitle}
                                 </h4>
                                 <p className="line-clamp-2 text-sm text-muted-foreground">
@@ -403,16 +403,16 @@ const Profile = () => {
                           onClick={() => navigate(`/course/${course.id}`)}
                         >
                           <CardContent className="p-4">
-                            <div className="flex gap-3">
-                              {course.cover_image && (
-                                <img
-                                  src={course.cover_image}
-                                  alt={courseTitle}
-                                  className="h-16 w-16 rounded object-cover"
-                                />
-                              )}
+                            {course.cover_image && (
+                              <img
+                                src={course.cover_image}
+                                alt={courseTitle}
+                                className="mb-3 h-32 w-full rounded object-cover"
+                              />
+                            )}
+                            <div className="flex items-start justify-between gap-2">
                               <div className="flex-1">
-                                <h4 className="font-medium">
+                                <h4 className="mb-1 font-medium">
                                   {courseTitle}
                                 </h4>
                                 <p className="line-clamp-2 text-sm text-muted-foreground">
