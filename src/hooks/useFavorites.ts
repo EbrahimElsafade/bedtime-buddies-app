@@ -32,14 +32,27 @@ export const useStoryFavorites = () => {
 
       if (storiesError) throw storiesError;
       
-      return (storiesData || []).map(story => ({
-        ...story,
-        title: typeof story.title === 'string' ? JSON.parse(story.title) : story.title,
-        description: typeof story.description === 'string' ? JSON.parse(story.description) : story.description,
-        story_audio: story.story_audio ? (typeof story.story_audio === 'string' ? JSON.parse(story.story_audio) : story.story_audio) : null,
-        audio_mode: (story.audio_mode || "per_section") as "per_section" | "single_story",
-        sections: []
-      })) as Story[];
+      console.log('Fetched stories data:', storiesData);
+      
+      return (storiesData || []).map(story => {
+        const coverImage = story.cover_image?.startsWith('http') 
+          ? story.cover_image 
+          : story.cover_image 
+            ? `https://brxbtgzaumryxflkykpp.supabase.co/storage/v1/object/public/story-images/${story.cover_image}`
+            : '';
+        
+        console.log('Story:', story.id, 'Cover image:', coverImage);
+        
+        return {
+          ...story,
+          cover_image: coverImage,
+          title: typeof story.title === 'string' ? JSON.parse(story.title) : story.title,
+          description: typeof story.description === 'string' ? JSON.parse(story.description) : story.description,
+          story_audio: story.story_audio ? (typeof story.story_audio === 'string' ? JSON.parse(story.story_audio) : story.story_audio) : null,
+          audio_mode: (story.audio_mode || "per_section") as "per_section" | "single_story",
+          sections: []
+        };
+      }) as Story[];
     },
     enabled: !!user,
   });
@@ -124,41 +137,53 @@ export const useCourseFavorites = () => {
 
       if (coursesError) throw coursesError;
       
-      return (coursesData || []).map(course => ({
-        id: course.id,
-        title: course.title_en || '',
-        title_en: course.title_en || '',
-        title_ar: course.title_ar || '',
-        title_fr: course.title_fr || '',
-        description: course.description_en || '',
-        description_en: course.description_en || '',
-        description_ar: course.description_ar || '',
-        description_fr: course.description_fr || '',
-        category: course.category,
-        cover_image: course.cover_image || '',
-        coverImagePath: course.cover_image || '',
-        languages: course.languages || [],
-        minAge: course.min_age || 0,
-        maxAge: course.max_age || 0,
-        duration: 0,
-        lessons: course.lessons || 0,
-        learningObjectives: course.learning_objectives_en || [],
-        is_free: course.is_free,
-        isFree: course.is_free,
-        isFeatured: false,
-        is_published: course.is_published,
-        createdAt: course.created_at || '',
-        instructor: course.instructor_name_en ? {
-          name_en: course.instructor_name_en || '',
-          name_ar: course.instructor_name_ar || '',
-          name_fr: course.instructor_name_fr || '',
-          bio_en: course.instructor_bio_en || '',
-          bio_ar: course.instructor_bio_ar || '',
-          bio_fr: course.instructor_bio_fr || '',
-          avatar: course.instructor_avatar,
-          expertise: course.instructor_expertise || [],
-        } : undefined,
-      })) as Course[];
+      console.log('Fetched courses data:', coursesData);
+      
+      return (coursesData || []).map(course => {
+        const coverImage = course.cover_image?.startsWith('http') 
+          ? course.cover_image 
+          : course.cover_image 
+            ? `https://brxbtgzaumryxflkykpp.supabase.co/storage/v1/object/public/admin-content/${course.cover_image}`
+            : '';
+        
+        console.log('Course:', course.id, 'Cover image:', coverImage);
+        
+        return {
+          id: course.id,
+          title: course.title_en || '',
+          title_en: course.title_en || '',
+          title_ar: course.title_ar || '',
+          title_fr: course.title_fr || '',
+          description: course.description_en || '',
+          description_en: course.description_en || '',
+          description_ar: course.description_ar || '',
+          description_fr: course.description_fr || '',
+          category: course.category,
+          cover_image: coverImage,
+          coverImagePath: coverImage,
+          languages: course.languages || [],
+          minAge: course.min_age || 0,
+          maxAge: course.max_age || 0,
+          duration: 0,
+          lessons: course.lessons || 0,
+          learningObjectives: course.learning_objectives_en || [],
+          is_free: course.is_free,
+          isFree: course.is_free,
+          isFeatured: false,
+          is_published: course.is_published,
+          createdAt: course.created_at || '',
+          instructor: course.instructor_name_en ? {
+            name_en: course.instructor_name_en || '',
+            name_ar: course.instructor_name_ar || '',
+            name_fr: course.instructor_name_fr || '',
+            bio_en: course.instructor_bio_en || '',
+            bio_ar: course.instructor_bio_ar || '',
+            bio_fr: course.instructor_bio_fr || '',
+            avatar: course.instructor_avatar,
+            expertise: course.instructor_expertise || [],
+          } : undefined,
+        };
+      }) as Course[];
     },
     enabled: !!user,
   });
