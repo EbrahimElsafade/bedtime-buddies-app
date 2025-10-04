@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useStoryFavorites, useCourseFavorites } from '@/hooks/useFavorites'
 import { Course } from '@/types/course'
+import { getImageUrl } from '@/utils/imageUtils'
 
 const Profile = () => {
   const navigate = useNavigate()
@@ -330,17 +331,18 @@ const Profile = () => {
                     {storyFavorites.map(story => {
                       const storyTitle = typeof story.title === 'object' ? (story.title[language] || story.title.en || '') : '';
                       const storyDesc = typeof story.description === 'object' ? (story.description[language] || story.description.en || '') : '';
+                      const imageUrl = getImageUrl(story.cover_image);
                       
                       return (
                         <Card
                           key={story.id}
                           className="cursor-pointer transition-shadow hover:shadow-lg"
-                          onClick={() => navigate(`/story/${story.id}`)}
+                          onClick={() => navigate(`/stories/${story.id}`)}
                         >
                           <CardContent className="p-4">
-                            {story.cover_image && (
+                            {imageUrl && (
                               <img
-                                src={story.cover_image}
+                                src={imageUrl}
                                 alt={storyTitle}
                                 className="mb-3 h-32 w-full rounded object-cover"
                               />
@@ -395,17 +397,18 @@ const Profile = () => {
                     {courseFavorites.map(course => {
                       const courseTitle = course[`title_${language}` as keyof Course] as string || course.title_en || '';
                       const courseDesc = course[`description_${language}` as keyof Course] as string || course.description_en || '';
+                      const imageUrl = getImageUrl(course.cover_image);
                       
                       return (
                         <Card
                           key={course.id}
                           className="cursor-pointer transition-shadow hover:shadow-lg"
-                          onClick={() => navigate(`/course/${course.id}`)}
+                          onClick={() => navigate(`/courses/${course.id}`)}
                         >
                           <CardContent className="p-4">
-                            {course.cover_image && (
+                            {imageUrl && (
                               <img
-                                src={course.cover_image}
+                                src={imageUrl}
                                 alt={courseTitle}
                                 className="mb-3 h-32 w-full rounded object-cover"
                               />
