@@ -171,7 +171,7 @@ const Profile = () => {
         <meta name="robots" content="noindex" />
       </Helmet>
 
-      <div className="container mx-auto max-w-3xl">
+      <div className="container mx-auto max-w-5xl">
         <h1 className="mb-6 font-bubbly text-3xl md:text-4xl">
           {t('common:myProfile')}
         </h1>
@@ -179,7 +179,8 @@ const Profile = () => {
         <Tabs defaultValue="profile" className="w-full">
           <TabsList>
             <TabsTrigger value="profile">{t('common:profile')}</TabsTrigger>
-            <TabsTrigger value="favorites">{t('common:favorites')}</TabsTrigger>
+            <TabsTrigger value="story-favorites">{t('common:storyFavorites')}</TabsTrigger>
+            <TabsTrigger value="course-favorites">{t('common:courseFavorites')}</TabsTrigger>
             <TabsTrigger value="subscription">
               {t('common:subscription')}
             </TabsTrigger>
@@ -300,8 +301,8 @@ const Profile = () => {
             </Card>
           </TabsContent>
 
-          {/* Favorites Tab */}
-          <TabsContent value="favorites">
+          {/* Story Favorites Tab */}
+          <TabsContent value="story-favorites">
             <Card>
               <CardHeader>
                 <CardTitle>{t('common:myFavoriteStories')}</CardTitle>
@@ -310,107 +311,120 @@ const Profile = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {storiesLoading || coursesLoading ? (
+                {storiesLoading ? (
                   <div className="py-12 text-center">
                     <Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin" />
                     <p>{t('common:loading')}</p>
                   </div>
-                ) : storyFavorites.length === 0 && courseFavorites.length === 0 ? (
+                ) : storyFavorites.length === 0 ? (
                   <div className="py-12 text-center">
                     <p className="mb-4 text-muted-foreground">
-                      {t('common:noFavoritesYet')}
+                      {t('common:noFavoriteStoriesYet')}
                     </p>
                     <Button onClick={() => navigate('/stories')}>
                       {t('common:browseStories')}
                     </Button>
                   </div>
                 ) : (
-                  <div className="space-y-6">
-                    {storyFavorites.length > 0 && (
-                      <div>
-                        <h3 className="mb-3 font-semibold">
-                          {t('common:stories')}
-                        </h3>
-                        <div className="grid gap-4 sm:grid-cols-2">
-                          {storyFavorites.map(story => {
-                            const storyTitle = typeof story.title === 'object' ? (story.title[language] || story.title.en || '') : '';
-                            const storyDesc = typeof story.description === 'object' ? (story.description[language] || story.description.en || '') : '';
-                            
-                            return (
-                              <Card
-                                key={story.id}
-                                className="cursor-pointer transition-shadow hover:shadow-lg"
-                                onClick={() => navigate(`/story/${story.id}`)}
-                              >
-                                <CardContent className="p-4">
-                                  <div className="flex gap-3">
-                                    {story.cover_image && (
-                                      <img
-                                        src={story.cover_image}
-                                        alt={storyTitle}
-                                        className="h-16 w-16 rounded object-cover"
-                                      />
-                                    )}
-                                    <div className="flex-1">
-                                      <h4 className="font-medium">
-                                        {storyTitle}
-                                      </h4>
-                                      <p className="line-clamp-2 text-sm text-muted-foreground">
-                                        {storyDesc}
-                                      </p>
-                                    </div>
-                                    <Heart className="h-5 w-5 flex-shrink-0 fill-red-500 text-red-500" />
-                                  </div>
-                                </CardContent>
-                              </Card>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
-                    
-                    {courseFavorites.length > 0 && (
-                      <div>
-                        <h3 className="mb-3 font-semibold">
-                          {t('common:courses')}
-                        </h3>
-                        <div className="grid gap-4 sm:grid-cols-2">
-                          {courseFavorites.map(course => {
-                            const courseTitle = course[`title_${language}` as keyof Course] as string || course.title_en || '';
-                            const courseDesc = course[`description_${language}` as keyof Course] as string || course.description_en || '';
-                            
-                            return (
-                              <Card
-                                key={course.id}
-                                className="cursor-pointer transition-shadow hover:shadow-lg"
-                                onClick={() => navigate(`/course/${course.id}`)}
-                              >
-                                <CardContent className="p-4">
-                                  <div className="flex gap-3">
-                                    {course.cover_image && (
-                                      <img
-                                        src={course.cover_image}
-                                        alt={courseTitle}
-                                        className="h-16 w-16 rounded object-cover"
-                                      />
-                                    )}
-                                    <div className="flex-1">
-                                      <h4 className="font-medium">
-                                        {courseTitle}
-                                      </h4>
-                                      <p className="line-clamp-2 text-sm text-muted-foreground">
-                                        {courseDesc}
-                                      </p>
-                                    </div>
-                                    <Heart className="h-5 w-5 flex-shrink-0 fill-red-500 text-red-500" />
-                                  </div>
-                                </CardContent>
-                              </Card>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {storyFavorites.map(story => {
+                      const storyTitle = typeof story.title === 'object' ? (story.title[language] || story.title.en || '') : '';
+                      const storyDesc = typeof story.description === 'object' ? (story.description[language] || story.description.en || '') : '';
+                      
+                      return (
+                        <Card
+                          key={story.id}
+                          className="cursor-pointer transition-shadow hover:shadow-lg"
+                          onClick={() => navigate(`/story/${story.id}`)}
+                        >
+                          <CardContent className="p-4">
+                            <div className="flex gap-3">
+                              {story.cover_image && (
+                                <img
+                                  src={story.cover_image}
+                                  alt={storyTitle}
+                                  className="h-16 w-16 rounded object-cover"
+                                />
+                              )}
+                              <div className="flex-1">
+                                <h4 className="font-medium">
+                                  {storyTitle}
+                                </h4>
+                                <p className="line-clamp-2 text-sm text-muted-foreground">
+                                  {storyDesc}
+                                </p>
+                              </div>
+                              <Heart className="h-5 w-5 flex-shrink-0 fill-red-500 text-red-500" />
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Course Favorites Tab */}
+          <TabsContent value="course-favorites">
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('common:myFavoriteCourses')}</CardTitle>
+                <CardDescription>
+                  {t('common:favoriteCoursesDescription')}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {coursesLoading ? (
+                  <div className="py-12 text-center">
+                    <Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin" />
+                    <p>{t('common:loading')}</p>
+                  </div>
+                ) : courseFavorites.length === 0 ? (
+                  <div className="py-12 text-center">
+                    <p className="mb-4 text-muted-foreground">
+                      {t('common:noFavoriteCoursesYet')}
+                    </p>
+                    <Button onClick={() => navigate('/courses')}>
+                      {t('common:browseCourses')}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                    {courseFavorites.map(course => {
+                      const courseTitle = course[`title_${language}` as keyof Course] as string || course.title_en || '';
+                      const courseDesc = course[`description_${language}` as keyof Course] as string || course.description_en || '';
+                      
+                      return (
+                        <Card
+                          key={course.id}
+                          className="cursor-pointer transition-shadow hover:shadow-lg"
+                          onClick={() => navigate(`/course/${course.id}`)}
+                        >
+                          <CardContent className="p-4">
+                            <div className="flex gap-3">
+                              {course.cover_image && (
+                                <img
+                                  src={course.cover_image}
+                                  alt={courseTitle}
+                                  className="h-16 w-16 rounded object-cover"
+                                />
+                              )}
+                              <div className="flex-1">
+                                <h4 className="font-medium">
+                                  {courseTitle}
+                                </h4>
+                                <p className="line-clamp-2 text-sm text-muted-foreground">
+                                  {courseDesc}
+                                </p>
+                              </div>
+                              <Heart className="h-5 w-5 flex-shrink-0 fill-red-500 text-red-500" />
+                            </div>
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
                   </div>
                 )}
               </CardContent>
