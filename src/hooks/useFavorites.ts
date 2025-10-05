@@ -32,20 +32,9 @@ export const useStoryFavorites = () => {
 
       if (storiesError) throw storiesError;
       
-      console.log('Fetched stories data:', storiesData);
-      
       return (storiesData || []).map(story => {
-        const coverImage = story.cover_image?.startsWith('http') 
-          ? story.cover_image 
-          : story.cover_image 
-            ? `https://brxbtgzaumryxflkykpp.supabase.co/storage/v1/object/public/story-images/${story.cover_image}`
-            : '';
-        
-        console.log('Story:', story.id, 'Cover image:', coverImage);
-        
         return {
           ...story,
-          cover_image: coverImage,
           title: typeof story.title === 'string' ? JSON.parse(story.title) : story.title,
           description: typeof story.description === 'string' ? JSON.parse(story.description) : story.description,
           story_audio: story.story_audio ? (typeof story.story_audio === 'string' ? JSON.parse(story.story_audio) : story.story_audio) : null,
@@ -137,17 +126,7 @@ export const useCourseFavorites = () => {
 
       if (coursesError) throw coursesError;
       
-      console.log('Fetched courses data:', coursesData);
-      
       return (coursesData || []).map(course => {
-        const coverImage = course.cover_image?.startsWith('http') 
-          ? course.cover_image 
-          : course.cover_image 
-            ? `https://brxbtgzaumryxflkykpp.supabase.co/storage/v1/object/public/admin-content/${course.cover_image}`
-            : '';
-        
-        console.log('Course:', course.id, 'Cover image:', coverImage);
-        
         return {
           id: course.id,
           title: course.title_en || '',
@@ -159,8 +138,8 @@ export const useCourseFavorites = () => {
           description_ar: course.description_ar || '',
           description_fr: course.description_fr || '',
           category: course.category,
-          cover_image: coverImage,
-          coverImagePath: coverImage,
+          cover_image: course.cover_image,
+          coverImagePath: course.cover_image,
           languages: course.languages || [],
           minAge: course.min_age || 0,
           maxAge: course.max_age || 0,
