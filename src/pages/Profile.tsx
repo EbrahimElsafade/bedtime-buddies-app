@@ -157,7 +157,10 @@ const Profile = () => {
         <title>{t('meta:titles.profile')}</title>
         <meta name="description" content={t('meta:descriptions.profile')} />
         <meta property="og:title" content={t('meta:titles.profile')} />
-        <meta property="og:description" content={t('meta:descriptions.profile')} />
+        <meta
+          property="og:description"
+          content={t('meta:descriptions.profile')}
+        />
         <meta name="robots" content="noindex" />
       </Helmet>
 
@@ -169,8 +172,12 @@ const Profile = () => {
         <Tabs defaultValue="profile" className="w-full">
           <TabsList>
             <TabsTrigger value="profile">{t('common:profile')}</TabsTrigger>
-            <TabsTrigger value="story-favorites">{t('common:storyFavorites')}</TabsTrigger>
-            <TabsTrigger value="course-favorites">{t('common:courseFavorites')}</TabsTrigger>
+            <TabsTrigger value="story-favorites">
+              {t('common:storyFavorites')}
+            </TabsTrigger>
+            <TabsTrigger value="course-favorites">
+              {t('common:courseFavorites')}
+            </TabsTrigger>
             <TabsTrigger value="subscription">
               {t('common:subscription')}
             </TabsTrigger>
@@ -227,7 +234,7 @@ const Profile = () => {
                       {t('common:preferredLanguage')}
                     </Label>
                     {isEditing ? (
-                        <Select
+                      <Select
                         value={profileLanguage}
                         onValueChange={value =>
                           setProfileLanguage(
@@ -241,9 +248,7 @@ const Profile = () => {
                         <SelectContent>
                           <SelectItem value="en">English</SelectItem>
                           <SelectItem value="ar-eg">مصري</SelectItem>
-                          <SelectItem value="ar-fos7a">
-                            فصحي
-                          </SelectItem>
+                          <SelectItem value="ar-fos7a">فصحي</SelectItem>
                           <SelectItem value="fr">français</SelectItem>
                         </SelectContent>
                       </Select>
@@ -303,12 +308,23 @@ const Profile = () => {
                     </Button>
                   </div>
                 ) : (
-                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <div
+                    className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+                    dir={language === 'ar' ? 'rtl' : 'ltr'}
+                  >
                     {storyFavorites.map(story => {
-                      const storyTitle = typeof story.title === 'object' ? (story.title[language] || story.title.en || '') : '';
-                      const storyDesc = typeof story.description === 'object' ? (story.description[language] || story.description.en || '') : '';
-                      const imageUrl = getImageUrl(story.cover_image);
-                      
+                      const storyTitle =
+                        typeof story.title === 'object'
+                          ? story.title[language] || story.title.en || ''
+                          : ''
+                      const storyDesc =
+                        typeof story.description === 'object'
+                          ? story.description[language] ||
+                            story.description.en ||
+                            ''
+                          : ''
+                      const imageUrl = getImageUrl(story.cover_image)
+
                       return (
                         <Card
                           key={story.id}
@@ -336,7 +352,7 @@ const Profile = () => {
                             </div>
                           </CardContent>
                         </Card>
-                      );
+                      )
                     })}
                   </div>
                 )}
@@ -364,12 +380,25 @@ const Profile = () => {
                     </Button>
                   </div>
                 ) : (
-                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <div
+                    className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+                    dir={language === 'ar' ? 'rtl' : 'ltr'}
+                  >
                     {courseFavorites.map(course => {
-                      const courseTitle = course[`title_${language}` as keyof Course] as string || course.title_en || '';
-                      const courseDesc = course[`description_${language}` as keyof Course] as string || course.description_en || '';
-                      const imageUrl = getImageUrl(course.cover_image);
-                      
+                      const courseTitle =
+                        (course[
+                          `title_${language}` as keyof Course
+                        ] as string) ||
+                        course.title_en ||
+                        ''
+                      const courseDesc =
+                        (course[
+                          `description_${language}` as keyof Course
+                        ] as string) ||
+                        course.description_en ||
+                        ''
+                      const imageUrl = getImageUrl(course.cover_image)
+
                       return (
                         <Card
                           key={course.id}
@@ -397,7 +426,7 @@ const Profile = () => {
                             </div>
                           </CardContent>
                         </Card>
-                      );
+                      )
                     })}
                   </div>
                 )}

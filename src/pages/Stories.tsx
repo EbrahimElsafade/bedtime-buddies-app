@@ -218,7 +218,7 @@ const Stories = () => {
                     <div className="flex flex-1 flex-col p-3 md:p-4">
                       <CardHeader className="flex-1 p-0 pb-2">
                         <div className="mb-2 flex items-start justify-between">
-                          <CardTitle className="line-clamp-2 flex-1 text-sm text-primary-foreground md:text-base lg:text-lg">
+                          <CardTitle className="line-clamp-1 flex-1 text-sm text-primary-foreground md:text-base lg:text-lg">
                             {storyTitle}
                           </CardTitle>
                           <div className="ml-2 flex flex-shrink-0 items-center gap-2">

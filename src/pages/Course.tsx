@@ -163,13 +163,27 @@ const Course = () => {
   return (
     <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-12">
       <Helmet>
-        <title>{getLocalized(course, 'title', lang)} - {t('meta:name')}</title>
-        <meta name="description" content={getLocalized(course, 'description', lang)} />
-        <meta property="og:title" content={`${getLocalized(course, 'title', lang)} - ${t('meta:name')}`} />
-        <meta property="og:description" content={getLocalized(course, 'description', lang)} />
+        <title>
+          {getLocalized(course, 'title', lang)} - {t('meta:name')}
+        </title>
+        <meta
+          name="description"
+          content={getLocalized(course, 'description', lang)}
+        />
+        <meta
+          property="og:title"
+          content={`${getLocalized(course, 'title', lang)} - ${t('meta:name')}`}
+        />
+        <meta
+          property="og:description"
+          content={getLocalized(course, 'description', lang)}
+        />
         <meta property="og:type" content="article" />
         {course.coverImagePath && (
-          <meta property="og:image" content={getImageUrl(course.coverImagePath)} />
+          <meta
+            property="og:image"
+            content={getImageUrl(course.coverImagePath)}
+          />
         )}
       </Helmet>
 
@@ -265,16 +279,16 @@ const Course = () => {
                 {getLocalized(course, 'description', lang)}
               </p>
 
-              <Button
-                onClick={handleStartCourse}
-                className="rounded-full bg-accent px-8 py-2 text-secondary hover:bg-primary"
-              >
-                {course.isFree
-                  ? t('button.startLearning')
-                  : isAuthenticated && isPremium
+              {!course.isFree && (
+                <Button
+                  onClick={handleStartCourse}
+                  className="rounded-full bg-accent px-8 py-2 text-secondary hover:bg-primary"
+                >
+                  {isAuthenticated && isPremium
                     ? t('button.startLearning')
                     : t('button.goToPremium')}
-              </Button>
+                </Button>
+              )}
             </div>
           </div>
 
@@ -310,7 +324,10 @@ const Course = () => {
                         <h2 className="mb-3 mt-6 font-bubbly text-xl text-primary-foreground">
                           {t('course.whatYouLearn')}
                         </h2>
-                        <ul className="list-decimal ps-5" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+                        <ul
+                          className="list-decimal ps-5"
+                          dir={lang === 'ar' ? 'rtl' : 'ltr'}
+                        >
                           {objectives.map(
                             (objective: string, index: number) => (
                               <li key={index}>{objective}</li>
