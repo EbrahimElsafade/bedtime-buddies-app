@@ -22,21 +22,22 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'sonner'
-import { Loader2, Heart } from 'lucide-react'
+import { Heart } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useStoryFavorites, useCourseFavorites } from '@/hooks/useFavorites'
 import { Course } from '@/types/course'
 import { getImageUrl } from '@/utils/imageUtils'
+import { useLoading } from '@/contexts/LoadingContext'
 
 const Profile = () => {
   const navigate = useNavigate()
-  const { user, profile, isAuthenticated, isLoading, updateProfile, logout } =
-    useAuth()
+  const { user, profile, isAuthenticated, updateProfile, logout } = useAuth()
+  const { setIsLoading: setGlobalLoading } = useLoading()
   const { t, i18n } = useTranslation(['common', 'auth', 'meta'])
   const { language } = useLanguage()
-  const { favorites: storyFavorites, isLoading: storiesLoading } = useStoryFavorites()
-  const { favorites: courseFavorites, isLoading: coursesLoading } = useCourseFavorites()
+  const { favorites: storyFavorites } = useStoryFavorites()
+  const { favorites: courseFavorites } = useCourseFavorites()
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -45,7 +46,6 @@ const Profile = () => {
     'en' | 'ar-eg' | 'ar-fos7a' | 'fr'
   >('ar-fos7a')
   const [isEditing, setIsEditing] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
 
   // Set page title
   useEffect(() => {
@@ -62,11 +62,11 @@ const Profile = () => {
 
   // Check authentication and redirect if needed
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (!isAuthenticated) {
       console.log('Profile - Not authenticated, redirecting to login')
       navigate('/login', { replace: true })
     }
-  }, [isAuthenticated, isLoading, navigate])
+  }, [isAuthenticated, navigate])
 
   // Update form data when profile is loaded
   useEffect(() => {
@@ -81,7 +81,7 @@ const Profile = () => {
   const handleSaveProfile = async () => {
     if (!user || !profile) return
 
-    setIsSaving(true)
+    setGlobalLoading(true)
     try {
       await updateProfile({
         parent_name: name,
@@ -94,7 +94,7 @@ const Profile = () => {
     } catch (error) {
       // Error handled by updateProfile
     } finally {
-      setIsSaving(false)
+      setGlobalLoading(false)
     }
   }
 
@@ -118,17 +118,6 @@ const Profile = () => {
       default:
         return 'فصحي'
     }
-  }
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-[80vh] items-center justify-center px-4 py-12">
-        <div className="text-center">
-          <Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin" />
-          <p>{t('common:loading')}</p>
-        </div>
-      </div>
-    )
   }
 
   if (!isAuthenticated) {
@@ -273,19 +262,11 @@ const Profile = () => {
                     <Button
                       variant="outline"
                       onClick={() => setIsEditing(false)}
-                      disabled={isSaving}
                     >
                       {t('common:cancel')}
                     </Button>
-                    <Button onClick={handleSaveProfile} disabled={isSaving}>
-                      {isSaving ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          {t('common:saving')}
-                        </>
-                      ) : (
-                        t('common:saveChanges')
-                      )}
+                    <Button onClick={handleSaveProfile}>
+                      {t('common:saveChanges')}
                     </Button>
                   </>
                 ) : (
@@ -312,12 +293,7 @@ const Profile = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {storiesLoading ? (
-                  <div className="py-12 text-center">
-                    <Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin" />
-                    <p>{t('common:loading')}</p>
-                  </div>
-                ) : storyFavorites.length === 0 ? (
+                {storyFavorites.length === 0 ? (
                   <div className="py-12 text-center">
                     <p className="mb-4 text-muted-foreground">
                       {t('common:noFavoriteStoriesYet')}
@@ -378,12 +354,7 @@ const Profile = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                {coursesLoading ? (
-                  <div className="py-12 text-center">
-                    <Loader2 className="mx-auto mb-4 h-8 w-8 animate-spin" />
-                    <p>{t('common:loading')}</p>
-                  </div>
-                ) : courseFavorites.length === 0 ? (
+                {courseFavorites.length === 0 ? (
                   <div className="py-12 text-center">
                     <p className="mb-4 text-muted-foreground">
                       {t('common:noFavoriteCoursesYet')}

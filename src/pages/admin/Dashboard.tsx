@@ -5,9 +5,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { User, CircleUser, BookOpen, Presentation, CalendarClock } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useLoading } from "@/contexts/LoadingContext";
 
 const Dashboard = () => {
   const { t } = useTranslation('admin');
+  const { setIsLoading } = useLoading();
   const [stats, setStats] = useState({
     totalUsers: 0,
     premiumUsers: 0,
@@ -16,7 +18,6 @@ const Dashboard = () => {
     totalCourses: 0,
     publishedCourses: 0,
   });
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -76,9 +77,9 @@ const Dashboard = () => {
             <User className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{isLoading ? "..." : stats.totalUsers}</div>
+            <div className="text-2xl font-bold">{stats.totalUsers}</div>
             <p className="text-xs text-muted-foreground">
-              {isLoading ? "..." : `${stats.premiumUsers} premium users`}
+              {`${stats.premiumUsers} premium users`}
             </p>
           </CardContent>
         </Card>
@@ -88,9 +89,9 @@ const Dashboard = () => {
             <BookOpen className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{isLoading ? "..." : stats.totalStories}</div>
+            <div className="text-2xl font-bold">{stats.totalStories}</div>
             <p className="text-xs text-muted-foreground">
-              {isLoading ? "..." : `${stats.publishedStories} published`}
+              {`${stats.publishedStories} published`}
             </p>
           </CardContent>
         </Card>
@@ -100,9 +101,9 @@ const Dashboard = () => {
             <Presentation className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{isLoading ? "..." : stats.totalCourses}</div>
+            <div className="text-2xl font-bold">{stats.totalCourses}</div>
             <p className="text-xs text-muted-foreground">
-              {isLoading ? "..." : `${stats.publishedCourses} published`}
+              {`${stats.publishedCourses} published`}
             </p>
           </CardContent>
         </Card>
@@ -146,13 +147,13 @@ const Dashboard = () => {
                   <div className="bg-muted rounded-md p-4">
                     <h3 className="font-medium mb-2">User Distribution</h3>
                     <p className="text-sm text-muted-foreground">
-                      {isLoading ? "Loading..." : `${stats.premiumUsers} Premium / ${stats.totalUsers - stats.premiumUsers} Free`}
+                      {`${stats.premiumUsers} Premium / ${stats.totalUsers - stats.premiumUsers} Free`}
                     </p>
                   </div>
                   <div className="bg-muted rounded-md p-4">
                     <h3 className="font-medium mb-2">Content Status</h3>
                     <p className="text-sm text-muted-foreground">
-                      {isLoading ? "Loading..." : `${stats.publishedStories + stats.publishedCourses} Published / ${(stats.totalStories + stats.totalCourses) - (stats.publishedStories + stats.publishedCourses)} Draft`}
+                      {`${stats.publishedStories + stats.publishedCourses} Published / ${(stats.totalStories + stats.totalCourses) - (stats.publishedStories + stats.publishedCourses)} Draft`}
                     </p>
                   </div>
                 </div>
