@@ -6,12 +6,14 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { LoadingProvider } from "@/contexts/LoadingContext";
 import { ThemeProvider } from "next-themes";
 import { HelmetProvider } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import AdminLayout from "@/components/AdminLayout";
 import AdminRoute from "@/components/AdminRoute";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
+import { GlobalLoader } from "@/components/GlobalLoader";
 
 import Index from "./pages/Index";
 import Stories from "./pages/Stories";
@@ -44,11 +46,13 @@ function App() {
       <ThemeProvider attribute="class" defaultTheme="light">
         <LanguageProvider>
           <AuthProvider>
-            <TooltipProvider>
-              <HelmetProvider>
-                <Toaster />
-                <BrowserRouter>
-                <PWAInstallPrompt />
+            <LoadingProvider>
+              <TooltipProvider>
+                <HelmetProvider>
+                  <Toaster />
+                  <GlobalLoader />
+                  <BrowserRouter>
+                  <PWAInstallPrompt />
                 <Routes>
                   {/* Public Routes with Layout */}
                   <Route path="/" element={<Layout />}>
@@ -92,8 +96,9 @@ function App() {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
-              </HelmetProvider>
-            </TooltipProvider>
+                </HelmetProvider>
+              </TooltipProvider>
+            </LoadingProvider>
           </AuthProvider>
         </LanguageProvider>
       </ThemeProvider>
