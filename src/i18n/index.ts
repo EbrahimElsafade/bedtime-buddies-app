@@ -1,8 +1,7 @@
-
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-import HttpBackend from 'i18next-http-backend';
+import i18n from 'i18next'
+import { initReactI18next } from 'react-i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
+import HttpBackend from 'i18next-http-backend'
 
 i18n
   .use(HttpBackend)
@@ -13,7 +12,7 @@ i18n
     fallbackLng: 'ar',
     debug: false,
     interpolation: {
-      escapeValue: false
+      escapeValue: false,
     },
     detection: {
       order: ['localStorage', 'navigator', 'htmlTag'],
@@ -25,18 +24,33 @@ i18n
       loadPath: '/locales/{{lng}}/{{ns}}.json',
     },
     defaultNS: 'common',
-    ns: ['common', 'navigation', 'auth', 'hero', 'stories', 'features', 'admin', 'misc', 'premium', 'subscription', 'notFound', 'games', 'courses'],
-  });
+    ns: [
+      'common',
+      'navigation',
+      'auth',
+      'hero',
+      'stories',
+      'features',
+      'admin',
+      'misc',
+      'premium',
+      'subscription',
+      'notFound',
+      'games',
+      'courses',
+      'story',
+    ],
+  })
 
 // Handle RTL direction for Arabic
-i18n.on('languageChanged', (lng) => {
+i18n.on('languageChanged', lng => {
   if (lng === 'ar') {
-    document.documentElement.dir = 'rtl';
-    document.documentElement.lang = 'ar';
+    document.documentElement.dir = 'rtl'
+    document.documentElement.lang = 'ar'
   } else {
-    document.documentElement.dir = 'ltr';
-    document.documentElement.lang = lng;
+    document.documentElement.dir = 'ltr'
+    document.documentElement.lang = lng
   }
-});
+})
 
-export default i18n;
+export default i18n

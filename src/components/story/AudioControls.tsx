@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { Story, StorySection } from '@/types/story'
 import { getAudioUrl } from '@/utils/imageUtils'
+import { useTranslation } from 'react-i18next'
 
 interface AudioControlsProps {
   story: Story
@@ -33,6 +34,7 @@ export const AudioControls = ({
   const [volume, setVolume] = useState(1)
   const [isAutoplay, setIsAutoplay] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
+  const { t } = useTranslation('story')
 
   // Notify parent component when playing state changes
   useEffect(() => {
@@ -191,7 +193,7 @@ export const AudioControls = ({
       </div>
 
       <div className="flex items-center justify-between pe-4">
-        <div className="flex  items-center justify-between">
+        <div className="flex items-center justify-between">
           <Button
             variant="link"
             onClick={toggleAutoplay}
@@ -222,7 +224,7 @@ export const AudioControls = ({
               </svg>
             )}
 
-            {isPlaying ? 'stop video' : 'play video'}
+            {isPlaying ? t('story:stopVideo') : t('story:playVideo')}
           </Button>
 
           <Button
@@ -239,7 +241,7 @@ export const AudioControls = ({
               <Play className="h-5 w-5" />
             )}
 
-            {isPlaying ? 'stop story' : 'read story'}
+            {isPlaying ? t('story:stopStory') : t('story:readStory')}
           </Button>
         </div>
 

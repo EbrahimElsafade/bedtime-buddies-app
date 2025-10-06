@@ -113,7 +113,7 @@ const FreeStory = () => {
                   </Badge>
 
                   {freeStory.languages.map((lang: string) => (
-                    <Badge key={lang}  className="mx-1">
+                    <Badge key={lang}  className="mx-1 bg-primary/50 hover:bg-primary/50">
                       {t(`lang.${lang}`)}
                     </Badge>
                   ))}
