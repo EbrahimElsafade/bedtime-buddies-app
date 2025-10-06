@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { supabase } from '@/integrations/supabase/client'
@@ -9,14 +9,14 @@ import {
   CardDescription,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Clock, Search } from 'lucide-react'
-import { Input } from '@/components/ui/input'
+import { Clock } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getMultilingualText } from '@/utils/multilingualUtils'
 import { useLanguage } from '@/contexts/LanguageContext'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { StoriesHeader } from './Stories/StoriesHeader'
+import { StoriesFilters } from './Stories/StoriesFilters'
 
 const Stories = () => {
   const [searchTerm, setSearchTerm] = useState('')
@@ -114,48 +114,15 @@ const Stories = () => {
       </Helmet>
 
       <div className="container mx-auto max-w-7xl">
-        <div className="mb-4 text-center md:mb-6 lg:mb-8">
-          <h1 className="mb-2 text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
-            {t('allStories')}
-          </h1>
-          {/* <p className="mx-auto max-w-2xl px-2 text-xs text-muted-foreground md:text-sm lg:text-base">
-            {t('browseCollection')}
-          </p> */}
-        </div>
-        {/* Search and Filter Section */}
-        <div className="mb-4 space-y-3 md:mb-6 md:space-y-4 lg:mb-8">
-          <div className="relative mx-auto max-w-md">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground rtl:left-auto rtl:right-3" />
-            <Input
-              type="text"
-              placeholder={t('searchStories')}
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-              className="w-full py-2 ps-10 text-start text-sm md:text-base"
-            />
-          </div>
-
-          <Tabs
-            defaultValue="all"
-            className="w-full"
-            onValueChange={setSelectedCategory}
-            value={selectedCategory}
-          >
-            <TabsList className="mb-4 w-full justify-start gap-2 overflow-x-auto p-1 md:mb-6 lg:mb-8">
-              <TabsTrigger value="all">{t('allCategories')}</TabsTrigger>
-
-              {categories.map(category => (
-                <TabsTrigger key={category.id} value={category.name}>
-                  {t(`category.${category.name}`, {
-                    defaultValue:
-                      category.name.charAt(0).toUpperCase() +
-                      category.name.slice(1),
-                  })}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-        </div>
+        <StoriesHeader />
+        
+        <StoriesFilters
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          categories={categories}
+        />
 
         {/* Stories Grid */}
         {filteredStories.length === 0 ? (
