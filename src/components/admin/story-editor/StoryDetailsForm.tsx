@@ -71,31 +71,38 @@ export const StoryDetailsForm = ({
 
           <TabsContent value="en" className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title-en">{t('admin:story_editor.title_label.en', 'Title (English)')}</Label>
+              <Label htmlFor="title-en">
+                {t('admin:story_editor.title_label.en', 'Title (English)')}
+              </Label>
               <Input
                 id="title-en"
-                placeholder={t('admin:story_editor.title_placeholder.en', 'Enter story title in English')}
+                placeholder={t(
+                  'admin:story_editor.title_placeholder.en',
+                  'Enter story title in English',
+                )}
                 value={storyData.title.en || ''}
                 onChange={e => onTitleChange('en', e.target.value)}
-                required
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description-en">{t('admin:story_editor.description_label.en')}</Label>
+              <Label htmlFor="description-en">
+                {t('admin:story_editor.description_label.en')}
+              </Label>
               <Textarea
                 id="description-en"
                 placeholder={t('admin:story_editor.description_placeholder.en')}
                 value={storyData.description.en || ''}
                 onChange={e => onDescriptionChange('en', e.target.value)}
                 className="min-h-[100px]"
-                required
               />
             </div>
           </TabsContent>
 
           <TabsContent value="ar" className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="title-ar">{t('admin:story_editor.title_label.ar')}</Label>
+              <Label htmlFor="title-ar">
+                {t('admin:story_editor.title_label.ar')}
+              </Label>
               <Input
                 id="title-ar"
                 placeholder={t('admin:story_editor.title_placeholder.ar')}
@@ -106,7 +113,9 @@ export const StoryDetailsForm = ({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="description-ar">{t('admin:story_editor.description_label.ar')}</Label>
+              <Label htmlFor="description-ar">
+                {t('admin:story_editor.description_label.ar')}
+              </Label>
               <Textarea
                 id="description-ar"
                 placeholder={t('admin:story_editor.description_placeholder.ar')}
