@@ -1,5 +1,7 @@
 import { User } from '@supabase/supabase-js'
 
+export type UserRole = 'admin' | 'moderator' | 'user'
+
 export type Profile = {
   id: string
   parent_name: string
@@ -10,7 +12,10 @@ export type Profile = {
   subscription_end?: string
 }
 
-export type UserRole = 'admin' | 'moderator' | 'user'
+export interface UserWithRoles {
+  id: string
+  roles: Array<{ role: UserRole }>
+}
 
 export type AuthContextType = {
   user: User | null

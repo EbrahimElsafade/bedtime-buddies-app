@@ -145,11 +145,19 @@ const Users = () => {
           .eq("role", "admin");
           
         if (error) throw error;
+        
+        // Add user role if they don't have it
+        const { error: userRoleError } = await supabase
+          .from("user_roles")
+          .insert({ user_id: user.id, role: "user" })
+          .onConflict(["user_id", "role"]).ignore();
+          
+        if (userRoleError) throw userRoleError;
       } else {
         // Add admin role
         const { error } = await supabase
           .from("user_roles")
-          .insert({ user_id: user.id, role: newRole });
+          .insert({ user_id: user.id, role: "admin" });
           
         if (error) throw error;
       }

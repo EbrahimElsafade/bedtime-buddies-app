@@ -1,9 +1,9 @@
 
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
-import { useUserRole } from '@/hooks/useUserRole'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useRoleManagement } from '@/hooks/useRoleManagement'
 
 interface AdminRouteProps {
   children: React.ReactNode
@@ -11,44 +11,36 @@ interface AdminRouteProps {
 
 const AdminRoute = ({ children }: AdminRouteProps) => {
   const { t } = useTranslation()
-  const { isAuthenticated, isLoading, user, isProfileLoaded } = useAuth()
-  const { isAdmin, isLoading: roleLoading } = useUserRole(user)
+  const { isAuthenticated, isLoading: authLoading, user } = useAuth()
+  const { isAdmin, isLoading: roleLoading } = useRoleManagement(user)
   const location = useLocation()
   const mountTimeRef = useRef(Date.now())
 
-  // useEffect(() => {
-  //   logger.debug('AdminRoute component mounted/updated', {
-  //     isAuthenticated,
-  //     isLoading,
-  //     hasProfile: !!profile,
-  //     profileRole: profile?.role,
-  //     hasUser: !!user,
-  //     isProfileLoaded,
-  //     location: location.pathname
-  //   })
-  // }, [isAuthenticated, isLoading, profile, user, location, isProfileLoaded])
+  const isLoading = authLoading || roleLoading
 
   // Early redirect for unauthenticated users - don't show loading
-  if (!isLoading && !isAuthenticated) {
-    // logger.info('AdminRoute - Not authenticated, redirecting to login')
+  if (!authLoading && !isAuthenticated) {
+    console.log('AdminRoute: Not authenticated, redirecting to login')
     return <Navigate to="/login" replace state={{ from: location }} />
   }
 
-  // Early redirect for authenticated users who are not admins
-  if (!isLoading && !roleLoading && isAuthenticated && isProfileLoaded) {
-    if (!isAdmin) {
-      return <Navigate to="/404" replace />
-    }
+  // Early redirect for non-admin users once we've checked their role
+  if (!isLoading && !isAdmin) {
+    console.log('AdminRoute: Not admin, redirecting to 404', {
+      isLoading,
+      isAdmin,
+      userId: user?.id
+    })
+    return <Navigate to="/404" replace />
   }
 
-  // Show loading state only while we're still determining auth/profile/role status
-  if (isLoading || roleLoading || (isAuthenticated && !isProfileLoaded)) {
-    const timeSinceMount = Date.now() - mountTimeRef.current
+  if (!isLoading && isAdmin) {
+    console.log('AdminRoute: Admin access granted')
+  }
 
-    // If it's been loading for more than 5 seconds, something might be wrong
-    // if (timeSinceMount > 5000) {
-    //   logger.warn('AdminRoute has been loading for more than 5 seconds')
-    // }
+  // Show loading state while determining auth/role status
+  if (isLoading) {
+    const timeSinceMount = Date.now() - mountTimeRef.current
 
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -60,8 +52,7 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
     )
   }
 
-  // Render the children if user is an admin
-  // logger.info('AdminRoute - Admin access granted')
+  // Render the children if user is authenticated and an admin
   return <>{children}</>
 }
 
