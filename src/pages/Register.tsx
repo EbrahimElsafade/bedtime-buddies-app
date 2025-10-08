@@ -23,6 +23,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
+import { registerSchema } from '@/utils/validation'
 
 const Register = () => {
   const navigate = useNavigate()
@@ -53,14 +54,22 @@ const Register = () => {
   }, [isAuthenticated, navigate])
 
   const handleNextStep = () => {
-    if (!name || !email || !password) {
-      setError(t('auth:register.errors.requiredFields'))
-      return
-    }
+    // Validate step 1 inputs
+    const validationResult = registerSchema.pick({
+      parentName: true,
+      email: true,
+      password: true
+    }).safeParse({
+      parentName: name,
+      email,
+      password
+    });
 
-    if (password.length < 6) {
-      setError(t('auth:register.errors.passwordLength'))
-      return
+    if (!validationResult.success) {
+      const firstError = validationResult.error.errors[0];
+      setError(firstError.message);
+      toast.error(firstError.message);
+      return;
     }
 
     setError('')
@@ -71,8 +80,30 @@ const Register = () => {
     e.preventDefault()
     setError('')
 
+    // Validate all inputs
+    const validationResult = registerSchema.safeParse({
+      parentName: name,
+      email,
+      password,
+      childName: childName || undefined,
+      preferredLanguage: language
+    });
+
+    if (!validationResult.success) {
+      const firstError = validationResult.error.errors[0];
+      setError(firstError.message);
+      toast.error(firstError.message);
+      return;
+    }
+
     try {
-      await signUp(email, password, name, childName || undefined, language)
+      await signUp(
+        validationResult.data.email,
+        validationResult.data.password,
+        validationResult.data.parentName,
+        validationResult.data.childName,
+        validationResult.data.preferredLanguage
+      );
       // Redirect will happen through the useEffect if authentication is successful
       // Otherwise, user will stay on the page to verify their email
     } catch (err: any) {

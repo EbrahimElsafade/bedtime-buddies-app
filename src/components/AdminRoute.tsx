@@ -1,9 +1,9 @@
 
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
-import { useRef, useEffect } from 'react'
+import { useUserRole } from '@/hooks/useUserRole'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-// import { logger } from '@/utils/logger'
 
 interface AdminRouteProps {
   children: React.ReactNode
@@ -11,7 +11,8 @@ interface AdminRouteProps {
 
 const AdminRoute = ({ children }: AdminRouteProps) => {
   const { t } = useTranslation()
-  const { isAuthenticated, isLoading, profile, user, isProfileLoaded } = useAuth()
+  const { isAuthenticated, isLoading, user, isProfileLoaded } = useAuth()
+  const { isAdmin, isLoading: roleLoading } = useUserRole(user)
   const location = useLocation()
   const mountTimeRef = useRef(Date.now())
 
@@ -33,21 +34,15 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
     return <Navigate to="/login" replace state={{ from: location }} />
   }
 
-  // Early redirect for authenticated users without profiles or non-admin users
-  if (!isLoading && isAuthenticated && isProfileLoaded) {
-    if (!profile) {
-      // logger.info('AdminRoute - No profile found, redirecting to 404')
-      return <Navigate to="/404" replace />
-    }
-
-    if (profile.role !== 'admin') {
-      // logger.info('AdminRoute - Not admin, redirecting to 404. Role:', profile.role)
+  // Early redirect for authenticated users who are not admins
+  if (!isLoading && !roleLoading && isAuthenticated && isProfileLoaded) {
+    if (!isAdmin) {
       return <Navigate to="/404" replace />
     }
   }
 
-  // Show loading state only while we're still determining auth/profile status
-  if (isLoading || (isAuthenticated && !isProfileLoaded)) {
+  // Show loading state only while we're still determining auth/profile/role status
+  if (isLoading || roleLoading || (isAuthenticated && !isProfileLoaded)) {
     const timeSinceMount = Date.now() - mountTimeRef.current
 
     // If it's been loading for more than 5 seconds, something might be wrong

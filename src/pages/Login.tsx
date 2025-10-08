@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useTranslation } from 'react-i18next';
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { loginSchema } from "@/utils/validation";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -32,13 +33,17 @@ const Login = () => {
     e.preventDefault();
     setError("");
     
-    if (!email || !password) {
-      setError(t('auth:messages.enterEmailPassword'));
+    // Validate inputs
+    const validationResult = loginSchema.safeParse({ email, password });
+    if (!validationResult.success) {
+      const firstError = validationResult.error.errors[0];
+      setError(firstError.message);
+      toast.error(firstError.message);
       return;
     }
     
     try {
-      await login(email, password);
+      await login(validationResult.data.email, validationResult.data.password);
       // Navigation will happen automatically via the useEffect
     } catch (err: any) {
       // Error is handled by the login function with toast
@@ -66,6 +71,13 @@ const Login = () => {
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate email
+    const emailValidation = loginSchema.shape.email.safeParse(resetEmail);
+    if (!emailValidation.success) {
+      toast.error(emailValidation.error.errors[0].message);
+      return;
+    }
     
     if (!resetEmail) {
       toast.error(t('auth:messages.enterEmail'));

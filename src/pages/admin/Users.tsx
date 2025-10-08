@@ -39,7 +39,7 @@ import {
   ShieldOff,
 } from "lucide-react";
 
-type User = {
+type UserWithRole = {
   id: string;
   parent_name: string;
   child_name: string | null;
@@ -47,23 +47,45 @@ type User = {
   is_premium: boolean;
   subscription_tier: string | null;
   subscription_end: string | null;
-  role: string;
+  roles?: Array<{ role: string }>;
   created_at: string;
 };
 
 const Users = () => {
   const { t } = useTranslation('admin');
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortField, setSortField] = useState<keyof User>("created_at");
+  const [sortField, setSortField] = useState<string>("created_at");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
 
   const fetchUsers = async () => {
-    const { data, error } = await supabase.from("profiles").select("*");
-    if (error) {
+    const { data: profilesData, error: profilesError } = await supabase
+      .from("profiles")
+      .select("*");
+    
+    if (profilesError) {
       toast.error("Failed to fetch users");
-      throw error;
+      throw profilesError;
     }
-    return data as User[];
+
+    // Fetch roles separately
+    const { data: rolesData, error: rolesError } = await supabase
+      .from("user_roles")
+      .select("user_id, role");
+
+    if (rolesError) {
+      toast.error("Failed to fetch user roles");
+      throw rolesError;
+    }
+
+    // Combine the data
+    const usersWithRoles = profilesData.map(profile => ({
+      ...profile,
+      roles: rolesData
+        .filter(r => r.user_id === profile.id)
+        .map(r => ({ role: r.role }))
+    }));
+
+    return usersWithRoles as UserWithRole[];
   };
 
   const { data: users = [], isLoading, refetch } = useQuery({
@@ -71,7 +93,7 @@ const Users = () => {
     queryFn: fetchUsers,
   });
 
-  const toggleSort = (field: keyof User) => {
+  const toggleSort = (field: string) => {
     if (sortField === field) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
@@ -109,16 +131,28 @@ const Users = () => {
       return 0;
     });
 
-  const toggleAdmin = async (user: User) => {
-    const newRole = user.role === "admin" ? "user" : "admin";
+  const toggleAdmin = async (user: UserWithRole) => {
+    const isAdmin = user.roles?.some(r => r.role === "admin");
+    const newRole = isAdmin ? "user" : "admin";
     
     try {
-      const { error } = await supabase
-        .from("profiles")
-        .update({ role: newRole })
-        .eq("id", user.id);
-        
-      if (error) throw error;
+      if (isAdmin) {
+        // Remove admin role
+        const { error } = await supabase
+          .from("user_roles")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("role", "admin");
+          
+        if (error) throw error;
+      } else {
+        // Add admin role
+        const { error } = await supabase
+          .from("user_roles")
+          .insert({ user_id: user.id, role: newRole });
+          
+        if (error) throw error;
+      }
       
       toast.success(`User ${user.parent_name} role updated to ${newRole}`);
       refetch();
@@ -226,7 +260,7 @@ const Users = () => {
                       </TableCell>
                       <TableCell>{user.preferred_language}</TableCell>
                       <TableCell>
-                        {user.role === "admin" ? (
+                        {user.roles?.some(r => r.role === "admin") ? (
                           <Badge variant="default" className="bg-red-600 hover:bg-red-700">
                             Admin
                           </Badge>
@@ -250,7 +284,7 @@ const Users = () => {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem onClick={() => toggleAdmin(user)}>
-                              {user.role === "admin" ? (
+                              {user.roles?.some(r => r.role === "admin") ? (
                                 <>
                                   <ShieldOff className="mr-2 h-4 w-4" /> {t('users.removeAdmin')}
                                 </>

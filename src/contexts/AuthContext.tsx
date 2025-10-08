@@ -307,7 +307,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       hasUser: !!user,
       userEmail: user?.email,
       hasProfile: !!profile,
-      profileRole: profile?.role,
       authLoading,
       profileLoading,
       profileLoaded,

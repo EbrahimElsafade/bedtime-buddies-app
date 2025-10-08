@@ -8,8 +8,9 @@ export type Profile = {
   is_premium: boolean
   subscription_tier?: string
   subscription_end?: string
-  role: 'user' | 'admin'
 }
+
+export type UserRole = 'admin' | 'moderator' | 'user'
 
 export type AuthContextType = {
   user: User | null

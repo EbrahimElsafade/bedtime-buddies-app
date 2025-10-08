@@ -18,6 +18,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useTranslation } from 'react-i18next'
+import { profileUpdateSchema } from '@/utils/validation'
+import { toast } from 'sonner'
 
 interface ProfileInfoProps {
   name: string
@@ -63,6 +65,19 @@ export const ProfileInfo = ({
   }
 
   const handleSave = () => {
+    // Validate inputs before saving
+    const validationResult = profileUpdateSchema.safeParse({
+      parentName: name,
+      childName: childName || '',
+      preferredLanguage: profileLanguage
+    });
+
+    if (!validationResult.success) {
+      const firstError = validationResult.error.errors[0];
+      toast.error(firstError.message);
+      return;
+    }
+
     onSave()
     setIsEditing(false)
   }
