@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import i18n from '@/i18n'
 import LanguageContext, { type Language } from './language-context'
 
-export default function LanguageProvider({ children }: { children: React.ReactNode }) {
+const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
   const initial = (i18n.language?.split('-')[0] || 'en') as Language
   const [language, setLanguageState] = useState<Language>(initial)
   const direction = language === 'ar' ? 'rtl' : 'ltr'
@@ -40,4 +40,5 @@ export default function LanguageProvider({ children }: { children: React.ReactNo
   )
 }
 
+export default LanguageProvider;
 
