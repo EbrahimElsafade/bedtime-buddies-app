@@ -84,8 +84,12 @@ const CourseEditor = () => {
     learningObjectives: [] as string[],
     learningObjectivesAr: [] as string[],
     learningObjectivesFr: [] as string[],
-    instructorName: '',
-    instructorBio: '',
+    instructorNameEn: '',
+    instructorNameAr: '',
+    instructorNameFr: '',
+    instructorBioEn: '',
+    instructorBioAr: '',
+    instructorBioFr: '',
     instructorAvatar: '',
     instructorExpertise: [] as string[],
   })
@@ -194,8 +198,12 @@ const CourseEditor = () => {
         learningObjectives: c.learning_objectives || c.learning_objectives_en || [],
         learningObjectivesAr: c.learning_objectives_ar || [],
         learningObjectivesFr: c.learning_objectives_fr || [],
-        instructorName: c.instructor_name || '',
-        instructorBio: c.instructor_bio || '',
+        instructorNameEn: c.instructor_name_en || c.instructor_name || '',
+        instructorNameAr: c.instructor_name_ar || '',
+        instructorNameFr: c.instructor_name_fr || '',
+        instructorBioEn: c.instructor_bio_en || c.instructor_bio || '',
+        instructorBioAr: c.instructor_bio_ar || '',
+        instructorBioFr: c.instructor_bio_fr || '',
         instructorAvatar: c.instructor_avatar || '',
         instructorExpertise: c.instructor_expertise || [],
       })
@@ -383,8 +391,12 @@ const CourseEditor = () => {
             learning_objectives_en: courseData.learningObjectives,
             learning_objectives_ar: courseData.learningObjectivesAr,
             learning_objectives_fr: courseData.learningObjectivesFr,
-            instructor_name: courseData.instructorName || null,
-            instructor_bio: courseData.instructorBio || null,
+            instructor_name_en: courseData.instructorNameEn || null,
+            instructor_name_ar: courseData.instructorNameAr || null,
+            instructor_name_fr: courseData.instructorNameFr || null,
+            instructor_bio_en: courseData.instructorBioEn || null,
+            instructor_bio_ar: courseData.instructorBioAr || null,
+            instructor_bio_fr: courseData.instructorBioFr || null,
             instructor_avatar: courseData.instructorAvatar || null,
             instructor_expertise: courseData.instructorExpertise,
           } as any)
@@ -414,8 +426,12 @@ const CourseEditor = () => {
             learning_objectives_en: courseData.learningObjectives,
             learning_objectives_ar: courseData.learningObjectivesAr,
             learning_objectives_fr: courseData.learningObjectivesFr,
-            instructor_name: courseData.instructorName || null,
-            instructor_bio: courseData.instructorBio || null,
+            instructor_name_en: courseData.instructorNameEn || null,
+            instructor_name_ar: courseData.instructorNameAr || null,
+            instructor_name_fr: courseData.instructorNameFr || null,
+            instructor_bio_en: courseData.instructorBioEn || null,
+            instructor_bio_ar: courseData.instructorBioAr || null,
+            instructor_bio_fr: courseData.instructorBioFr || null,
             instructor_avatar: courseData.instructorAvatar || null,
             instructor_expertise: courseData.instructorExpertise,
           } as any)
@@ -1028,40 +1044,113 @@ const CourseEditor = () => {
               <CardHeader>
                 <CardTitle>Instructor Information</CardTitle>
                 <CardDescription>
-                  Information about the course instructor
+                  Information about the course instructor (at least one language required)
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="instructor-name">Instructor Name</Label>
-                  <Input
-                    id="instructor-name"
-                    placeholder="Enter instructor name"
-                    value={courseData.instructorName}
-                    onChange={e =>
-                      setCourseData({
-                        ...courseData,
-                        instructorName: e.target.value,
-                      })
-                    }
-                  />
-                </div>
+                <Tabs defaultValue="en" className="space-y-4">
+                  <TabsList>
+                    <TabsTrigger value="en">English</TabsTrigger>
+                    <TabsTrigger value="ar">Arabic</TabsTrigger>
+                    <TabsTrigger value="fr">French</TabsTrigger>
+                  </TabsList>
 
-                <div className="space-y-2">
-                  <Label htmlFor="instructor-bio">Instructor Bio</Label>
-                  <Textarea
-                    id="instructor-bio"
-                    placeholder="Enter instructor biography..."
-                    value={courseData.instructorBio}
-                    onChange={e =>
-                      setCourseData({
-                        ...courseData,
-                        instructorBio: e.target.value,
-                      })
-                    }
-                    rows={3}
-                  />
-                </div>
+                  <TabsContent value="en" className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="instructor-name-en">Instructor Name (English)</Label>
+                      <Input
+                        id="instructor-name-en"
+                        placeholder="Enter instructor name in English"
+                        value={courseData.instructorNameEn}
+                        onChange={e =>
+                          setCourseData({
+                            ...courseData,
+                            instructorNameEn: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="instructor-bio-en">Instructor Bio (English)</Label>
+                      <Textarea
+                        id="instructor-bio-en"
+                        placeholder="Enter instructor biography in English..."
+                        value={courseData.instructorBioEn}
+                        onChange={e =>
+                          setCourseData({
+                            ...courseData,
+                            instructorBioEn: e.target.value,
+                          })
+                        }
+                        rows={3}
+                      />
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="ar" className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="instructor-name-ar">Instructor Name (Arabic)</Label>
+                      <Input
+                        id="instructor-name-ar"
+                        placeholder="أدخل اسم المدرب بالعربية"
+                        value={courseData.instructorNameAr}
+                        onChange={e =>
+                          setCourseData({
+                            ...courseData,
+                            instructorNameAr: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="instructor-bio-ar">Instructor Bio (Arabic)</Label>
+                      <Textarea
+                        id="instructor-bio-ar"
+                        placeholder="أدخل السيرة الذاتية للمدرب بالعربية..."
+                        value={courseData.instructorBioAr}
+                        onChange={e =>
+                          setCourseData({
+                            ...courseData,
+                            instructorBioAr: e.target.value,
+                          })
+                        }
+                        rows={3}
+                      />
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="fr" className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="instructor-name-fr">Instructor Name (French)</Label>
+                      <Input
+                        id="instructor-name-fr"
+                        placeholder="Entrez le nom de l'instructeur en français"
+                        value={courseData.instructorNameFr}
+                        onChange={e =>
+                          setCourseData({
+                            ...courseData,
+                            instructorNameFr: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="instructor-bio-fr">Instructor Bio (French)</Label>
+                      <Textarea
+                        id="instructor-bio-fr"
+                        placeholder="Entrez la biographie de l'instructeur en français..."
+                        value={courseData.instructorBioFr}
+                        onChange={e =>
+                          setCourseData({
+                            ...courseData,
+                            instructorBioFr: e.target.value,
+                          })
+                        }
+                        rows={3}
+                      />
+                    </div>
+                  </TabsContent>
+                </Tabs>
 
                 <div className="space-y-2">
                   <Label htmlFor="instructor-avatar">
