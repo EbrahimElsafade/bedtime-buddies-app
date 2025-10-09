@@ -149,10 +149,12 @@ const Users = () => {
         // Add user role if they don't have it
         const { error: userRoleError } = await supabase
           .from("user_roles")
-          .insert({ user_id: user.id, role: "user" })
-          .onConflict(["user_id", "role"]).ignore();
+          .insert({ user_id: user.id, role: "user" });
           
-        if (userRoleError) throw userRoleError;
+        if (userRoleError && userRoleError.code !== '23505') {
+          // Ignore duplicate key errors (23505), but throw other errors
+          throw userRoleError;
+        }
       } else {
         // Add admin role
         const { error } = await supabase

@@ -548,6 +548,39 @@ export type Database = {
           },
         ]
       }
+      user_role_audit_log: {
+        Row: {
+          action: string
+          id: string
+          ip_address: string | null
+          performed_at: string
+          performed_by: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          id?: string
+          ip_address?: string | null
+          performed_at?: string
+          performed_by: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          id?: string
+          ip_address?: string | null
+          performed_at?: string
+          performed_by?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
