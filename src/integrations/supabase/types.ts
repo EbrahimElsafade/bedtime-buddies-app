@@ -193,6 +193,7 @@ export type Database = {
           instructor_name_ar: string | null
           instructor_name_en: string | null
           instructor_name_fr: string | null
+          instructor_user_id: string | null
           is_free: boolean
           is_published: boolean
           languages: string[]
@@ -226,6 +227,7 @@ export type Database = {
           instructor_name_ar?: string | null
           instructor_name_en?: string | null
           instructor_name_fr?: string | null
+          instructor_user_id?: string | null
           is_free?: boolean
           is_published?: boolean
           languages?: string[]
@@ -259,6 +261,7 @@ export type Database = {
           instructor_name_ar?: string | null
           instructor_name_en?: string | null
           instructor_name_fr?: string | null
+          instructor_user_id?: string | null
           is_free?: boolean
           is_published?: boolean
           languages?: string[]
@@ -274,7 +277,15 @@ export type Database = {
           title_fr?: string | null
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "courses_instructor_user_id_fkey"
+            columns: ["instructor_user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {

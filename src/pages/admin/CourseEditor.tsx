@@ -91,13 +91,16 @@ const CourseEditor = () => {
     instructorBioAr: '',
     instructorBioFr: '',
     instructorAvatar: '',
-    instructorExpertise: [] as string[],
+    instructorUserId: null as string | null,
+    instructorType: 'custom' as 'custom' | 'user',
   })
+  
+  const [instructorAvatarFile, setInstructorAvatarFile] = useState<File | null>(null)
+  const [instructorAvatarPreview, setInstructorAvatarPreview] = useState<string | null>(null)
 
   const [newObjective, setNewObjective] = useState('')
   const [newObjectiveAr, setNewObjectiveAr] = useState('')
   const [newObjectiveFr, setNewObjectiveFr] = useState('')
-  const [newExpertise, setNewExpertise] = useState('')
 
   // Course lessons/videos
   const [courseLessons, setCourseLessons] = useState<CourseLessonForm[]>([])
@@ -205,8 +208,15 @@ const CourseEditor = () => {
         instructorBioAr: c.instructor_bio_ar || '',
         instructorBioFr: c.instructor_bio_fr || '',
         instructorAvatar: c.instructor_avatar || '',
-        instructorExpertise: c.instructor_expertise || [],
+        instructorUserId: c.instructor_user_id || null,
+        instructorType: c.instructor_user_id ? 'user' : 'custom',
       })
+      
+      // Handle instructor avatar preview
+      if (c.instructor_avatar) {
+        const avatarUrl = getImageUrl(c.instructor_avatar)
+        setInstructorAvatarPreview(avatarUrl)
+      }
 
       // Process lessons for the form
       if (lessons && lessons.length > 0) {
@@ -256,6 +266,16 @@ const CourseEditor = () => {
       const objectUrl = URL.createObjectURL(file)
       console.log('Created preview URL:', objectUrl)
       setCoverImagePreview(objectUrl)
+    }
+  }
+
+  // Handle file input change for instructor avatar
+  const handleInstructorAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      setInstructorAvatarFile(file)
+      const objectUrl = URL.createObjectURL(file)
+      setInstructorAvatarPreview(objectUrl)
     }
   }
 
@@ -367,6 +387,23 @@ const CourseEditor = () => {
         coverImageUrl = filename
         console.log('Storing filename in DB:', coverImageUrl)
       }
+      
+      // Upload instructor avatar if a new file was selected
+      let instructorAvatarUrl = courseData.instructorAvatar
+      if (instructorAvatarFile) {
+        const filename = `instructor-avatar-${Date.now()}-${instructorAvatarFile.name}`
+
+        const { data: uploadData, error: uploadError } =
+          await supabase.storage
+            .from('admin-content')
+            .upload(`instructor-avatars/${filename}`, instructorAvatarFile, {
+              cacheControl: '3600',
+              upsert: false,
+            })
+
+        if (uploadError) throw uploadError
+        instructorAvatarUrl = filename
+      }
 
       // Create or update the course
       let courseId = id
@@ -397,8 +434,8 @@ const CourseEditor = () => {
             instructor_bio_en: courseData.instructorBioEn || null,
             instructor_bio_ar: courseData.instructorBioAr || null,
             instructor_bio_fr: courseData.instructorBioFr || null,
-            instructor_avatar: courseData.instructorAvatar || null,
-            instructor_expertise: courseData.instructorExpertise,
+            instructor_avatar: instructorAvatarUrl || null,
+            instructor_user_id: courseData.instructorType === 'user' ? courseData.instructorUserId : null,
           } as any)
           .select('id')
           .single()
@@ -432,8 +469,8 @@ const CourseEditor = () => {
             instructor_bio_en: courseData.instructorBioEn || null,
             instructor_bio_ar: courseData.instructorBioAr || null,
             instructor_bio_fr: courseData.instructorBioFr || null,
-            instructor_avatar: courseData.instructorAvatar || null,
-            instructor_expertise: courseData.instructorExpertise,
+            instructor_avatar: instructorAvatarUrl || null,
+            instructor_user_id: courseData.instructorType === 'user' ? courseData.instructorUserId : null,
           } as any)
           .eq('id', courseId)
 
@@ -1048,199 +1085,179 @@ const CourseEditor = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <Tabs defaultValue="en" className="space-y-4">
-                  <TabsList>
-                    <TabsTrigger value="en">English</TabsTrigger>
-                    <TabsTrigger value="ar">Arabic</TabsTrigger>
-                    <TabsTrigger value="fr">French</TabsTrigger>
-                  </TabsList>
-
-                  <TabsContent value="en" className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="instructor-name-en">Instructor Name (English)</Label>
-                      <Input
-                        id="instructor-name-en"
-                        placeholder="Enter instructor name in English"
-                        value={courseData.instructorNameEn}
-                        onChange={e =>
-                          setCourseData({
-                            ...courseData,
-                            instructorNameEn: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="instructor-bio-en">Instructor Bio (English)</Label>
-                      <Textarea
-                        id="instructor-bio-en"
-                        placeholder="Enter instructor biography in English..."
-                        value={courseData.instructorBioEn}
-                        onChange={e =>
-                          setCourseData({
-                            ...courseData,
-                            instructorBioEn: e.target.value,
-                          })
-                        }
-                        rows={3}
-                      />
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="ar" className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="instructor-name-ar">Instructor Name (Arabic)</Label>
-                      <Input
-                        id="instructor-name-ar"
-                        placeholder="أدخل اسم المدرب بالعربية"
-                        value={courseData.instructorNameAr}
-                        onChange={e =>
-                          setCourseData({
-                            ...courseData,
-                            instructorNameAr: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="instructor-bio-ar">Instructor Bio (Arabic)</Label>
-                      <Textarea
-                        id="instructor-bio-ar"
-                        placeholder="أدخل السيرة الذاتية للمدرب بالعربية..."
-                        value={courseData.instructorBioAr}
-                        onChange={e =>
-                          setCourseData({
-                            ...courseData,
-                            instructorBioAr: e.target.value,
-                          })
-                        }
-                        rows={3}
-                      />
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="fr" className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="instructor-name-fr">Instructor Name (French)</Label>
-                      <Input
-                        id="instructor-name-fr"
-                        placeholder="Entrez le nom de l'instructeur en français"
-                        value={courseData.instructorNameFr}
-                        onChange={e =>
-                          setCourseData({
-                            ...courseData,
-                            instructorNameFr: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="instructor-bio-fr">Instructor Bio (French)</Label>
-                      <Textarea
-                        id="instructor-bio-fr"
-                        placeholder="Entrez la biographie de l'instructeur en français..."
-                        value={courseData.instructorBioFr}
-                        onChange={e =>
-                          setCourseData({
-                            ...courseData,
-                            instructorBioFr: e.target.value,
-                          })
-                        }
-                        rows={3}
-                      />
-                    </div>
-                  </TabsContent>
-                </Tabs>
-
                 <div className="space-y-2">
-                  <Label htmlFor="instructor-avatar">
-                    Instructor Avatar URL
-                  </Label>
-                  <Input
-                    id="instructor-avatar"
-                    placeholder="Enter avatar image URL"
-                    value={courseData.instructorAvatar}
-                    onChange={e =>
-                      setCourseData({
-                        ...courseData,
-                        instructorAvatar: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label>Expertise Areas</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      placeholder="Add expertise area..."
-                      value={newExpertise}
-                      onChange={e => setNewExpertise(e.target.value)}
-                      onKeyPress={e => {
-                        if (e.key === 'Enter') {
-                          e.preventDefault()
-                          if (newExpertise.trim()) {
-                            setCourseData({
-                              ...courseData,
-                              instructorExpertise: [
-                                ...courseData.instructorExpertise,
-                                newExpertise.trim(),
-                              ],
-                            })
-                            setNewExpertise('')
-                          }
-                        }
-                      }}
-                    />
+                  <Label>Instructor Type</Label>
+                  <div className="flex gap-4">
                     <Button
                       type="button"
-                      onClick={() => {
-                        if (newExpertise.trim()) {
-                          setCourseData({
-                            ...courseData,
-                            instructorExpertise: [
-                              ...courseData.instructorExpertise,
-                              newExpertise.trim(),
-                            ],
-                          })
-                          setNewExpertise('')
-                        }
-                      }}
+                      variant={courseData.instructorType === 'custom' ? 'default' : 'outline'}
+                      onClick={() => setCourseData({ ...courseData, instructorType: 'custom', instructorUserId: null })}
                     >
-                      <Plus className="h-4 w-4" />
+                      Custom Instructor
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={courseData.instructorType === 'user' ? 'default' : 'outline'}
+                      onClick={() => setCourseData({ ...courseData, instructorType: 'user' })}
+                    >
+                      Select User
                     </Button>
                   </div>
-                  {courseData.instructorExpertise.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {courseData.instructorExpertise.map((skill, index) => (
-                        <Badge
-                          key={index}
-                          variant="secondary"
-                          className="flex items-center gap-1"
-                        >
-                          {skill}
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            className="h-auto p-0 text-xs"
-                            onClick={() => {
+                </div>
+
+                {courseData.instructorType === 'user' ? (
+                  <div className="space-y-2">
+                    <Label htmlFor="instructor-user">Select User</Label>
+                    <p className="text-sm text-muted-foreground">
+                      User selection feature coming soon. For now, use custom instructor.
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <Tabs defaultValue="en" className="space-y-4">
+                      <TabsList>
+                        <TabsTrigger value="en">English</TabsTrigger>
+                        <TabsTrigger value="ar">Arabic</TabsTrigger>
+                        <TabsTrigger value="fr">French</TabsTrigger>
+                      </TabsList>
+
+                      <TabsContent value="en" className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="instructor-name-en">Instructor Name (English)</Label>
+                          <Input
+                            id="instructor-name-en"
+                            placeholder="Enter instructor name in English"
+                            value={courseData.instructorNameEn}
+                            onChange={e =>
                               setCourseData({
                                 ...courseData,
-                                instructorExpertise:
-                                  courseData.instructorExpertise.filter(
-                                    (_, i) => i !== index,
-                                  ),
+                                instructorNameEn: e.target.value,
                               })
-                            }}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </Badge>
-                      ))}
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="instructor-bio-en">Instructor Bio (English)</Label>
+                          <Textarea
+                            id="instructor-bio-en"
+                            placeholder="Enter instructor biography in English..."
+                            value={courseData.instructorBioEn}
+                            onChange={e =>
+                              setCourseData({
+                                ...courseData,
+                                instructorBioEn: e.target.value,
+                              })
+                            }
+                            rows={3}
+                          />
+                        </div>
+                      </TabsContent>
+
+                      <TabsContent value="ar" className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="instructor-name-ar">Instructor Name (Arabic)</Label>
+                          <Input
+                            id="instructor-name-ar"
+                            placeholder="أدخل اسم المدرب بالعربية"
+                            value={courseData.instructorNameAr}
+                            onChange={e =>
+                              setCourseData({
+                                ...courseData,
+                                instructorNameAr: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="instructor-bio-ar">Instructor Bio (Arabic)</Label>
+                          <Textarea
+                            id="instructor-bio-ar"
+                            placeholder="أدخل السيرة الذاتية للمدرب بالعربية..."
+                            value={courseData.instructorBioAr}
+                            onChange={e =>
+                              setCourseData({
+                                ...courseData,
+                                instructorBioAr: e.target.value,
+                              })
+                            }
+                            rows={3}
+                          />
+                        </div>
+                      </TabsContent>
+
+                      <TabsContent value="fr" className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="instructor-name-fr">Instructor Name (French)</Label>
+                          <Input
+                            id="instructor-name-fr"
+                            placeholder="Entrez le nom de l'instructeur en français"
+                            value={courseData.instructorNameFr}
+                            onChange={e =>
+                              setCourseData({
+                                ...courseData,
+                                instructorNameFr: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="instructor-bio-fr">Instructor Bio (French)</Label>
+                          <Textarea
+                            id="instructor-bio-fr"
+                            placeholder="Entrez la biographie de l'instructeur en français..."
+                            value={courseData.instructorBioFr}
+                            onChange={e =>
+                              setCourseData({
+                                ...courseData,
+                                instructorBioFr: e.target.value,
+                              })
+                            }
+                            rows={3}
+                          />
+                        </div>
+                      </TabsContent>
+                    </Tabs>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="instructor-avatar">Instructor Avatar</Label>
+                      <div className="flex items-center gap-4">
+                        {instructorAvatarPreview ? (
+                          <div className="relative h-20 w-20 overflow-hidden rounded-full border">
+                            <img
+                              src={instructorAvatarPreview}
+                              alt="Avatar preview"
+                              className="h-full w-full object-cover"
+                            />
+                            <Button
+                              type="button"
+                              size="icon"
+                              variant="destructive"
+                              className="absolute right-0 top-0 h-6 w-6"
+                              onClick={() => {
+                                setInstructorAvatarFile(null)
+                                setInstructorAvatarPreview(null)
+                                setCourseData({ ...courseData, instructorAvatar: '' })
+                              }}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="flex h-20 w-20 items-center justify-center rounded-full border border-dashed border-muted-foreground/50 bg-muted">
+                            <Upload className="h-6 w-6 text-muted-foreground" />
+                          </div>
+                        )}
+                        <Input
+                          id="instructor-avatar"
+                          type="file"
+                          accept="image/*"
+                          onChange={handleInstructorAvatarChange}
+                          className="flex-1"
+                        />
+                      </div>
                     </div>
-                  )}
-                </div>
+                  </>
+                )}
               </CardContent>
             </Card>
 
