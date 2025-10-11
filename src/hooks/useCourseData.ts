@@ -83,6 +83,9 @@ export const useCourseData = (courseId: string | undefined) => {
         videos,
         createdAt: courseData.created_at,
         learningObjectives: courseData.learning_objectives || [],
+        learning_objectives_en: courseData.learning_objectives_en || [],
+        learning_objectives_ar: courseData.learning_objectives_ar || [],
+        learning_objectives_fr: courseData.learning_objectives_fr || [],
         instructor: course.instructor_name_en || course.instructor_name
           ? {
               name_en: course.instructor_name_en || course.instructor_name || '',

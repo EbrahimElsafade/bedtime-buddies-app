@@ -51,7 +51,10 @@ export type Course = {
   languages: string[]; // Keep for backwards compatibility
   videos?: CourseVideo[];
   createdAt: string;
-  learningObjectives?: string[];
+  learningObjectives?: string[]; // Keep for backwards compatibility
+  learning_objectives_en?: string[];
+  learning_objectives_ar?: string[];
+  learning_objectives_fr?: string[];
   instructor?: {
     name_en: string;
     name_ar: string;
