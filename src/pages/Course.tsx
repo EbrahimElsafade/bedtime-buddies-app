@@ -261,7 +261,7 @@ const Course = () => {
                 >
                   <Clock className="mr-2 h-4 w-4" />
                   <span>
-                    {course.duration} {t('duration')}
+                    {Math.floor(course.duration / 60)} {t('duration')}
                   </span>
                 </Badge>
                 <Badge
@@ -427,7 +427,7 @@ const Course = () => {
                         <div className="mb-2 flex items-center text-sm text-primary-foreground">
                           <Clock className="mr-1 h-4 w-4" />
                           <span>
-                            {selectedVideo.duration} {t('duration')}
+                            {Math.floor(selectedVideo.duration / 60)}:{String(selectedVideo.duration % 60).padStart(2, '0')} {t('duration')}
                           </span>
                         </div>
                         <p className="text-primary-foreground">
@@ -490,7 +490,7 @@ const Course = () => {
                                 <div className="mt-1 flex items-center text-xs text-primary-foreground/70">
                                   <Clock className="mx-1 h-3 w-3" />
                                   <span>
-                                    {video.duration} {t('duration')}
+                                    {Math.floor(video.duration / 60)}:{String(video.duration % 60).padStart(2, '0')}
                                   </span>
                                 </div>
                               </div>
