@@ -341,7 +341,25 @@ const CourseEditor = () => {
     setCourseLessons(updatedLessons)
   }
 
-  const handleLessonVideoFilesChange = (
+  const getVideoDuration = (file: File): Promise<number> => {
+    return new Promise((resolve, reject) => {
+      const video = document.createElement('video')
+      video.preload = 'metadata'
+      
+      video.onloadedmetadata = () => {
+        window.URL.revokeObjectURL(video.src)
+        resolve(Math.floor(video.duration))
+      }
+      
+      video.onerror = () => {
+        reject(new Error('Failed to load video'))
+      }
+      
+      video.src = URL.createObjectURL(file)
+    })
+  }
+
+  const handleLessonVideoFilesChange = async (
     lessonIndex: number,
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -349,8 +367,25 @@ const CourseEditor = () => {
       const files = Array.from(e.target.files)
       const updatedLessons = [...courseLessons]
       updatedLessons[lessonIndex].videoFiles = files
+      
+      // Try to calculate duration from video file
+      const videoFile = files.find(f => f.type.startsWith('video/'))
+      if (videoFile) {
+        try {
+          const duration = await getVideoDuration(videoFile)
+          updatedLessons[lessonIndex].duration = duration
+        } catch (error) {
+          console.error('Error getting video duration:', error)
+        }
+      }
+      
       setCourseLessons(updatedLessons)
     }
+  }
+
+  // Calculate total course duration from all lessons
+  const calculateTotalDuration = () => {
+    return courseLessons.reduce((sum, lesson) => sum + (lesson.duration || 0), 0)
   }
 
   // Handle save/submit
@@ -405,6 +440,9 @@ const CourseEditor = () => {
         instructorAvatarUrl = filename
       }
 
+      // Calculate total course duration
+      const totalDuration = calculateTotalDuration()
+
       // Create or update the course
       let courseId = id
       if (!isEditing) {
@@ -424,6 +462,7 @@ const CourseEditor = () => {
             is_free: courseData.isFree,
             is_published: courseData.isFeatured,
             lessons: courseLessons.length,
+            duration: totalDuration,
             learning_objectives: courseData.learningObjectives,
             learning_objectives_en: courseData.learningObjectives,
             learning_objectives_ar: courseData.learningObjectivesAr,
@@ -459,6 +498,7 @@ const CourseEditor = () => {
             is_free: courseData.isFree,
             is_published: courseData.isFeatured,
             lessons: courseLessons.length,
+            duration: totalDuration,
             learning_objectives: courseData.learningObjectives,
             learning_objectives_en: courseData.learningObjectives,
             learning_objectives_ar: courseData.learningObjectivesAr,
@@ -1347,20 +1387,17 @@ const CourseEditor = () => {
                                 </div>
                               </div>
                               <div className="space-y-2">
-                                <Label>{t('course_editor.duration_label')}</Label>
-                                <Input
-                                  type="number"
-                                  min="1"
-                                  placeholder={t('course_editor.duration_placeholder')}
-                                  value={lesson.duration}
-                                  onChange={e =>
-                                    updateLessonField(
-                                      lessonIndex,
-                                      'duration',
-                                      parseInt(e.target.value) || 0,
-                                    )
-                                  }
-                                />
+                                <Label>Video Duration</Label>
+                                <div className="rounded-md border bg-muted px-3 py-2">
+                                  <p className="text-sm">
+                                    {lesson.duration > 0 
+                                      ? `${Math.floor(lesson.duration / 60)}:${String(lesson.duration % 60).padStart(2, '0')}` 
+                                      : 'Upload video to calculate'}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground mt-1">
+                                    Duration will be auto-calculated from video
+                                  </p>
+                                </div>
                               </div>
                             </div>
 
