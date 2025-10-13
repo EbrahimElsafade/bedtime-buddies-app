@@ -119,6 +119,20 @@ const CourseEditor = () => {
     },
   })
 
+  // Fetch users who can be instructors
+  const { data: users } = useQuery({
+    queryKey: ['users-for-instructors'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, parent_name, child_name')
+        .order('parent_name')
+
+      if (error) throw error
+      return data
+    },
+  })
+
   // Fetch course data if editing
   const { data: courseDetails, isLoading } = useQuery({
     queryKey: ['admin-course', id],
@@ -1146,11 +1160,66 @@ const CourseEditor = () => {
                 </div>
 
                 {courseData.instructorType === 'user' ? (
-                  <div className="space-y-2">
-                    <Label htmlFor="instructor-user">Select User</Label>
-                    <p className="text-sm text-muted-foreground">
-                      User selection feature coming soon. For now, use custom instructor.
-                    </p>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="instructor-user">Select User as Instructor</Label>
+                      <Select
+                        value={courseData.instructorUserId || undefined}
+                        onValueChange={async (userId) => {
+                          setCourseData({ ...courseData, instructorUserId: userId })
+                          
+                          // Fetch user profile to populate instructor fields
+                          const { data: profile } = await supabase
+                            .from('profiles')
+                            .select('parent_name, child_name')
+                            .eq('id', userId)
+                            .single()
+                          
+                          if (profile) {
+                            const displayName = profile.child_name || profile.parent_name
+                            setCourseData(prev => ({
+                              ...prev,
+                              instructorUserId: userId,
+                              instructorNameEn: displayName,
+                              instructorNameAr: displayName,
+                              instructorNameFr: displayName,
+                              instructorBioEn: `Instructor at Dolphoon`,
+                              instructorBioAr: `مدرب في دولفون`,
+                              instructorBioFr: `Instructeur chez Dolphoon`,
+                            }))
+                            toast.success('User selected as instructor')
+                          }
+                        }}
+                      >
+                        <SelectTrigger id="instructor-user">
+                          <SelectValue placeholder="Select a user..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Users</SelectLabel>
+                            {users?.map((user) => (
+                              <SelectItem key={user.id} value={user.id}>
+                                {user.child_name || user.parent_name} ({user.parent_name})
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {courseData.instructorUserId && (
+                      <div className="space-y-2 rounded-lg border border-primary/20 bg-primary/5 p-4">
+                        <p className="text-sm font-medium">Selected Instructor Details:</p>
+                        <div className="space-y-1 text-sm text-muted-foreground">
+                          <p>Name (EN): {courseData.instructorNameEn}</p>
+                          <p>Name (AR): {courseData.instructorNameAr}</p>
+                          <p>Name (FR): {courseData.instructorNameFr}</p>
+                        </div>
+                        <p className="mt-2 text-xs text-muted-foreground">
+                          You can switch to "Custom Instructor" to manually edit these fields.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <>
