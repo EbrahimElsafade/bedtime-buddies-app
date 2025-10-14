@@ -82,9 +82,9 @@ const Index = () => {
       {homePageSettings?.freeStoryEnabled !== false && <FreeStory />}
 
       {homePageSettings?.storiesSection !== false && <FeaturedStories />}
+      {homePageSettings?.courses !== false && <FeaturedCourses />}
       {homePageSettings?.topRated !== false && <PopularStories />}
       {/* {homePageSettings?.specialStory !== false && <EntertainmentStories />} */}
-      {homePageSettings?.courses !== false && <FeaturedCourses />}
 
       {homePageSettings?.features !== false && <Features />}
       {homePageSettings?.subscribeBanner !== false && <SubscribeBanner />}

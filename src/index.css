@@ -50,9 +50,9 @@
     @apply bg-secondary font-rounded text-foreground;
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
+    /* -webkit-touch-callout: none;
     -webkit-user-select: none;
-    user-select: none;
+    user-select: none; */
   }
 
   h1,

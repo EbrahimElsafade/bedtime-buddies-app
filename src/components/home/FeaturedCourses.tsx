@@ -23,17 +23,17 @@ const FeaturedCourses = () => {
   if (isLoading || !featuredCourses.length) return null
 
   return (
-    <section className="relative  px-4 py-12">
+    <section className="relative px-4 py-12">
       <div className="container mx-auto">
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="font-bubbly text-lg text-primary-foreground md:text-3xl">
+        <div className="mb-6 relative z-10 flex items-center justify-between">
+          <h2 className="text-lg text-primary-foreground md:text-3xl">
             {t('misc:courses.title')}
           </h2>
           <Link
             to="/courses"
-            className="flex items-center text-xs font-medium text-primary-foreground hover:underline md:text-sm"
+            className="flex items-center gap-2 text-xs font-medium text-primary-foreground hover:underline md:text-sm"
           >
-            {t('misc:free.viewAll')}{' '}
+             {t('misc:free.viewAll')}
             <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
           </Link>
         </div>
@@ -49,31 +49,31 @@ const FeaturedCourses = () => {
                 to={`/courses/${course.id}`}
                 className="block"
               >
-                <Card className="story-card cursor-pointer overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-transform hover:scale-105">
+                <Card className="story-card relative z-10 h-[500px] cursor-pointer overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-transform hover:scale-105">
                   <div className="relative aspect-[3/2]">
                     <img
                       src={getImageUrl(course.coverImagePath)}
                       alt={getLocalized(course, 'title', lang)}
-                      className="h-full w-full object-cover"
+                      className="h-full w-full overflow-hidden object-cover"
                       onError={e => {
                         e.currentTarget.src =
                           'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
                       }}
                     />
                     {course.isFree ? (
-                      <div className="absolute left-2 top-2 rounded-full bg-primary-foreground px-2 py-1 text-xs font-medium text-secondary">
+                      <div className="absolute left-2 top-2 rounded-full bg-primary-foreground px-2 py-1 text-xs font-medium text-secondary shadow-md">
                         {t('misc:free.tag')}
                       </div>
                     ) : (
-                      <div className="bg-moon-DEFAULT absolute left-2 top-2 rounded-full px-2 py-1 text-xs font-medium text-secondary">
+                      <div className="bg-moon-DEFAULT absolute left-2 top-2 rounded-full px-2 py-1 text-xs font-medium text-secondary shadow-md">
                         {t('misc:premium.tag')}
                       </div>
                     )}
-                    <div className="absolute right-2 top-2 rounded-full bg-secondary/80 px-2 py-1 text-xs text-primary-foreground">
+                    <div className="absolute right-2 top-2 rounded-full bg-secondary/80 px-2 py-1 text-xs text-primary-foreground shadow-md">
                       {course.minAge}-{course.maxAge} {t('misc:courses.years')}
                     </div>
                   </div>
-                  <CardHeader className="pb-2">
+                  <CardHeader className="h-28 pb-2">
                     <CardTitle className="text-xl text-primary-foreground">
                       {getLocalized(course, 'title', lang)}
                     </CardTitle>
@@ -81,6 +81,7 @@ const FeaturedCourses = () => {
                       {getLocalized(course, 'description', lang)}
                     </CardDescription>
                   </CardHeader>
+
                   <CardContent className="pb-4">
                     <div className="mb-2 flex flex-wrap gap-2">
                       <Badge
@@ -93,13 +94,13 @@ const FeaturedCourses = () => {
                       </Badge>
                     </div>
                     <div className="flex items-center justify-between text-sm text-primary-foreground">
-                      <div className="flex items-center">
+                      <div className="flex items-center gap-2">
                         <BookOpen className="mr-1 h-4 w-4" />
                         <span>
                           {course.lessons} {t('misc:courses.lessons')}
                         </span>
                       </div>
-                      <div className="flex items-center">
+                      <div className="flex items-center gap-2">
                         <Clock className="mr-1 h-4 w-4" />
                         <span>
                           {Math.floor(course.duration / 60)}{' '}
