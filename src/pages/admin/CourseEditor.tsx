@@ -45,6 +45,7 @@ import {
 import { getImageUrl } from '@/utils/imageUtils'
 import { CourseVideo } from '@/types/course'
 import { useTranslation } from 'react-i18next'
+import { UserAutocomplete } from '@/components/admin/UserAutocomplete'
 
 interface CourseLessonForm extends Omit<CourseVideo, 'id'> {
   id?: string
@@ -1163,48 +1164,37 @@ const CourseEditor = () => {
                   <div className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="instructor-user">Select User as Instructor</Label>
-                      <Select
-                        value={courseData.instructorUserId || undefined}
-                        onValueChange={async (userId) => {
-                          setCourseData({ ...courseData, instructorUserId: userId })
-                          
-                          // Fetch user profile to populate instructor fields
-                          const { data: profile } = await supabase
-                            .from('profiles')
-                            .select('parent_name, child_name')
-                            .eq('id', userId)
-                            .single()
-                          
-                          if (profile) {
-                            const displayName = profile.child_name || profile.parent_name
-                            setCourseData(prev => ({
-                              ...prev,
-                              instructorUserId: userId,
-                              instructorNameEn: displayName,
-                              instructorNameAr: displayName,
-                              instructorNameFr: displayName,
-                              instructorBioEn: `Instructor at Dolphoon`,
-                              instructorBioAr: `مدرب في دولفون`,
-                              instructorBioFr: `Instructeur chez Dolphoon`,
-                            }))
-                            toast.success('User selected as instructor')
+                      <UserAutocomplete
+                        value={courseData.instructorUserId || ''}
+                        onValueChange={(userId, user) => {
+                          if (!userId || !user) {
+                            setCourseData({ ...courseData, instructorUserId: null })
+                            return
                           }
+
+                          // Populate instructor fields with selected user data
+                          const displayName = user.child_name || user.parent_name
+                          setCourseData(prev => ({
+                            ...prev,
+                            instructorUserId: userId,
+                            instructorNameEn: displayName,
+                            instructorNameAr: displayName,
+                            instructorNameFr: displayName,
+                            instructorBioEn: user.skills?.length 
+                              ? `${displayName} | Skills: ${user.skills.join(', ')}`
+                              : `${displayName} - Instructor at Dolphoon`,
+                            instructorBioAr: user.skills?.length
+                              ? `${displayName} | المهارات: ${user.skills.join(', ')}`
+                              : `${displayName} - مدرب في دولفون`,
+                            instructorBioFr: user.skills?.length
+                              ? `${displayName} | Compétences: ${user.skills.join(', ')}`
+                              : `${displayName} - Instructeur chez Dolphoon`,
+                            instructorAvatar: user.profile_image || null,
+                          }))
+                          toast.success('User selected as instructor')
                         }}
-                      >
-                        <SelectTrigger id="instructor-user">
-                          <SelectValue placeholder="Select a user..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectGroup>
-                            <SelectLabel>Users</SelectLabel>
-                            {users?.map((user) => (
-                              <SelectItem key={user.id} value={user.id}>
-                                {user.child_name || user.parent_name} ({user.parent_name})
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                        </SelectContent>
-                      </Select>
+                        placeholder="Search and select an instructor..."
+                      />
                     </div>
 
                     {courseData.instructorUserId && (
