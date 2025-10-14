@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { supabase } from '@/integrations/supabase/client'
+import { useLoading } from '@/contexts/LoadingContext'
 import {
   Card,
   CardHeader,
@@ -21,8 +22,9 @@ import { StoriesFilters } from './Stories/StoriesFilters'
 const Stories = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
-  const { t, i18n } = useTranslation(['stories', 'misc', 'meta'])
+  const { t, i18n } = useTranslation(['stories', 'misc', 'meta', 'common'])
   const { language } = useLanguage()
+  const { setIsLoading, setLoadingMessage } = useLoading()
 
   const { data: stories = [], isLoading } = useQuery({
     queryKey: ['stories', language],
@@ -78,29 +80,16 @@ const Stories = () => {
     return matchesSearch && matchesCategory
   })
 
-  if (isLoading) {
-    return (
-      <div className="px-3 py-4 md:px-4 md:py-8 lg:py-12">
-        <div className="container mx-auto max-w-6xl">
-          <div className="mb-4 text-center md:mb-6 lg:mb-8">
-            <h1 className="mb-2 bg-gradient-to-r from-primary-foreground to-purple-600 bg-clip-text text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
-              {t('allStories')}
-            </h1>
-          </div>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <Card key={i} className="h-[20rem] animate-pulse">
-                <div className="aspect-[3/2] bg-gray-200"></div>
-                <CardHeader>
-                  <div className="mb-2 h-6 rounded bg-gray-200"></div>
-                  <div className="h-4 rounded bg-gray-200"></div>
-                </CardHeader>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </div>
-    )
+  // Update global loading state
+  useEffect(() => {
+    setIsLoading(isLoading)
+    if (isLoading) {
+      setLoadingMessage(t('loading.stories', { ns: 'common' }))
+    }
+  }, [isLoading, setIsLoading, setLoadingMessage, t])
+
+  if (!stories.length && !filteredStories.length && isLoading) {
+    return null
   }
 
   return (

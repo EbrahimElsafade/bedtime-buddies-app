@@ -1,4 +1,13 @@
 {
+  "loading": {
+    "default": "Chargement...",
+    "stories": "Chargement des histoires...",
+    "story": "Chargement de l'histoire...",
+    "courses": "Chargement des cours...",
+    "course": "Chargement du cours...",
+    "profile": "Chargement du profil...",
+    "data": "Chargement des données..."
+  },
   "appName": "Dolphoon",
   "tagline": "Votre ami pour les histoires, l'apprentissage et le jeu",
   "home": "Accueil",
@@ -41,7 +50,6 @@
   "premiumPlanDescription": "Vous êtes actuellement sur le plan Premium. Profitez d'un accès illimité à toutes les histoires et fonctionnalités.",
   "freePlanDescription": "Passez au Premium pour un accès illimité à toutes les histoires et fonctionnalités.",
   "upgradeToPremium": "Passer au Premium",
-  "loading": "Chargement...",
   "profileUpdated": "Profil mis à jour avec succès",
   "profileLoadError": "Votre profil n'a pas pu être chargé. Veuillez vous reconnecter.",
   "pwa": {

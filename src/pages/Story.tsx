@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { useAuth } from '@/contexts/AuthContext'
+import { useLoading } from '@/contexts/LoadingContext'
+import { useTranslation } from 'react-i18next'
 import { useStoryData } from '@/hooks/useStoryData'
 import { useStoryLanguage } from '@/hooks/useStoryLanguage'
 import { useStoryFavorites } from '@/hooks/useFavorites'
@@ -17,14 +19,24 @@ const Story = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { isAuthenticated, profile } = useAuth()
+  const { t } = useTranslation(['common'])
 
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0)
 
+  const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: story, isLoading, error } = useStoryData(id)
   const { currentLanguage, setCurrentLanguage } = useStoryLanguage(story)
   const { isFavorite, addFavorite, removeFavorite } = useStoryFavorites()
   const currentLanguageKey = currentLanguage[0] + currentLanguage[1]
   const currentStoryDir = currentLanguageKey === 'ar' ? 'rtl' : 'ltr'
+
+  // Set global loading state
+  useEffect(() => {
+    setIsLoading(isLoading)
+    if (isLoading) {
+      setLoadingMessage(t('loading.story', { ns: 'common' }))
+    }
+  }, [isLoading, setIsLoading, setLoadingMessage, t])
 
   // Get title and description for current language
   const getStoryTitle = () => {
@@ -50,18 +62,8 @@ const Story = () => {
     }
   }, [error, story, isLoading, navigate])
 
-  if (isLoading) {
-    return (
-      <div className="px-4 py-8">
-        <div className="container mx-auto max-w-4xl">
-          <div className="animate-pulse">
-            <div className="mb-4 h-8 rounded bg-gray-200"></div>
-            <div className="mb-6 h-6 w-2/3 rounded bg-gray-200"></div>
-            <div className="mb-6 aspect-[3/2] rounded bg-gray-200"></div>
-          </div>
-        </div>
-      </div>
-    )
+  if (!story && !error) {
+    return null
   }
 
   if (!story) {

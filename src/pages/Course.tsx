@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { ArrowLeft, Clock, BookOpen, Play, Lock, Loader2 } from 'lucide-react'
+import { ArrowLeft, Clock, BookOpen, Play, Lock } from 'lucide-react'
+import { useLoading } from '@/contexts/LoadingContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -21,16 +22,24 @@ import { CourseHeader } from '@/components/course/CourseHeader'
 const Course = () => {
   const { id: courseId } = useParams<{ id: string }>()
   const navigate = useNavigate()
-  const { t } = useTranslation(['courses', 'meta'])
+  const { t } = useTranslation(['courses', 'meta', 'common'])
   const { isAuthenticated, profile } = useAuth()
   const { toast } = useToast()
   const [activeTab, setActiveTab] = useState('overview')
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
 
+  const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
   const { isFavorite, addFavorite, removeFavorite } = useCourseFavorites()
   const isPremium = profile?.is_premium || false
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
+
+  useEffect(() => {
+    setIsLoading(isLoading)
+    if (isLoading) {
+      setLoadingMessage(t('loading.course', { ns: 'common' }))
+    }
+  }, [isLoading, setIsLoading, setLoadingMessage, t])
 
   const tabsRef = useRef<HTMLDivElement>(null)
 
@@ -104,19 +113,6 @@ const Course = () => {
     setSelectedVideo(video)
   }
 
-  // Loading state
-  if (isLoading) {
-    return (
-      <div className="px-4 py-16 text-center">
-        <div className="mb-4 flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary-foreground" />
-        </div>
-        <h1 className="font-bubbly text-2xl text-primary-foreground">
-          {t('course.loading')}
-        </h1>
-      </div>
-    )
-  }
 
   // Error state
   if (error) {

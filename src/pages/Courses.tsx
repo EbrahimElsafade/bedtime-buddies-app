@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { Search, BookOpen, Clock } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import { useLoading } from '@/contexts/LoadingContext'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -21,11 +22,17 @@ import { useTranslation } from 'react-i18next'
 const Courses = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState<string>('all')
-  const { t } = useTranslation(['courses', 'meta'])
+  const { t } = useTranslation(['courses', 'meta', 'common'])
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
 
+  const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: courses = [], isLoading } = useCoursesData()
   const { data: categories = [] } = useCourseCategories()
+
+  useEffect(() => {
+    setIsLoading(isLoading)
+    setLoadingMessage(isLoading ? t('common:loading.courses') : undefined)
+  }, [isLoading, setIsLoading, setLoadingMessage, t])
 
   const filteredCourses = useMemo(() => {
     return courses.filter(course => {
@@ -57,14 +64,6 @@ const Courses = () => {
     })
     return counts
   }, [courses])
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-primary-foreground">Loading courses...</div>
-      </div>
-    )
-  }
 
   return (
     <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-3 py-8 md:px-4 md:py-12">

@@ -1,4 +1,13 @@
 {
+  "loading": {
+    "default": "Loading...",
+    "stories": "Loading stories...",
+    "story": "Loading story...",
+    "courses": "Loading courses...",
+    "course": "Loading course...",
+    "profile": "Loading profile...",
+    "data": "Loading data..."
+  },
   "appName": "Dolphoon",
   "languages": {
     "en": "English",
@@ -48,7 +57,6 @@
   "premiumPlanDescription": "You are currently on the Premium plan. Enjoy unlimited access to all stories and features.",
   "freePlanDescription": "Upgrade to Premium for unlimited access to all stories and features.",
   "upgradeToPremium": "Upgrade to Premium",
-  "loading": "Loading...",
   "profileUpdated": "Profile updated successfully",
   "profileLoadError": "Your profile could not be loaded. Please log in again.",
   "pwa": {
