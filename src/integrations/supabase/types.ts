@@ -293,8 +293,11 @@ export type Database = {
           created_at: string
           id: string
           is_premium: boolean
+          linked_accounts: string[] | null
           parent_name: string
           preferred_language: string
+          profile_image: string | null
+          skills: string[] | null
           subscription_end: string | null
           subscription_tier: string | null
           updated_at: string
@@ -304,8 +307,11 @@ export type Database = {
           created_at?: string
           id: string
           is_premium?: boolean
+          linked_accounts?: string[] | null
           parent_name: string
           preferred_language?: string
+          profile_image?: string | null
+          skills?: string[] | null
           subscription_end?: string | null
           subscription_tier?: string | null
           updated_at?: string
@@ -315,8 +321,11 @@ export type Database = {
           created_at?: string
           id?: string
           is_premium?: boolean
+          linked_accounts?: string[] | null
           parent_name?: string
           preferred_language?: string
+          profile_image?: string | null
+          skills?: string[] | null
           subscription_end?: string | null
           subscription_tier?: string | null
           updated_at?: string

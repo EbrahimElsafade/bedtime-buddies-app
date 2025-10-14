@@ -45,7 +45,10 @@ export const useProfileManagement = (user: User | null) => {
         preferred_language: data.preferred_language as 'en' | 'ar-eg' | 'ar-fos7a' | 'fr',
         is_premium: data.is_premium,
         subscription_tier: data.subscription_tier,
-        subscription_end: data.subscription_end
+        subscription_end: data.subscription_end,
+        profile_image: data.profile_image,
+        linked_accounts: (data.linked_accounts || []) as Profile['linked_accounts'],
+        skills: data.skills,
       };
       
       setProfile(transformedProfile);
@@ -88,7 +91,10 @@ export const useProfileManagement = (user: User | null) => {
         preferred_language: data.preferred_language as 'en' | 'ar-eg' | 'ar-fos7a' | 'fr',
         is_premium: data.is_premium,
         subscription_tier: data.subscription_tier,
-        subscription_end: data.subscription_end
+        subscription_end: data.subscription_end,
+        profile_image: data.profile_image,
+        linked_accounts: (data.linked_accounts || []) as Profile['linked_accounts'],
+        skills: data.skills,
       };
 
       setProfile(transformedProfile);

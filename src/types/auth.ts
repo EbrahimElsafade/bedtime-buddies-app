@@ -2,6 +2,8 @@ import { User } from '@supabase/supabase-js'
 
 export type UserRole = 'admin' | 'moderator' | 'user'
 
+export type SocialAccount = 'linkedin' | 'facebook' | 'twitter' | 'google'
+
 export type Profile = {
   id: string
   parent_name: string
@@ -10,6 +12,9 @@ export type Profile = {
   is_premium: boolean
   subscription_tier?: string
   subscription_end?: string
+  profile_image?: string
+  linked_accounts?: SocialAccount[]
+  skills?: string[]
 }
 
 export interface UserWithRoles {

@@ -20,6 +20,10 @@ import {
 import { useTranslation } from 'react-i18next'
 import { profileUpdateSchema } from '@/utils/validation'
 import { toast } from 'sonner'
+import { ProfileImageUpload } from '@/components/profile/ProfileImageUpload'
+import { SocialAccountsManager } from '@/components/profile/SocialAccountsManager'
+import { SkillsManager } from '@/components/profile/SkillsManager'
+import { Separator } from '@/components/ui/separator'
 
 interface ProfileInfoProps {
   name: string
@@ -93,61 +97,79 @@ export const ProfileInfo = ({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">{t('yourName')}</Label>
-            <Input
-              id="name"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              disabled={!isEditing}
-            />
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-sm font-medium mb-4">Profile Picture</h3>
+            <ProfileImageUpload />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email">{t('email')}</Label>
-            <Input id="email" value={email} disabled />
-            <p className="text-xs text-muted-foreground">
-              {t('emailCannotChange')}
-            </p>
-          </div>
+          <Separator />
 
-          <div className="space-y-2">
-            <Label htmlFor="childName">{t('childName')}</Label>
-            <Input
-              id="childName"
-              value={childName}
-              onChange={e => setChildName(e.target.value)}
-              disabled={!isEditing}
-              placeholder={
-                isEditing ? t('enterChildName') : t('notProvided')
-              }
-            />
-          </div>
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium">Personal Information</h3>
+            <div className="space-y-2">
+              <Label htmlFor="name">{t('yourName')}</Label>
+              <Input
+                id="name"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                disabled={!isEditing}
+              />
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="language">{t('preferredLanguage')}</Label>
-            {isEditing ? (
-              <Select
-                value={profileLanguage}
-                onValueChange={value =>
-                  setProfileLanguage(value as 'en' | 'ar-eg' | 'ar-fos7a' | 'fr')
+            <div className="space-y-2">
+              <Label htmlFor="email">{t('email')}</Label>
+              <Input id="email" value={email} disabled />
+              <p className="text-xs text-muted-foreground">
+                {t('emailCannotChange')}
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="childName">{t('childName')}</Label>
+              <Input
+                id="childName"
+                value={childName}
+                onChange={e => setChildName(e.target.value)}
+                disabled={!isEditing}
+                placeholder={
+                  isEditing ? t('enterChildName') : t('notProvided')
                 }
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="ar-eg">مصري</SelectItem>
-                  <SelectItem value="ar-fos7a">فصحي</SelectItem>
-                  <SelectItem value="fr">français</SelectItem>
-                </SelectContent>
-              </Select>
-            ) : (
-              <Input value={getLanguageDisplayName(profileLanguage)} disabled />
-            )}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="language">{t('preferredLanguage')}</Label>
+              {isEditing ? (
+                <Select
+                  value={profileLanguage}
+                  onValueChange={value =>
+                    setProfileLanguage(value as 'en' | 'ar-eg' | 'ar-fos7a' | 'fr')
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="ar-eg">مصري</SelectItem>
+                    <SelectItem value="ar-fos7a">فصحي</SelectItem>
+                    <SelectItem value="fr">français</SelectItem>
+                  </SelectContent>
+                </Select>
+              ) : (
+                <Input value={getLanguageDisplayName(profileLanguage)} disabled />
+              )}
+            </div>
           </div>
+
+          <Separator />
+
+          <SocialAccountsManager />
+
+          <Separator />
+
+          <SkillsManager />
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
