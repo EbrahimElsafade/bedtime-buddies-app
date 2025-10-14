@@ -13,7 +13,7 @@ const Hero = () => {
   return (
     <section className="relative overflow-hidden px-4 py-8 md:py-12">
       <div className="container relative z-10 mx-auto">
-        <div className="mx-auto grid max-w-4xl gap-8 md:gap-12 text-center">
+        <div className="mx-auto grid max-w-4xl gap-8 text-center md:gap-12">
           {/* Dolphoon mascot */}
           <div className="flex justify-center">
             <DolphoonMascot size="xl" expression="cheering" animate={false} />
@@ -35,6 +35,17 @@ const Hero = () => {
                 className="w-full rounded-full sm:w-auto"
               >
                 {t('exploreButton')}
+                <ArrowRight className="ms-2 h-4 w-4 rtl:rotate-180" />
+              </Button>
+            </Link>
+
+            <Link to="/courses" className="w-full sm:w-auto">
+              <Button
+                size="lg"
+                variant="accent"
+                className="w-full rounded-full sm:w-auto"
+              >
+                {t('exploreButton2')}
                 <ArrowRight className="ms-2 h-4 w-4 rtl:rotate-180" />
               </Button>
             </Link>
