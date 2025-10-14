@@ -398,11 +398,6 @@ const CourseEditor = () => {
     }
   }
 
-  // Calculate total course duration from all lessons
-  const calculateTotalDuration = () => {
-    return courseLessons.reduce((sum, lesson) => sum + (lesson.duration || 0), 0)
-  }
-
   // Handle save/submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -456,8 +451,6 @@ const CourseEditor = () => {
       }
 
       // Calculate total course duration
-      const totalDuration = calculateTotalDuration()
-
       // Create or update the course
       let courseId = id
       if (!isEditing) {
@@ -477,7 +470,6 @@ const CourseEditor = () => {
             is_free: courseData.isFree,
             is_published: courseData.isFeatured,
             lessons: courseLessons.length,
-            duration: totalDuration,
             learning_objectives: courseData.learningObjectives,
             learning_objectives_en: courseData.learningObjectives,
             learning_objectives_ar: courseData.learningObjectivesAr,
@@ -513,7 +505,6 @@ const CourseEditor = () => {
             is_free: courseData.isFree,
             is_published: courseData.isFeatured,
             lessons: courseLessons.length,
-            duration: totalDuration,
             learning_objectives: courseData.learningObjectives,
             learning_objectives_en: courseData.learningObjectives,
             learning_objectives_ar: courseData.learningObjectivesAr,
