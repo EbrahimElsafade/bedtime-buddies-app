@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useLoading } from "@/contexts/LoadingContext";
 import {
   Card,
   CardContent,
@@ -25,6 +26,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 import { getMultilingualText } from "@/utils/multilingualUtils";
 
+type Json = string | number | boolean | null | { [key: string]: Json } | Json[];
+
 interface HomePageSettings {
   freeStory: string;
   freeStoryEnabled: boolean;
@@ -36,12 +39,13 @@ interface HomePageSettings {
 
 interface StoryOption {
   id: string;
-  title: any;
+  title: Record<string, string>;
   cover_image: string | null;
 }
 
 const Appearance = () => {
   const queryClient = useQueryClient();
+  const { setIsLoading, setLoadingMessage } = useLoading();
   
   // Fetch home page settings
   const { data: homeSettings, isLoading: homeLoading } = useQuery({
@@ -92,11 +96,15 @@ const Appearance = () => {
   // Mutation to update settings
   const updateSettingsMutation = useMutation({
     mutationFn: async (newSettings: HomePageSettings) => {
+      const settingsJson: Json = {
+        ...newSettings
+      };
+
       const { error } = await supabase
         .from("appearance_settings")
         .upsert({
           setting_key: "home_page",
-          setting_value: newSettings as any
+          setting_value: settingsJson
         }, {
           onConflict: "setting_key"
         });
@@ -107,7 +115,7 @@ const Appearance = () => {
       toast.success("Settings updated successfully!");
       queryClient.invalidateQueries({ queryKey: ["appearance-settings"] });
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       console.error("Error updating settings:", error);
       toast.error("Failed to update settings");
     }
@@ -117,21 +125,19 @@ const Appearance = () => {
     updateSettingsMutation.mutate(settings);
   };
 
-  const updateSetting = (key: keyof HomePageSettings, value: any) => {
+  const updateSetting = <K extends keyof HomePageSettings>(key: K, value: HomePageSettings[K]) => {
     setSettings(prev => ({
       ...prev,
       [key]: value
     }));
   };
 
-  if (homeLoading) {
-    return (
-      <div className="flex items-center justify-center p-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        <span className="ml-2 text-lg">Loading appearance settings...</span>
-      </div>
-    );
-  }
+  useEffect(() => {
+    setIsLoading(homeLoading);
+    if (homeLoading) {
+      setLoadingMessage('Loading appearance settings...');
+    }
+  }, [homeLoading, setIsLoading, setLoadingMessage]);
 
   return (
     <div className="space-y-6">

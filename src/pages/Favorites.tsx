@@ -12,11 +12,13 @@ import { Clock, Heart, BookOpen, GraduationCap } from "lucide-react";
 import { getImageUrl } from "@/utils/imageUtils";
 import { getMultilingualText } from "@/utils/multilingualUtils";
 import { useStoryFavorites, useCourseFavorites } from "@/hooks/useFavorites";
+import { useLoading } from "@/contexts/LoadingContext";
 
 const Favorites = () => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const { t, i18n } = useTranslation(['stories', 'courses', 'misc', 'common', 'meta']);
+  const { setIsLoading, setLoadingMessage } = useLoading();
   const { language } = useLanguage();
   
   const { favorites: storyFavorites, isLoading: isLoadingStories } = useStoryFavorites();
@@ -24,23 +26,17 @@ const Favorites = () => {
   
   // Check authentication and redirect if needed
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (!authLoading && !isAuthenticated) {
       navigate("/login", { replace: true });
     }
-  }, [isAuthenticated, isLoading, navigate]);
-  
-  if (isLoading) {
-    return (
-      <div className="py-12 px-4 flex items-center justify-center min-h-[80vh]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p>{t('common:loading')}</p>
-        </div>
-      </div>
-    );
-  }
-  
-  if (!isAuthenticated) {
+  }, [isAuthenticated, authLoading, navigate]);
+
+  useEffect(() => {
+    setIsLoading(authLoading);
+    if (authLoading) {
+      setLoadingMessage(t('loading.data', { ns: 'common' }));
+    }
+  }, [authLoading, t]);  if (!isAuthenticated) {
     return (
       <div className="py-12 px-4 flex items-center justify-center min-h-[80vh]">
         <div className="text-center">
