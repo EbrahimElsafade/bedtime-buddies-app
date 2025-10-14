@@ -50,7 +50,7 @@ const Hero = () => {
               </Button>
             </Link>
 
-            {!isAuthenticated && (
+            {/* {!isAuthenticated && (
               <Link to="/register" className="w-full sm:w-auto">
                 <Button
                   size="lg"
@@ -60,7 +60,7 @@ const Hero = () => {
                   {t('signUpButton')}
                 </Button>
               </Link>
-            )}
+            )} */}
           </div>
         </div>
       </div>
