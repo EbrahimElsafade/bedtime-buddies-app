@@ -2,7 +2,7 @@ import { User } from '@supabase/supabase-js'
 
 export type UserRole = 'admin' | 'moderator' | 'user'
 
-export type SocialAccount = 'linkedin' | 'facebook' | 'twitter' | 'google'
+export type SocialAccount = 'linkedin_oidc' | 'facebook' | 'twitter' | 'google' | 'apple'
 
 export type Profile = {
   id: string
@@ -31,6 +31,11 @@ export type AuthContextType = {
   login: (email: string, password: string) => Promise<void>
   loginWithGoogle: () => Promise<void>
   loginWithApple: () => Promise<void>
+  loginWithLinkedIn: () => Promise<void>
+  loginWithFacebook: () => Promise<void>
+  loginWithTwitter: () => Promise<void>
+  linkSocialAccount: (provider: SocialAccount) => Promise<void>
+  unlinkSocialAccount: (provider: SocialAccount) => Promise<void>
   register: (
     email: string,
     password: string,

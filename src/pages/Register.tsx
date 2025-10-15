@@ -32,6 +32,9 @@ const Register = () => {
     register: signUp,
     loginWithGoogle,
     loginWithApple,
+    loginWithLinkedIn,
+    loginWithFacebook,
+    loginWithTwitter,
     isAuthenticated,
     isLoading,
   } = useAuth()
@@ -129,6 +132,30 @@ const Register = () => {
     }
   }
 
+  const handleLinkedInSignUp = async () => {
+    try {
+      await loginWithLinkedIn()
+    } catch (err) {
+      // Error is handled by the loginWithLinkedIn function
+    }
+  }
+
+  const handleFacebookSignUp = async () => {
+    try {
+      await loginWithFacebook()
+    } catch (err) {
+      // Error is handled by the loginWithFacebook function
+    }
+  }
+
+  const handleTwitterSignUp = async () => {
+    try {
+      await loginWithTwitter()
+    } catch (err) {
+      // Error is handled by the loginWithTwitter function
+    }
+  }
+
   return (
     <div className="flex min-h-[82.7vh] bg-gradient-to-b from-primary/20 to-primary/10 items-center justify-center px-4 py-12">
       <Helmet>
@@ -214,7 +241,7 @@ const Register = () => {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-3">
                     <Button
                       variant="outline"
                       type="button"
@@ -230,6 +257,31 @@ const Register = () => {
                       disabled={isLoading}
                     >
                       {t('auth:common.apple')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      type="button"
+                      onClick={handleLinkedInSignUp}
+                      disabled={isLoading}
+                    >
+                      {t('auth:common.linkedin')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      type="button"
+                      onClick={handleFacebookSignUp}
+                      disabled={isLoading}
+                    >
+                      {t('auth:common.facebook')}
+                    </Button>
+                    <Button
+                      variant="outline"
+                      type="button"
+                      onClick={handleTwitterSignUp}
+                      disabled={isLoading}
+                      className="col-span-2"
+                    >
+                      {t('auth:common.twitter')}
                     </Button>
                   </div>
                 </div>

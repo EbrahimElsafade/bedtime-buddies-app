@@ -1,104 +1,141 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'sonner'
-import { Facebook, Linkedin, Twitter } from 'lucide-react'
+import { Loader2, Plus, X } from 'lucide-react'
 import { SocialAccount } from '@/types/auth'
-import { supabase } from '@/integrations/supabase/client'
-
-const socialIcons = {
-  linkedin: Linkedin,
-  facebook: Facebook,
-  twitter: Twitter,
-  google: () => (
-    <svg className="h-5 w-5" viewBox="0 0 24 24">
-      <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-      <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-      <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-      <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-    </svg>
-  )
-}
 
 export const SocialAccountsManager = () => {
-  const { profile, updateProfile } = useAuth()
-  const [linking, setLinking] = useState<SocialAccount | null>(null)
-  const linkedAccounts = profile?.linked_accounts || []
+  const { profile, user, linkSocialAccount, unlinkSocialAccount } = useAuth()
+  const [linking, setLinking] = useState(false)
+  const [unlinking, setUnlinking] = useState<SocialAccount | null>(null)
 
-  const handleToggleAccount = async (account: SocialAccount) => {
+  const linkedAccounts = profile?.linked_accounts || []
+  
+  // Get actual linked identities from user object
+  const actualLinkedProviders = user?.identities?.map(id => id.provider) || []
+  
+  const availableAccounts: SocialAccount[] = ['google', 'apple', 'linkedin_oidc', 'facebook', 'twitter']
+
+  const getProviderDisplayName = (provider: SocialAccount): string => {
+    const names: Record<SocialAccount, string> = {
+      google: 'Google',
+      apple: 'Apple',
+      linkedin_oidc: 'LinkedIn',
+      facebook: 'Facebook',
+      twitter: 'Twitter'
+    }
+    return names[provider] || provider
+  }
+
+  const handleLinkAccount = async (account: SocialAccount) => {
+    if (actualLinkedProviders.includes(account)) {
+      toast.error('This account is already linked')
+      return
+    }
+
+    setLinking(true)
     try {
-      setLinking(account)
-      const isLinked = linkedAccounts.includes(account)
-      
-      if (isLinked) {
-        // Unlink account
-        const newAccounts = linkedAccounts.filter(a => a !== account)
-        await updateProfile({ linked_accounts: newAccounts })
-        toast.success(`${account} account unlinked`)
-      } else {
-        // Link account - trigger OAuth flow
-        const { error } = await supabase.auth.signInWithOAuth({
-          provider: account === 'google' ? 'google' : 
-                   account === 'facebook' ? 'facebook' :
-                   account === 'twitter' ? 'twitter' : 'linkedin_oidc',
-          options: {
-            redirectTo: `${window.location.origin}/profile`,
-            skipBrowserRedirect: false,
-          }
-        })
-        
-        if (error) throw error
-        
-        // After OAuth completes, the account will be linked
-        const newAccounts = [...linkedAccounts, account]
-        await updateProfile({ linked_accounts: newAccounts })
-      }
-    } catch (error: any) {
-      toast.error(error.message || `Failed to ${linkedAccounts.includes(account) ? 'unlink' : 'link'} account`)
+      await linkSocialAccount(account)
+      // The redirect will happen automatically, and linked_accounts will be updated via onAuthStateChange
+    } catch (err: any) {
+      // Error already handled in context with toast
     } finally {
-      setLinking(null)
+      setLinking(false)
     }
   }
 
-  const accounts: SocialAccount[] = ['google', 'facebook', 'linkedin', 'twitter']
+  const handleUnlinkAccount = async (account: SocialAccount) => {
+    // Prevent unlinking the last authentication method
+    if (actualLinkedProviders.length <= 1) {
+      toast.error('You must keep at least one authentication method')
+      return
+    }
+
+    setUnlinking(account)
+    try {
+      await unlinkSocialAccount(account)
+    } catch (err: any) {
+      // Error already handled in context with toast
+    } finally {
+      setUnlinking(null)
+    }
+  }
 
   return (
-    <div className="space-y-3">
-      <h3 className="text-sm font-medium">Connected Accounts</h3>
-      <div className="grid gap-3">
-        {accounts.map((account) => {
-          const Icon = socialIcons[account]
-          const isLinked = linkedAccounts.includes(account)
-          const isProcessing = linking === account
-          
-          return (
-            <Card key={account} className="p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
-                    <Icon />
-                  </div>
-                  <div>
-                    <p className="font-medium capitalize">{account}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {isLinked ? 'Connected' : 'Not connected'}
-                    </p>
-                  </div>
-                </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Linked Social Accounts</CardTitle>
+        <CardDescription>
+          Manage your connected social accounts for login and profile display
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {/* Currently Linked Accounts */}
+        <div className="space-y-2">
+          <h4 className="text-sm font-medium">Connected Accounts</h4>
+          {actualLinkedProviders.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No social accounts linked</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {actualLinkedProviders.map((account) => (
+                <Badge key={account} variant="secondary" className="flex items-center gap-2 px-3 py-1.5">
+                  {getProviderDisplayName(account as SocialAccount)}
+                  <button
+                    onClick={() => handleUnlinkAccount(account as SocialAccount)}
+                    disabled={unlinking === account || actualLinkedProviders.length <= 1}
+                    className="ml-1 hover:text-destructive disabled:opacity-50"
+                  >
+                    {unlinking === account ? (
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                    ) : (
+                      <X className="h-3 w-3" />
+                    )}
+                  </button>
+                </Badge>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Available Accounts to Link */}
+        <div className="space-y-2">
+          <h4 className="text-sm font-medium">Add Account</h4>
+          <div className="grid grid-cols-2 gap-2">
+            {availableAccounts
+              .filter(account => !actualLinkedProviders.includes(account))
+              .map((account) => (
                 <Button
-                  onClick={() => handleToggleAccount(account)}
-                  disabled={isProcessing}
-                  variant={isLinked ? 'destructive' : 'default'}
+                  key={account}
+                  variant="outline"
                   size="sm"
+                  onClick={() => handleLinkAccount(account)}
+                  disabled={linking}
+                  className="justify-start"
                 >
-                  {isProcessing ? 'Processing...' : isLinked ? 'Unlink' : 'Link'}
+                  {linking ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Plus className="mr-2 h-4 w-4" />
+                  )}
+                  {getProviderDisplayName(account)}
                 </Button>
-              </div>
-            </Card>
-          )
-        })}
-      </div>
-    </div>
+              ))}
+          </div>
+          {availableAccounts.filter(a => !actualLinkedProviders.includes(a)).length === 0 && (
+            <p className="text-sm text-muted-foreground">All accounts are linked</p>
+          )}
+        </div>
+
+        <div className="pt-4 border-t">
+          <p className="text-xs text-muted-foreground">
+            <strong>Note:</strong> You must keep at least one authentication method linked. 
+            Linking accounts allows you to sign in using any of your connected providers.
+          </p>
+        </div>
+      </CardContent>
+    </Card>
   )
 }

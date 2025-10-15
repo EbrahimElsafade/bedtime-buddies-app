@@ -14,7 +14,7 @@ import { loginSchema } from "@/utils/validation";
 const Login = () => {
   const navigate = useNavigate();
   const { t } = useTranslation(['auth', 'meta']);
-  const { login, loginWithGoogle, loginWithApple, isAuthenticated, isLoading, resetPassword } = useAuth();
+  const { login, loginWithGoogle, loginWithApple, loginWithLinkedIn, loginWithFacebook, loginWithTwitter, isAuthenticated, isLoading, resetPassword } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -66,6 +66,30 @@ const Login = () => {
       // OAuth will redirect the user
     } catch (err) {
       // Error is handled by the loginWithApple function with toast
+    }
+  };
+
+  const handleLinkedInLogin = async () => {
+    try {
+      await loginWithLinkedIn();
+    } catch (err) {
+      // Error is handled by the loginWithLinkedIn function with toast
+    }
+  };
+
+  const handleFacebookLogin = async () => {
+    try {
+      await loginWithFacebook();
+    } catch (err) {
+      // Error is handled by the loginWithFacebook function with toast
+    }
+  };
+
+  const handleTwitterLogin = async () => {
+    try {
+      await loginWithTwitter();
+    } catch (err) {
+      // Error is handled by the loginWithTwitter function with toast
     }
   };
 
@@ -242,7 +266,7 @@ const Login = () => {
                 </div>
               </div>
               
-              <div className="mt-4 grid grid-cols-2 gap-4">
+              <div className="mt-4 grid grid-cols-2 gap-3">
                 <Button 
                   variant="outline" 
                   type="button" 
@@ -258,6 +282,31 @@ const Login = () => {
                   disabled={isLoading}
                 >
                   {t('auth:common.apple')}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  type="button" 
+                  onClick={handleLinkedInLogin}
+                  disabled={isLoading}
+                >
+                  {t('auth:common.linkedin')}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  type="button" 
+                  onClick={handleFacebookLogin}
+                  disabled={isLoading}
+                >
+                  {t('auth:common.facebook')}
+                </Button>
+                <Button 
+                  variant="outline" 
+                  type="button" 
+                  onClick={handleTwitterLogin}
+                  disabled={isLoading}
+                  className="col-span-2"
+                >
+                  {t('auth:common.twitter')}
                 </Button>
               </div>
             </div>

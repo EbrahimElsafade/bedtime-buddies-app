@@ -17,6 +17,11 @@ const defaultContextValue: AuthContextType = {
   login: async () => { throw new Error('AuthProvider not initialized') },
   loginWithGoogle: async () => { throw new Error('AuthProvider not initialized') },
   loginWithApple: async () => { throw new Error('AuthProvider not initialized') },
+  loginWithLinkedIn: async () => { throw new Error('AuthProvider not initialized') },
+  loginWithFacebook: async () => { throw new Error('AuthProvider not initialized') },
+  loginWithTwitter: async () => { throw new Error('AuthProvider not initialized') },
+  linkSocialAccount: async () => { throw new Error('AuthProvider not initialized') },
+  unlinkSocialAccount: async () => { throw new Error('AuthProvider not initialized') },
   register: async () => { throw new Error('AuthProvider not initialized') },
   logout: async () => { throw new Error('AuthProvider not initialized') },
   resetPassword: async () => { throw new Error('AuthProvider not initialized') },
@@ -100,6 +105,100 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error: any) {
       logger.error('Apple login error:', error.message);
       toast.error(error.message || 'Failed to sign in with Apple');
+      throw error;
+    }
+  };
+
+  const loginWithLinkedIn = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'linkedin_oidc',
+        options: {
+          redirectTo: `${window.location.origin}/login`
+        }
+      });
+      
+      if (error) throw error;
+    } catch (error: any) {
+      logger.error('LinkedIn login error:', error.message);
+      toast.error(error.message || 'Failed to sign in with LinkedIn');
+      throw error;
+    }
+  };
+
+  const loginWithFacebook = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'facebook',
+        options: {
+          redirectTo: `${window.location.origin}/login`
+        }
+      });
+      
+      if (error) throw error;
+    } catch (error: any) {
+      logger.error('Facebook login error:', error.message);
+      toast.error(error.message || 'Failed to sign in with Facebook');
+      throw error;
+    }
+  };
+
+  const loginWithTwitter = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'twitter',
+        options: {
+          redirectTo: `${window.location.origin}/login`
+        }
+      });
+      
+      if (error) throw error;
+    } catch (error: any) {
+      logger.error('Twitter login error:', error.message);
+      toast.error(error.message || 'Failed to sign in with Twitter');
+      throw error;
+    }
+  };
+
+  const linkSocialAccount = async (provider: 'linkedin_oidc' | 'facebook' | 'twitter' | 'google' | 'apple') => {
+    try {
+      if (!user) throw new Error('Must be logged in to link accounts');
+      
+      const { error } = await supabase.auth.linkIdentity({
+        provider: provider as any,
+      });
+      
+      if (error) throw error;
+      
+      toast.success(`${provider} account linking initiated`);
+    } catch (error: any) {
+      logger.error('Link account error:', error.message);
+      toast.error(error.message || 'Failed to link account');
+      throw error;
+    }
+  };
+
+  const unlinkSocialAccount = async (provider: 'linkedin_oidc' | 'facebook' | 'twitter' | 'google' | 'apple') => {
+    try {
+      if (!user) throw new Error('Must be logged in to unlink accounts');
+      
+      const identity = user.identities?.find(id => id.provider === provider);
+      if (!identity) {
+        throw new Error('Account not linked');
+      }
+      
+      const { error } = await supabase.auth.unlinkIdentity(identity);
+      
+      if (error) throw error;
+      
+      // Update profile to remove from linked_accounts
+      const updatedAccounts = (profile?.linked_accounts || []).filter(acc => acc !== provider);
+      await updateProfile({ linked_accounts: updatedAccounts });
+      
+      toast.success(`${provider} account unlinked successfully`);
+    } catch (error: any) {
+      logger.error('Unlink account error:', error.message);
+      toast.error(error.message || 'Failed to unlink account');
       throw error;
     }
   };
@@ -199,6 +298,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (currentSession) {
         setSession(currentSession);
         setUser(currentSession.user);
+        
+        // Update linked accounts based on actual identities
+        if (currentSession.user?.identities) {
+          const providers = currentSession.user.identities.map((id: any) => id.provider);
+          // Defer the profile update to avoid race conditions
+          setTimeout(async () => {
+            try {
+              const { data: currentProfile } = await supabase
+                .from('profiles')
+                .select('linked_accounts')
+                .eq('id', currentSession.user.id)
+                .single();
+              
+              const existingAccounts = currentProfile?.linked_accounts || [];
+              const hasChanges = providers.some((p: string) => !existingAccounts.includes(p)) ||
+                                 existingAccounts.some((a: string) => !providers.includes(a));
+              
+              if (hasChanges) {
+                await supabase
+                  .from('profiles')
+                  .update({ linked_accounts: providers })
+                  .eq('id', currentSession.user.id);
+              }
+            } catch (error) {
+              logger.warn('Failed to sync linked accounts:', error);
+            }
+          }, 0);
+        }
         
         // Store session in sessionStorage as backup
         try {
@@ -327,6 +454,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     login,
     loginWithGoogle,
     loginWithApple,
+    loginWithLinkedIn,
+    loginWithFacebook,
+    loginWithTwitter,
+    linkSocialAccount,
+    unlinkSocialAccount,
     register,
     logout,
     resetPassword,
