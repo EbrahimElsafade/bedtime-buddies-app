@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -27,6 +27,7 @@ import { registerSchema } from '@/utils/validation'
 
 const Register = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const { t } = useTranslation(['auth', 'meta'])
   const {
     register: signUp,
@@ -50,11 +51,12 @@ const Register = () => {
   const [currentStep, setCurrentStep] = useState(1)
 
   useEffect(() => {
-    // Redirect to home if already authenticated
+    // Redirect to the previous page or home if already authenticated
     if (isAuthenticated) {
-      navigate('/')
+      const from = (location.state as any)?.from || '/'
+      navigate(from, { replace: true })
     }
-  }, [isAuthenticated, navigate])
+  }, [isAuthenticated, navigate, location])
 
   const handleNextStep = () => {
     // Validate step 1 inputs

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,6 +13,7 @@ import { loginSchema } from "@/utils/validation";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { t } = useTranslation(['auth', 'meta']);
   const { login, loginWithGoogle, loginWithApple, loginWithLinkedIn, loginWithFacebook, loginWithTwitter, isAuthenticated, isLoading, resetPassword } = useAuth();
   const [email, setEmail] = useState("");
@@ -23,11 +24,12 @@ const Login = () => {
   const [resetSubmitting, setResetSubmitting] = useState(false);
   
   useEffect(() => {
-    // Redirect to home if already authenticated
+    // Redirect to the previous page or home if already authenticated
     if (isAuthenticated) {
-      navigate("/");
+      const from = (location.state as any)?.from || "/";
+      navigate(from, { replace: true });
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, navigate, location]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
