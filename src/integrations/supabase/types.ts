@@ -116,6 +116,7 @@ export type Database = {
           description_fr: string | null
           duration: number
           id: string
+          is_free: boolean
           lesson_order: number
           thumbnail_path: string | null
           title: string
@@ -135,6 +136,7 @@ export type Database = {
           description_fr?: string | null
           duration: number
           id?: string
+          is_free?: boolean
           lesson_order?: number
           thumbnail_path?: string | null
           title: string
@@ -154,6 +156,7 @@ export type Database = {
           description_fr?: string | null
           duration?: number
           id?: string
+          is_free?: boolean
           lesson_order?: number
           thumbnail_path?: string | null
           title?: string

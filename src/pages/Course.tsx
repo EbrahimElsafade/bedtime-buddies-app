@@ -195,14 +195,6 @@ const Course = () => {
           onBackClick={() => navigate('/courses')}
           isFavorite={courseId ? isFavorite(courseId) : false}
           onToggleFavorite={() => {
-            if (!isAuthenticated) {
-              toast({
-                title: t('toast.loginRequired'),
-                description: t('toast.pleaseLoginToStart'),
-                variant: 'destructive',
-              })
-              return
-            }
             if (courseId) {
               if (isFavorite(courseId)) {
                 removeFavorite(courseId)

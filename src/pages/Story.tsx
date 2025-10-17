@@ -73,11 +73,6 @@ const Story = () => {
   const currentSection = story.sections[currentSectionIndex]
 
   const toggleFavorite = () => {
-    if (!isAuthenticated) {
-      navigate('/login')
-      return
-    }
-    
     if (!id) return
     
     if (isFavorite(id)) {

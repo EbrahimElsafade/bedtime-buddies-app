@@ -238,26 +238,27 @@ const CourseEditor = () => {
         console.log('Processing lessons:', lessons)
         const lessonsForForm: CourseLessonForm[] = lessons.map(lesson => {
           console.log('Processing lesson:', lesson)
+          const lessonData = lesson as any; // Type assertion for newly added is_free field
 
           return {
-            id: lesson.id,
-            title_en: lesson.title_en || lesson.title || '',
-            title_ar: lesson.title_ar || '',
-            title_fr: lesson.title_fr || '',
-            description_en: lesson.description_en || lesson.description || '',
-            description_ar: lesson.description_ar || '',
-            description_fr: lesson.description_fr || '',
-            videoPath: lesson.video_path || '',
-            thumbnailPath: lesson.thumbnail_path || '',
-            duration: lesson.duration || 0,
-            isFree: lesson.is_free !== undefined ? lesson.is_free : course.is_free,
-            order: lesson.lesson_order || 1,
-            createdAt: lesson.created_at,
-            thumbnailPreview: lesson.thumbnail_path
-              ? getImageUrl(lesson.thumbnail_path)
+            id: lessonData.id,
+            title_en: lessonData.title_en || lessonData.title || '',
+            title_ar: lessonData.title_ar || '',
+            title_fr: lessonData.title_fr || '',
+            description_en: lessonData.description_en || lessonData.description || '',
+            description_ar: lessonData.description_ar || '',
+            description_fr: lessonData.description_fr || '',
+            videoPath: lessonData.video_path || '',
+            thumbnailPath: lessonData.thumbnail_path || '',
+            duration: lessonData.duration || 0,
+            isFree: lessonData.is_free !== undefined ? lessonData.is_free : course.is_free,
+            order: lessonData.lesson_order || 1,
+            createdAt: lessonData.created_at,
+            thumbnailPreview: lessonData.thumbnail_path
+              ? getImageUrl(lessonData.thumbnail_path)
               : null,
-            videoUrl: lesson.video_url || '',
-            uploadMethod: lesson.video_url ? 'url' : 'upload',
+            videoUrl: lessonData.video_url || '',
+            uploadMethod: lessonData.video_url ? 'url' : 'upload',
           }
         })
 
