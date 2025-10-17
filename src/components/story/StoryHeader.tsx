@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { ShareDialog } from "./ShareDialog";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface StoryHeaderProps {
   onBackClick: () => void;
@@ -21,6 +23,16 @@ export const StoryHeader = ({
   storyDescription 
 }: StoryHeaderProps) => {
   const { t } = useTranslation('stories');
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  const handleFavoriteClick = () => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    onToggleFavorite();
+  };
 
   return (
     <div className="mb-2 flex flex-wrap justify-between items-center">
@@ -32,7 +44,7 @@ export const StoryHeader = ({
         <Button 
           variant="tertiary" 
           size="icon" 
-          onClick={onToggleFavorite} 
+          onClick={handleFavoriteClick} 
           className={cn("rounded-md shadow", isFavorite && "text-red-500")}
           aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
         >

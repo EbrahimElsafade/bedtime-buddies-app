@@ -250,7 +250,7 @@ const CourseEditor = () => {
             videoPath: lesson.video_path || '',
             thumbnailPath: lesson.thumbnail_path || '',
             duration: lesson.duration || 0,
-            isFree: course.is_free,
+            isFree: lesson.is_free !== undefined ? lesson.is_free : course.is_free,
             order: lesson.lesson_order || 1,
             createdAt: lesson.created_at,
             thumbnailPreview: lesson.thumbnail_path
@@ -606,6 +606,7 @@ const CourseEditor = () => {
             thumbnail_path: lessonThumbnailUrl,
             duration: lesson.duration,
             lesson_order: lesson.order,
+            is_free: lesson.isFree || false,
           })
 
         if (lessonError) throw lessonError
@@ -1491,6 +1492,23 @@ const CourseEditor = () => {
                                   className="min-h-[80px]"
                                 />
                               </div>
+                            </div>
+
+                            {/* Free Lesson Toggle */}
+                            <div className="flex items-center justify-between rounded-lg border p-4">
+                              <div className="space-y-0.5">
+                                <Label htmlFor={`lesson-free-${lessonIndex}`}>Free Lesson</Label>
+                                <p className="text-sm text-muted-foreground">
+                                  Make this lesson free even if the course is premium
+                                </p>
+                              </div>
+                              <Switch
+                                id={`lesson-free-${lessonIndex}`}
+                                checked={lesson.isFree || false}
+                                onCheckedChange={(checked) => 
+                                  updateLessonField(lessonIndex, 'isFree', checked)
+                                }
+                              />
                             </div>
 
                             <div className="grid gap-4 sm:grid-cols-2">
