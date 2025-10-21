@@ -46,6 +46,8 @@ import { getImageUrl } from '@/utils/imageUtils'
 import { CourseVideo } from '@/types/course'
 import { useTranslation } from 'react-i18next'
 import { UserAutocomplete } from '@/components/admin/UserAutocomplete'
+import { validateImageFile, validateVideoFile } from '@/utils/fileValidation'
+import { validateCourseData } from '@/utils/contentValidation'
 
 interface CourseLessonForm extends Omit<CourseVideo, 'id'> {
   id?: string
@@ -405,10 +407,32 @@ const CourseEditor = () => {
     setIsSubmitting(true)
 
     try {
+      // Validate course data
+      const contentValidation = validateCourseData({
+        title_en: courseData.title_en,
+        description_en: courseData.description_en,
+        min_age: courseData.minAge,
+        max_age: courseData.maxAge,
+      });
+      
+      if (!contentValidation.valid) {
+        toast.error(contentValidation.error || 'Invalid course data');
+        setIsSubmitting(false);
+        return;
+      }
+
       let coverImageUrl = courseData.coverImagePath
 
       // Upload cover image if changed
       if (coverImageFile) {
+        // Validate cover image
+        const imageValidation = validateImageFile(coverImageFile);
+        if (!imageValidation.valid) {
+          toast.error(imageValidation.error || 'Invalid cover image');
+          setIsSubmitting(false);
+          return;
+        }
+
         console.log(
           'Uploading image file:',
           coverImageFile.name,
@@ -564,6 +588,14 @@ const CourseEditor = () => {
 
           // Upload all video files to storage
           for (const file of lesson.videoFiles) {
+            // Validate video file
+            const videoValidation = validateVideoFile(file);
+            if (!videoValidation.valid) {
+              toast.error(`Lesson ${lesson.order} video: ${videoValidation.error}`);
+              setIsSubmitting(false);
+              return;
+            }
+
             const { error: uploadError } = await supabase.storage
               .from('course-videos')
               .upload(`${folder}/${file.name}`, file, {

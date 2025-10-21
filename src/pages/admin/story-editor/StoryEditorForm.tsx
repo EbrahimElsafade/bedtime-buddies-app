@@ -13,6 +13,8 @@ import { StorySectionsList } from '@/components/admin/story-editor/StorySections
 import { useStoryForm } from './hooks/useStoryForm'
 import { useStoryLanguages } from './hooks/useStoryLanguages'
 import { useStorySections } from './hooks/useStorySections'
+import { validateImageFile, validateAudioFile } from '@/utils/fileValidation'
+import { validateStoryData } from '@/utils/contentValidation'
 import { useStoryData } from './hooks/useStoryData'
 
 interface StoryEditorFormProps {
@@ -102,11 +104,30 @@ export const StoryEditorForm = ({
     setIsSubmitting(true)
 
     try {
+      // Validate story data
+      const contentValidation = validateStoryData({
+        title: storyData.title,
+        description: storyData.description,
+      });
+      
+      if (!contentValidation.valid) {
+        toast.error(contentValidation.error || 'Invalid story data');
+        setIsSubmitting(false);
+        return;
+      }
+
       let coverImageUrl = storyData.cover_image
       let storyAudioUrls = storyData.story_audio
 
       // Upload cover image if changed
       if (coverImageFile) {
+        // Validate image file
+        const imageValidation = validateImageFile(coverImageFile);
+        if (!imageValidation.valid) {
+          toast.error(imageValidation.error || 'Invalid cover image');
+          setIsSubmitting(false);
+          return;
+        }
         const filename = `cover-${Date.now()}-${coverImageFile.name}`
         const { error: uploadError } = await supabase.storage
           .from('admin-content')
@@ -127,6 +148,14 @@ export const StoryEditorForm = ({
         const newStoryAudioUrls = { ...storyAudioUrls }
 
         for (const [language, audioFile] of Object.entries(storyAudioFiles)) {
+          // Validate audio file
+          const audioValidation = validateAudioFile(audioFile);
+          if (!audioValidation.valid) {
+            toast.error(`${language} audio: ${audioValidation.error}`);
+            setIsSubmitting(false);
+            return;
+          }
+
           const filename = `story-audio-${Date.now()}-${language}-${audioFile.name}`
           const { error: uploadError } = await supabase.storage
             .from('admin-content')
@@ -189,6 +218,14 @@ export const StoryEditorForm = ({
       for (const section of storySections) {
         let sectionImageUrl = null
         if (section.imageFile) {
+          // Validate section image
+          const sectionImageValidation = validateImageFile(section.imageFile);
+          if (!sectionImageValidation.valid) {
+            toast.error(`Section ${section.order} image: ${sectionImageValidation.error}`);
+            setIsSubmitting(false);
+            return;
+          }
+
           const filename = `section-${storyId}-${section.order}-${Date.now()}-${section.imageFile.name}`
           const { error: uploadError } = await supabase.storage
             .from('admin-content')
@@ -207,6 +244,14 @@ export const StoryEditorForm = ({
         const voiceUrls: Record<string, string> = { ...section.voices }
         if (storyData.audio_mode === 'per_section' && section.voiceFiles) {
           for (const [language, voiceFile] of Object.entries(section.voiceFiles)) {
+            // Validate voice file
+            const voiceValidation = validateAudioFile(voiceFile);
+            if (!voiceValidation.valid) {
+              toast.error(`Section ${section.order} ${language} voice: ${voiceValidation.error}`);
+              setIsSubmitting(false);
+              return;
+            }
+
             const filename = `voice-${storyId}-${section.order}-${language}-${Date.now()}-${voiceFile.name}`
             const { error: uploadError } = await supabase.storage
               .from('admin-content')
