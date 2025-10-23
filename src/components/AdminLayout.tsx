@@ -1,6 +1,5 @@
-import { Link, NavLink, useLocation, Outlet, Navigate } from 'react-router-dom'
+import { Link, NavLink, useLocation, Outlet } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
-import { useRoleManagement } from '@/hooks/useRoleManagement'
 import {
   Users,
   Book,
@@ -26,15 +25,8 @@ import {
 } from '@/components/ui/sidebar'
 
 const AdminLayout = () => {
-  const { user, logout } = useAuth()
+  const { logout } = useAuth()
   const { t } = useTranslation('admin')
-  const { isAdmin, isLoading } = useRoleManagement(user)
-  
-  // Verify admin access
-  if (!isLoading && !isAdmin) {
-    console.log('AdminLayout: Not admin, redirecting to 404')
-    return <Navigate to="/404" replace />
-  }
   const location = useLocation()
   const isActive = (path: string) => location.pathname === path
   const isRTL = document.documentElement.lang === 'ar'
