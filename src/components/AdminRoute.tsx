@@ -1,4 +1,3 @@
-
 import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRef } from 'react'
@@ -20,27 +19,22 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
 
   // Early redirect for unauthenticated users - don't show loading
   if (!authLoading && !isAuthenticated) {
-    console.log('AdminRoute: Not authenticated, redirecting to login')
     return <Navigate to="/login" replace state={{ from: location }} />
   }
 
   // Early redirect for non-admin users once we've checked their role
   if (!isLoading && !isAdmin) {
-    console.log('AdminRoute: Not admin, redirecting to 404', {
-      isLoading,
-      isAdmin,
-      userId: user?.id
-    })
     return <Navigate to="/404" replace />
-  }
-
-  if (!isLoading && isAdmin) {
-    console.log('AdminRoute: Admin access granted')
   }
 
   // Show loading state while determining auth/role status
   if (isLoading) {
     const timeSinceMount = Date.now() - mountTimeRef.current
+
+    // Only show loading after a brief delay to prevent flash
+    if (timeSinceMount < 100) {
+      return null
+    }
 
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -52,7 +46,7 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
     )
   }
 
-  // Render the children if user is authenticated and an admin
+  // At this point we know the user is authenticated and is an admin
   return <>{children}</>
 }
 

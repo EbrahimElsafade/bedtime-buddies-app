@@ -9,6 +9,8 @@ export const useRoleManagement = (user: User | null) => {
   const [isLoading, setIsLoading] = useState(true)
 
   const checkIsAdmin = useCallback(async () => {
+    setIsLoading(true)
+    
     if (!user?.id) {
       setIsAdmin(false)
       setIsLoading(false)
@@ -18,17 +20,31 @@ export const useRoleManagement = (user: User | null) => {
     try {
       logger.debug('Checking admin status for user:', user.id)
 
-      // Use the simpler is_admin() RPC function
-      const { data, error } = await supabase.rpc('is_admin')
+      // First try direct role check
+      const { data: roleData, error: roleError } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .eq('role', 'admin')
+        .maybeSingle()
 
-      if (error) {
-        logger.error('Error checking admin status:', error)
-        setIsAdmin(false)
+      if (roleError) {
+        logger.error('Error checking admin role:', roleError)
+        // Fallback to RPC if direct check fails
+        const { data: rpcData, error: rpcError } = await supabase.rpc('is_admin')
+        
+        if (rpcError) {
+          logger.error('Error in is_admin RPC:', rpcError)
+          setIsAdmin(false)
+          return
+        }
+        
+        setIsAdmin(!!rpcData)
         return
       }
 
-      logger.debug('Admin status result:', data)
-      setIsAdmin(!!data)
+      setIsAdmin(!!roleData)
+      logger.debug('Admin status result:', !!roleData)
     } catch (err) {
       logger.error('Error in checkIsAdmin:', err)
       setIsAdmin(false)
