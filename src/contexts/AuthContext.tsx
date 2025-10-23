@@ -16,10 +16,7 @@ const defaultContextValue: AuthContextType = {
   isProfileLoaded: false,
   login: async () => { throw new Error('AuthProvider not initialized') },
   loginWithGoogle: async () => { throw new Error('AuthProvider not initialized') },
-  loginWithApple: async () => { throw new Error('AuthProvider not initialized') },
-  loginWithLinkedIn: async () => { throw new Error('AuthProvider not initialized') },
   loginWithFacebook: async () => { throw new Error('AuthProvider not initialized') },
-  loginWithTwitter: async () => { throw new Error('AuthProvider not initialized') },
   linkSocialAccount: async () => { throw new Error('AuthProvider not initialized') },
   unlinkSocialAccount: async () => { throw new Error('AuthProvider not initialized') },
   register: async () => { throw new Error('AuthProvider not initialized') },
@@ -92,40 +89,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const loginWithApple = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'apple',
-        options: {
-          redirectTo: `${window.location.origin}/login`
-        }
-      });
-      
-      if (error) throw error;
-    } catch (error: any) {
-      logger.error('Apple login error:', error.message);
-      toast.error(error.message || 'Failed to sign in with Apple');
-      throw error;
-    }
-  };
-
-  const loginWithLinkedIn = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'linkedin_oidc',
-        options: {
-          redirectTo: `${window.location.origin}/login`
-        }
-      });
-      
-      if (error) throw error;
-    } catch (error: any) {
-      logger.error('LinkedIn login error:', error.message);
-      toast.error(error.message || 'Failed to sign in with LinkedIn');
-      throw error;
-    }
-  };
-
   const loginWithFacebook = async () => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
@@ -143,24 +106,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const loginWithTwitter = async () => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'twitter',
-        options: {
-          redirectTo: `${window.location.origin}/login`
-        }
-      });
-      
-      if (error) throw error;
-    } catch (error: any) {
-      logger.error('Twitter login error:', error.message);
-      toast.error(error.message || 'Failed to sign in with Twitter');
-      throw error;
-    }
-  };
-
-  const linkSocialAccount = async (provider: 'linkedin_oidc' | 'facebook' | 'twitter' | 'google' | 'apple') => {
+  const linkSocialAccount = async (provider: 'facebook' | 'google') => {
     try {
       if (!user) throw new Error('Must be logged in to link accounts');
       
@@ -178,7 +124,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const unlinkSocialAccount = async (provider: 'linkedin_oidc' | 'facebook' | 'twitter' | 'google' | 'apple') => {
+  const unlinkSocialAccount = async (provider: 'facebook' | 'google') => {
     try {
       if (!user) throw new Error('Must be logged in to unlink accounts');
       
@@ -453,10 +399,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     isProfileLoaded: profileLoaded,
     login,
     loginWithGoogle,
-    loginWithApple,
-    loginWithLinkedIn,
     loginWithFacebook,
-    loginWithTwitter,
     linkSocialAccount,
     unlinkSocialAccount,
     register,

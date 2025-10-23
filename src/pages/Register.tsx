@@ -32,10 +32,7 @@ const Register = () => {
   const {
     register: signUp,
     loginWithGoogle,
-    loginWithApple,
-    loginWithLinkedIn,
     loginWithFacebook,
-    loginWithTwitter,
     isAuthenticated,
     isLoading,
   } = useAuth()
@@ -125,36 +122,11 @@ const Register = () => {
     }
   }
 
-  const handleAppleSignUp = async () => {
-    try {
-      await loginWithApple()
-      // OAuth will redirect the user
-    } catch (err) {
-      // Error is handled by the loginWithApple function
-    }
-  }
-
-  const handleLinkedInSignUp = async () => {
-    try {
-      await loginWithLinkedIn()
-    } catch (err) {
-      // Error is handled by the loginWithLinkedIn function
-    }
-  }
-
   const handleFacebookSignUp = async () => {
     try {
       await loginWithFacebook()
     } catch (err) {
       // Error is handled by the loginWithFacebook function
-    }
-  }
-
-  const handleTwitterSignUp = async () => {
-    try {
-      await loginWithTwitter()
-    } catch (err) {
-      // Error is handled by the loginWithTwitter function
     }
   }
 
@@ -255,35 +227,10 @@ const Register = () => {
                     <Button
                       variant="outline"
                       type="button"
-                      onClick={handleAppleSignUp}
-                      disabled={isLoading}
-                    >
-                      {t('auth:common.apple')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      type="button"
-                      onClick={handleLinkedInSignUp}
-                      disabled={isLoading}
-                    >
-                      {t('auth:common.linkedin')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      type="button"
                       onClick={handleFacebookSignUp}
                       disabled={isLoading}
                     >
                       {t('auth:common.facebook')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      type="button"
-                      onClick={handleTwitterSignUp}
-                      disabled={isLoading}
-                      className="col-span-2"
-                    >
-                      {t('auth:common.twitter')}
                     </Button>
                   </div>
                 </div>

@@ -17,15 +17,12 @@ export const SocialAccountsManager = () => {
   // Get actual linked identities from user object
   const actualLinkedProviders = user?.identities?.map(id => id.provider) || []
   
-  const availableAccounts: SocialAccount[] = ['google', 'apple', 'linkedin_oidc', 'facebook', 'twitter']
+  const availableAccounts: SocialAccount[] = ['google', 'facebook']
 
   const getProviderDisplayName = (provider: SocialAccount): string => {
     const names: Record<SocialAccount, string> = {
       google: 'Google',
-      apple: 'Apple',
-      linkedin_oidc: 'LinkedIn',
-      facebook: 'Facebook',
-      twitter: 'Twitter'
+      facebook: 'Facebook'
     }
     return names[provider] || provider
   }
