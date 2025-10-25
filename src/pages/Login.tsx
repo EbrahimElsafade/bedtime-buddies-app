@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { loginSchema } from "@/utils/validation";
+import { sanitizeErrorMessage } from "@/utils/errorHandling";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -211,7 +212,7 @@ const Login = () => {
                 </div>
                 
                 {error && (
-                  <p className="text-red-500 text-sm">{error}</p>
+                  <p className="text-destructive text-sm">{sanitizeErrorMessage(error)}</p>
                 )}
                 
                 <Button

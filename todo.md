@@ -1,13 +1,13 @@
 # TODO:
 
-## Priority Scalls
+## Priority Scale
 
     [
         {
             Top Priority : 🡅🡅🡅
         },
         {
-            Hight Priority : 🡅🡅
+            High Priority : 🡅🡅
         },
         {
             Medium Priority : 🡅
@@ -22,6 +22,57 @@
             Not Sure : ?
         },
     ]
+
+## Code Review - Critical Issues:
+
+    [ ] Fix AuthContext session management (race conditions & deadlocks) 🡅🡅🡅
+        - Async Supabase calls inside setTimeout in handleAuthStateChange
+        - Fragile sessionStorage backup mechanism
+        - Multiple profile fetches causing performance issues
+    [ ] Security: Sanitize error messages in Login.tsx 🡅🡅🡅
+        - Line 214 displays raw error messages that could leak sensitive info
+    [ ] Security: Remove console.error in production (Layout.tsx) 🡅🡅
+        - Line 35 logs errors in production environment
+    [ ] Performance: Memoize debounce function in AuthContext 🡅🡅
+        - Non-memoized debounce creates new function on every render
+    [ ] Performance: Optimize useEffect hooks 🡅🡅
+        - Redundant profile fetching
+        - Multiple effect dependencies causing unnecessary re-renders
+
+## Code Review - Code Quality:
+
+    [ ] Refactor AuthContext - too many responsibilities 🡅
+        - Split into smaller, focused hooks
+        - Separate profile management from auth logic
+    [ ] Remove commented-out debug logs 🡅
+        - Clean up console.log statements throughout codebase
+    [ ] Fix 'any' types in AuthContext 🡅
+        - Replace with proper TypeScript types
+    [ ] Design system: Fix hardcoded colors in tailwind.config.ts 🡅
+        - ocean property uses hex colors instead of CSS variables
+
+## Code Review - Security Recommendations:
+
+    [ ] Add rate limiting for auth endpoints 🡅
+    [ ] Implement CSRF protection 🡅
+    [ ] Add input sanitization library (DOMPurify) 🡅
+    [ ] Validate session expiry client-side 🡇
+    [ ] Add security headers 🡇
+
+## Code Review - Performance Recommendations:
+
+    [ ] Implement React.memo for expensive components 🡅
+    [ ] Add code splitting for routes 🡅
+    [ ] Optimize image loading (lazy loading, responsive images) 🡅
+    [ ] Implement virtual scrolling for long lists 🡇
+
+## Code Review - Best Practices:
+
+    [ ] Add Error Boundaries 🡅🡅
+    [ ] Improve logging strategy (use proper logger in production) 🡅
+    [ ] Enhance type safety (remove 'any' types) 🡅
+    [ ] Add unit tests for critical functions 🡇
+    [ ] Improve documentation (JSDoc comments) 🡇
 
 ## general issues:
 

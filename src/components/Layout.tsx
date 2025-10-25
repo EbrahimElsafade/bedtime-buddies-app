@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
+import { logger } from '@/utils/logger'
 import { Navbar } from './navigation/Navbar'
 import { Footer } from './navigation/Footer'
 import { MobileNavigation } from './navigation/MobileNavigation'
@@ -32,7 +33,7 @@ const Layout = () => {
         .maybeSingle()
 
       if (error) {
-        console.error('Error fetching navigation settings:', error)
+        logger.warn('Error fetching navigation settings:', error)
         // Return default settings if error
         return {
           home: true,

@@ -27,18 +27,21 @@ const defaultContextValue: AuthContextType = {
 
 const AuthContext = createContext<AuthContextType>(defaultContextValue);
 
-// Debounce function to prevent rapid auth state changes
-const debounce = (func: Function, wait: number) => {
-  let timeout: NodeJS.Timeout;
-  return function executedFunction(...args: any[]) {
-    const later = () => {
+// Memoized debounce function to prevent creating new function on every render
+const debounce = React.useMemo(
+  () => (func: Function, wait: number) => {
+    let timeout: NodeJS.Timeout;
+    return function executedFunction(...args: any[]) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
       clearTimeout(timeout);
-      func(...args);
+      timeout = setTimeout(later, wait);
     };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-  };
-};
+  },
+  []
+);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -233,143 +236,86 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // More accurate loading state calculation
   const isLoading = authLoading || (!!user && !profileLoaded);
 
-  // Simplified auth state handler without complex ref management
+  // Simplified auth state handler - synchronous only, no Supabase calls
   const handleAuthStateChange = useCallback(
-    debounce(async (event: string, currentSession: any) => {
-      // logger.debug('Processing auth state change:', event, currentSession?.user?.email);
-      
+    (event: string, currentSession: Session | null) => {
       if (currentSession) {
         setSession(currentSession);
         setUser(currentSession.user);
-        
-        // Update linked accounts based on actual identities
-        if (currentSession.user?.identities) {
-          const providers = currentSession.user.identities.map((id: any) => id.provider);
-          // Defer the profile update to avoid race conditions
-          setTimeout(async () => {
-            try {
-              const { data: currentProfile } = await supabase
-                .from('profiles')
-                .select('linked_accounts')
-                .eq('id', currentSession.user.id)
-                .single();
-              
-              const existingAccounts = currentProfile?.linked_accounts || [];
-              const hasChanges = providers.some((p: string) => !existingAccounts.includes(p)) ||
-                                 existingAccounts.some((a: string) => !providers.includes(a));
-              
-              if (hasChanges) {
-                await supabase
-                  .from('profiles')
-                  .update({ linked_accounts: providers })
-                  .eq('id', currentSession.user.id);
-              }
-            } catch (error) {
-              logger.warn('Failed to sync linked accounts:', error);
-            }
-          }, 0);
-        }
-        
-        // Store session in sessionStorage as backup
-        try {
-          sessionStorage.setItem('supabase.auth.session', JSON.stringify(currentSession));
-        } catch (error) {
-          logger.warn('Failed to store session in sessionStorage:', error);
-        }
       } else {
         setSession(null);
         setUser(null);
         setProfile(null);
-        
-        // Clear session storage
-        try {
-          sessionStorage.removeItem('supabase.auth.session');
-        } catch (error) {
-          logger.warn('Failed to clear session from sessionStorage:', error);
-        }
       }
       
-      // Always set auth loading to false after handling auth state change
       setAuthLoading(false);
-    }, 300),
-    [setSession, setUser, setProfile, setAuthLoading]
+    },
+    [setProfile]
   );
 
+  // Separate effect to sync linked accounts - prevents race conditions
   useEffect(() => {
-    // logger.debug("Setting up auth state listener");
-    let isMounted = true;
-    let subscription: any;
-    
-    // Set up auth state listener
-    const setupAuthListener = async () => {
-      try {
-        const authListener = supabase.auth.onAuthStateChange(
-          (event, currentSession) => {
-            if (!isMounted) return;
-            
-            // Only process important events
-            const importantEvents = ['SIGNED_IN', 'SIGNED_OUT', 'INITIAL_SESSION'];
-            if (!importantEvents.includes(event)) {
-              // logger.debug('Ignoring auth event:', event);
-              return;
-            }
-            
-            // logger.debug('Processing important auth event:', event, !!currentSession);
-            handleAuthStateChange(event, currentSession);
-          }
-        );
-        
-        subscription = authListener.data?.subscription;
+    if (!user?.identities || !user?.id) return;
 
-        // Check for existing session
-        const { data: { session: currentSession } } = await supabase.auth.getSession();
+    const syncLinkedAccounts = async () => {
+      try {
+        const providers = user.identities.map((id: any) => id.provider);
         
-        if (!isMounted) return;
+        const { data: currentProfile } = await supabase
+          .from('profiles')
+          .select('linked_accounts')
+          .eq('id', user.id)
+          .single();
         
-        let sessionToUse = currentSession;
+        const existingAccounts = currentProfile?.linked_accounts || [];
+        const hasChanges = providers.some((p: string) => !existingAccounts.includes(p)) ||
+                           existingAccounts.some((a: string) => !providers.includes(a));
         
-        // If no current session, try to restore from sessionStorage
-        if (!currentSession) {
-          try {
-            const storedSession = sessionStorage.getItem('supabase.auth.session');
-            if (storedSession) {
-              const parsedSession = JSON.parse(storedSession);
-              // logger.debug("Attempting to restore session from sessionStorage");
-              
-              // Validate the stored session is still valid
-              if (parsedSession.expires_at && new Date(parsedSession.expires_at * 1000) > new Date()) {
-                sessionToUse = parsedSession;
-              }
-            }
-          } catch (error) {
-            logger.warn('Failed to restore session from sessionStorage:', error);
-          }
+        if (hasChanges) {
+          await supabase
+            .from('profiles')
+            .update({ linked_accounts: providers })
+            .eq('id', user.id);
         }
-        
-        // logger.debug("Initial session check:", !!sessionToUse);
-        
-        if (sessionToUse) {
-          setSession(sessionToUse);
-          setUser(sessionToUse.user);
-        }
-        
-        // Always set auth loading to false after initial session check
-        setAuthLoading(false);
       } catch (error) {
-        logger.error('Error setting up auth listener:', error);
-        setAuthLoading(false);
+        logger.warn('Failed to sync linked accounts:', error);
       }
     };
 
-    setupAuthListener();
+    syncLinkedAccounts();
+  }, [user?.id, user?.identities]);
+
+  useEffect(() => {
+    let isMounted = true;
+    
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, currentSession) => {
+        if (!isMounted) return;
+        handleAuthStateChange(event, currentSession);
+      }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      if (!isMounted) return;
+      
+      if (currentSession) {
+        setSession(currentSession);
+        setUser(currentSession.user);
+      }
+      
+      setAuthLoading(false);
+    }).catch((error) => {
+      logger.error('Error getting session:', error);
+      setAuthLoading(false);
+    });
 
     return () => {
       isMounted = false;
-      if (subscription) {
-        subscription.unsubscribe();
-      }
+      subscription.unsubscribe();
     };
-  }, [handleAuthStateChange, setSession, setUser, setAuthLoading]);
+  }, [handleAuthStateChange]);
 
   // Simplified debug logging
   useEffect(() => {

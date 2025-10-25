@@ -66,29 +66,29 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Dolphoon custom colors
+				// Dolphoon custom colors - using HSL for proper theme integration
 				ocean: {
-					DEFAULT: '#00A8E8', // Aqua Blue - main ocean color
-					light: '#7DD3FC', // Light aqua blue
-					dark: '#0369A1', // Deep ocean blue
-					surface: '#E0F7FA', // Very light aqua for surfaces
+					DEFAULT: 'hsl(198, 100%, 46%)', // Aqua Blue - main ocean color
+					light: 'hsl(199, 95%, 74%)', // Light aqua blue
+					dark: 'hsl(201, 96%, 32%)', // Deep ocean blue
+					surface: 'hsl(187, 68%, 94%)', // Very light aqua for surfaces
 				},
 				coral: {
-					DEFAULT: '#FF6B9D', // Coral Pink - primary accent
-					light: '#FFB3D1', // Light coral pink
-					dark: '#E91E63', // Deep coral
-					soft: '#FFF0F5', // Very light coral for backgrounds
+					DEFAULT: 'hsl(341, 100%, 70%)', // Coral Pink - primary accent
+					light: 'hsl(341, 100%, 85%)', // Light coral pink
+					dark: 'hsl(340, 82%, 52%)', // Deep coral
+					soft: 'hsl(340, 100%, 97%)', // Very light coral for backgrounds
 				},
 				sunshine: {
-					DEFAULT: '#FFD93D', // Sun Glow Orange/Yellow
-					light: '#FFF59D', // Light sunshine yellow
-					dark: '#F59E0B', // Deeper sun orange
-					glow: '#FFFBEB', // Very light sunshine for highlights
+					DEFAULT: 'hsl(48, 100%, 62%)', // Sun Glow Orange/Yellow
+					light: 'hsl(54, 100%, 80%)', // Light sunshine yellow
+					dark: 'hsl(38, 92%, 50%)', // Deeper sun orange
+					glow: 'hsl(48, 100%, 97%)', // Very light sunshine for highlights
 				},
 				wave: {
-					DEFAULT: '#B8E6FF', // Soft wave blue
-					light: '#E6F7FF', // Very light wave
-					dark: '#4FC3F7', // Deeper wave blue
+					DEFAULT: 'hsl(199, 100%, 85%)', // Soft wave blue
+					light: 'hsl(199, 100%, 95%)', // Very light wave
+					dark: 'hsl(199, 92%, 64%)', // Deeper wave blue
 				}
 			},
 			borderRadius: {
