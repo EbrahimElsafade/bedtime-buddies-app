@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { logger } from "@/utils/logger";
 import {
   Table,
   TableBody,
@@ -167,7 +168,7 @@ const Users = () => {
       toast.success(`User ${user.parent_name} role updated to ${newRole}`);
       refetch();
     } catch (error) {
-      console.error("Error updating user role:", error);
+      logger.error("Error updating user role:", error);
       toast.error("Failed to update user role");
     }
   };

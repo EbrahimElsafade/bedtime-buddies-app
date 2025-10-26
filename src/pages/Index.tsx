@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import { Helmet } from 'react-helmet-async'
 import PricingPopup from '@/components/PricingPopup'
+import { logger } from '@/utils/logger'
 import Hero from '@/components/home/Hero'
 import FreeStory from '@/components/home/FreeStory'
 import FeaturedStories from '@/components/home/FeaturedStories'
@@ -40,7 +41,7 @@ const Index = () => {
         .maybeSingle()
 
       if (error) {
-        console.error('Error fetching home page settings:', error)
+        logger.error('Error fetching home page settings:', error)
         throw error
       }
 

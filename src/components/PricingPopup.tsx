@@ -12,19 +12,30 @@ const PricingPopup = () => {
   const [isOpen, setIsOpen] = useState(false);
   
   useEffect(() => {
-    // Check if user is not logged in and hasn't dismissed the popup recently
-    const hasSeenPopup = localStorage.getItem("pricingPopupSeen");
-    const lastSeen = hasSeenPopup ? new Date(hasSeenPopup) : null;
-    const showAgain = !lastSeen || (new Date().getTime() - lastSeen.getTime() > 24 * 60 * 60 * 1000); // 24 hours
-    
-    if (!isAuthenticated && showAgain) {
-      // Show popup immediately for testing, later can revert to 2 seconds
-      const timer = setTimeout(() => {
-        setIsOpen(true);
-      }, 100); // Reduced from 2000ms to 100ms for faster testing
+    let mounted = true;
+
+    const checkPopupVisibility = () => {
+      const hasSeenPopup = localStorage.getItem("pricingPopupSeen");
+      const lastSeen = hasSeenPopup ? new Date(hasSeenPopup) : null;
+      const showAgain = !lastSeen || (new Date().getTime() - lastSeen.getTime() > 24 * 60 * 60 * 1000);
       
-      return () => clearTimeout(timer);
-    }
+      if (!isAuthenticated && showAgain && mounted) {
+        const timer = setTimeout(() => {
+          if (mounted) {
+            setIsOpen(true);
+          }
+        }, 100);
+        
+        return () => clearTimeout(timer);
+      }
+    };
+
+    const cleanup = checkPopupVisibility();
+    
+    return () => {
+      mounted = false;
+      if (cleanup) cleanup();
+    };
   }, [isAuthenticated]);
   
   const closePopup = () => {

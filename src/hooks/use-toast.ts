@@ -149,6 +149,35 @@ function toast({ ...props }: Toast) {
     })
   const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
 
+  // Enhanced error handling
+  if (props.variant === 'destructive') {
+    const error = props.description
+    if (error instanceof Error) {
+      props = {
+        ...props,
+        description: error.message,
+        duration: 5000, // Show errors longer
+        action: props.action || {
+          label: 'Report',
+          onClick: () => {
+            // Log error to monitoring service
+            console.error('Error details:', {
+              message: error.message,
+              stack: error.stack,
+              timestamp: new Date().toISOString()
+            })
+          }
+        }
+      }
+    }
+  }
+
+  // Default duration for different variants
+  if (!props.duration) {
+    props.duration = props.variant === 'destructive' ? 5000 :
+                    props.variant === 'success' ? 3000 : 4000
+  }
+
   dispatch({
     type: "ADD_TOAST",
     toast: {
@@ -162,7 +191,7 @@ function toast({ ...props }: Toast) {
   })
 
   return {
-    id: id,
+    id,
     dismiss,
     update,
   }

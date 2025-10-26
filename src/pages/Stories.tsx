@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { supabase } from '@/integrations/supabase/client'
+import { logger } from '@/utils/logger'
 import { useLoading } from '@/contexts/LoadingContext'
 import {
   Card,
@@ -36,7 +37,7 @@ const Stories = () => {
         .order('created_at', { ascending: false })
 
       if (error) {
-        console.error('Error fetching stories:', error)
+        logger.error('Error fetching stories:', error)
         throw error
       }
 

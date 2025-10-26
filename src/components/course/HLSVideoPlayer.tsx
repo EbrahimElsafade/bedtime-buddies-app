@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
-import Hls from 'hls.js'
+import Hls, { Events as HlsEvents, ErrorData, ErrorTypes } from 'hls.js'
 import { supabase } from '@/integrations/supabase/client'
+import { logger } from '@/utils/logger'
 
 interface HLSVideoPlayerProps {
   videoPath: string
@@ -35,38 +36,36 @@ const HLSVideoPlayer = ({ videoPath, title, className = '' }: HLSVideoPlayerProp
           hlsRef.current = hls
           hls.loadSource(videoUrl)
           hls.attachMedia(video)
-          
-          // hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          //   console.log('HLS manifest loaded, ready to play')
-          // })
 
-          hls.on(Hls.Events.ERROR, (event, data) => {
-            console.error('HLS error:', data)
+          const handleError = (_event: HlsEvents, data: ErrorData) => {
+            logger.error('HLS error:', data)
             if (data.fatal) {
               switch (data.type) {
-                case Hls.ErrorTypes.NETWORK_ERROR:
-                  console.log('Network error, trying to recover...')
+                case ErrorTypes.NETWORK_ERROR:
+                  logger.warn('Network error, trying to recover...')
                   hls.startLoad()
                   break
-                case Hls.ErrorTypes.MEDIA_ERROR:
-                  console.log('Media error, trying to recover...')
+                case ErrorTypes.MEDIA_ERROR:
+                  logger.warn('Media error, trying to recover...')
                   hls.recoverMediaError()
                   break
                 default:
-                  console.log('Fatal error, destroying HLS instance')
+                  logger.error('Fatal error, destroying HLS instance')
                   hls.destroy()
                   break
               }
             }
-          })
+          }
+          
+          hls.on(HlsEvents.ERROR, handleError)
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
           // For Safari, which has native HLS support
           video.src = videoUrl
         } else {
-          console.error('HLS is not supported in this browser')
+          logger.error('HLS is not supported in this browser')
         }
       } catch (error) {
-        console.error('Error initializing video player:', error)
+        logger.error('Error initializing video player:', error)
       }
     }
 
