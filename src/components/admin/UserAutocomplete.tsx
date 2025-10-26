@@ -42,7 +42,7 @@ export const UserAutocomplete = ({ value, onValueChange, placeholder = 'Select u
 
       if (error) throw error
       setUsers(data || [])
-    } catch (error: any) {
+    } catch (error) {
       toast.error('Failed to load users')
       console.error('Error fetching users:', error)
     } finally {

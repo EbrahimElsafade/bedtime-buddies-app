@@ -18,7 +18,7 @@ export const getMultilingualText = (
   
   // Handle JSONB object format
   if (typeof textObj === 'object' && textObj !== null && !Array.isArray(textObj)) {
-    const langObj = textObj as Record<string, any>;
+    const langObj = textObj as Record<string, unknown>;
     
     // Try preferred language first
     if (langObj[preferredLanguage] && typeof langObj[preferredLanguage] === 'string') {

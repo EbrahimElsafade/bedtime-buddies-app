@@ -19,10 +19,11 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Plus, X } from 'lucide-react'
 import { useToast } from '@/hooks/use-toast'
+import { Language } from '@/types/language'
 
 interface StoryLanguageManagerProps {
   selectedLanguages: string[]
-  availableLanguages: any[] | undefined
+  availableLanguages: Language[] | undefined
   languagesLoading: boolean
   onAddLanguage: (language: string) => void
   onRemoveLanguage: (language: string) => void

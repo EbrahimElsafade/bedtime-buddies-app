@@ -16,11 +16,12 @@ import { useStorySections } from './hooks/useStorySections'
 import { validateImageFile, validateAudioFile } from '@/utils/fileValidation'
 import { validateStoryData } from '@/utils/contentValidation'
 import { useStoryData } from './hooks/useStoryData'
+import { Category, Language } from '@/types/language'
 
 interface StoryEditorFormProps {
-  categories: any[]
+  categories: Category[]
   categoriesLoading: boolean
-  languages: any[]
+  languages: Language[]
   languagesLoading: boolean
 }
 

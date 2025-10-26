@@ -27,7 +27,7 @@ const Login = () => {
   useEffect(() => {
     // Redirect to the previous page or home if already authenticated
     if (isAuthenticated) {
-      const from = (location.state as any)?.from || "/";
+      const from = (location.state as Record<string, unknown>)?.from as string || "/";
       navigate(from, { replace: true });
     }
   }, [isAuthenticated, navigate, location]);
@@ -48,9 +48,10 @@ const Login = () => {
     try {
       await login(validationResult.data.email, validationResult.data.password);
       // Navigation will happen automatically via the useEffect
-    } catch (err: any) {
+    } catch (err) {
       // Error is handled by the login function with toast
-      setError(err.message || t('auth:messages.invalidCredentials'));
+      const errorMessage = err instanceof Error ? err.message : t('auth:messages.invalidCredentials');
+      setError(errorMessage);
     }
   };
 

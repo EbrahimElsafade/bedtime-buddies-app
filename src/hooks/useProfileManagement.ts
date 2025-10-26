@@ -56,12 +56,13 @@ export const useProfileManagement = (user: User | null) => {
       // logger.debug("Profile fetch completed, profileLoaded set to true");
       
       return transformedProfile;
-    } catch (err: any) {
-      logger.error("Error in fetchUserProfile:", err);
-      setError(err);
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Unknown error');
+      logger.error("Error in fetchUserProfile:", error);
+      setError(error);
       setProfile(null);
       setProfileLoaded(true); // Still set to true to prevent infinite loading
-      throw err;
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -98,9 +99,10 @@ export const useProfileManagement = (user: User | null) => {
       };
 
       setProfile(transformedProfile);
-    } catch (err: any) {
-      setError(err);
-      throw err;
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Unknown error');
+      setError(error);
+      throw error;
     } finally {
       setIsLoading(false);
     }

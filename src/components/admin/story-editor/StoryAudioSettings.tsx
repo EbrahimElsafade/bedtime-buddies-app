@@ -9,11 +9,12 @@ import {
 } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { StoryAudioUpload } from '@/components/admin/StoryAudioUpload'
+import { Language } from '@/types/language'
 
 interface StoryAudioSettingsProps {
   audioMode: 'per_section' | 'single_story'
   languages: string[]
-  availableLanguages: any[] | undefined
+  availableLanguages: Language[] | undefined
   storyAudioFiles: Record<string, File>
   storyAudioPreviews: Record<string, string>
   existingStoryAudio: Record<string, string>

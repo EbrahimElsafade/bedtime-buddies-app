@@ -50,7 +50,7 @@ const Register = () => {
   useEffect(() => {
     // Redirect to the previous page or home if already authenticated
     if (isAuthenticated) {
-      const from = (location.state as any)?.from || '/'
+      const from = (location.state as Record<string, unknown>)?.from as string || '/'
       navigate(from, { replace: true })
     }
   }, [isAuthenticated, navigate, location])
@@ -108,8 +108,9 @@ const Register = () => {
       );
       // Redirect will happen through the useEffect if authentication is successful
       // Otherwise, user will stay on the page to verify their email
-    } catch (err: any) {
-      setError(err.message || t('auth:register.errors.createFailed'))
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : t('auth:register.errors.createFailed');
+      setError(errorMessage)
     }
   }
 

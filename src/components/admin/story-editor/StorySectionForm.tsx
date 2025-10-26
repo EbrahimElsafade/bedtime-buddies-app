@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/accordion'
 import { Trash2, X, Image } from 'lucide-react'
 import { VoiceFileUpload } from '@/components/admin/VoiceFileUpload'
+import { Language } from '@/types/language'
 
 interface StorySectionFormProps {
   section: {
@@ -25,7 +26,7 @@ interface StorySectionFormProps {
   }
   sectionIndex: number
   languages: string[]
-  availableLanguages: any[] | undefined
+  availableLanguages: Language[] | undefined
   audioMode: 'per_section' | 'single_story'
   onDeleteSection: (index: number) => void
   onUpdateSectionText: (

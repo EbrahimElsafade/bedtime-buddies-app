@@ -9,10 +9,11 @@ import {
 } from '@/components/ui/card'
 import { Heart } from 'lucide-react'
 import { getImageUrl } from '@/utils/imageUtils'
+import { FavoriteItem, FavoriteStory, FavoriteCourse } from '@/types/favorites'
 
 interface FavoritesListProps {
   type: 'story' | 'course'
-  favorites: any[]
+  favorites: FavoriteItem[]
   language: string
   t: (key: string) => string
 }
@@ -25,22 +26,28 @@ export const FavoritesList = ({
 }: FavoritesListProps) => {
   const navigate = useNavigate()
 
-  const getTitle = (item: any) => {
+  const getTitle = (item: FavoriteItem) => {
     if (type === 'story') {
-      return typeof item.title === 'object'
-        ? item.title[language] || item.title.en || ''
+      const story = item as FavoriteStory;
+      return typeof story.title === 'object'
+        ? story.title[language] || story.title.en || ''
         : ''
     }
-    return item[`title_${language}`] || item.title_en || ''
+    const course = item as FavoriteCourse;
+    const langKey = `title_${language}` as keyof FavoriteCourse;
+    return (course[langKey] as string) || course.title_en || course.title || ''
   }
 
-  const getDescription = (item: any) => {
+  const getDescription = (item: FavoriteItem) => {
     if (type === 'story') {
-      return typeof item.description === 'object'
-        ? item.description[language] || item.description.en || ''
+      const story = item as FavoriteStory;
+      return typeof story.description === 'object'
+        ? story.description[language] || story.description.en || ''
         : ''
     }
-    return item[`description_${language}`] || item.description_en || ''
+    const course = item as FavoriteCourse;
+    const langKey = `description_${language}` as keyof FavoriteCourse;
+    return (course[langKey] as string) || course.description_en || course.description || ''
   }
 
   const emptyMessage =

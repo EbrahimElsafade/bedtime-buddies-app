@@ -1,7 +1,7 @@
 import { getImageUrl } from '@/utils/imageUtils'
 import { StorySectionForm } from '../hooks/useStoryForm'
 
-export const parseTitle = (title: any): Record<string, string> => {
+export const parseTitle = (title: unknown): Record<string, string> => {
   let titleObj = { en: '', ar: '', fr: '' }
 
   if (typeof title === 'string') {
@@ -27,7 +27,7 @@ export const parseTitle = (title: any): Record<string, string> => {
   return titleObj
 }
 
-export const parseDescription = (description: any): Record<string, string> => {
+export const parseDescription = (description: unknown): Record<string, string> => {
   let descriptionObj = { en: '', ar: '', fr: '' }
 
   if (typeof description === 'string') {
@@ -53,7 +53,7 @@ export const parseDescription = (description: any): Record<string, string> => {
   return descriptionObj
 }
 
-export const parseStoryAudio = (storyAudio: any): Record<string, string> => {
+export const parseStoryAudio = (storyAudio: unknown): Record<string, string> => {
   let audioObj = {}
 
   if (typeof storyAudio === 'string') {
@@ -69,8 +69,10 @@ export const parseStoryAudio = (storyAudio: any): Record<string, string> => {
   return audioObj
 }
 
-export const parseStorySections = (sections: any[]): StorySectionForm[] => {
-  return sections.map(section => {
+export const parseStorySections = (sections: unknown[]): StorySectionForm[] => {
+  return sections.map(sectionRaw => {
+    const section = sectionRaw as Record<string, unknown>;
+    
     let texts = {}
     if (typeof section.texts === 'string') {
       try {
@@ -105,12 +107,12 @@ export const parseStorySections = (sections: any[]): StorySectionForm[] => {
     }
 
     return {
-      id: section.id,
-      order: section.order,
+      id: section.id as string,
+      order: section.order as number,
       texts: texts as Record<string, string>,
       voices: voices as Record<string, string>,
-      image: section.image || undefined,
-      imagePreview: section.image ? getImageUrl(section.image) : null,
+      image: (section.image as string) || undefined,
+      imagePreview: section.image ? getImageUrl(section.image as string) : null,
       voicePreviews,
     }
   })

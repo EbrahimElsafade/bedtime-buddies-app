@@ -31,7 +31,7 @@ const Settings = () => {
     emailNotifications: true,
   });
 
-  const updateSetting = (key: keyof typeof settings, value: any) => {
+  const updateSetting = (key: keyof typeof settings, value: string | boolean) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
   };
 

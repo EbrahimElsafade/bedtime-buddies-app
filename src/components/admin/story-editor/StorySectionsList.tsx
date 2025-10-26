@@ -11,11 +11,13 @@ import {
 } from '@/components/ui/accordion'
 import { Plus } from 'lucide-react'
 import { StorySectionForm } from './StorySectionForm'
+import { Language } from '@/types/language'
+import { StorySection } from '@/types/story-section'
 
 interface StorySectionsListProps {
-  sections: any[]
+  sections: StorySection[]
   languages: string[]
-  availableLanguages: any[] | undefined
+  availableLanguages: Language[] | undefined
   audioMode: 'per_section' | 'single_story'
   onAddSection: () => void
   onDeleteSection: (index: number) => void

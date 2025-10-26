@@ -28,9 +28,12 @@ const defaultContextValue: AuthContextType = {
 const AuthContext = createContext<AuthContextType>(defaultContextValue);
 
 // Utility function for debouncing
-const createDebounce = (func: Function, wait: number) => {
+const createDebounce = <T extends unknown[]>(
+  func: (...args: T) => void,
+  wait: number
+) => {
   let timeout: NodeJS.Timeout;
-  return function executedFunction(...args: any[]) {
+  return function executedFunction(...args: T) {
     const later = () => {
       clearTimeout(timeout);
       func(...args);
@@ -47,7 +50,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Memoized debounce function to prevent creating new function on every render
   const debounce = useMemo(
-    () => (func: Function, wait: number) => createDebounce(func, wait),
+    () => <T extends unknown[]>(func: (...args: T) => void, wait: number) => createDebounce(func, wait),
     []
   );
 
@@ -69,9 +72,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       toast.success('Logged in successfully');
-    } catch (error: any) {
-      logger.error('Login error:', error.message);
-      toast.error(error.message || 'Failed to sign in');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      logger.error('Login error:', errorMessage);
+      toast.error(errorMessage || 'Failed to sign in');
       throw error;
     } finally {
       setAuthLoading(false);
@@ -85,9 +89,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       
       if (error) throw error;
-    } catch (error: any) {
-      logger.error('Google login error:', error.message);
-      toast.error(error.message || 'Failed to sign in with Google');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      logger.error('Google login error:', errorMessage);
+      toast.error(errorMessage || 'Failed to sign in with Google');
       throw error;
     }
   };
@@ -102,9 +107,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       
       if (error) throw error;
-    } catch (error: any) {
-      logger.error('Facebook login error:', error.message);
-      toast.error(error.message || 'Failed to sign in with Facebook');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      logger.error('Facebook login error:', errorMessage);
+      toast.error(errorMessage || 'Failed to sign in with Facebook');
       throw error;
     }
   };
@@ -114,15 +120,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (!user) throw new Error('Must be logged in to link accounts');
       
       const { error } = await supabase.auth.linkIdentity({
-        provider: provider as any,
+        provider,
       });
       
       if (error) throw error;
       
       toast.success(`${provider} account linking initiated`);
-    } catch (error: any) {
-      logger.error('Link account error:', error.message);
-      toast.error(error.message || 'Failed to link account');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      logger.error('Link account error:', errorMessage);
+      toast.error(errorMessage || 'Failed to link account');
       throw error;
     }
   };
@@ -145,9 +152,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await updateProfile({ linked_accounts: updatedAccounts });
       
       toast.success(`${provider} account unlinked successfully`);
-    } catch (error: any) {
-      logger.error('Unlink account error:', error.message);
-      toast.error(error.message || 'Failed to unlink account');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      logger.error('Unlink account error:', errorMessage);
+      toast.error(errorMessage || 'Failed to unlink account');
       throw error;
     }
   };
@@ -183,9 +191,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       
       toast.success('Registration successful! Please check your email to verify your account.');
-    } catch (error: any) {
-      logger.error('Registration error:', error.message);
-      toast.error(error.message || 'Failed to register');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      logger.error('Registration error:', errorMessage);
+      toast.error(errorMessage || 'Failed to register');
       throw error;
     } finally {
       setAuthLoading(false);
@@ -202,8 +211,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSession(null);
       logger.info("Logout successful, session cleared");
       toast.success('Logged out successfully');
-    } catch (error: any) {
-      logger.error('Logout error:', error.message);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      logger.error('Logout error:', errorMessage);
       toast.error('Failed to sign out');
     } finally {
       setAuthLoading(false);
@@ -219,9 +229,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) throw error;
       
       toast.success('Password reset instructions sent to your email');
-    } catch (error: any) {
-      logger.error('Password reset error:', error.message);
-      toast.error(error.message || 'Failed to send reset password instructions');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      logger.error('Password reset error:', errorMessage);
+      toast.error(errorMessage || 'Failed to send reset password instructions');
       throw error;
     }
   };
@@ -262,7 +273,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const syncLinkedAccounts = async () => {
       try {
-        const providers = user.identities.map((id: any) => id.provider);
+        const providers = user.identities.map((id) => id.provider);
         
         const { data: currentProfile } = await supabase
           .from('profiles')

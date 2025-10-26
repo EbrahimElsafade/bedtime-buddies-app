@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/card'
 import { Upload, X } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { Category } from '@/types/language'
 
 interface StoryDetailsFormProps {
   storyData: {
@@ -29,7 +30,7 @@ interface StoryDetailsFormProps {
     category: string
     cover_image: string | null
   }
-  categories: any[] | undefined
+  categories: Category[] | undefined
   categoriesLoading: boolean
   coverImagePreview: string | null
   onTitleChange: (language: string, value: string) => void

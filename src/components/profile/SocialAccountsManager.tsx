@@ -37,7 +37,7 @@ export const SocialAccountsManager = () => {
     try {
       await linkSocialAccount(account)
       // The redirect will happen automatically, and linked_accounts will be updated via onAuthStateChange
-    } catch (err: any) {
+    } catch (err) {
       // Error already handled in context with toast
     } finally {
       setLinking(false)
@@ -54,7 +54,7 @@ export const SocialAccountsManager = () => {
     setUnlinking(account)
     try {
       await unlinkSocialAccount(account)
-    } catch (err: any) {
+    } catch (err) {
       // Error already handled in context with toast
     } finally {
       setUnlinking(null)

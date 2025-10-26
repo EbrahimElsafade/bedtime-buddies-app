@@ -2,13 +2,14 @@ import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTranslation } from 'react-i18next'
+import { Category } from '@/types/language'
 
 interface StoriesFiltersProps {
   searchTerm: string
   onSearchChange: (value: string) => void
   selectedCategory: string
   onCategoryChange: (value: string) => void
-  categories: any[]
+  categories: Category[]
 }
 
 export const StoriesFilters = ({

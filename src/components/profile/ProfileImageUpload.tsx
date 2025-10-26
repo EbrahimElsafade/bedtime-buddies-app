@@ -69,8 +69,9 @@ export const ProfileImageUpload = () => {
       await updateProfile({ profile_image: publicUrl })
       setImageUrl(publicUrl)
       toast.success('Profile image updated successfully')
-    } catch (error: any) {
-      toast.error(error.message || 'Failed to upload image')
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to upload image';
+      toast.error(errorMessage)
     } finally {
       setUploading(false)
     }
