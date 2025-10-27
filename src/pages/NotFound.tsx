@@ -4,18 +4,17 @@ import { useLocation, Link } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
-import { logger } from '@/utils/logger';
 
 const NotFound = () => {
   const location = useLocation();
   const { t } = useTranslation(['notFound', 'misc', 'meta']);
 
   useEffect(() => {
-    logger.warn(
+    console.error(
       "404 Error: User attempted to access non-existent route:",
       location.pathname
     );
-  }, [location.pathname]);
+  }, [location.pathname, t]);
 
   return (
     <div className="min-h-svh flex items-center justify-center bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-12">

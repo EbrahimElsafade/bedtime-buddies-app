@@ -3,7 +3,6 @@ import React from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
@@ -56,29 +55,27 @@ function App() {
                   <PWAInstallPrompt />
                 <Routes>
                   {/* Public Routes with Layout */}
-                  <Route path="/" element={<ErrorBoundary><Layout /></ErrorBoundary>}>
-                    <Route index element={<ErrorBoundary><Index /></ErrorBoundary>} />
-                    <Route path="stories" element={<ErrorBoundary><Stories /></ErrorBoundary>} />
-                    <Route path="stories/:id" element={<ErrorBoundary><Story /></ErrorBoundary>} />
-                    <Route path="games" element={<ErrorBoundary><Games /></ErrorBoundary>} />
-                    <Route path="courses" element={<ErrorBoundary><Courses /></ErrorBoundary>} />
-                    <Route path="courses/:id" element={<ErrorBoundary><Course /></ErrorBoundary>} />
-                    <Route path="login" element={<ErrorBoundary><Login /></ErrorBoundary>} />
-                    <Route path="register" element={<ErrorBoundary><Register /></ErrorBoundary>} />
-                    <Route path="profile" element={<ErrorBoundary><Profile /></ErrorBoundary>} />
-                    <Route path="favorites" element={<ErrorBoundary><Favorites /></ErrorBoundary>} />
-                    <Route path="subscription" element={<ErrorBoundary><Subscription /></ErrorBoundary>} />
+                  <Route path="/" element={<Layout />}>
+                    <Route index element={<Index />} />
+                    <Route path="stories" element={<Stories />} />
+                    <Route path="stories/:id" element={<Story />} />
+                    <Route path="games" element={<Games />} />
+                    <Route path="courses" element={<Courses />} />
+                    <Route path="courses/:id" element={<Course />} />
+                    <Route path="login" element={<Login />} />
+                    <Route path="register" element={<Register />} />
+                    <Route path="profile" element={<Profile />} />
+                    <Route path="favorites" element={<Favorites />} />
+                    <Route path="subscription" element={<Subscription />} />
                   </Route>
 
                   {/* Admin Routes */}
                   <Route
                     path="/admin"
                     element={
-                      <ErrorBoundary>
-                        <AdminRoute>
-                          <AdminLayout />
-                        </AdminRoute>
-                      </ErrorBoundary>
+                      <AdminRoute>
+                        <AdminLayout />
+                      </AdminRoute>
                     }
                   >
                     <Route index element={<AdminDashboard />} />

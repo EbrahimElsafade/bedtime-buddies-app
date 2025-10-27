@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useStoryFavorites, useCourseFavorites } from '@/hooks/useFavorites'
 import { useLoading } from '@/contexts/LoadingContext'
-import { logger } from '@/utils/logger'
 import { ProfileInfo } from './Profile/ProfileInfo'
 import { FavoritesList } from './Profile/FavoritesList'
 import { SubscriptionTab } from './Profile/SubscriptionTab'
@@ -46,7 +45,7 @@ const Profile = () => {
   // Check authentication and redirect if needed
   useEffect(() => {
     if (!isAuthenticated) {
-      logger.info('Profile - Not authenticated, redirecting to login')
+      console.log('Profile - Not authenticated, redirecting to login')
       navigate('/login', { replace: true })
     }
   }, [isAuthenticated, navigate])

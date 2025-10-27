@@ -12,20 +12,19 @@ export const useProfileManagement = (user: User | null) => {
   const [error, setError] = useState<Error | null>(null);
 
   const fetchUserProfile = useCallback(async (userId: string, skipIfLoaded = false) => {
-    let isCancelled = false;
-
     // Skip fetching if profile is already loaded and skipIfLoaded is true
     if (skipIfLoaded && profileLoaded && profile) {
+      // logger.debug("Profile already loaded, skipping fetch");
       return profile;
     }
 
     try {
-      if (!isCancelled) {
-        setIsLoading(true);
-        setError(null);
-      }
+      setIsLoading(true);
+      setError(null);
       
-      const { data: profileData, error: profileError } = await supabase
+      // logger.debug("Starting to fetch profile for user:", userId);
+      
+      const { data, error: profileError } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
@@ -36,28 +35,25 @@ export const useProfileManagement = (user: User | null) => {
         throw profileError;
       }
 
-      if (isCancelled) {
-        return profile;
-      }
-
-      // Transform the data to match the Profile type
+      // logger.debug("Profile fetched successfully:", data);
+      
+      // Transform the data to match the Profile type from auth.ts
       const transformedProfile: Profile = {
-        id: profileData.id,
-        parent_name: profileData.parent_name,
-        child_name: profileData.child_name,
-        preferred_language: profileData.preferred_language as 'en' | 'ar-eg' | 'ar-fos7a' | 'fr',
-        is_premium: profileData.is_premium,
-        subscription_tier: profileData.subscription_tier,
-        subscription_end: profileData.subscription_end,
-        profile_image: profileData.profile_image,
-        linked_accounts: (profileData.linked_accounts || []) as Profile['linked_accounts'],
-        skills: profileData.skills,
+        id: data.id,
+        parent_name: data.parent_name,
+        child_name: data.child_name,
+        preferred_language: data.preferred_language as 'en' | 'ar-eg' | 'ar-fos7a' | 'fr',
+        is_premium: data.is_premium,
+        subscription_tier: data.subscription_tier,
+        subscription_end: data.subscription_end,
+        profile_image: data.profile_image,
+        linked_accounts: (data.linked_accounts || []) as Profile['linked_accounts'],
+        skills: data.skills,
       };
       
-      if (!isCancelled) {
-        setProfile(transformedProfile);
-        setProfileLoaded(true);
-      }
+      setProfile(transformedProfile);
+      setProfileLoaded(true);
+      // logger.debug("Profile fetch completed, profileLoaded set to true");
       
       return transformedProfile;
     } catch (err) {
@@ -112,33 +108,24 @@ export const useProfileManagement = (user: User | null) => {
     }
   };
 
-  // Effect to fetch profile when user changes
+  // Effect to fetch profile when user changes, but avoid refetch on tab switches
   useEffect(() => {
-    let mounted = true;
-    
-    const initializeProfile = async () => {
-      if (user?.id && !profileLoaded) {
-        try {
-          await fetchUserProfile(user.id);
-        } catch (error) {
-          if (mounted) {
-            logger.error("Error in profile initialization:", error);
-          }
-        }
-      } else if (!user && mounted) {
-        // Clear profile when user logs out
-        setProfile(null);
-        setProfileLoaded(false);
-        setError(null);
+    if (user?.id) {
+      // logger.debug("useProfileManagement effect triggered, user:", user.id);
+      
+      // Only fetch if we don't have a profile loaded yet
+      if (!profileLoaded) {
+        fetchUserProfile(user.id);
+      } else {
+        // logger.debug("Profile already loaded, skipping fetch");
       }
-    };
-
-    initializeProfile();
-
-    return () => {
-      mounted = false;
-    };
-  }, [user, fetchUserProfile, profileLoaded]);
+    } else if (!user) {
+      // Clear profile when user logs out
+      setProfile(null);
+      setProfileLoaded(false);
+      setError(null);
+    }
+  }, [user?.id, fetchUserProfile, profileLoaded]);
 
   return {
     profile,

@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
-import { logger } from "@/utils/logger";
 import { User, CircleUser, BookOpen, Presentation, CalendarClock } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLoading } from "@/contexts/LoadingContext";
@@ -55,7 +54,7 @@ const Dashboard = () => {
           publishedCourses: courses?.filter(c => c.is_published).length || 0,
         });
       } catch (error) {
-        logger.error('Error fetching admin stats:', error);
+        console.error('Error fetching admin stats:', error);
       } finally {
         setIsLoading(false);
       }

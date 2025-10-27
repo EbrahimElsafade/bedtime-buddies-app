@@ -1,24 +1,16 @@
 import { useEffect, useRef } from 'react'
-import Hls, { Events as HlsEvents, ErrorData, ErrorTypes } from 'hls.js'
+import Hls from 'hls.js'
 import { supabase } from '@/integrations/supabase/client'
-import { logger } from '@/utils/logger'
 
 interface HLSVideoPlayerProps {
   videoPath: string
   title: string
   className?: string
-  onVideoRef?: (ref: HTMLVideoElement | null) => void
 }
 
-const HLSVideoPlayer = ({ videoPath, title, className = '', onVideoRef }: HLSVideoPlayerProps) => {
+const HLSVideoPlayer = ({ videoPath, title, className = '' }: HLSVideoPlayerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const hlsRef = useRef<Hls | null>(null)
-
-  useEffect(() => {
-    if (onVideoRef && videoRef.current) {
-      onVideoRef(videoRef.current)
-    }
-  }, [onVideoRef])
 
   useEffect(() => {
     const video = videoRef.current
@@ -43,36 +35,38 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', onVideoRef }: HLSVid
           hlsRef.current = hls
           hls.loadSource(videoUrl)
           hls.attachMedia(video)
+          
+          // hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          //   console.log('HLS manifest loaded, ready to play')
+          // })
 
-          const handleError = (_event: HlsEvents, data: ErrorData) => {
-            logger.error('HLS error:', data)
+          hls.on(Hls.Events.ERROR, (event, data) => {
+            console.error('HLS error:', data)
             if (data.fatal) {
               switch (data.type) {
-                case ErrorTypes.NETWORK_ERROR:
-                  logger.warn('Network error, trying to recover...')
+                case Hls.ErrorTypes.NETWORK_ERROR:
+                  console.log('Network error, trying to recover...')
                   hls.startLoad()
                   break
-                case ErrorTypes.MEDIA_ERROR:
-                  logger.warn('Media error, trying to recover...')
+                case Hls.ErrorTypes.MEDIA_ERROR:
+                  console.log('Media error, trying to recover...')
                   hls.recoverMediaError()
                   break
                 default:
-                  logger.error('Fatal error, destroying HLS instance')
+                  console.log('Fatal error, destroying HLS instance')
                   hls.destroy()
                   break
               }
             }
-          }
-          
-          hls.on(HlsEvents.ERROR, handleError)
+          })
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
           // For Safari, which has native HLS support
           video.src = videoUrl
         } else {
-          logger.error('HLS is not supported in this browser')
+          console.error('HLS is not supported in this browser')
         }
       } catch (error) {
-        logger.error('Error initializing video player:', error)
+        console.error('Error initializing video player:', error)
       }
     }
 
@@ -91,10 +85,10 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', onVideoRef }: HLSVid
     <video
       ref={videoRef}
       className={`h-full w-full ${className}`}
+      controls
       playsInline
       preload="metadata"
       title={title}
-      muted
     >
       Your browser does not support the video tag.
     </video>

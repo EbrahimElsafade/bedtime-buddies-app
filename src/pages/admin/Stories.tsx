@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
 import { getMultilingualText } from '@/utils/multilingualUtils'
-import { logger } from '@/utils/logger'
 import {
   Table,
   TableBody,
@@ -162,7 +161,7 @@ const Stories = () => {
         toast.success('Story deleted successfully')
         refetch()
       } catch (error) {
-        logger.error('Error deleting story:', error)
+        console.error('Error deleting story:', error)
         toast.error('Failed to delete story')
       }
     }
@@ -182,7 +181,7 @@ const Stories = () => {
       )
       refetch()
     } catch (error) {
-      logger.error('Error updating story status:', error)
+      console.error('Error updating story status:', error)
       toast.error('Failed to update story status')
     }
   }

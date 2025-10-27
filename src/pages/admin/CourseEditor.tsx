@@ -3,7 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
-import { logger } from '@/utils/logger'
 import {
   Card,
   CardContent,
@@ -143,7 +142,7 @@ const CourseEditor = () => {
     queryFn: async () => {
       if (!isEditing || !id) return null
 
-      logger.info('Fetching course for ID:', id)
+      console.log('Fetching course for ID:', id)
 
       // Fetch course details
       const { data: course, error: courseError } = await supabase
@@ -153,7 +152,7 @@ const CourseEditor = () => {
         .single()
 
       if (courseError) {
-        logger.error('Course fetch error:', courseError)
+        console.error('Course fetch error:', courseError)
         toast.error('Failed to fetch course details')
         throw courseError
       }
@@ -166,12 +165,12 @@ const CourseEditor = () => {
         .order('lesson_order', { ascending: true })
 
       if (lessonsError) {
-        logger.error('Lessons fetch error:', lessonsError)
+        console.error('Lessons fetch error:', lessonsError)
         toast.error('Failed to fetch course lessons')
         throw lessonsError
       }
 
-      logger.info('Fetched course lessons:', lessons)
+      console.log('Fetched course lessons:', lessons)
 
       return {
         course,
@@ -183,7 +182,7 @@ const CourseEditor = () => {
   })
 
   useEffect(() => {
-    logger.info(
+    console.log(
       'CourseEditor - isEditing:',
       isEditing,
       'id:',
@@ -198,7 +197,7 @@ const CourseEditor = () => {
       // Handle cover image preview
       if (course.cover_image) {
         const imageUrl = getImageUrl(course.cover_image)
-        logger.info('Setting preview image URL:', imageUrl)
+        console.log('Setting preview image URL:', imageUrl)
         setCoverImagePreview(imageUrl)
       }
 
@@ -238,9 +237,9 @@ const CourseEditor = () => {
 
       // Process lessons for the form
       if (lessons && lessons.length > 0) {
-        logger.info('Processing lessons:', lessons)
+        console.log('Processing lessons:', lessons)
         const lessonsForForm: CourseLessonForm[] = lessons.map(lesson => {
-          logger.info('Processing lesson:', lesson)
+          console.log('Processing lesson:', lesson)
           const lessonData = lesson as any; // Type assertion for newly added is_free field
 
           return {
@@ -265,10 +264,10 @@ const CourseEditor = () => {
           }
         })
 
-        logger.info('Setting lessons for form:', lessonsForForm)
+        console.log('Setting lessons for form:', lessonsForForm)
         setCourseLessons(lessonsForForm)
       } else {
-        logger.info('No lessons found, initializing empty lessons')
+        console.log('No lessons found, initializing empty lessons')
         setCourseLessons([])
       }
     }
@@ -278,12 +277,12 @@ const CourseEditor = () => {
   const handleCoverImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0]
-      logger.info('New image file selected:', file.name, file.size)
+      console.log('New image file selected:', file.name, file.size)
       setCoverImageFile(file)
 
       // Create a preview
       const objectUrl = URL.createObjectURL(file)
-      logger.info('Created preview URL:', objectUrl)
+      console.log('Created preview URL:', objectUrl)
       setCoverImagePreview(objectUrl)
     }
   }
@@ -394,7 +393,7 @@ const CourseEditor = () => {
           const duration = await getVideoDuration(videoFile)
           updatedLessons[lessonIndex].duration = duration
         } catch (error) {
-          logger.error('Error getting video duration:', error)
+          console.error('Error getting video duration:', error)
         }
       }
       
@@ -434,7 +433,7 @@ const CourseEditor = () => {
           return;
         }
 
-        logger.info(
+        console.log(
           'Uploading image file:',
           coverImageFile.name,
           'Size:',
@@ -450,13 +449,13 @@ const CourseEditor = () => {
           })
 
         if (uploadError) {
-          logger.error('Upload error:', uploadError)
+          console.error('Upload error:', uploadError)
           throw uploadError
         }
 
-        logger.info('Upload successful:', uploadData)
+        console.log('Upload successful:', uploadData)
         coverImageUrl = filename
-        logger.info('Storing filename in DB:', coverImageUrl)
+        console.log('Storing filename in DB:', coverImageUrl)
       }
       
       // Upload instructor avatar if a new file was selected
@@ -605,7 +604,7 @@ const CourseEditor = () => {
               })
 
             if (uploadError) {
-              logger.error('Video upload error:', uploadError)
+              console.error('Video upload error:', uploadError)
               throw uploadError
             }
           }
@@ -649,7 +648,7 @@ const CourseEditor = () => {
       toast.success(`Course ${isEditing ? 'updated' : 'created'} successfully!`)
       navigate('/admin/courses')
     } catch (error: any) {
-      logger.error('Error saving course:', error)
+      console.error('Error saving course:', error)
       toast.error(
         `Failed to ${isEditing ? 'update' : 'create'} course: ${error.message}`,
       )
@@ -832,7 +831,7 @@ const CourseEditor = () => {
                             variant="destructive"
                             className="absolute right-2 top-2 h-6 w-6"
                             onClick={() => {
-                              logger.info('Clearing image preview')
+                              console.log('Clearing image preview')
                               setCoverImagePreview(null)
                               setCoverImageFile(null)
                               setCourseData({
