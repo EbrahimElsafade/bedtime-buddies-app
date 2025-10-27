@@ -6,7 +6,7 @@ import { getImageUrl } from '@/utils/imageUtils'
 import { AudioControls } from './AudioControls'
 import { TextHighlight } from './TextHighlight'
 import HLSVideoPlayer from '@/components/course/HLSVideoPlayer'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface StoryContentProps {
   story: Story
@@ -28,6 +28,7 @@ export const StoryContent = ({
   const [isAudioPlaying, setIsAudioPlaying] = useState(false)
   const [audioCurrentTime, setAudioCurrentTime] = useState(0)
   const [audioDuration, setAudioDuration] = useState(0)
+  const videoRef = useRef<HTMLVideoElement | null>(null)
 
   const currentSection = story.sections[currentSectionIndex]
   const currentText =
@@ -64,7 +65,25 @@ export const StoryContent = ({
   const handleAudioTimeUpdate = (currentTime: number, duration: number) => {
     setAudioCurrentTime(currentTime)
     setAudioDuration(duration)
+    
+    // Sync video with audio time if video exists
+    if (videoRef.current) {
+      videoRef.current.currentTime = currentTime
+    }
   }
+  
+  // Update video playback state when audio playing state changes
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isAudioPlaying) {
+        videoRef.current.play().catch(error => {
+          console.error('Error playing video:', error)
+        })
+      } else {
+        videoRef.current.pause()
+      }
+    }
+  }, [isAudioPlaying])
 
   return (
     <Card
@@ -80,6 +99,9 @@ export const StoryContent = ({
                 videoPath={currentVideo}
                 title={storyTitle}
                 className="h-full w-full object-cover"
+                onVideoRef={(ref) => {
+                  videoRef.current = ref
+                }}
               />
             </div>
           ) : currentImage ? (

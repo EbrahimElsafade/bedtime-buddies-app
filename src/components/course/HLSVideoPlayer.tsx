@@ -6,11 +6,18 @@ interface HLSVideoPlayerProps {
   videoPath: string
   title: string
   className?: string
+  onVideoRef?: (ref: HTMLVideoElement | null) => void
 }
 
-const HLSVideoPlayer = ({ videoPath, title, className = '' }: HLSVideoPlayerProps) => {
+const HLSVideoPlayer = ({ videoPath, title, className = '', onVideoRef }: HLSVideoPlayerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const hlsRef = useRef<Hls | null>(null)
+
+  useEffect(() => {
+    if (onVideoRef && videoRef.current) {
+      onVideoRef(videoRef.current)
+    }
+  }, [onVideoRef])
 
   useEffect(() => {
     const video = videoRef.current
@@ -85,10 +92,10 @@ const HLSVideoPlayer = ({ videoPath, title, className = '' }: HLSVideoPlayerProp
     <video
       ref={videoRef}
       className={`h-full w-full ${className}`}
-      controls
       playsInline
       preload="metadata"
       title={title}
+      muted
     >
       Your browser does not support the video tag.
     </video>
