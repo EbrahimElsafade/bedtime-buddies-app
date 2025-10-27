@@ -33,7 +33,7 @@ interface StorySectionsListProps {
   onClearSectionImage: (sectionIndex: number) => void
   onSectionVideoChange: (
     sectionIndex: number,
-    e: React.ChangeEvent<HTMLInputElement>,
+    files: FileList,
   ) => void
   onClearSectionVideo: (sectionIndex: number) => void
   onSectionVoiceChange: (

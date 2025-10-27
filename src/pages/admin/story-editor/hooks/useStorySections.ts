@@ -55,15 +55,18 @@ export const useStorySections = (
     })
   }, [setStorySections])
 
-  const handleSectionVideoChange = useCallback((sectionIndex: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0]
+  const handleSectionVideoChange = useCallback((sectionIndex: number, files: FileList) => {
+    if (files && files.length > 0) {
+      // Find the .m3u8 file for preview
+      const m3u8File = Array.from(files).find(f => f.name.endsWith('.m3u8'))
+      const preview = m3u8File ? URL.createObjectURL(m3u8File) : null
+
       setStorySections(prev => {
         const updated = [...prev]
         updated[sectionIndex] = {
           ...updated[sectionIndex],
-          videoFile: file,
-          videoPreview: URL.createObjectURL(file),
+          videoFiles: files,
+          videoPreview: preview,
         }
         return updated
       })
@@ -75,7 +78,7 @@ export const useStorySections = (
       const updated = [...prev]
       updated[sectionIndex] = {
         ...updated[sectionIndex],
-        videoFile: null,
+        videoFiles: null,
         videoPreview: null,
         video: undefined,
       }

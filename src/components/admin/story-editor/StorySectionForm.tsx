@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/accordion'
 import { Trash2, X, Image } from 'lucide-react'
 import { VoiceFileUpload } from '@/components/admin/VoiceFileUpload'
+import { HLSVideoUpload } from '@/components/admin/HLSVideoUpload'
 import { Language } from '@/types/language'
 
 interface StorySectionFormProps {
@@ -21,7 +22,7 @@ interface StorySectionFormProps {
     image?: string
     video?: string
     imageFile?: File | null
-    videoFile?: File | null
+    videoFiles?: FileList | null
     imagePreview?: string | null
     videoPreview?: string | null
     voiceFiles?: Record<string, File>
@@ -44,7 +45,7 @@ interface StorySectionFormProps {
   onClearSectionImage: (sectionIndex: number) => void
   onSectionVideoChange: (
     sectionIndex: number,
-    e: React.ChangeEvent<HTMLInputElement>,
+    files: FileList,
   ) => void
   onClearSectionVideo: (sectionIndex: number) => void
   onSectionVoiceChange: (
@@ -128,42 +129,12 @@ export const StorySectionForm = ({
           </div>
 
           {/* Section Video */}
-          <div className="space-y-2">
-            <Label>Section Video (HLS - replaces image if provided)</Label>
-            <div className="flex items-center gap-4">
-              {section.videoPreview ? (
-                <div className="relative h-32 w-32 overflow-hidden rounded-md border">
-                  <video
-                    src={section.videoPreview}
-                    className="h-full w-full object-cover"
-                    muted
-                  />
-                  <Button
-                    type="button"
-                    size="icon"
-                    variant="destructive"
-                    className="absolute right-1 top-1 h-6 w-6"
-                    onClick={() => onClearSectionVideo(sectionIndex)}
-                  >
-                    <X className="h-3 w-3" />
-                  </Button>
-                </div>
-              ) : (
-                <div className="flex h-32 w-32 flex-col items-center justify-center rounded-md border border-dashed border-muted-foreground/50 bg-muted">
-                  <Image className="mb-1 h-6 w-6 text-muted-foreground" />
-                  <p className="text-center text-xs text-muted-foreground">
-                    Upload Video
-                  </p>
-                </div>
-              )}
-              <Input
-                type="file"
-                accept="video/*,.m3u8"
-                onChange={e => onSectionVideoChange(sectionIndex, e)}
-                className="flex-1"
-              />
-            </div>
-          </div>
+          <HLSVideoUpload
+            sectionIndex={sectionIndex}
+            videoPreview={section.videoPreview}
+            onVideoChange={onSectionVideoChange}
+            onClearVideo={onClearSectionVideo}
+          />
 
           {/* Language-specific content */}
           <Tabs defaultValue={languages[0]} className="w-full">

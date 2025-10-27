@@ -244,17 +244,28 @@ export const StoryEditorForm = ({
         }
 
         let sectionVideoUrl = null
-        if (section.videoFile) {
-          const filename = `section-video-${storyId}-${section.order}-${Date.now()}-${section.videoFile.name}`
-          const { error: uploadError } = await supabase.storage
-            .from('course-videos')
-            .upload(filename, section.videoFile, {
-              cacheControl: '3600',
-              upsert: false,
-            })
+        if (section.videoFiles && section.videoFiles.length > 0) {
+          const files = Array.from(section.videoFiles)
+          const folderName = `story_${storyId}_section_${section.order}_${Date.now()}`
+          
+          // Upload all HLS files to a dedicated folder
+          for (const file of files) {
+            const filePath = `${folderName}/${file.name}`
+            const { error: uploadError } = await supabase.storage
+              .from('course-videos')
+              .upload(filePath, file, {
+                cacheControl: '3600',
+                upsert: false,
+              })
 
-          if (uploadError) throw uploadError
-          sectionVideoUrl = filename
+            if (uploadError) throw new Error(`Failed to upload video file ${file.name}: ${uploadError.message}`)
+          }
+
+          // Store the path to the .m3u8 manifest file
+          const m3u8File = files.find(f => f.name.endsWith('.m3u8'))
+          if (m3u8File) {
+            sectionVideoUrl = `${folderName}/${m3u8File.name}`
+          }
         } else if (typeof section.video === 'string') {
           sectionVideoUrl = section.video
         }

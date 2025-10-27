@@ -6,7 +6,7 @@ export interface StorySection {
   image?: string
   video?: string
   imageFile?: File | null
-  videoFile?: File | null
+  videoFiles?: FileList | null
   imagePreview?: string | null
   videoPreview?: string | null
   voiceFiles?: Record<string, File>
