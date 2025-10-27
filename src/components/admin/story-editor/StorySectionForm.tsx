@@ -19,8 +19,11 @@ interface StorySectionFormProps {
     texts: Record<string, string>
     voices?: Record<string, string>
     image?: string
+    video?: string
     imageFile?: File | null
+    videoFile?: File | null
     imagePreview?: string | null
+    videoPreview?: string | null
     voiceFiles?: Record<string, File>
     voicePreviews?: Record<string, string>
   }
@@ -39,6 +42,11 @@ interface StorySectionFormProps {
     e: React.ChangeEvent<HTMLInputElement>,
   ) => void
   onClearSectionImage: (sectionIndex: number) => void
+  onSectionVideoChange: (
+    sectionIndex: number,
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => void
+  onClearSectionVideo: (sectionIndex: number) => void
   onSectionVoiceChange: (
     sectionIndex: number,
     language: string,
@@ -57,6 +65,8 @@ export const StorySectionForm = ({
   onUpdateSectionText,
   onSectionImageChange,
   onClearSectionImage,
+  onSectionVideoChange,
+  onClearSectionVideo,
   onSectionVoiceChange,
   onRemoveSectionVoice,
 }: StorySectionFormProps) => {
@@ -112,6 +122,44 @@ export const StorySectionForm = ({
                 type="file"
                 accept="image/*"
                 onChange={e => onSectionImageChange(sectionIndex, e)}
+                className="flex-1"
+              />
+            </div>
+          </div>
+
+          {/* Section Video */}
+          <div className="space-y-2">
+            <Label>Section Video (HLS - replaces image if provided)</Label>
+            <div className="flex items-center gap-4">
+              {section.videoPreview ? (
+                <div className="relative h-32 w-32 overflow-hidden rounded-md border">
+                  <video
+                    src={section.videoPreview}
+                    className="h-full w-full object-cover"
+                    muted
+                  />
+                  <Button
+                    type="button"
+                    size="icon"
+                    variant="destructive"
+                    className="absolute right-1 top-1 h-6 w-6"
+                    onClick={() => onClearSectionVideo(sectionIndex)}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex h-32 w-32 flex-col items-center justify-center rounded-md border border-dashed border-muted-foreground/50 bg-muted">
+                  <Image className="mb-1 h-6 w-6 text-muted-foreground" />
+                  <p className="text-center text-xs text-muted-foreground">
+                    Upload Video
+                  </p>
+                </div>
+              )}
+              <Input
+                type="file"
+                accept="video/*,.m3u8"
+                onChange={e => onSectionVideoChange(sectionIndex, e)}
                 className="flex-1"
               />
             </div>

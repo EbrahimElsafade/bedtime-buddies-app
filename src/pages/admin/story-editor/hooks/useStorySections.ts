@@ -55,6 +55,34 @@ export const useStorySections = (
     })
   }, [setStorySections])
 
+  const handleSectionVideoChange = useCallback((sectionIndex: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0]
+      setStorySections(prev => {
+        const updated = [...prev]
+        updated[sectionIndex] = {
+          ...updated[sectionIndex],
+          videoFile: file,
+          videoPreview: URL.createObjectURL(file),
+        }
+        return updated
+      })
+    }
+  }, [setStorySections])
+
+  const handleClearSectionVideo = useCallback((sectionIndex: number) => {
+    setStorySections(prev => {
+      const updated = [...prev]
+      updated[sectionIndex] = {
+        ...updated[sectionIndex],
+        videoFile: null,
+        videoPreview: null,
+        video: undefined,
+      }
+      return updated
+    })
+  }, [setStorySections])
+
   const handleSectionVoiceChange = useCallback((sectionIndex: number, language: string, file: File) => {
     setStorySections(prev => {
       const updated = [...prev]
@@ -109,6 +137,8 @@ export const useStorySections = (
     deleteSection,
     handleSectionImageChange,
     handleClearSectionImage,
+    handleSectionVideoChange,
+    handleClearSectionVideo,
     handleSectionVoiceChange,
     handleRemoveSectionVoice,
     updateSectionText,

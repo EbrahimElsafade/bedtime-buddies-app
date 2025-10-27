@@ -75,6 +75,8 @@ export const StoryEditorForm = ({
     deleteSection,
     handleSectionImageChange,
     handleClearSectionImage,
+    handleSectionVideoChange,
+    handleClearSectionVideo,
     handleSectionVoiceChange,
     handleRemoveSectionVoice,
     updateSectionText,
@@ -241,6 +243,22 @@ export const StoryEditorForm = ({
           sectionImageUrl = section.image
         }
 
+        let sectionVideoUrl = null
+        if (section.videoFile) {
+          const filename = `section-video-${storyId}-${section.order}-${Date.now()}-${section.videoFile.name}`
+          const { error: uploadError } = await supabase.storage
+            .from('course-videos')
+            .upload(filename, section.videoFile, {
+              cacheControl: '3600',
+              upsert: false,
+            })
+
+          if (uploadError) throw uploadError
+          sectionVideoUrl = filename
+        } else if (typeof section.video === 'string') {
+          sectionVideoUrl = section.video
+        }
+
         // Upload voice files only if in per_section mode
         const voiceUrls: Record<string, string> = { ...section.voices }
         if (storyData.audio_mode === 'per_section' && section.voiceFiles) {
@@ -273,6 +291,7 @@ export const StoryEditorForm = ({
             story_id: storyId,
             order: section.order,
             image: sectionImageUrl,
+            video: sectionVideoUrl,
             texts: section.texts,
             voices: storyData.audio_mode === 'per_section' ? voiceUrls : {},
           })
@@ -376,6 +395,8 @@ export const StoryEditorForm = ({
           onUpdateSectionText={updateSectionText}
           onSectionImageChange={handleSectionImageChange}
           onClearSectionImage={handleClearSectionImage}
+          onSectionVideoChange={handleSectionVideoChange}
+          onClearSectionVideo={handleClearSectionVideo}
           onSectionVoiceChange={handleSectionVoiceChange}
           onRemoveSectionVoice={handleRemoveSectionVoice}
         />

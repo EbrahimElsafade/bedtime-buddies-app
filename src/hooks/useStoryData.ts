@@ -42,7 +42,8 @@ export const useStoryData = (storyId: string | undefined) => {
         order: section.order,
         texts: section.texts as Record<string, string>,
         voices: section.voices as Record<string, string> | undefined,
-        image: section.image || undefined
+        image: section.image || undefined,
+        video: section.video || undefined
       })) || [];
 
       // Transform multilingual title and description to Record<string, string>

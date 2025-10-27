@@ -510,6 +510,7 @@ export type Database = {
           story_id: string
           texts: Json
           updated_at: string
+          video: string | null
           voices: Json | null
         }
         Insert: {
@@ -520,6 +521,7 @@ export type Database = {
           story_id: string
           texts?: Json
           updated_at?: string
+          video?: string | null
           voices?: Json | null
         }
         Update: {
@@ -530,6 +532,7 @@ export type Database = {
           story_id?: string
           texts?: Json
           updated_at?: string
+          video?: string | null
           voices?: Json | null
         }
         Relationships: [
