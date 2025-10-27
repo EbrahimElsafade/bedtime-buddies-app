@@ -22,4 +22,5 @@ export interface StorySection {
   texts: Record<string, string>; // { "en": "Once upon a time...", "ar-eg": "في يوم من الأيام..." }
   voices?: Record<string, string>; // { "en": "url.mp3", "ar-eg": "url.mp3" }
   image?: string; // section image URL
+  video?: string; // section HLS video URL (path to .m3u8 manifest)
 }

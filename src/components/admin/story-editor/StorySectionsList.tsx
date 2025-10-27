@@ -31,6 +31,11 @@ interface StorySectionsListProps {
     e: React.ChangeEvent<HTMLInputElement>,
   ) => void
   onClearSectionImage: (sectionIndex: number) => void
+  onSectionVideoChange: (
+    sectionIndex: number,
+    files: FileList,
+  ) => void
+  onClearSectionVideo: (sectionIndex: number) => void
   onSectionVoiceChange: (
     sectionIndex: number,
     language: string,
@@ -49,12 +54,17 @@ export const StorySectionsList = ({
   onUpdateSectionText,
   onSectionImageChange,
   onClearSectionImage,
+  onSectionVideoChange,
+  onClearSectionVideo,
   onSectionVoiceChange,
   onRemoveSectionVoice,
 }: StorySectionsListProps) => {
   const handleClearSectionImage = (sectionIndex: number) => {
-    // This will be handled in the parent component
     onClearSectionImage(sectionIndex)
+  }
+
+  const handleClearSectionVideo = (sectionIndex: number) => {
+    onClearSectionVideo(sectionIndex)
   }
 
   return (
@@ -89,6 +99,8 @@ export const StorySectionsList = ({
                 onUpdateSectionText={onUpdateSectionText}
                 onSectionImageChange={onSectionImageChange}
                 onClearSectionImage={handleClearSectionImage}
+                onSectionVideoChange={onSectionVideoChange}
+                onClearSectionVideo={handleClearSectionVideo}
                 onSectionVoiceChange={onSectionVoiceChange}
                 onRemoveSectionVoice={onRemoveSectionVoice}
               />

@@ -75,6 +75,8 @@ export const StoryEditorForm = ({
     deleteSection,
     handleSectionImageChange,
     handleClearSectionImage,
+    handleSectionVideoChange,
+    handleClearSectionVideo,
     handleSectionVoiceChange,
     handleRemoveSectionVoice,
     updateSectionText,
@@ -241,6 +243,33 @@ export const StoryEditorForm = ({
           sectionImageUrl = section.image
         }
 
+        let sectionVideoUrl = null
+        if (section.videoFiles && section.videoFiles.length > 0) {
+          const files = Array.from(section.videoFiles)
+          const folderName = `story_${storyId}_section_${section.order}_${Date.now()}`
+          
+          // Upload all HLS files to a dedicated folder
+          for (const file of files) {
+            const filePath = `${folderName}/${file.name}`
+            const { error: uploadError } = await supabase.storage
+              .from('course-videos')
+              .upload(filePath, file, {
+                cacheControl: '3600',
+                upsert: false,
+              })
+
+            if (uploadError) throw new Error(`Failed to upload video file ${file.name}: ${uploadError.message}`)
+          }
+
+          // Store the path to the .m3u8 manifest file
+          const m3u8File = files.find(f => f.name.endsWith('.m3u8'))
+          if (m3u8File) {
+            sectionVideoUrl = `${folderName}/${m3u8File.name}`
+          }
+        } else if (typeof section.video === 'string') {
+          sectionVideoUrl = section.video
+        }
+
         // Upload voice files only if in per_section mode
         const voiceUrls: Record<string, string> = { ...section.voices }
         if (storyData.audio_mode === 'per_section' && section.voiceFiles) {
@@ -273,6 +302,7 @@ export const StoryEditorForm = ({
             story_id: storyId,
             order: section.order,
             image: sectionImageUrl,
+            video: sectionVideoUrl,
             texts: section.texts,
             voices: storyData.audio_mode === 'per_section' ? voiceUrls : {},
           })
@@ -376,6 +406,8 @@ export const StoryEditorForm = ({
           onUpdateSectionText={updateSectionText}
           onSectionImageChange={handleSectionImageChange}
           onClearSectionImage={handleClearSectionImage}
+          onSectionVideoChange={handleSectionVideoChange}
+          onClearSectionVideo={handleClearSectionVideo}
           onSectionVoiceChange={handleSectionVoiceChange}
           onRemoveSectionVoice={handleRemoveSectionVoice}
         />

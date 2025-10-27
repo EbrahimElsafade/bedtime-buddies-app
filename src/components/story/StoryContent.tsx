@@ -5,6 +5,7 @@ import { Story } from '@/types/story'
 import { getImageUrl } from '@/utils/imageUtils'
 import { AudioControls } from './AudioControls'
 import { TextHighlight } from './TextHighlight'
+import HLSVideoPlayer from '@/components/course/HLSVideoPlayer'
 import { useState } from 'react'
 
 interface StoryContentProps {
@@ -32,6 +33,10 @@ export const StoryContent = ({
   const currentText =
     currentSection?.texts[currentLanguage] ||
     'Content not available in selected language'
+
+  const currentVideo = currentSection?.video
+    ? currentSection.video
+    : null
 
   const currentImage = currentSection?.image
     ? getImageUrl(currentSection.image)
@@ -67,26 +72,32 @@ export const StoryContent = ({
       className="mb-4 overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm md:mb-6"
     >
       <div className="grid">
-        {/* Story Section Image */}
+        {/* Story Section Video or Image */}
         <div className="relative w-full">
-          {currentImage ? (
+          {currentVideo ? (
+            <div className="aspect-square h-64 w-full md:aspect-auto md:h-auto">
+              <HLSVideoPlayer
+                videoPath={currentVideo}
+                title={storyTitle}
+                className="h-full w-full object-cover"
+              />
+            </div>
+          ) : currentImage ? (
             <img
               src={currentImage}
               alt={storyTitle}
               className="aspect-square h-64 w-full object-cover md:aspect-auto md:h-full"
               onError={e => {
-                console.log('Image failed to load:', currentImage)
                 e.currentTarget.style.display = 'none'
               }}
             />
           ) : (
-            // here we gonna set the controls
-            <div className="flex aspect-square h-64 w-full items-center justify-center bg-gray-200 md:aspect-auto md:h-full">
-              <span className="text-gray-500">No Image</span>
+            <div className="flex aspect-square h-64 w-full items-center justify-center bg-muted md:aspect-auto md:h-full">
+              <span className="text-muted-foreground">No media</span>
             </div>
           )}
 
-          <div className="absolute bottom-0 w-full bg-transparent/50">
+          <div className="absolute bottom-0 w-full bg-black/50">
             <AudioControls
               story={story}
               currentSection={currentSection}

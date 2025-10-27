@@ -55,6 +55,37 @@ export const useStorySections = (
     })
   }, [setStorySections])
 
+  const handleSectionVideoChange = useCallback((sectionIndex: number, files: FileList) => {
+    if (files && files.length > 0) {
+      // Find the .m3u8 file for preview
+      const m3u8File = Array.from(files).find(f => f.name.endsWith('.m3u8'))
+      const preview = m3u8File ? URL.createObjectURL(m3u8File) : null
+
+      setStorySections(prev => {
+        const updated = [...prev]
+        updated[sectionIndex] = {
+          ...updated[sectionIndex],
+          videoFiles: files,
+          videoPreview: preview,
+        }
+        return updated
+      })
+    }
+  }, [setStorySections])
+
+  const handleClearSectionVideo = useCallback((sectionIndex: number) => {
+    setStorySections(prev => {
+      const updated = [...prev]
+      updated[sectionIndex] = {
+        ...updated[sectionIndex],
+        videoFiles: null,
+        videoPreview: null,
+        video: undefined,
+      }
+      return updated
+    })
+  }, [setStorySections])
+
   const handleSectionVoiceChange = useCallback((sectionIndex: number, language: string, file: File) => {
     setStorySections(prev => {
       const updated = [...prev]
@@ -109,6 +140,8 @@ export const useStorySections = (
     deleteSection,
     handleSectionImageChange,
     handleClearSectionImage,
+    handleSectionVideoChange,
+    handleClearSectionVideo,
     handleSectionVoiceChange,
     handleRemoveSectionVoice,
     updateSectionText,

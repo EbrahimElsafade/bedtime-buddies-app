@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/accordion'
 import { Trash2, X, Image } from 'lucide-react'
 import { VoiceFileUpload } from '@/components/admin/VoiceFileUpload'
+import { HLSVideoUpload } from '@/components/admin/HLSVideoUpload'
 import { Language } from '@/types/language'
 
 interface StorySectionFormProps {
@@ -19,8 +20,11 @@ interface StorySectionFormProps {
     texts: Record<string, string>
     voices?: Record<string, string>
     image?: string
+    video?: string
     imageFile?: File | null
+    videoFiles?: FileList | null
     imagePreview?: string | null
+    videoPreview?: string | null
     voiceFiles?: Record<string, File>
     voicePreviews?: Record<string, string>
   }
@@ -39,6 +43,11 @@ interface StorySectionFormProps {
     e: React.ChangeEvent<HTMLInputElement>,
   ) => void
   onClearSectionImage: (sectionIndex: number) => void
+  onSectionVideoChange: (
+    sectionIndex: number,
+    files: FileList,
+  ) => void
+  onClearSectionVideo: (sectionIndex: number) => void
   onSectionVoiceChange: (
     sectionIndex: number,
     language: string,
@@ -57,6 +66,8 @@ export const StorySectionForm = ({
   onUpdateSectionText,
   onSectionImageChange,
   onClearSectionImage,
+  onSectionVideoChange,
+  onClearSectionVideo,
   onSectionVoiceChange,
   onRemoveSectionVoice,
 }: StorySectionFormProps) => {
@@ -116,6 +127,14 @@ export const StorySectionForm = ({
               />
             </div>
           </div>
+
+          {/* Section Video */}
+          <HLSVideoUpload
+            sectionIndex={sectionIndex}
+            videoPreview={section.videoPreview}
+            onVideoChange={onSectionVideoChange}
+            onClearVideo={onClearSectionVideo}
+          />
 
           {/* Language-specific content */}
           <Tabs defaultValue={languages[0]} className="w-full">
