@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Video, X, Upload, FolderOpen } from 'lucide-react';
+import { Video, X, Upload } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface HLSVideoUploadProps {
@@ -35,11 +35,11 @@ export const HLSVideoUpload: React.FC<HLSVideoUploadProps> = ({
 
   return (
     <div className="space-y-2">
-      <Label>Section Video (HLS - replaces image if provided)</Label>
+      <Label>Section Video (Any format - auto-converts to HLS)</Label>
       
       <Alert>
         <AlertDescription className="text-xs">
-          Upload HLS video files: select the .m3u8 manifest file AND all .ts segment files together.
+          Upload any video format (MP4, MOV, AVI, etc.). The system will automatically transcode it to HLS format.
         </AlertDescription>
       </Alert>
 
@@ -60,7 +60,7 @@ export const HLSVideoUpload: React.FC<HLSVideoUploadProps> = ({
             <Video className="h-4 w-4 text-green-600" />
             <span className="text-sm flex-1">
               {fileCount > 0 
-                ? `${fileCount} HLS file(s) selected` 
+                ? `Video selected (will be transcoded)` 
                 : 'Video uploaded'
               }
             </span>
@@ -77,17 +77,16 @@ export const HLSVideoUpload: React.FC<HLSVideoUploadProps> = ({
         </div>
       ) : (
         <div className="flex flex-col items-center gap-2 p-4 border-2 border-dashed border-muted-foreground/25 rounded-md">
-          <FolderOpen className="h-6 w-6 text-muted-foreground" />
+          <Upload className="h-6 w-6 text-muted-foreground" />
           <p className="text-sm text-muted-foreground text-center">
-            No video uploaded
+            Upload video file
           </p>
         </div>
       )}
       
       <Input
         type="file"
-        accept=".m3u8,.ts,video/*"
-        multiple
+        accept="video/*"
         onChange={handleFileChange}
         className="text-sm"
       />

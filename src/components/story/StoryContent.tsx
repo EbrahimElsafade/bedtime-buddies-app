@@ -36,8 +36,7 @@ export const StoryContent = ({
     'Content not available in selected language'
 
   const currentVideo = currentSection?.video
-    ? currentSection.video
-    : null
+  const videoStatus = (currentSection as any)?.video_status
 
   const currentImage = currentSection?.image
     ? getImageUrl(currentSection.image)
@@ -91,10 +90,9 @@ export const StoryContent = ({
       className="mb-4 overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm md:mb-6"
     >
       <div className="grid">
-        {/* Story Section Video or Image */}
-        <div className="relative w-full">
-          {currentVideo ? (
-            <div className="aspect-square h-64 w-full md:aspect-auto md:h-auto">
+        <div className="relative h-full w-full overflow-hidden rounded-lg bg-gradient-to-b from-primary/5 to-background">
+          {currentVideo && videoStatus === 'completed' ? (
+            <div className="h-full w-full">
               <HLSVideoPlayer
                 videoPath={currentVideo}
                 title={storyTitle}
@@ -103,6 +101,13 @@ export const StoryContent = ({
                   videoRef.current = ref
                 }}
               />
+            </div>
+          ) : currentVideo && videoStatus === 'transcoding' ? (
+            <div className="flex h-full w-full items-center justify-center bg-muted">
+              <div className="text-center">
+                <div className="mb-2 text-sm text-muted-foreground">Transcoding video...</div>
+                <div className="text-xs text-muted-foreground">Please wait</div>
+              </div>
             </div>
           ) : currentImage ? (
             <img
