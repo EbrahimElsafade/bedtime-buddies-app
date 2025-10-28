@@ -43,10 +43,7 @@ export const useStoryData = (storyId: string | undefined) => {
         texts: section.texts as Record<string, string>,
         voices: section.voices as Record<string, string> | undefined,
         image: section.image || undefined,
-        video: section.video || undefined,
-        video_status: (section as any).video_status,
-        video_original: (section as any).video_original,
-        transcoding_progress: (section as any).transcoding_progress
+        video: section.video || undefined
       })) || [];
 
       // Transform multilingual title and description to Record<string, string>

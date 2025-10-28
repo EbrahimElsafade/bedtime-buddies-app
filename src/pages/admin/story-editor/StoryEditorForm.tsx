@@ -244,27 +244,27 @@ export const StoryEditorForm = ({
         }
 
         let sectionVideoUrl = null
-        let sectionId: string | null = null
-        
         if (section.videoFiles && section.videoFiles.length > 0) {
-          console.log(`Uploading video for section ${section.order}`)
+          const files = Array.from(section.videoFiles)
+          const folderName = `story_${storyId}_section_${section.order}_${Date.now()}`
           
-          // Get the first video file (original video)
-          const videoFile = section.videoFiles[0]
-          const timestamp = Date.now()
-          const originalVideoPath = `story_${storyId}_section_${section.order}_original_${timestamp}${videoFile.name.substring(videoFile.name.lastIndexOf('.'))}`
+          // Upload all HLS files to a dedicated folder
+          for (const file of files) {
+            const filePath = `${folderName}/${file.name}`
+            const { error: uploadError } = await supabase.storage
+              .from('course-videos')
+              .upload(filePath, file, {
+                cacheControl: '3600',
+                upsert: false,
+              })
 
-          // Upload original video first
-          const { error: videoUploadError } = await supabase.storage
-            .from('course-videos')
-            .upload(originalVideoPath, videoFile, { upsert: true })
+            if (uploadError) throw new Error(`Failed to upload video file ${file.name}: ${uploadError.message}`)
+          }
 
-          if (videoUploadError) {
-            console.error('Error uploading video:', videoUploadError)
-            toast.error(`Failed to upload video for section ${section.order}`)
-          } else {
-            // Store original path for transcoding
-            sectionVideoUrl = originalVideoPath
+          // Store the path to the .m3u8 manifest file
+          const m3u8File = files.find(f => f.name.endsWith('.m3u8'))
+          if (m3u8File) {
+            sectionVideoUrl = `${folderName}/${m3u8File.name}`
           }
         } else if (typeof section.video === 'string') {
           sectionVideoUrl = section.video
@@ -296,46 +296,18 @@ export const StoryEditorForm = ({
         }
 
         // Insert section
-        const { data: insertedSection, error: sectionError } = await supabase
+        const { error: sectionError } = await supabase
           .from('story_sections')
           .insert({
             story_id: storyId,
             order: section.order,
             image: sectionImageUrl,
             video: sectionVideoUrl,
-            video_status: section.videoFiles && section.videoFiles.length > 0 ? 'pending' : null,
-            video_original: sectionVideoUrl,
             texts: section.texts,
             voices: storyData.audio_mode === 'per_section' ? voiceUrls : {},
           })
-          .select()
-          .single()
 
         if (sectionError) throw sectionError
-        
-        // Trigger transcoding if video was uploaded
-        if (section.videoFiles && section.videoFiles.length > 0 && insertedSection) {
-          console.log('Triggering transcoding for section:', insertedSection.id)
-          
-          const { error: transcodeError } = await supabase.functions.invoke(
-            'video-transcoder',
-            {
-              body: {
-                sectionId: insertedSection.id,
-                videoPath: sectionVideoUrl,
-                storyId,
-                sectionOrder: section.order
-              }
-            }
-          )
-
-          if (transcodeError) {
-            console.error('Error starting transcoding:', transcodeError)
-            toast.error(`Video uploaded but transcoding failed for section ${section.order}`)
-          } else {
-            console.log('Transcoding started successfully')
-          }
-        }
       }
 
       await queryClient.invalidateQueries({ queryKey: ['admin-story'] })

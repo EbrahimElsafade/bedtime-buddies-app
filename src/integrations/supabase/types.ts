@@ -509,12 +509,8 @@ export type Database = {
           order: number
           story_id: string
           texts: Json
-          transcoding_error: string | null
-          transcoding_progress: number | null
           updated_at: string
           video: string | null
-          video_original: string | null
-          video_status: string | null
           voices: Json | null
         }
         Insert: {
@@ -524,12 +520,8 @@ export type Database = {
           order: number
           story_id: string
           texts?: Json
-          transcoding_error?: string | null
-          transcoding_progress?: number | null
           updated_at?: string
           video?: string | null
-          video_original?: string | null
-          video_status?: string | null
           voices?: Json | null
         }
         Update: {
@@ -539,12 +531,8 @@ export type Database = {
           order?: number
           story_id?: string
           texts?: Json
-          transcoding_error?: string | null
-          transcoding_progress?: number | null
           updated_at?: string
           video?: string | null
-          video_original?: string | null
-          video_status?: string | null
           voices?: Json | null
         }
         Relationships: [

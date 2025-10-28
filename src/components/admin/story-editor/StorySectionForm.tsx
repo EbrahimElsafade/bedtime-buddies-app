@@ -45,7 +45,7 @@ interface StorySectionFormProps {
   onClearSectionImage: (sectionIndex: number) => void
   onSectionVideoChange: (
     sectionIndex: number,
-    files: FileList | null,
+    files: FileList,
   ) => void
   onClearSectionVideo: (sectionIndex: number) => void
   onSectionVoiceChange: (

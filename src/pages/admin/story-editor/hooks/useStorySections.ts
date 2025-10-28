@@ -55,11 +55,11 @@ export const useStorySections = (
     })
   }, [setStorySections])
 
-  const handleSectionVideoChange = useCallback((sectionIndex: number, files: FileList | null) => {
+  const handleSectionVideoChange = useCallback((sectionIndex: number, files: FileList) => {
     if (files && files.length > 0) {
-      // Get the first video file for preview
-      const videoFile = files[0]
-      const preview = videoFile ? URL.createObjectURL(videoFile) : null
+      // Find the .m3u8 file for preview
+      const m3u8File = Array.from(files).find(f => f.name.endsWith('.m3u8'))
+      const preview = m3u8File ? URL.createObjectURL(m3u8File) : null
 
       setStorySections(prev => {
         const updated = [...prev]
