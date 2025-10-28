@@ -5,7 +5,7 @@ import { Story } from '@/types/story'
 import { getImageUrl } from '@/utils/imageUtils'
 import { AudioControls } from './AudioControls'
 import { TextHighlight } from './TextHighlight'
-import HLSVideoPlayer from '@/components/course/HLSVideoPlayer'
+import VideoPlayer from './VideoPlayer'
 import { useEffect, useRef, useState } from 'react'
 
 interface StoryContentProps {
@@ -95,10 +95,11 @@ export const StoryContent = ({
         <div className="relative w-full">
           {currentVideo ? (
             <div className="aspect-square h-64 w-full md:aspect-auto md:h-auto">
-              <HLSVideoPlayer
+              <VideoPlayer
                 videoPath={currentVideo}
                 title={storyTitle}
                 className="h-full w-full object-cover"
+                playOnTouch={!(story.audio_mode === 'single_story' || (currentSection?.voices && Object.keys(currentSection.voices).length > 0))}
                 onVideoRef={(ref) => {
                   videoRef.current = ref
                 }}
