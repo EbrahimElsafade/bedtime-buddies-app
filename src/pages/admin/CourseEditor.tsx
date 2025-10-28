@@ -582,43 +582,35 @@ const CourseEditor = () => {
         let lessonVideoUrl = lesson.videoUrl || ''
         let lessonVideoPath = lesson.videoPath || ''
 
-        // Upload HSL video files if provided
+        // Upload video file if provided (will be transcoded to HLS)
         if (lesson.videoFiles && lesson.videoFiles.length > 0) {
-          const folder = `${courseId}/lesson-${lesson.order}-${Date.now()}`
-
-          // Upload all video files to storage
-          for (const file of lesson.videoFiles) {
-            // Validate video file
-            const videoValidation = validateVideoFile(file);
-            if (!videoValidation.valid) {
-              toast.error(`Lesson ${lesson.order} video: ${videoValidation.error}`);
-              setIsSubmitting(false);
-              return;
-            }
-
-            const { error: uploadError } = await supabase.storage
-              .from('course-videos')
-              .upload(`${folder}/${file.name}`, file, {
-                cacheControl: '3600',
-                upsert: false,
-              })
-
-            if (uploadError) {
-              console.error('Video upload error:', uploadError)
-              throw uploadError
-            }
+          const videoFile = lesson.videoFiles[0] // Get first file only
+          
+          // Validate video file
+          const videoValidation = validateVideoFile(videoFile);
+          if (!videoValidation.valid) {
+            toast.error(`Lesson ${lesson.order} video: ${videoValidation.error}`);
+            setIsSubmitting(false);
+            return;
           }
 
-          // Find the master playlist file (.m3u8) and store its storage path
-          const m3u8File = lesson.videoFiles.find(f => f.name.endsWith('.m3u8'))
-          if (m3u8File) {
-            lessonVideoPath = `${folder}/${m3u8File.name}`
-            lessonVideoUrl = '' // Clear URL since we're using storage path
-          } else {
-            throw new Error(
-              'No .m3u8 playlist file found in the uploaded video files',
-            )
+          const timestamp = Date.now()
+          const filename = `lesson_${courseId}_${lesson.order}_${timestamp}_${videoFile.name}`
+
+          const { error: uploadError } = await supabase.storage
+            .from('course-videos')
+            .upload(filename, videoFile, {
+              cacheControl: '3600',
+              upsert: false,
+            })
+
+          if (uploadError) {
+            console.error('Video upload error:', uploadError)
+            throw uploadError
           }
+          
+          lessonVideoPath = filename
+          lessonVideoUrl = '' // Clear URL since we're using storage path
         }
 
         // Insert lesson
