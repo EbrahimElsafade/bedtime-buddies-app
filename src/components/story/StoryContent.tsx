@@ -35,9 +35,7 @@ export const StoryContent = ({
     currentSection?.texts[currentLanguage] ||
     'Content not available in selected language'
 
-  const currentVideo = currentSection?.video
-    ? currentSection.video
-    : null
+  const currentVideo = currentSection?.video ? currentSection.video : null
 
   const currentImage = currentSection?.image
     ? getImageUrl(currentSection.image)
@@ -65,13 +63,13 @@ export const StoryContent = ({
   const handleAudioTimeUpdate = (currentTime: number, duration: number) => {
     setAudioCurrentTime(currentTime)
     setAudioDuration(duration)
-    
+
     // Sync video with audio time if video exists
     if (videoRef.current) {
       videoRef.current.currentTime = currentTime
     }
   }
-  
+
   // Update video playback state when audio playing state changes
   useEffect(() => {
     if (videoRef.current) {
@@ -99,8 +97,7 @@ export const StoryContent = ({
                 videoPath={currentVideo}
                 title={storyTitle}
                 className="h-full w-full object-cover"
-                playOnTouch={!(story.audio_mode === 'single_story' || (currentSection?.voices && Object.keys(currentSection.voices).length > 0))}
-                onVideoRef={(ref) => {
+                onVideoRef={ref => {
                   videoRef.current = ref
                 }}
               />
@@ -136,14 +133,14 @@ export const StoryContent = ({
 
         {/* Section Navigation - only show if not in single story audio mode or if no sections */}
         {(story.audio_mode !== 'single_story' || story.sections.length > 1) && (
-          <div className="flex items-center justify-between p-4 md:p-6 pb-0">
+          <div className="flex items-center justify-between p-4 pb-0 md:p-6">
             <Button
               size="icon"
-              variant='ghost'
+              variant="ghost"
               onClick={handlePrevSection}
               disabled={currentSectionIndex === 0}
               aria-label="Previous section"
-              className="h-8 w-8 md:h-10 md:w-10 shadow-lg"
+              className="h-8 w-8 shadow-lg md:h-10 md:w-10"
             >
               <ChevronLeft
                 className={
@@ -160,11 +157,11 @@ export const StoryContent = ({
 
             <Button
               size="icon"
-              variant='ghost'
+              variant="ghost"
               onClick={handleNextSection}
               disabled={currentSectionIndex === story.sections.length - 1}
               aria-label="Next section"
-              className="h-8 w-8 md:h-10 md:w-10 shadow-lg"
+              className="h-8 w-8 shadow-lg md:h-10 md:w-10"
             >
               <ChevronRight
                 className={
