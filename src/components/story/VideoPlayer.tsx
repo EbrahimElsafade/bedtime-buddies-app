@@ -36,6 +36,7 @@ const VideoPlayer = ({
       muted={true}
       playsInline
       title={title}
+    //   loop
       onClick={() => {
         if (videoRef.current) {
           videoRef.current.play()
