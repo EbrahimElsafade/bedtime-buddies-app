@@ -1,18 +1,16 @@
-
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Volume2, X, Upload } from 'lucide-react';
+import { Volume2, X, Upload, Loader2 } from 'lucide-react';
 
 interface VoiceFileUploadProps {
   language: string;
   languageName: string;
   sectionIndex: number;
-  voiceFiles: Record<string, File> | undefined;
-  voicePreviews: Record<string, string> | undefined;
-  existingVoiceUrls: Record<string, string> | undefined;
-  onVoiceFileChange: (sectionIndex: number, language: string, file: File) => void;
+  voiceUrls: Record<string, string> | undefined;
+  isUploading?: boolean;
+  onVoiceFileChange: (sectionIndex: number, language: string, file: File) => Promise<void>;
   onRemoveVoiceFile: (sectionIndex: number, language: string) => void;
 }
 
@@ -20,20 +18,18 @@ export const VoiceFileUpload: React.FC<VoiceFileUploadProps> = ({
   language,
   languageName,
   sectionIndex,
-  voiceFiles,
-  voicePreviews,
-  existingVoiceUrls,
+  voiceUrls,
+  isUploading = false,
   onVoiceFileChange,
   onRemoveVoiceFile,
 }) => {
-  const hasVoiceFile = voiceFiles?.[language];
-  const hasVoicePreview = voicePreviews?.[language];
-  const hasExistingVoice = existingVoiceUrls?.[language];
+  const hasVoiceUrl = voiceUrls?.[language];
   
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      onVoiceFileChange(sectionIndex, language, file);
+      await onVoiceFileChange(sectionIndex, language, file);
+      e.target.value = ''; // Reset input
     }
   };
 
@@ -45,15 +41,15 @@ export const VoiceFileUpload: React.FC<VoiceFileUploadProps> = ({
     <div className="space-y-2">
       <Label>Voice Audio ({languageName})</Label>
       
-      {(hasVoiceFile || hasVoicePreview || hasExistingVoice) ? (
+      {isUploading ? (
+        <div className="flex items-center gap-2 p-4 border rounded-md bg-primary/5">
+          <Loader2 className="h-4 w-4 animate-spin text-primary" />
+          <span className="text-sm text-muted-foreground">Uploading {languageName} audio...</span>
+        </div>
+      ) : hasVoiceUrl ? (
         <div className="flex items-center gap-2 p-3 border rounded-md bg-muted/50">
           <Volume2 className="h-4 w-4 text-green-600" />
-          <span className="text-sm flex-1">
-            {hasVoiceFile 
-              ? `New file: ${voiceFiles![language].name}` 
-              : `Audio uploaded for ${languageName}`
-            }
-          </span>
+          <span className="text-sm flex-1">Audio uploaded for {languageName}</span>
           <Button
             type="button"
             size="sm"
@@ -77,6 +73,7 @@ export const VoiceFileUpload: React.FC<VoiceFileUploadProps> = ({
         type="file"
         accept="audio/*"
         onChange={handleFileChange}
+        disabled={isUploading}
         className="text-sm"
       />
     </div>

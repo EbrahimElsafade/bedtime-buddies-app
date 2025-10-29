@@ -22,11 +22,8 @@ interface StorySectionFormProps {
     image?: string
     video?: string
     imageFile?: File | null
-    videoFiles?: FileList | null
     imagePreview?: string | null
     videoPreview?: string | null
-    voiceFiles?: Record<string, File>
-    voicePreviews?: Record<string, string>
   }
   sectionIndex: number
   languages: string[]
@@ -45,15 +42,17 @@ interface StorySectionFormProps {
   onClearSectionImage: (sectionIndex: number) => void
   onSectionVideoChange: (
     sectionIndex: number,
-    files: FileList,
-  ) => void
+    file: File,
+  ) => Promise<void>
   onClearSectionVideo: (sectionIndex: number) => void
   onSectionVoiceChange: (
     sectionIndex: number,
     language: string,
     file: File,
-  ) => void
+  ) => Promise<void>
   onRemoveSectionVoice: (sectionIndex: number, language: string) => void
+  isVideoUploading?: boolean
+  getVoiceUploadingState?: (sectionIndex: number, language: string) => boolean
 }
 
 export const StorySectionForm = ({
@@ -70,6 +69,8 @@ export const StorySectionForm = ({
   onClearSectionVideo,
   onSectionVoiceChange,
   onRemoveSectionVoice,
+  isVideoUploading,
+  getVoiceUploadingState,
 }: StorySectionFormProps) => {
   return (
     <AccordionItem key={sectionIndex} value={`section-${sectionIndex}`}>
@@ -132,6 +133,8 @@ export const StorySectionForm = ({
           <HLSVideoUpload
             sectionIndex={sectionIndex}
             videoPreview={section.videoPreview}
+            videoUrl={section.video}
+            isUploading={isVideoUploading}
             onVideoChange={onSectionVideoChange}
             onClearVideo={onClearSectionVideo}
           />
@@ -185,9 +188,8 @@ export const StorySectionForm = ({
                       language={lang}
                       languageName={langOption?.name || lang}
                       sectionIndex={sectionIndex}
-                      voiceFiles={section.voiceFiles}
-                      voicePreviews={section.voicePreviews}
-                      existingVoiceUrls={section.voices}
+                      voiceUrls={section.voices}
+                      isUploading={getVoiceUploadingState?.(sectionIndex, lang)}
                       onVoiceFileChange={onSectionVoiceChange}
                       onRemoveVoiceFile={onRemoveSectionVoice}
                     />

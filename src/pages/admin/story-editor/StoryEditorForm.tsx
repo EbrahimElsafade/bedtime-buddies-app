@@ -13,6 +13,7 @@ import { StorySectionsList } from '@/components/admin/story-editor/StorySections
 import { useStoryForm } from './hooks/useStoryForm'
 import { useStoryLanguages } from './hooks/useStoryLanguages'
 import { useStorySections } from './hooks/useStorySections'
+import { useInstantUpload } from './hooks/useInstantUpload'
 import { validateImageFile, validateAudioFile } from '@/utils/fileValidation'
 import { validateStoryData } from '@/utils/contentValidation'
 import { useStoryData } from './hooks/useStoryData'
@@ -81,6 +82,39 @@ export const StoryEditorForm = ({
     handleRemoveSectionVoice,
     updateSectionText,
   } = useStorySections(storyData, storySections, setStorySections)
+
+  const { uploadVideo, uploadAudio, isUploading } = useInstantUpload()
+
+  // Wrapper handlers for instant uploads
+  const handleVideoUpload = async (sectionIndex: number, file: File) => {
+    const tempStoryId = id || 'temp'
+    const videoUrl = await uploadVideo(file, tempStoryId, storySections[sectionIndex].order)
+    if (videoUrl) {
+      handleSectionVideoChange(sectionIndex, file, videoUrl)
+    }
+  }
+
+  const handleVoiceUpload = async (sectionIndex: number, language: string, file: File) => {
+    const tempStoryId = id || 'temp'
+    const voiceUrl = await uploadAudio(
+      file,
+      tempStoryId,
+      storySections[sectionIndex].order,
+      language,
+      'section'
+    )
+    if (voiceUrl) {
+      handleSectionVoiceChange(sectionIndex, language, voiceUrl)
+    }
+  }
+
+  const getVideoUploadingState = (sectionIndex: number) => {
+    return isUploading(`video-${sectionIndex}`)
+  }
+
+  const getVoiceUploadingState = (sectionIndex: number, language: string) => {
+    return isUploading(`audio-section-${sectionIndex}-${language}`)
+  }
 
   const updateStoryTitle = (language: string, value: string) => {
     setStoryData(prev => ({
@@ -217,7 +251,7 @@ export const StoryEditorForm = ({
         if (deleteSectionsError) throw deleteSectionsError
       }
 
-      // Insert all sections
+      // Insert all sections (media already uploaded)
       for (const section of storySections) {
         let sectionImageUrl = null
         if (section.imageFile) {
@@ -243,48 +277,11 @@ export const StoryEditorForm = ({
           sectionImageUrl = section.image
         }
 
-        let sectionVideoUrl = null
-        if (section.videoFiles && section.videoFiles.length > 0) {
-          const videoFile = section.videoFiles[0] // Take the first file since we're only handling single MP4
-          const filename = `story_${storyId}_section_${section.order}_${Date.now()}_${videoFile.name}`
-          
-          const { error: uploadError } = await supabase.storage
-            .from('course-videos')
-            .upload(filename, videoFile, {
-              cacheControl: '3600',
-              upsert: false,
-            })
+        // Use the already-uploaded video URL
+        const sectionVideoUrl = section.video || null
 
-          if (uploadError) throw new Error(`Failed to upload video file: ${uploadError.message}`)
-          sectionVideoUrl = filename
-        } else if (typeof section.video === 'string') {
-          sectionVideoUrl = section.video
-        }
-
-        // Upload voice files only if in per_section mode
-        const voiceUrls: Record<string, string> = { ...section.voices }
-        if (storyData.audio_mode === 'per_section' && section.voiceFiles) {
-          for (const [language, voiceFile] of Object.entries(section.voiceFiles)) {
-            // Validate voice file
-            const voiceValidation = validateAudioFile(voiceFile);
-            if (!voiceValidation.valid) {
-              toast.error(`Section ${section.order} ${language} voice: ${voiceValidation.error}`);
-              setIsSubmitting(false);
-              return;
-            }
-
-            const filename = `voice-${storyId}-${section.order}-${language}-${Date.now()}-${voiceFile.name}`
-            const { error: uploadError } = await supabase.storage
-              .from('admin-content')
-              .upload(`story-voices/${filename}`, voiceFile, {
-                cacheControl: '3600',
-                upsert: false,
-              })
-
-            if (uploadError) throw uploadError
-            voiceUrls[language] = filename
-          }
-        }
+        // Use the already-uploaded voice URLs
+        const voiceUrls = section.voices || {}
 
         // Insert section
         const { error: sectionError } = await supabase
@@ -397,10 +394,12 @@ export const StoryEditorForm = ({
           onUpdateSectionText={updateSectionText}
           onSectionImageChange={handleSectionImageChange}
           onClearSectionImage={handleClearSectionImage}
-          onSectionVideoChange={handleSectionVideoChange}
+          onSectionVideoChange={handleVideoUpload}
           onClearSectionVideo={handleClearSectionVideo}
-          onSectionVoiceChange={handleSectionVoiceChange}
+          onSectionVoiceChange={handleVoiceUpload}
           onRemoveSectionVoice={handleRemoveSectionVoice}
+          getVideoUploadingState={getVideoUploadingState}
+          getVoiceUploadingState={getVoiceUploadingState}
         />
       </div>
 

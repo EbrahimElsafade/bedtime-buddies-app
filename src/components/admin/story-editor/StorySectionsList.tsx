@@ -33,15 +33,17 @@ interface StorySectionsListProps {
   onClearSectionImage: (sectionIndex: number) => void
   onSectionVideoChange: (
     sectionIndex: number,
-    files: FileList,
-  ) => void
+    file: File,
+  ) => Promise<void>
   onClearSectionVideo: (sectionIndex: number) => void
   onSectionVoiceChange: (
     sectionIndex: number,
     language: string,
     file: File,
-  ) => void
+  ) => Promise<void>
   onRemoveSectionVoice: (sectionIndex: number, language: string) => void
+  getVideoUploadingState?: (sectionIndex: number) => boolean
+  getVoiceUploadingState?: (sectionIndex: number, language: string) => boolean
 }
 
 export const StorySectionsList = ({
@@ -58,6 +60,8 @@ export const StorySectionsList = ({
   onClearSectionVideo,
   onSectionVoiceChange,
   onRemoveSectionVoice,
+  getVideoUploadingState,
+  getVoiceUploadingState,
 }: StorySectionsListProps) => {
   const handleClearSectionImage = (sectionIndex: number) => {
     onClearSectionImage(sectionIndex)
@@ -103,6 +107,8 @@ export const StorySectionsList = ({
                 onClearSectionVideo={handleClearSectionVideo}
                 onSectionVoiceChange={onSectionVoiceChange}
                 onRemoveSectionVoice={onRemoveSectionVoice}
+                isVideoUploading={getVideoUploadingState?.(sectionIndex)}
+                getVoiceUploadingState={getVoiceUploadingState}
               />
             ))}
           </Accordion>

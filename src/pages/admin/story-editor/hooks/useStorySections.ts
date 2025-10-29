@@ -55,22 +55,16 @@ export const useStorySections = (
     })
   }, [setStorySections])
 
-  const handleSectionVideoChange = useCallback((sectionIndex: number, files: FileList) => {
-    if (files && files.length > 0) {
-      // Find the .m3u8 file for preview
-      const m3u8File = Array.from(files).find(f => f.name.endsWith('.m3u8'))
-      const preview = m3u8File ? URL.createObjectURL(m3u8File) : null
-
-      setStorySections(prev => {
-        const updated = [...prev]
-        updated[sectionIndex] = {
-          ...updated[sectionIndex],
-          videoFiles: files,
-          videoPreview: preview,
-        }
-        return updated
-      })
-    }
+  const handleSectionVideoChange = useCallback((sectionIndex: number, file: File, videoUrl: string) => {
+    setStorySections(prev => {
+      const updated = [...prev]
+      updated[sectionIndex] = {
+        ...updated[sectionIndex],
+        video: videoUrl,
+        videoPreview: URL.createObjectURL(file),
+      }
+      return updated
+    })
   }, [setStorySections])
 
   const handleClearSectionVideo = useCallback((sectionIndex: number) => {
@@ -78,7 +72,6 @@ export const useStorySections = (
       const updated = [...prev]
       updated[sectionIndex] = {
         ...updated[sectionIndex],
-        videoFiles: null,
         videoPreview: null,
         video: undefined,
       }
@@ -86,17 +79,13 @@ export const useStorySections = (
     })
   }, [setStorySections])
 
-  const handleSectionVoiceChange = useCallback((sectionIndex: number, language: string, file: File) => {
+  const handleSectionVoiceChange = useCallback((sectionIndex: number, language: string, voiceUrl: string) => {
     setStorySections(prev => {
       const updated = [...prev]
       const section = updated[sectionIndex]
       updated[sectionIndex] = {
         ...section,
-        voiceFiles: { ...(section.voiceFiles || {}), [language]: file },
-        voicePreviews: {
-          ...(section.voicePreviews || {}),
-          [language]: URL.createObjectURL(file),
-        },
+        voices: { ...(section.voices || {}), [language]: voiceUrl },
       }
       return updated
     })
@@ -106,15 +95,8 @@ export const useStorySections = (
     setStorySections(prev => {
       const updated = [...prev]
       const section = updated[sectionIndex]
-      const newVoiceFiles = { ...(section.voiceFiles || {}) }
-      const newVoicePreviews = { ...(section.voicePreviews || {}) }
-      delete newVoiceFiles[language]
-      delete newVoicePreviews[language]
-
       updated[sectionIndex] = {
         ...section,
-        voiceFiles: newVoiceFiles,
-        voicePreviews: newVoicePreviews,
         voices: { ...section.voices, [language]: '' },
       }
       return updated
