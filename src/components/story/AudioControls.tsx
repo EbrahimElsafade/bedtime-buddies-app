@@ -50,12 +50,27 @@ export const AudioControls = ({
     const audio = audioRef.current
     if (!audio) return
 
+    // Reset duration when audio source changes
+    setDuration(0)
+
+    const handleCanPlay = () => {
+      if (audio.duration && !isNaN(audio.duration)) {
+        setDuration(audio.duration)
+      }
+    }
+
     const handleTimeUpdate = () => {
       setCurrentTime(audio.currentTime)
+      // Double-check duration is set
+      if (audio.duration && !isNaN(audio.duration) && duration === 0) {
+        setDuration(audio.duration)
+      }
     }
 
     const handleLoadedMetadata = () => {
-      setDuration(audio.duration)
+      if (audio.duration && !isNaN(audio.duration)) {
+        setDuration(audio.duration)
+      }
     }
 
     const handleEnded = () => {
@@ -81,14 +96,22 @@ export const AudioControls = ({
 
     audio.addEventListener('timeupdate', handleTimeUpdate)
     audio.addEventListener('loadedmetadata', handleLoadedMetadata)
+    audio.addEventListener('canplay', handleCanPlay)
     audio.addEventListener('ended', handleEnded)
 
     return () => {
       audio.removeEventListener('timeupdate', handleTimeUpdate)
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata)
+      audio.removeEventListener('canplay', handleCanPlay)
       audio.removeEventListener('ended', handleEnded)
     }
-  }, [isAutoplay, onSectionChange, currentSectionIndex, story.sections.length])
+  }, [
+    isAutoplay,
+    onSectionChange,
+    currentSectionIndex,
+    story.sections.length,
+    duration,
+  ])
 
   // Reset time when section changes
   useEffect(() => {
@@ -98,7 +121,8 @@ export const AudioControls = ({
 
   const getAudioUrlForCurrentSection = () => {
     if (story.audio_mode === 'single_story' && story.story_audio) {
-      return getAudioUrl(story.story_audio[currentLanguage] || null)
+      const url = getAudioUrl(story.story_audio[currentLanguage] || null)
+      return url
     }
 
     if (currentSection?.voices?.[currentLanguage]) {
