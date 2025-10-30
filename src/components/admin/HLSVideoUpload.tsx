@@ -52,12 +52,13 @@ export const HLSVideoUpload: React.FC<HLSVideoUploadProps> = ({
       ) : (videoPreview || videoUrl) ? (
         <div className="space-y-2">
           {videoPreview && (
-            <div className="relative h-32 w-full overflow-hidden rounded-md border">
+            <div className="relative h-96 aspect-video overflow-hidden rounded-md border">
               <video
                 src={videoPreview}
                 className="h-full w-full object-cover"
                 muted
                 playsInline
+                controls
               />
             </div>
           )}

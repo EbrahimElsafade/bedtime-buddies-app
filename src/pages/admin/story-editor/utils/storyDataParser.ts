@@ -1,4 +1,4 @@
-import { getImageUrl } from '@/utils/imageUtils'
+import { getImageUrl, getVideoUrl } from '@/utils/imageUtils'
 import { StorySectionForm } from '../hooks/useStoryForm'
 
 export const parseTitle = (title: unknown): Record<string, string> => {
@@ -27,7 +27,9 @@ export const parseTitle = (title: unknown): Record<string, string> => {
   return titleObj
 }
 
-export const parseDescription = (description: unknown): Record<string, string> => {
+export const parseDescription = (
+  description: unknown,
+): Record<string, string> => {
   let descriptionObj = { en: '', ar: '', fr: '' }
 
   if (typeof description === 'string') {
@@ -53,7 +55,9 @@ export const parseDescription = (description: unknown): Record<string, string> =
   return descriptionObj
 }
 
-export const parseStoryAudio = (storyAudio: unknown): Record<string, string> => {
+export const parseStoryAudio = (
+  storyAudio: unknown,
+): Record<string, string> => {
   let audioObj = {}
 
   if (typeof storyAudio === 'string') {
@@ -71,8 +75,8 @@ export const parseStoryAudio = (storyAudio: unknown): Record<string, string> => 
 
 export const parseStorySections = (sections: unknown[]): StorySectionForm[] => {
   return sections.map(sectionRaw => {
-    const section = sectionRaw as Record<string, unknown>;
-    
+    const section = sectionRaw as Record<string, unknown>
+
     let texts = {}
     if (typeof section.texts === 'string') {
       try {
@@ -118,7 +122,9 @@ export const parseStorySections = (sections: unknown[]): StorySectionForm[] => {
       image: (section.image as string) || undefined,
       video: (section.video as string) || undefined,
       imagePreview: section.image ? getImageUrl(section.image as string) : null,
-      videoPreview: section.video ? getImageUrl(section.video as string) : null,
+      videoPreview: section.video
+        ? getVideoUrl(section.video as string, null)
+        : null,
       voicePreviews,
     }
   })
