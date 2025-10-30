@@ -22,6 +22,15 @@ const VideoPlayer = ({
     }
   }, [onVideoRef])
 
+  // Reset video when videoPath changes (section switch)
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.pause()
+      videoRef.current.currentTime = 0
+      videoRef.current.load()
+    }
+  }, [videoPath])
+
   // Get video URL from Supabase storage
   const getVideoUrl = (path: string) => {
     const { data } = supabase.storage.from('course-videos').getPublicUrl(path)
