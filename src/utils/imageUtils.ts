@@ -93,7 +93,7 @@ export const getAudioUrl = (audioPath: string | null): string => {
 
 export const getVideoUrl = (
   videoPath: string | null,
-  videoUrl: string | null = null,
+  videoUrl: string | null,
 ): string => {
   // If there's an external URL, use it
   if (
@@ -107,11 +107,6 @@ export const getVideoUrl = (
   if (videoPath) {
     // If it's already a full URL, return as is
     if (videoPath.startsWith('http://') || videoPath.startsWith('https://')) {
-      return videoPath
-    }
-
-    // If it's a blob URL (for previews), return as is
-    if (videoPath.startsWith('blob:')) {
       return videoPath
     }
 

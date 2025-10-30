@@ -96,11 +96,11 @@ export const StoryContent = ({
         {/* Story Section Video or Image */}
         <div className="relative w-full">
           {currentVideo ? (
-            <div className="aspect-video w-full">
+            <div className="aspect-square h-64 w-full md:aspect-auto md:h-auto">
               <VideoPlayer
                 videoPath={currentVideo}
                 title={storyTitle}
-                className="h-full w-full object-contain"
+                className="h-full w-full object-cover"
                 onVideoRef={ref => {
                   videoRef.current = ref
                 }}
@@ -121,20 +121,18 @@ export const StoryContent = ({
             </div>
           )}
 
-          {!currentVideo && (
-            <div className="absolute bottom-0 w-full bg-black/50">
-              <AudioControls
-                story={story}
-                currentSection={currentSection}
-                currentLanguage={currentLanguage}
-                currentSectionIndex={currentSectionIndex}
-                currentSectionDir={storyDirection}
-                onSectionChange={onSectionChange}
-                onPlayingChange={setIsAudioPlaying}
-                onAudioTimeUpdate={handleAudioTimeUpdate}
-              />
-            </div>
-          )}
+          <div className="absolute bottom-0 w-full bg-black/50">
+            <AudioControls
+              story={story}
+              currentSection={currentSection}
+              currentLanguage={currentLanguage}
+              currentSectionIndex={currentSectionIndex}
+              currentSectionDir={storyDirection}
+              onSectionChange={onSectionChange}
+              onPlayingChange={setIsAudioPlaying}
+              onAudioTimeUpdate={handleAudioTimeUpdate}
+            />
+          </div>
         </div>
 
         {/* Section Navigation - only show if not in single story audio mode or if no sections */}

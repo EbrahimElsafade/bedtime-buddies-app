@@ -92,10 +92,10 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', onVideoRef }: HLSVid
     <video
       ref={videoRef}
       className={`h-full w-full ${className}`}
-      controls={true}
       playsInline
       preload="metadata"
       title={title}
+      muted
     >
       Your browser does not support the video tag.
     </video>
