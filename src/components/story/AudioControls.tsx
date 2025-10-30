@@ -31,7 +31,11 @@ export const AudioControls = ({
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
-  const [volume, setVolume] = useState(1)
+  const [volume, setVolume] = useState(() => {
+    // Initialize volume from localStorage or default to 1
+    const savedVolume = localStorage.getItem('story-player-volume')
+    return savedVolume ? parseFloat(savedVolume) : 1
+  })
   const [isAutoplay, setIsAutoplay] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
   const { t } = useTranslation('story')
@@ -186,6 +190,8 @@ export const AudioControls = ({
   const handleVolumeChange = (value: number[]) => {
     const newVolume = value[0]
     setVolume(newVolume)
+    // Save volume to localStorage
+    localStorage.setItem('story-player-volume', newVolume.toString())
     if (audioRef.current) {
       audioRef.current.volume = newVolume
     }

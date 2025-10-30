@@ -46,7 +46,7 @@ const VideoPlayer = ({
       playsInline
       preload="auto"
       title={title}
-    //   loop
+      // loop
       onClick={() => {
         if (videoRef.current) {
           videoRef.current.play()
