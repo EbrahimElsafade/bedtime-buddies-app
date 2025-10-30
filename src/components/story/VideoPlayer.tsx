@@ -41,17 +41,10 @@ const VideoPlayer = ({
     <video
       ref={videoRef}
       className={`h-full w-full object-cover ${className}`}
-      controls={false}
-      muted={true}
+      controls={true}
       playsInline
       preload="auto"
       title={title}
-    //   loop
-      onClick={() => {
-        if (videoRef.current) {
-          videoRef.current.play()
-        }
-      }}
     >
       <source src={getVideoUrl(videoPath)} type="video/mp4" />
       Your browser does not support the video tag.
