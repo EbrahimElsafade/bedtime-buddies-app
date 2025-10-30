@@ -44,6 +44,7 @@ const VideoPlayer = ({
       controls={false}
       muted={true}
       playsInline
+      preload="auto"
       title={title}
     //   loop
       onClick={() => {

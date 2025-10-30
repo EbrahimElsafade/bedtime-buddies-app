@@ -7,6 +7,7 @@ import { AudioControls } from './AudioControls'
 import { TextHighlight } from './TextHighlight'
 import VideoPlayer from './VideoPlayer'
 import { useEffect, useRef, useState } from 'react'
+import { usePreloadNextSection } from '@/hooks/usePreloadNextSection'
 
 interface StoryContentProps {
   story: Story
@@ -29,6 +30,9 @@ export const StoryContent = ({
   const [audioCurrentTime, setAudioCurrentTime] = useState(0)
   const [audioDuration, setAudioDuration] = useState(0)
   const videoRef = useRef<HTMLVideoElement | null>(null)
+
+  // Preload next section's media in the background
+  usePreloadNextSection(story, currentSectionIndex)
 
   const currentSection = story.sections[currentSectionIndex]
   const currentText =
