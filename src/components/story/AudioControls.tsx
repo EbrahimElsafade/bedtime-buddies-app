@@ -62,9 +62,9 @@ export const AudioControls = ({
     const handleTimeUpdate = () => {
       setCurrentTime(audio.currentTime)
       // Double-check duration is set
-      if (audio.duration && !isNaN(audio.duration) && duration === 0) {
-        setDuration(audio.duration)
-      }
+      // if (audio.duration && !isNaN(audio.duration) && duration === 0) {
+      //   setDuration(audio.duration)
+      // }
     }
 
     const handleLoadedMetadata = () => {
