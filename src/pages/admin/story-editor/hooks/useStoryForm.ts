@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react'
 export interface StorySectionForm {
   id?: string
   order: number
+  type: 'image' | 'video'
   texts: Record<string, string>
   voices: Record<string, string>
   image?: string

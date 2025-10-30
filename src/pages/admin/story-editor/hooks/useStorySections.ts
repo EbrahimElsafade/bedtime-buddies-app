@@ -9,6 +9,7 @@ export const useStorySections = (
   const addNewSection = useCallback(() => {
     const newSection: StorySectionForm = {
       order: storySections.length + 1,
+      type: 'image',
       texts: storyData.languages.reduce((acc, lang) => {
         acc[lang] = ''
         return acc
@@ -60,6 +61,7 @@ export const useStorySections = (
       const updated = [...prev]
       updated[sectionIndex] = {
         ...updated[sectionIndex],
+        type: 'video',
         video: videoUrl,
         videoPreview: URL.createObjectURL(file),
       }
@@ -72,6 +74,7 @@ export const useStorySections = (
       const updated = [...prev]
       updated[sectionIndex] = {
         ...updated[sectionIndex],
+        type: 'image',
         videoPreview: null,
         video: undefined,
       }

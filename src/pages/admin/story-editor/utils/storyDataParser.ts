@@ -106,13 +106,19 @@ export const parseStorySections = (sections: unknown[]): StorySectionForm[] => {
       )
     }
 
+    const hasVideo = !!section.video
+    const sectionType: 'image' | 'video' = hasVideo ? 'video' : 'image'
+
     return {
       id: section.id as string,
       order: section.order as number,
+      type: sectionType,
       texts: texts as Record<string, string>,
       voices: voices as Record<string, string>,
       image: (section.image as string) || undefined,
+      video: (section.video as string) || undefined,
       imagePreview: section.image ? getImageUrl(section.image as string) : null,
+      videoPreview: section.video ? getImageUrl(section.video as string) : null,
       voicePreviews,
     }
   })
