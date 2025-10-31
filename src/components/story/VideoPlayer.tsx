@@ -22,19 +22,19 @@ const VideoPlayer = ({
     }
   }, [onVideoRef])
 
-    // Reset video when videoPath changes (section switch)
-  //   useEffect(() => {
-  //   if (videoRef.current) {
-  //     videoRef.current.pause()
-  //     videoRef.current.currentTime = 0
-  //     // just update the src, not reload()
-  //     const source = videoRef.current.querySelector('source')
-  //     if (source) {
-  //       source.setAttribute('src', getVideoUrl(videoPath))
-  //       videoRef.current.load() // optional: only if needed
-  //     }
-  //   }
-  // }, [videoPath])
+  // Reset video when videoPath changes (section switch)
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.pause()
+      videoRef.current.currentTime = 0
+      // just update the src, not reload()
+      const source = videoRef.current.querySelector('source')
+      if (source) {
+        source.setAttribute('src', getVideoUrl(videoPath))
+        videoRef.current.load() // optional: only if needed
+      }
+    }
+  }, [videoPath])
 
   // Allow natural buffering - don't interfere with mobile playback
 
