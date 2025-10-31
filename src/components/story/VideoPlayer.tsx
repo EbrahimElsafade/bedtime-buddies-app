@@ -31,6 +31,33 @@ const VideoPlayer = ({
     }
   }, [videoPath])
 
+  // Prevent video from stopping on mobile
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    const handleStalled = () => {
+      video.load()
+    }
+
+    const handleWaiting = () => {
+      // Give it a moment to buffer
+      setTimeout(() => {
+        if (video.readyState < 2) {
+          video.load()
+        }
+      }, 100)
+    }
+
+    video.addEventListener('stalled', handleStalled)
+    video.addEventListener('waiting', handleWaiting)
+
+    return () => {
+      video.removeEventListener('stalled', handleStalled)
+      video.removeEventListener('waiting', handleWaiting)
+    }
+  }, [])
+
   // Get video URL from Supabase storage
   const getVideoUrl = (path: string) => {
     const { data } = supabase.storage.from('course-videos').getPublicUrl(path)
@@ -44,12 +71,13 @@ const VideoPlayer = ({
       controls={false}
       muted={true}
       playsInline
-      preload="auto"
+      preload="metadata"
       title={title}
-    //   loop
+      webkit-playsinline="true"
+      x5-playsinline="true"
       onClick={() => {
         if (videoRef.current) {
-          videoRef.current.play()
+          videoRef.current.play().catch(err => console.warn('Video play failed:', err))
         }
       }}
     >

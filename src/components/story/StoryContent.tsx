@@ -68,8 +68,8 @@ export const StoryContent = ({
     setAudioCurrentTime(currentTime)
     setAudioDuration(duration)
 
-    // Sync video with audio time if video exists
-    if (videoRef.current) {
+    // Gentle sync: only sync if video is significantly out of sync (more than 0.5s)
+    if (videoRef.current && Math.abs(videoRef.current.currentTime - currentTime) > 0.5) {
       videoRef.current.currentTime = currentTime
     }
   }
@@ -78,9 +78,18 @@ export const StoryContent = ({
   useEffect(() => {
     if (videoRef.current) {
       if (isAudioPlaying) {
-        videoRef.current.play().catch(error => {
-          console.error('Error playing video:', error)
-        })
+        // Start playing video from current audio position
+        const playPromise = videoRef.current.play()
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.warn('Video play failed:', error)
+            // Try again with muted video on mobile
+            if (videoRef.current) {
+              videoRef.current.muted = true
+              videoRef.current.play().catch(e => console.error('Muted video play failed:', e))
+            }
+          })
+        }
       } else {
         videoRef.current.pause()
       }
