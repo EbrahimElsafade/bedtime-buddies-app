@@ -22,7 +22,7 @@ const VideoPlayer = ({
     }
   }, [onVideoRef])
 
-  //   // Reset video when videoPath changes (section switch)
+    // Reset video when videoPath changes (section switch)
   //   useEffect(() => {
   //   if (videoRef.current) {
   //     videoRef.current.pause()
