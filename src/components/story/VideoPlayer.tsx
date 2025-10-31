@@ -31,32 +31,7 @@ const VideoPlayer = ({
     }
   }, [videoPath])
 
-  // Prevent video from stopping on mobile
-  useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
-
-    const handleStalled = () => {
-      video.load()
-    }
-
-    const handleWaiting = () => {
-      // Give it a moment to buffer
-      setTimeout(() => {
-        if (video.readyState < 2) {
-          video.load()
-        }
-      }, 100)
-    }
-
-    video.addEventListener('stalled', handleStalled)
-    video.addEventListener('waiting', handleWaiting)
-
-    return () => {
-      video.removeEventListener('stalled', handleStalled)
-      video.removeEventListener('waiting', handleWaiting)
-    }
-  }, [])
+  // Allow natural buffering - don't interfere with mobile playback
 
   // Get video URL from Supabase storage
   const getVideoUrl = (path: string) => {
