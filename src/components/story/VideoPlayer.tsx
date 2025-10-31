@@ -22,14 +22,19 @@ const VideoPlayer = ({
     }
   }, [onVideoRef])
 
-  // Reset video when videoPath changes (section switch)
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.pause()
-      videoRef.current.currentTime = 0
-      videoRef.current.load()
-    }
-  }, [videoPath])
+  //   // Reset video when videoPath changes (section switch)
+  //   useEffect(() => {
+  //   if (videoRef.current) {
+  //     videoRef.current.pause()
+  //     videoRef.current.currentTime = 0
+  //     // just update the src, not reload()
+  //     const source = videoRef.current.querySelector('source')
+  //     if (source) {
+  //       source.setAttribute('src', getVideoUrl(videoPath))
+  //       videoRef.current.load() // optional: only if needed
+  //     }
+  //   }
+  // }, [videoPath])
 
   // Allow natural buffering - don't interfere with mobile playback
 
@@ -41,10 +46,12 @@ const VideoPlayer = ({
 
   return (
     <video
+      key={videoPath}
       ref={videoRef}
-      className={`h-full w-full object-cover ${className}`}
+      className={`aspect-[16/9] h-full w-full rounded-xl object-cover ${className}`}
+      style={{ objectFit: 'cover' }}
       controls={false}
-      muted={true}
+      muted
       playsInline
       preload="metadata"
       title={title}
@@ -52,7 +59,9 @@ const VideoPlayer = ({
       x5-playsinline="true"
       onClick={() => {
         if (videoRef.current) {
-          videoRef.current.play().catch(err => console.warn('Video play failed:', err))
+          videoRef.current
+            .play()
+            .catch(err => console.warn('Video play failed:', err))
         }
       }}
     >
