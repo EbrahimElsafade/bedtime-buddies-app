@@ -277,7 +277,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         
         const { data: currentProfile } = await supabase
           .from('profiles')
-          .select('linked_accounts')
+          .select('id, linked_accounts')
           .eq('id', user.id)
           .single();
         
