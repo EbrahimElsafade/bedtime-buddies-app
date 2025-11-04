@@ -4,30 +4,26 @@ import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useRoleManagement } from '@/hooks/useRoleManagement'
 
-interface AdminRouteProps {
+interface EditorRouteProps {
   children: React.ReactNode
 }
 
-/**
- * Route guard for admin-only pages
- * CRITICAL: Editors must NOT access admin routes - they only edit content
- */
-const AdminRoute = ({ children }: AdminRouteProps) => {
+const EditorRoute = ({ children }: EditorRouteProps) => {
   const { t } = useTranslation()
   const { isAuthenticated, isLoading: authLoading, user } = useAuth()
-  const { isAdmin, isLoading: roleLoading } = useRoleManagement(user)
+  const { isEditor, isLoading: roleLoading } = useRoleManagement(user)
   const location = useLocation()
   const mountTimeRef = useRef(Date.now())
 
   const isLoading = authLoading || roleLoading
 
-  // Early redirect for unauthenticated users - don't show loading
+  // Early redirect for unauthenticated users
   if (!authLoading && !isAuthenticated) {
     return <Navigate to="/login" replace state={{ from: location }} />
   }
 
-  // Early redirect for non-admin users (including editors!)
-  if (!isLoading && !isAdmin) {
+  // Early redirect for non-editor users once we've checked their role
+  if (!isLoading && !isEditor) {
     return <Navigate to="/404" replace />
   }
 
@@ -50,8 +46,8 @@ const AdminRoute = ({ children }: AdminRouteProps) => {
     )
   }
 
-  // At this point we know the user is authenticated and is ADMIN (not just editor)
+  // At this point we know the user is authenticated and is an editor or admin
   return <>{children}</>
 }
 
-export default AdminRoute
+export default EditorRoute

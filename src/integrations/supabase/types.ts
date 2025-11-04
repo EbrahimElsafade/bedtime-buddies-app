@@ -593,7 +593,7 @@ export type Database = {
           ip_address: string | null
           performed_at: string
           performed_by: string
-          role: Database["public"]["Enums"]["app_role"]
+          role: string
           user_agent: string | null
           user_id: string
         }
@@ -603,7 +603,7 @@ export type Database = {
           ip_address?: string | null
           performed_at?: string
           performed_by: string
-          role: Database["public"]["Enums"]["app_role"]
+          role?: string
           user_agent?: string | null
           user_id: string
         }
@@ -613,7 +613,7 @@ export type Database = {
           ip_address?: string | null
           performed_at?: string
           performed_by?: string
-          role?: Database["public"]["Enums"]["app_role"]
+          role?: string
           user_agent?: string | null
           user_id?: string
         }
@@ -648,6 +648,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      has_any_role: {
+        Args: {
+          _roles: Database["public"]["Enums"]["app_role"][]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      has_premium_access: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -655,9 +663,7 @@ export type Database = {
         }
         Returns: boolean
       }
-      is_admin:
-        | { Args: { uid: string }; Returns: boolean }
-        | { Args: never; Returns: boolean }
+      is_admin: { Args: { _user_id?: string }; Returns: boolean }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user" | "premium" | "editor"

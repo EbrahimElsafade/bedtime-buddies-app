@@ -82,6 +82,7 @@ const Story = () => {
     }
   }
 
+  // Check premium access: free story OR authenticated with premium/admin role OR profile flag
   const canAccessStory =
     story.is_free || (isAuthenticated && profile?.is_premium)
 

@@ -1,6 +1,17 @@
 import { User } from '@supabase/supabase-js'
 
-export type UserRole = 'admin' | 'moderator' | 'user'
+export type UserRole = 'user' | 'premium' | 'editor' | 'admin'
+
+export type Permission =
+  | 'view_free_content'
+  | 'create_account'
+  | 'manage_favorites'
+  | 'view_premium_content'
+  | 'edit_stories'
+  | 'edit_courses'
+  | 'access_admin'
+  | 'manage_users'
+  | 'manage_settings'
 
 export type SocialAccount = 'facebook' | 'google'
 

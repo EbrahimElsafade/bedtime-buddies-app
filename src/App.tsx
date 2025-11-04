@@ -12,6 +12,7 @@ import { HelmetProvider } from "react-helmet-async";
 import Layout from "@/components/Layout";
 import AdminLayout from "@/components/AdminLayout";
 import AdminRoute from "@/components/AdminRoute";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import { GlobalLoader } from "@/components/GlobalLoader";
 
@@ -64,8 +65,8 @@ function App() {
                     <Route path="courses/:id" element={<Course />} />
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />
-                    <Route path="profile" element={<Profile />} />
-                    <Route path="favorites" element={<Favorites />} />
+                    <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                    <Route path="favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
                     <Route path="subscription" element={<Subscription />} />
                   </Route>
 
