@@ -78,7 +78,7 @@ const Course = () => {
       return
     }
 
-    if (!course?.isFree && !isPremium) {
+    if (!isPremium) {
       toast({
         title: t('toast.premiumRequired'),
         description: t('toast.upgradeToPremium'),
@@ -102,7 +102,7 @@ const Course = () => {
   }
 
   const handleVideoSelect = (video: CourseVideo) => {
-    if (!video.isFree && !isPremium && !course?.isFree) {
+    if (!isPremium) {
       toast({
         title: t('toast.premiumRequired'),
         description: t('toast.upgradeToPremium'),
@@ -226,16 +226,6 @@ const Course = () => {
               </h1>
 
               <div className="mb-4 flex max-w-60 flex-wrap gap-2 sm:max-w-none">
-                {course.isFree ? (
-                  <Badge className="bg-green-600 text-secondary">
-                    {t('free.tag')}
-                  </Badge>
-                ) : (
-                  <Badge className="bg-accent text-secondary">
-                    {t('premium.tag')}
-                  </Badge>
-                )}
-
                 <Badge variant="secondary" className="px-4 py-2 shadow-md">
                   {course.category || 'General'}
                 </Badge>
@@ -267,16 +257,14 @@ const Course = () => {
                 {getLocalized(course, 'description', lang)}
               </p>
 
-              {!course.isFree && (
-                <Button
-                  onClick={handleStartCourse}
-                  className="rounded-full bg-accent px-8 py-2 text-secondary hover:bg-primary"
-                >
-                  {isAuthenticated && isPremium
-                    ? t('button.startLearning')
-                    : t('button.goToPremium')}
-                </Button>
-              )}
+              <Button
+                onClick={handleStartCourse}
+                className="rounded-full bg-accent px-8 py-2 text-secondary hover:bg-primary"
+              >
+                {isAuthenticated && isPremium
+                  ? t('button.startLearning')
+                  : t('button.goToPremium')}
+              </Button>
             </div>
           </div>
 
@@ -458,13 +446,11 @@ const Course = () => {
                                   alt={getLocalized(video, 'title', lang)}
                                   className="h-full w-full rounded object-cover"
                                 />
-                                {!video.isFree &&
-                                  !course.isFree &&
-                                  !isPremium && (
-                                    <div className="absolute inset-0 flex items-center justify-center rounded bg-black/50">
-                                      <Lock className="h-6 w-6 text-secondary" />
-                                    </div>
-                                  )}
+                                {!isPremium && (
+                                  <div className="absolute inset-0 flex items-center justify-center rounded bg-black/50">
+                                    <Lock className="h-6 w-6 text-secondary" />
+                                  </div>
+                                )}
                                 <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity hover:opacity-100">
                                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-foreground">
                                     <Play className="h-4 w-4 text-secondary" />

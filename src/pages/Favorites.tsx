@@ -315,17 +315,6 @@ const Favorites = () => {
                               <Heart className="h-4 w-4 fill-current" />
                             </div>
                           </div>
-                          
-                          {/* Free/Premium badge */}
-                          {course.is_free ? (
-                            <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-secondary shadow-lg">
-                              {t('misc:free.tag')}
-                            </div>
-                          ) : (
-                            <div className="absolute end-2 top-2 rounded-full border-2 border-white bg-yellow-500 px-3 py-1.5 text-xs font-bold text-black shadow-lg">
-                              {t('misc:premium.tag')}
-                            </div>
-                          )}
                         </div>
                         
                         <div className="flex flex-1 flex-col">

@@ -60,15 +60,6 @@ const FeaturedCourses = () => {
                           'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
                       }}
                     />
-                    {course.isFree ? (
-                      <div className="absolute left-2 top-2 rounded-full bg-primary-foreground px-2 py-1 text-xs font-medium text-secondary shadow-md">
-                        {t('misc:free.tag')}
-                      </div>
-                    ) : (
-                      <div className="bg-moon-DEFAULT absolute left-2 top-2 rounded-full px-2 py-1 text-xs font-medium text-secondary shadow-md">
-                        {t('misc:premium.tag')}
-                      </div>
-                    )}
                     <div className="absolute right-2 top-2 rounded-full bg-secondary/80 px-2 py-1 text-xs text-primary-foreground shadow-md">
                       {course.minAge}-{course.maxAge} {t('misc:courses.years')}
                     </div>

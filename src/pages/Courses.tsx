@@ -154,15 +154,6 @@ const Courses = () => {
                             'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
                         }}
                       />
-                      {course.isFree ? (
-                        <Badge className="absolute end-2 top-2 border-none bg-green-600 text-secondary">
-                          {t('free.tag')}
-                        </Badge>
-                      ) : (
-                        <Badge className="absolute end-2 top-2 bg-accent text-secondary">
-                          {t('premium.tag')}
-                        </Badge>
-                      )}
                     </div>
 
                     <div className="grid gap-4">
