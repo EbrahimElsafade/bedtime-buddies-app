@@ -7,9 +7,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Heart } from 'lucide-react'
+import { Heart, Lock } from 'lucide-react'
 import { getImageUrl } from '@/utils/imageUtils'
 import { FavoriteItem, FavoriteStory, FavoriteCourse } from '@/types/favorites'
+import { useAuth } from '@/contexts/AuthContext'
+import { useTranslation } from 'react-i18next'
+import { useUserRole } from '@/hooks/useUserRole'
 
 interface FavoritesListProps {
   type: 'story' | 'course'
@@ -25,6 +28,9 @@ export const FavoritesList = ({
   t,
 }: FavoritesListProps) => {
   const navigate = useNavigate()
+  const { user } = useAuth()
+  const { isPremium } = useUserRole(user)
+  const { t: tPremium } = useTranslation('premium')
 
   const getTitle = (item: FavoriteItem) => {
     if (type === 'story') {
@@ -85,6 +91,45 @@ export const FavoritesList = ({
               const title = getTitle(item)
               const description = getDescription(item)
               const imageUrl = getImageUrl(item.cover_image)
+
+              // For courses, show premium message if user is not premium
+              if (type === 'course' && !isPremium) {
+                return (
+                  <Card key={item.id} className="relative overflow-hidden">
+                    <CardContent className="p-0">
+                      {imageUrl && (
+                        <div className="relative">
+                          <img
+                            src={imageUrl}
+                            alt={title}
+                            className="h-48 w-full object-cover blur-sm"
+                          />
+                          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center">
+                            <Lock className="h-12 w-12 text-muted-foreground" />
+                          </div>
+                        </div>
+                      )}
+                      <div className="p-6 text-center">
+                        <div className="mb-4">
+                          <span className="inline-block px-3 py-1 bg-accent/20 text-accent rounded-full text-sm font-medium mb-3">
+                            {tPremium('tag')}
+                          </span>
+                          <h4 className="mb-2 text-xl font-bold">{title}</h4>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            {tPremium('message.description')}
+                          </p>
+                        </div>
+                        <Button 
+                          onClick={() => navigate('/subscription')}
+                          className="w-full"
+                        >
+                          {tPremium('message.subscriptionButton')}
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )
+              }
 
               return (
                 <Card

@@ -1,5 +1,8 @@
-import { Link } from 'react-router-dom'
-import { ArrowRight, BookOpen, Clock } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { ArrowRight, BookOpen, Clock, Lock } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { useAuth } from '@/contexts/AuthContext'
+import { useUserRole } from '@/hooks/useUserRole'
 import {
   Card,
   CardHeader,
@@ -15,10 +18,13 @@ import { getLocalized } from '@/utils/getLocalized'
 import { getCategoryText } from '@/utils/courseUtils'
 
 const FeaturedCourses = () => {
-  const { t } = useTranslation(['misc', 'stories'])
+  const { t } = useTranslation(['misc', 'stories', 'premium'])
   const { data: featuredCourses = [], isLoading } = useFeaturedCourses()
   const { data: categories = [] } = useCourseCategories()
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
+  const navigate = useNavigate()
+  const { user } = useAuth()
+  const { isPremium } = useUserRole(user)
 
   if (isLoading || !featuredCourses.length) return null
 
@@ -43,6 +49,46 @@ const FeaturedCourses = () => {
             const category = categories.find(
               cat => cat.id === course.category || cat.name === course.category,
             )
+            
+            // Show premium message for non-premium users
+            if (!isPremium) {
+              return (
+                <Card key={course.id} className="story-card relative z-10 h-[500px] overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm">
+                  <div className="relative aspect-[3/2]">
+                    <img
+                      src={getImageUrl(course.coverImagePath)}
+                      alt={getLocalized(course, 'title', lang)}
+                      className="h-full w-full overflow-hidden object-cover blur-sm"
+                      onError={e => {
+                        e.currentTarget.src =
+                          'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center">
+                      <Lock className="h-12 w-12 text-muted-foreground" />
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-center justify-center flex-1 p-6 text-center">
+                    <span className="inline-block px-3 py-1 bg-accent/20 text-accent rounded-full text-sm font-medium mb-3">
+                      {t('premium:tag')}
+                    </span>
+                    <h3 className="font-bubbly text-lg mb-2 text-primary-foreground line-clamp-1">
+                      {getLocalized(course, 'title', lang)}
+                    </h3>
+                    <p className="text-muted-foreground text-sm mb-4">
+                      {t('premium:message.description')}
+                    </p>
+                    <Button 
+                      onClick={() => navigate('/subscription')}
+                      className="w-full"
+                    >
+                      {t('premium:message.subscriptionButton')}
+                    </Button>
+                  </div>
+                </Card>
+              )
+            }
+
             return (
               <Link
                 key={course.id}
