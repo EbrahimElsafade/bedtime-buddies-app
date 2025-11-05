@@ -28,11 +28,18 @@ export const useProfileManagement = (user: User | null) => {
         .from('profiles')
         .select('*')
         .eq('id', userId)
-        .single();
+        .maybeSingle();
 
       if (profileError) {
         logger.error("Profile fetch error:", profileError);
         throw profileError;
+      }
+
+      if (!data) {
+        logger.warn("No profile found for user:", userId);
+        setProfile(null);
+        setProfileLoaded(true);
+        return null;
       }
 
       // logger.debug("Profile fetched successfully:", data);
