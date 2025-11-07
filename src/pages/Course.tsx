@@ -114,24 +114,10 @@ const Course = () => {
     setSelectedVideo(video)
   }
 
-  // Show login prompt if not authenticated
+  // Redirect to login if not authenticated
   if (!isAuthenticated) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <Card className="mx-auto max-w-md">
-          <CardContent className="pt-6 text-center">
-            <Lock className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
-            <h2 className="mb-2 text-2xl font-bold">Login Required</h2>
-            <p className="mb-6 text-muted-foreground">
-              Please log in to view this course
-            </p>
-            <Button onClick={() => navigate('/login')} className="w-full">
-              Log In
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
+    navigate('/login')
+    return null
   }
 
   // Error state

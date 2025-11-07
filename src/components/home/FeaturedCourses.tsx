@@ -26,8 +26,7 @@ const FeaturedCourses = () => {
   const { user, isAuthenticated } = useAuth()
   const { isPremium } = useUserRole(user)
 
-  // Don't show courses if user is not authenticated
-  if (!isAuthenticated || isLoading || !featuredCourses.length) return null
+  if (isLoading || !featuredCourses.length) return null
 
   return (
     <section className="relative px-4 py-12">
@@ -50,6 +49,45 @@ const FeaturedCourses = () => {
             const category = categories.find(
               cat => cat.id === course.category || cat.name === course.category,
             )
+            
+            // Show login overlay for non-authenticated users
+            if (!isAuthenticated) {
+              return (
+                <div 
+                  key={course.id}
+                  onClick={() => navigate('/login')}
+                  className="cursor-pointer"
+                >
+                  <Card className="story-card relative z-10 h-[500px] overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm">
+                    <div className="relative aspect-[3/2]">
+                      <img
+                        src={getImageUrl(course.coverImagePath)}
+                        alt={getLocalized(course, 'title', lang)}
+                        className="h-full w-full overflow-hidden object-cover blur-sm"
+                        onError={e => {
+                          e.currentTarget.src =
+                            'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center">
+                        <Lock className="h-12 w-12 text-muted-foreground" />
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-center justify-center flex-1 p-6 text-center">
+                      <h3 className="font-bubbly text-lg mb-2 text-primary-foreground line-clamp-1">
+                        {getLocalized(course, 'title', lang)}
+                      </h3>
+                      <p className="text-muted-foreground text-sm mb-4">
+                        Please log in to view courses
+                      </p>
+                      <Button className="w-full">
+                        Log In
+                      </Button>
+                    </div>
+                  </Card>
+                </div>
+              )
+            }
             
             // Show premium message for premium courses when user is not premium
             if (!course.is_free && !isPremium) {

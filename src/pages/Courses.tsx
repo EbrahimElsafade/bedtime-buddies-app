@@ -71,32 +71,6 @@ const Courses = () => {
     return counts
   }, [courses])
 
-  // Show login prompt if not authenticated
-  if (!isAuthenticated) {
-    return (
-      <>
-        <Helmet>
-          <title>{t('meta:titles.courses')}</title>
-          <meta name="description" content={t('meta:descriptions.courses')} />
-        </Helmet>
-        <div className="flex min-h-[82.7svh] items-center justify-center bg-gradient-to-b from-primary/20 to-primary/10 px-4">
-          <Card className="max-w-md">
-            <CardContent className="pt-6 text-center">
-              <Lock className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
-              <h2 className="mb-2 text-2xl font-bold">Login Required</h2>
-              <p className="mb-6 text-muted-foreground">
-                Please log in to view our courses
-              </p>
-              <Button onClick={() => navigate('/login')} className="w-full">
-                Log In
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </>
-    )
-  }
-
   return (
     <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-3 py-8 md:px-4 md:py-12">
       <Helmet>
@@ -169,6 +143,45 @@ const Courses = () => {
                 cat =>
                   cat.id === course.category || cat.name === course.category,
               )
+              
+              // Show login overlay for non-authenticated users
+              if (!isAuthenticated) {
+                return (
+                  <div 
+                    key={course.id}
+                    onClick={() => navigate('/login')}
+                    className="cursor-pointer"
+                  >
+                    <Card className="story-card relative z-20 flex h-[25rem] w-full flex-col overflow-hidden border-primary/20 bg-secondary/10 backdrop-blur-sm">
+                      <div className="relative h-48 overflow-hidden">
+                        <img
+                          src={getImageUrl(course.coverImagePath)}
+                          alt={getLocalized(course, 'title', lang)}
+                          className="h-full w-full object-cover blur-sm"
+                          onError={e => {
+                            e.currentTarget.src =
+                              'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center">
+                          <Lock className="h-12 w-12 text-muted-foreground" />
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-center justify-center flex-1 p-6 text-center">
+                        <h3 className="font-bubbly text-lg mb-2 text-primary-foreground line-clamp-1">
+                          {getLocalized(course, 'title', lang)}
+                        </h3>
+                        <p className="text-muted-foreground text-sm mb-4">
+                          Please log in to view courses
+                        </p>
+                        <Button className="w-full">
+                          Log In
+                        </Button>
+                      </div>
+                    </Card>
+                  </div>
+                )
+              }
               
               // Show premium message for premium courses when user is not premium
               if (!course.is_free && !isPremium) {
