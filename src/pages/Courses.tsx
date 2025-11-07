@@ -9,6 +9,7 @@ import { useLoading } from '@/contexts/LoadingContext'
 import { Button } from '@/components/ui/button'
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -27,7 +28,7 @@ const Courses = () => {
   const { t } = useTranslation(['courses', 'meta', 'common', 'premium'])
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, isAuthenticated } = useAuth()
   const { isPremium } = useUserRole(user)
 
   const { setIsLoading, setLoadingMessage } = useLoading()
@@ -69,6 +70,32 @@ const Courses = () => {
     })
     return counts
   }, [courses])
+
+  // Show login prompt if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <>
+        <Helmet>
+          <title>{t('meta:titles.courses')}</title>
+          <meta name="description" content={t('meta:descriptions.courses')} />
+        </Helmet>
+        <div className="flex min-h-[82.7svh] items-center justify-center bg-gradient-to-b from-primary/20 to-primary/10 px-4">
+          <Card className="max-w-md">
+            <CardContent className="pt-6 text-center">
+              <Lock className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
+              <h2 className="mb-2 text-2xl font-bold">Login Required</h2>
+              <p className="mb-6 text-muted-foreground">
+                Please log in to view our courses
+              </p>
+              <Button onClick={() => navigate('/login')} className="w-full">
+                Log In
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </>
+    )
+  }
 
   return (
     <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-3 py-8 md:px-4 md:py-12">
@@ -143,8 +170,8 @@ const Courses = () => {
                   cat.id === course.category || cat.name === course.category,
               )
               
-              // Show premium message for non-premium users
-              if (!isPremium) {
+              // Show premium message for premium courses when user is not premium
+              if (!course.is_free && !isPremium) {
                 return (
                   <Card key={course.id} className="story-card relative z-20 flex h-[25rem] w-full flex-col overflow-hidden border-primary/20 bg-secondary/10 backdrop-blur-sm">
                     <div className="relative h-48 overflow-hidden">
@@ -185,7 +212,7 @@ const Courses = () => {
               return (
                 <Link key={course.id} to={`/courses/${course.id}`}>
                   <Card className="story-card relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-secondary/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg">
-                    <div className="relative h-48 overflow-hidden">
+                     <div className="relative h-48 overflow-hidden">
                       <img
                         src={getImageUrl(course.coverImagePath)}
                         alt={getLocalized(course, 'title', lang)}
@@ -199,6 +226,16 @@ const Courses = () => {
                             'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
                         }}
                       />
+                      {course.is_free && (
+                        <Badge className="absolute top-2 right-2 bg-green-500 hover:bg-green-600">
+                          {t('courses:free.tag')}
+                        </Badge>
+                      )}
+                      {!course.is_free && (
+                        <Badge className="absolute top-2 right-2 bg-gradient-to-r from-purple-500 to-pink-500">
+                          {t('premium:tag')}
+                        </Badge>
+                      )}
                     </div>
 
                     <div className="grid gap-4">

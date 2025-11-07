@@ -92,8 +92,10 @@ export const FavoritesList = ({
               const description = getDescription(item)
               const imageUrl = getImageUrl(item.cover_image)
 
-              // For courses, show premium message if user is not premium
-              if (type === 'course' && !isPremium) {
+              // For courses, show premium message for premium courses when user is not premium
+              const isCourse = type === 'course'
+              const course = item as FavoriteCourse
+              if (isCourse && !course.is_free && !isPremium) {
                 return (
                   <Card key={item.id} className="relative overflow-hidden">
                     <CardContent className="p-0">

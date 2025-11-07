@@ -18,12 +18,13 @@ import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 import { useTranslation } from 'react-i18next'
 import { CourseHeader } from '@/components/course/CourseHeader'
+import { useUserRole } from '@/hooks/useUserRole'
 
 const Course = () => {
   const { id: courseId } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { t } = useTranslation(['courses', 'meta', 'common'])
-  const { isAuthenticated, profile } = useAuth()
+  const { isAuthenticated, profile, user } = useAuth()
   const { toast } = useToast()
   const [activeTab, setActiveTab] = useState('overview')
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
@@ -31,7 +32,7 @@ const Course = () => {
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
   const { isFavorite, addFavorite, removeFavorite } = useCourseFavorites()
-  const isPremium = profile?.is_premium || false
+  const { isPremium } = useUserRole(user)
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
 
   useEffect(() => {
@@ -102,7 +103,7 @@ const Course = () => {
   }
 
   const handleVideoSelect = (video: CourseVideo) => {
-    if (!isPremium) {
+    if (!isPremium && !video.isFree) {
       toast({
         title: t('toast.premiumRequired'),
         description: t('toast.upgradeToPremium'),
@@ -113,6 +114,25 @@ const Course = () => {
     setSelectedVideo(video)
   }
 
+  // Show login prompt if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Card className="mx-auto max-w-md">
+          <CardContent className="pt-6 text-center">
+            <Lock className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
+            <h2 className="mb-2 text-2xl font-bold">Login Required</h2>
+            <p className="mb-6 text-muted-foreground">
+              Please log in to view this course
+            </p>
+            <Button onClick={() => navigate('/login')} className="w-full">
+              Log In
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   // Error state
   if (error) {

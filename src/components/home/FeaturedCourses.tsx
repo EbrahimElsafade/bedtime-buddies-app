@@ -18,15 +18,16 @@ import { getLocalized } from '@/utils/getLocalized'
 import { getCategoryText } from '@/utils/courseUtils'
 
 const FeaturedCourses = () => {
-  const { t } = useTranslation(['misc', 'stories', 'premium'])
+  const { t } = useTranslation(['misc', 'stories', 'premium', 'courses'])
   const { data: featuredCourses = [], isLoading } = useFeaturedCourses()
   const { data: categories = [] } = useCourseCategories()
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, isAuthenticated } = useAuth()
   const { isPremium } = useUserRole(user)
 
-  if (isLoading || !featuredCourses.length) return null
+  // Don't show courses if user is not authenticated
+  if (!isAuthenticated || isLoading || !featuredCourses.length) return null
 
   return (
     <section className="relative px-4 py-12">
@@ -50,8 +51,8 @@ const FeaturedCourses = () => {
               cat => cat.id === course.category || cat.name === course.category,
             )
             
-            // Show premium message for non-premium users
-            if (!isPremium) {
+            // Show premium message for premium courses when user is not premium
+            if (!course.is_free && !isPremium) {
               return (
                 <Card key={course.id} className="story-card relative z-10 h-[500px] overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm">
                   <div className="relative aspect-[3/2]">
@@ -109,6 +110,16 @@ const FeaturedCourses = () => {
                     <div className="absolute right-2 top-2 rounded-full bg-secondary/80 px-2 py-1 text-xs text-primary-foreground shadow-md">
                       {course.minAge}-{course.maxAge} {t('misc:courses.years')}
                     </div>
+                    {course.is_free && (
+                      <Badge className="absolute top-2 left-2 bg-green-500 hover:bg-green-600">
+                        {t('courses:free.tag')}
+                      </Badge>
+                    )}
+                    {!course.is_free && (
+                      <Badge className="absolute top-2 left-2 bg-gradient-to-r from-purple-500 to-pink-500">
+                        {t('premium:tag')}
+                      </Badge>
+                    )}
                   </div>
                   <CardHeader className="h-28 pb-2">
                     <CardTitle className="text-xl text-primary-foreground">
