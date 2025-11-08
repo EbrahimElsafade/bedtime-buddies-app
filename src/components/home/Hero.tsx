@@ -1,14 +1,11 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { DolphoonMascot } from '@/components/DolphoonMascot'
 
 const Hero = () => {
-  const { isAuthenticated } = useAuth()
   const { t } = useTranslation('hero')
-  const { t: tCommon } = useTranslation('common')
 
   return (
     <section className="relative overflow-hidden px-4 py-8 md:py-12">
@@ -31,7 +28,7 @@ const Hero = () => {
             <Link to="/stories" className="w-full sm:w-auto">
               <Button
                 size="lg"
-                variant="accent"
+                variant="tertiary"
                 className="w-full rounded-full sm:w-auto"
               >
                 {t('exploreButton')}
@@ -49,18 +46,6 @@ const Hero = () => {
                 <ArrowRight className="ms-2 h-4 w-4 rtl:rotate-180" />
               </Button>
             </Link>
-
-            {/* {!isAuthenticated && (
-              <Link to="/register" className="w-full sm:w-auto">
-                <Button
-                  size="lg"
-                  variant="tertiary"
-                  className="w-full rounded-full sm:w-auto"
-                >
-                  {t('signUpButton')}
-                </Button>
-              </Link>
-            )} */}
           </div>
         </div>
       </div>

@@ -18,31 +18,47 @@ import {
   WhatsappIcon,
   TelegramIcon,
 } from 'react-share'
-import { useTranslation } from 'react-i18next'
 
 interface ShareDialogProps {
   storyTitle: string
   storyDescription?: string
 }
 
-export const ShareDialog = ({
-  storyTitle,
-  storyDescription,
-}: ShareDialogProps) => {
-  const { t } = useTranslation('stories')
+export const ShareDialog = ({ storyTitle }: ShareDialogProps) => {
   const [copied, setCopied] = useState(false)
   const [open, setOpen] = useState(false)
 
   const shareUrl = window.location.href
   const shareTitle = `Check out this amazing story: ${storyTitle}`
-  const shareDescription =
-    storyDescription || 'Discover wonderful Dolphoon on Dolphoon!'
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(shareUrl)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      // Modern approach for supported browsers
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(shareUrl)
+        setCopied(true)
+        setTimeout(() => setCopied(false), 2000)
+      } else {
+        // Fallback for mobile/older browsers
+        const textArea = document.createElement('textarea')
+        textArea.value = shareUrl
+        textArea.style.position = 'fixed'
+        textArea.style.left = '-999999px'
+        textArea.style.top = '-999999px'
+        document.body.appendChild(textArea)
+        textArea.focus()
+        textArea.select()
+
+        try {
+          document.execCommand('copy')
+          setCopied(true)
+          setTimeout(() => setCopied(false), 2000)
+        } catch (err) {
+          console.error('Fallback copy failed:', err)
+        } finally {
+          textArea.remove()
+        }
+      }
     } catch (err) {
       console.error('Failed to copy: ', err)
     }
