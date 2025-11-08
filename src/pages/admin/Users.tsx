@@ -131,38 +131,22 @@ const Users = () => {
       return 0;
     });
 
-  const toggleAdmin = async (user: UserWithRole) => {
-    const isAdmin = user.roles?.some(r => r.role === "admin");
-    const newRole = isAdmin ? "user" : "admin";
-    
+  const changeUserRole = async (user: UserWithRole, newRole: 'user' | 'editor' | 'admin') => {
     try {
-      if (isAdmin) {
-        // Remove admin role
-        const { error } = await supabase
-          .from("user_roles")
-          .delete()
-          .eq("user_id", user.id)
-          .eq("role", "admin");
-          
-        if (error) throw error;
+      // Remove all existing roles for this user
+      const { error: deleteError } = await supabase
+        .from("user_roles")
+        .delete()
+        .eq("user_id", user.id);
         
-        // Add user role if they don't have it
-        const { error: userRoleError } = await supabase
-          .from("user_roles")
-          .insert({ user_id: user.id, role: "user" });
-          
-        if (userRoleError && userRoleError.code !== '23505') {
-          // Ignore duplicate key errors (23505), but throw other errors
-          throw userRoleError;
-        }
-      } else {
-        // Add admin role
-        const { error } = await supabase
-          .from("user_roles")
-          .insert({ user_id: user.id, role: "admin" });
-          
-        if (error) throw error;
-      }
+      if (deleteError) throw deleteError;
+      
+      // Add the new role
+      const { error: insertError } = await supabase
+        .from("user_roles")
+        .insert({ user_id: user.id, role: newRole });
+        
+      if (insertError) throw insertError;
       
       toast.success(`User ${user.parent_name} role updated to ${newRole}`);
       refetch();
@@ -170,6 +154,12 @@ const Users = () => {
       console.error("Error updating user role:", error);
       toast.error("Failed to update user role");
     }
+  };
+
+  const getUserRole = (user: UserWithRole): 'user' | 'editor' | 'admin' => {
+    if (user.roles?.some(r => r.role === "admin")) return "admin";
+    if (user.roles?.some(r => r.role === "editor")) return "editor";
+    return "user";
   };
 
   return (
@@ -274,6 +264,10 @@ const Users = () => {
                           <Badge variant="default" className="bg-red-600 hover:bg-red-700">
                             Admin
                           </Badge>
+                        ) : user.roles?.some(r => r.role === "editor") ? (
+                          <Badge variant="default" className="bg-blue-600 hover:bg-blue-700">
+                            Editor
+                          </Badge>
                         ) : (
                           <Badge variant="outline">User</Badge>
                         )}
@@ -293,16 +287,23 @@ const Users = () => {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => toggleAdmin(user)}>
-                              {user.roles?.some(r => r.role === "admin") ? (
-                                <>
-                                  <ShieldOff className="mr-2 h-4 w-4" /> {t('users.removeAdmin')}
-                                </>
-                              ) : (
-                                <>
-                                  <ShieldCheck className="mr-2 h-4 w-4" /> {t('users.makeAdmin')}
-                                </>
-                              )}
+                            <DropdownMenuItem 
+                              onClick={() => changeUserRole(user, 'user')}
+                              disabled={getUserRole(user) === 'user'}
+                            >
+                              <User className="mr-2 h-4 w-4" /> Set as User
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              onClick={() => changeUserRole(user, 'editor')}
+                              disabled={getUserRole(user) === 'editor'}
+                            >
+                              <ShieldCheck className="mr-2 h-4 w-4" /> Set as Editor
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              onClick={() => changeUserRole(user, 'admin')}
+                              disabled={getUserRole(user) === 'admin'}
+                            >
+                              <ShieldCheck className="mr-2 h-4 w-4" /> Set as Admin
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
