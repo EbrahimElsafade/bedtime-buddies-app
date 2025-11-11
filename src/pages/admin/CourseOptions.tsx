@@ -11,7 +11,17 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Plus, Trash2, Edit2, Check, X } from 'lucide-react'
+import { Plus, Trash2, Edit2, Check, X, AlertTriangle } from 'lucide-react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/integrations/supabase/client'
 import { Category } from '@/types/course'
@@ -30,6 +40,7 @@ const CourseOptions = () => {
   const [editingCategoryName, setEditingCategoryName] = useState('')
   const [editingCategoryNameAr, setEditingCategoryNameAr] = useState('')
   const [editingCategoryNameFr, setEditingCategoryNameFr] = useState('')
+  const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null)
 
   // Fetch categories
   const { data: categories = [], isLoading: categoriesLoading } = useQuery({
@@ -177,8 +188,14 @@ const CourseOptions = () => {
     setEditingCategoryNameFr('')
   }
 
-  const removeCategory = (id: string) => {
-    removeCategoryMutation.mutate(id)
+  const handleDeleteCategoryClick = (id: string) => {
+    setCategoryToDelete(id)
+  }
+
+  const confirmDeleteCategory = () => {
+    if (!categoryToDelete) return
+    removeCategoryMutation.mutate(categoryToDelete)
+    setCategoryToDelete(null)
   }
 
   return (
@@ -316,7 +333,7 @@ const CourseOptions = () => {
                               variant="ghost"
                               size="sm"
                               className="h-6 w-6 p-0 hover:bg-destructive hover:text-destructive-foreground"
-                              onClick={() => removeCategory(category.id)}
+                              onClick={() => handleDeleteCategoryClick(category.id)}
                               disabled={removeCategoryMutation.isPending}
                             >
                               <Trash2 className="h-3 w-3" />
@@ -332,6 +349,33 @@ const CourseOptions = () => {
           </CardContent>
         </Card>
       </div>
+
+      <AlertDialog
+        open={!!categoryToDelete}
+        onOpenChange={() => setCategoryToDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              <AlertDialogTitle>Delete Category</AlertDialogTitle>
+            </div>
+            <AlertDialogDescription>
+              Are you sure you want to delete this category? This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteCategory}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

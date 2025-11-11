@@ -41,7 +41,18 @@ import {
   X,
   Image,
   Video,
+  AlertTriangle,
 } from 'lucide-react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { getImageUrl } from '@/utils/imageUtils'
 import { CourseVideo } from '@/types/course'
 import { useTranslation } from 'react-i18next'
@@ -69,6 +80,7 @@ const CourseEditor = () => {
   const [coverImagePreview, setCoverImagePreview] = useState<string | null>(
     null,
   )
+  const [lessonToDelete, setLessonToDelete] = useState<number | null>(null)
 
   // Course form data
   const [courseData, setCourseData] = useState({
@@ -320,14 +332,21 @@ const CourseEditor = () => {
     setCourseLessons([...courseLessons, newLesson])
   }
 
-  const deleteLesson = (index: number) => {
-    const updatedLessons = courseLessons.filter((_, i) => i !== index)
+  const handleDeleteLessonClick = (index: number) => {
+    setLessonToDelete(index)
+  }
+
+  const confirmDeleteLesson = () => {
+    if (lessonToDelete === null) return
+
+    const updatedLessons = courseLessons.filter((_, i) => i !== lessonToDelete)
     // Reorder lessons
     const reorderedLessons = updatedLessons.map((lesson, idx) => ({
       ...lesson,
       order: idx + 1,
     }))
     setCourseLessons(reorderedLessons)
+    setLessonToDelete(null)
   }
 
   const updateLessonField = (
@@ -1421,7 +1440,7 @@ const CourseEditor = () => {
                               className="rounded-xl border bg-red-500 p-2"
                               onClick={e => {
                                 e.stopPropagation()
-                                deleteLesson(lessonIndex)
+                                handleDeleteLessonClick(lessonIndex)
                               }}
                             >
                               <Trash2 className="h-4 w-4" />
@@ -1758,6 +1777,33 @@ const CourseEditor = () => {
           </div>
         </form>
       )}
+
+      <AlertDialog
+        open={lessonToDelete !== null}
+        onOpenChange={() => setLessonToDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              <AlertDialogTitle>Delete Lesson</AlertDialogTitle>
+            </div>
+            <AlertDialogDescription>
+              Are you sure you want to delete this lesson? This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteLesson}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

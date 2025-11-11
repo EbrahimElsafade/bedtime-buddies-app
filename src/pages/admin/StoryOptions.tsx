@@ -11,7 +11,17 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Plus, Trash2, Edit2, Check, X } from 'lucide-react'
+import { Plus, Trash2, Edit2, Check, X, AlertTriangle } from 'lucide-react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/integrations/supabase/client'
 
@@ -49,6 +59,8 @@ const StoryOptions = () => {
   )
   const [editingLanguageCode, setEditingLanguageCode] = useState('')
   const [editingLanguageName, setEditingLanguageName] = useState('')
+  const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null)
+  const [languageToDelete, setLanguageToDelete] = useState<string | null>(null)
 
   // Fetch categories
   const { data: categories = [], isLoading: categoriesLoading } = useQuery({
@@ -256,8 +268,14 @@ const StoryOptions = () => {
     setEditingCategoryName('')
   }
 
-  const removeCategory = (id: string) => {
-    removeCategoryMutation.mutate(id)
+  const handleDeleteCategoryClick = (id: string) => {
+    setCategoryToDelete(id)
+  }
+
+  const confirmDeleteCategory = () => {
+    if (!categoryToDelete) return
+    removeCategoryMutation.mutate(categoryToDelete)
+    setCategoryToDelete(null)
   }
 
   const addLanguage = () => {
@@ -299,8 +317,14 @@ const StoryOptions = () => {
     setEditingLanguageName('')
   }
 
-  const removeLanguage = (id: string) => {
-    removeLanguageMutation.mutate(id)
+  const handleDeleteLanguageClick = (id: string) => {
+    setLanguageToDelete(id)
+  }
+
+  const confirmDeleteLanguage = () => {
+    if (!languageToDelete) return
+    removeLanguageMutation.mutate(languageToDelete)
+    setLanguageToDelete(null)
   }
 
   return (
@@ -392,7 +416,7 @@ const StoryOptions = () => {
                           variant="ghost"
                           size="sm"
                           className="h-4 w-4 p-0 hover:bg-destructive hover:text-destructive-foreground"
-                          onClick={() => removeCategory(category.id)}
+                          onClick={() => handleDeleteCategoryClick(category.id)}
                           disabled={removeCategoryMutation.isPending}
                         >
                           <Trash2 className="h-3 w-3" />
@@ -497,7 +521,7 @@ const StoryOptions = () => {
                           variant="ghost"
                           size="sm"
                           className="h-4 w-4 p-0 hover:bg-destructive hover:text-destructive-foreground"
-                          onClick={() => removeLanguage(language.id)}
+                          onClick={() => handleDeleteLanguageClick(language.id)}
                           disabled={removeLanguageMutation.isPending}
                         >
                           <Trash2 className="h-3 w-3" />
@@ -511,6 +535,60 @@ const StoryOptions = () => {
           </CardContent>
         </Card>
       </div>
+
+      <AlertDialog
+        open={!!categoryToDelete}
+        onOpenChange={() => setCategoryToDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              <AlertDialogTitle>Delete Category</AlertDialogTitle>
+            </div>
+            <AlertDialogDescription>
+              Are you sure you want to delete this category? This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteCategory}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={!!languageToDelete}
+        onOpenChange={() => setLanguageToDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              <AlertDialogTitle>Delete Language</AlertDialogTitle>
+            </div>
+            <AlertDialogDescription>
+              Are you sure you want to delete this language? This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteLanguage}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

@@ -13,6 +13,7 @@ import { Plus } from 'lucide-react'
 import { StorySectionForm } from './StorySectionForm'
 import { Language } from '@/types/language'
 import { StorySection } from '@/types/story-section'
+import { useState } from 'react'
 
 interface StorySectionsListProps {
   sections: StorySection[]
@@ -63,6 +64,23 @@ export const StorySectionsList = ({
   getVideoUploadingState,
   getVoiceUploadingState,
 }: StorySectionsListProps) => {
+  const [sectionToDelete, setSectionToDelete] = useState<number | null>(null)
+
+  const handleDeleteClick = (index: number) => {
+    setSectionToDelete(index)
+  }
+
+  const confirmDelete = () => {
+    if (sectionToDelete !== null) {
+      onDeleteSection(sectionToDelete)
+      setSectionToDelete(null)
+    }
+  }
+
+  const cancelDelete = () => {
+    setSectionToDelete(null)
+  }
+
   const handleClearSectionImage = (sectionIndex: number) => {
     onClearSectionImage(sectionIndex)
   }
@@ -109,6 +127,10 @@ export const StorySectionsList = ({
                 onRemoveSectionVoice={onRemoveSectionVoice}
                 isVideoUploading={getVideoUploadingState?.(sectionIndex)}
                 getVoiceUploadingState={getVoiceUploadingState}
+                sectionToDelete={sectionToDelete}
+                onDeleteClick={handleDeleteClick}
+                onConfirmDelete={confirmDelete}
+                onCancelDelete={cancelDelete}
               />
             ))}
           </Accordion>

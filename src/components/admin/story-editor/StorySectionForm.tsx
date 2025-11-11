@@ -8,7 +8,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import { Trash2, X, Image } from 'lucide-react'
+import { Trash2, X, Image, AlertTriangle } from 'lucide-react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { VoiceFileUpload } from '@/components/admin/VoiceFileUpload'
 import { HLSVideoUpload } from '@/components/admin/HLSVideoUpload'
 import { Language } from '@/types/language'
@@ -53,6 +63,10 @@ interface StorySectionFormProps {
   onRemoveSectionVoice: (sectionIndex: number, language: string) => void
   isVideoUploading?: boolean
   getVoiceUploadingState?: (sectionIndex: number, language: string) => boolean
+  sectionToDelete?: number | null
+  onDeleteClick?: (index: number) => void
+  onConfirmDelete?: () => void
+  onCancelDelete?: () => void
 }
 
 export const StorySectionForm = ({
@@ -71,24 +85,33 @@ export const StorySectionForm = ({
   onRemoveSectionVoice,
   isVideoUploading,
   getVoiceUploadingState,
+  sectionToDelete,
+  onDeleteClick,
+  onConfirmDelete,
+  onCancelDelete,
 }: StorySectionFormProps) => {
   return (
-    <AccordionItem key={sectionIndex} value={`section-${sectionIndex}`}>
-      <AccordionTrigger className="hover:no-underline">
-        <div className="mr-4 flex w-full items-center justify-between">
-          <span className="font-medium">Section {section.order}</span>
-          <span
-            role="button"
-            className="rounded-xl border bg-red-500 p-2"
-            onClick={e => {
-              e.stopPropagation()
-              onDeleteSection(sectionIndex)
-            }}
-          >
-            <Trash2 className="h-4 w-4" />
-          </span>
-        </div>
-      </AccordionTrigger>
+    <>
+      <AccordionItem key={sectionIndex} value={`section-${sectionIndex}`}>
+        <AccordionTrigger className="hover:no-underline">
+          <div className="mr-4 flex w-full items-center justify-between">
+            <span className="font-medium">Section {section.order}</span>
+            <span
+              role="button"
+              className="rounded-xl border bg-red-500 p-2"
+              onClick={e => {
+                e.stopPropagation()
+                if (onDeleteClick) {
+                  onDeleteClick(sectionIndex)
+                } else {
+                  onDeleteSection(sectionIndex)
+                }
+              }}
+            >
+              <Trash2 className="h-4 w-4" />
+            </span>
+          </div>
+        </AccordionTrigger>
       <AccordionContent className="pt-4">
         <div className="space-y-6">
           {/* Section Image */}
@@ -201,5 +224,35 @@ export const StorySectionForm = ({
         </div>
       </AccordionContent>
     </AccordionItem>
+
+    {onDeleteClick && onConfirmDelete && onCancelDelete && (
+      <AlertDialog
+        open={sectionToDelete === sectionIndex}
+        onOpenChange={() => onCancelDelete()}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              <AlertDialogTitle>Delete Section</AlertDialogTitle>
+            </div>
+            <AlertDialogDescription>
+              Are you sure you want to delete this section? This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={onConfirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    )}
+  </>
   )
 }
