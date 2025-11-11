@@ -32,6 +32,16 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import {
   ArrowUpDown,
   MoreHorizontal,
   Search,
@@ -40,6 +50,7 @@ import {
   Edit,
   Trash2,
   Eye,
+  AlertTriangle,
 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -63,6 +74,7 @@ const Stories = () => {
   const [filter, setFilter] = useState<'all' | 'published' | 'draft'>('all')
   const [sortField, setSortField] = useState<keyof Story>('created_at')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
+  const [storyToDelete, setStoryToDelete] = useState<string | null>(null)
 
   const { i18n } = useTranslation()
 
@@ -147,23 +159,28 @@ const Stories = () => {
       return 0
     })
 
-  const deleteStory = async (id: string) => {
-    if (
-      confirm(
-        'Are you sure you want to delete this story? This action cannot be undone.',
-      )
-    ) {
-      try {
-        const { error } = await supabase.from('stories').delete().eq('id', id)
+  const handleDeleteClick = (id: string) => {
+    setStoryToDelete(id)
+  }
 
-        if (error) throw error
+  const confirmDelete = async () => {
+    if (!storyToDelete) return
 
-        toast.success('Story deleted successfully')
-        refetch()
-      } catch (error) {
-        console.error('Error deleting story:', error)
-        toast.error('Failed to delete story')
-      }
+    try {
+      const { error } = await supabase
+        .from('stories')
+        .delete()
+        .eq('id', storyToDelete)
+
+      if (error) throw error
+
+      toast.success('Story deleted successfully')
+      refetch()
+    } catch (error) {
+      console.error('Error deleting story:', error)
+      toast.error('Failed to delete story')
+    } finally {
+      setStoryToDelete(null)
     }
   }
 
@@ -383,7 +400,7 @@ const Stories = () => {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               className="text-red-600"
-                              onClick={() => deleteStory(story.id)}
+                              onClick={() => handleDeleteClick(story.id)}
                             >
                               <Trash2 className="mr-2 h-4 w-4" /> Delete
                             </DropdownMenuItem>
@@ -403,6 +420,29 @@ const Stories = () => {
           </p>
         </CardFooter>
       </Card>
+
+      <AlertDialog open={!!storyToDelete} onOpenChange={() => setStoryToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              <AlertDialogTitle>Delete Story</AlertDialogTitle>
+            </div>
+            <AlertDialogDescription>
+              Are you sure you want to delete this story? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
