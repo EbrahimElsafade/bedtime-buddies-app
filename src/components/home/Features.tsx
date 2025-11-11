@@ -20,7 +20,7 @@ const Features = () => {
           <div className="rounded-xl bg-secondary/70 p-4 backdrop-blur-sm md:p-6">
             <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary md:mb-4 md:h-12 md:w-12">
               <span className="text-xl md:text-2xl">
-                <LibraryBig />
+                <LibraryBig className='text-white' />
               </span>
             </div>
             <h3 className="mb-2 font-bubbly text-lg text-primary-foreground md:text-xl">
@@ -34,7 +34,7 @@ const Features = () => {
           <div className="rounded-xl bg-secondary/70 p-4 backdrop-blur-sm md:p-6">
             <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary md:mb-4 md:h-12 md:w-12">
               <span className="text-xl md:text-2xl">
-                <Languages />
+                <Languages className='text-white' />
               </span>
             </div>
             <h3 className="mb-2 font-bubbly text-lg text-primary-foreground md:text-xl">
@@ -48,7 +48,7 @@ const Features = () => {
           <div className="rounded-xl bg-secondary/70 p-4 backdrop-blur-sm md:col-span-2 md:p-6 lg:col-span-1">
             <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary md:mb-4 md:h-12 md:w-12">
               <span className="text-xl md:text-2xl">
-                <Gamepad2 />
+                <Gamepad2 className='text-white' />
               </span>
             </div>
             <h3 className="mb-2 font-bubbly text-lg text-primary-foreground md:text-xl">
