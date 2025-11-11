@@ -421,7 +421,10 @@ const Stories = () => {
         </CardFooter>
       </Card>
 
-      <AlertDialog open={!!storyToDelete} onOpenChange={() => setStoryToDelete(null)}>
+      <AlertDialog
+        open={!!storyToDelete}
+        onOpenChange={() => setStoryToDelete(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <div className="flex items-center gap-2">
@@ -429,7 +432,8 @@ const Stories = () => {
               <AlertDialogTitle>Delete Story</AlertDialogTitle>
             </div>
             <AlertDialogDescription>
-              Are you sure you want to delete this story? This action cannot be undone.
+              Are you sure you want to delete this story? This action cannot be
+              undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

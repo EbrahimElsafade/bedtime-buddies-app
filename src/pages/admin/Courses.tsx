@@ -55,8 +55,11 @@ import { getLocalized } from '@/utils/getLocalized'
 
 type Course = {
   id: string
-  title: string
-  description: string
+  title?: string
+  description?: string
+  description_en?: string
+  description_ar?: string
+  description_fr?: string
   category: string
   cover_image: string | null
   is_free: boolean
@@ -64,6 +67,21 @@ type Course = {
   languages: string[]
   created_at: string
   updated_at: string
+  instructor_name?: string
+  instructor_name_en?: string
+  instructor_name_ar?: string
+  instructor_name_fr?: string
+  instructor_avatar?: string
+  instructor_bio?: string
+  instructor_bio_en?: string
+  instructor_bio_ar?: string
+  instructor_bio_fr?: string
+  instructor_expertise?: string[]
+  instructor_user_id?: string
+  learning_objectives?: string[]
+  learning_objectives_en?: string[]
+  learning_objectives_ar?: string[]
+  learning_objectives_fr?: string[]
 }
 
 const Courses = () => {
@@ -82,7 +100,7 @@ const Courses = () => {
       throw error
     }
 
-    return (data as any[]) || []
+    return data as Course[]
   }
 
   const {
@@ -421,6 +439,33 @@ const Courses = () => {
           </p>
         </CardFooter>
       </Card>
+
+      <AlertDialog
+        open={!!courseToDelete}
+        onOpenChange={() => setCourseToDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-destructive" />
+              <AlertDialogTitle>Delete Course</AlertDialogTitle>
+            </div>
+            <AlertDialogDescription>
+              Are you sure you want to delete this course? This action cannot be
+              undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
