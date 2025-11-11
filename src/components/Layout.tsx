@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { Home, Book, BookOpen, User, Layers } from 'lucide-react'
+import { Home, BookOpen, User, Gamepad2, LibraryBig } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
@@ -65,19 +65,19 @@ const Layout = () => {
     {
       name: t('navigation:stories'),
       path: '/stories',
-      icon: Book,
+      icon: BookOpen,
       key: 'stories',
     },
     {
       name: t('navigation:courses'),
       path: '/courses',
-      icon: Layers,
+      icon: LibraryBig,
       key: 'courses',
     },
     {
       name: t('navigation:games'),
       path: '/games',
-      icon: BookOpen,
+      icon: Gamepad2,
       key: 'games',
     },
     {
