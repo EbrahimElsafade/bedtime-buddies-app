@@ -31,6 +31,16 @@ import {
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import {
   ArrowUpDown,
   MoreHorizontal,
   Search,
@@ -39,6 +49,7 @@ import {
   Edit,
   Trash2,
   Eye,
+  AlertTriangle,
 } from 'lucide-react'
 import { getLocalized } from '@/utils/getLocalized'
 
@@ -62,6 +73,7 @@ const Courses = () => {
   const [sortField, setSortField] = useState<keyof Course>('created_at')
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
+  const [courseToDelete, setCourseToDelete] = useState<string | null>(null)
 
   const fetchCourses = async () => {
     const { data, error } = await supabase.from('courses').select('*')
@@ -70,7 +82,7 @@ const Courses = () => {
       throw error
     }
 
-    return data as any[] || []
+    return (data as any[]) || []
   }
 
   const {
@@ -131,23 +143,28 @@ const Courses = () => {
       return 0
     })
 
-  const deleteCourse = async (id: string) => {
-    if (
-      confirm(
-        'Are you sure you want to delete this course? This action cannot be undone.',
-      )
-    ) {
-      try {
-        const { error } = await supabase.from('courses').delete().eq('id', id)
+  const handleDeleteClick = (id: string) => {
+    setCourseToDelete(id)
+  }
 
-        if (error) throw error
+  const confirmDelete = async () => {
+    if (!courseToDelete) return
 
-        toast.success('Course deleted successfully')
-        refetch()
-      } catch (error) {
-        console.error('Error deleting course:', error)
-        toast.error('Failed to delete course')
-      }
+    try {
+      const { error } = await supabase
+        .from('courses')
+        .delete()
+        .eq('id', courseToDelete)
+
+      if (error) throw error
+
+      toast.success('Course deleted successfully')
+      refetch()
+    } catch (error) {
+      console.error('Error deleting course:', error)
+      toast.error('Failed to delete course')
+    } finally {
+      setCourseToDelete(null)
     }
   }
 
@@ -384,7 +401,7 @@ const Courses = () => {
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
                               className="text-red-600"
-                              onClick={() => deleteCourse(course.id)}
+                              onClick={() => handleDeleteClick(course.id)}
                             >
                               <Trash2 className="mr-2 h-4 w-4" /> Delete
                             </DropdownMenuItem>
