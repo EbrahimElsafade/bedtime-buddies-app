@@ -84,14 +84,14 @@
     "description": "I'm thinking of a number between 1 and 10",
     "prompt": "What's your guess?",
     "check": "Check",
-    "correct": "You got it! The number was {{number}}",
+    "correct": "You got it! The number was ",
     "higher": "Go higher!",
     "lower": "Go lower!",
     "won": "You won! 🎉"
   },
   "catchAnimal": {
     "title": "Catch the Animal",
-    "description": "Tap the {{animal}} before it escapes!",
+    "description": "Tap the Animal before it escapes!",
     "score": "Score",
     "reset": "Reset Score"
   },

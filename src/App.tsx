@@ -20,6 +20,7 @@ import Index from "./pages/Index";
 import Stories from "./pages/Stories";
 import Story from "./pages/Story";
 import Games from "./pages/Games";
+import GamePage from "./pages/GamePage";
 import Courses from "./pages/Courses";
 import Course from "./pages/Course";
 import Login from "./pages/Login";
@@ -61,6 +62,7 @@ function App() {
                     <Route path="stories" element={<Stories />} />
                     <Route path="stories/:id" element={<Story />} />
                     <Route path="games" element={<Games />} />
+                    <Route path="games/:gameId" element={<GamePage />} />
                     <Route path="courses" element={<Courses />} />
                     <Route path="courses/:id" element={<Course />} />
                     <Route path="login" element={<Login />} />

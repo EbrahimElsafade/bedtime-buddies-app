@@ -71,6 +71,60 @@
     "newGame": "Nouvelle partie",
     "backToMenu": "Retour au menu",
     "won": "a gagné !"
+  },
+  "chooseColor": {
+    "title": "Choisis la Couleur",
+    "description": "Clique sur la couleur correcte pour correspondre à la boîte",
+    "correct": "Correct ! 🎉",
+    "tryAgain": "Réessaye !",
+    "newRound": "Nouveau tour"
+  },
+  "guessNumber": {
+    "title": "Devinez le Nombre",
+    "description": "Je pense à un nombre entre 1 et 10",
+    "prompt": "Quel est ton chiffre?",
+    "check": "Vérifier",
+    "correct": "Tu as trouvé ! Le nombre était {{number}}",
+    "higher": "Plus haut !",
+    "lower": "Plus bas !",
+    "won": "Tu as gagné ! 🎉"
+  },
+  "catchAnimal": {
+    "title": "Attrape l'Animal",
+    "description": "Touche l'animal avant qu'il ne s'échappe !",
+    "score": "Score",
+    "reset": "Réinitialiser le score"
+  },
+  "puzzle": {
+    "title": "Puzzle d'Images",
+    "description": "Glisse-dépose les pièces pour compléter l'image",
+    "solved": "Puzzle résolu ! 🎉",
+    "shuffle": "Mélanger"
+  },
+  "whereDidIt": {
+    "title": "Où est-ce Parti?",
+    "description": "Mémorise quel objet a disparu",
+    "goCorrect": "Correct ! 🎉",
+    "tryAgain": "Réessaye !",
+    "playAgain": "Rejouer"
+  },
+  "colors": {
+    "red": "Rouge",
+    "green": "Vert",
+    "blue": "Bleu",
+    "yellow": "Jaune",
+    "purple": "Violet"
+  },
+  "animals": {
+    "rabbit": "🐰",
+    "cat": "🐱",
+    "dog": "🐕",
+    "fox": "🦊"
+  },
+  "items": {
+    "apple": "🍎",
+    "ball": "⚽",
+    "star": "⭐"
   }
 }
 
