@@ -62,8 +62,8 @@ const CourseOptions = () => {
           description_en: (categoryData.description_en as string) || '',
           description_ar: (categoryData.description_ar as string) || '',
           description_fr: (categoryData.description_fr as string) || '',
-          created_at: category.created_at,
-          updated_at: category.updated_at,
+          created_at: categoryData.created_at as string,
+          updated_at: categoryData.updated_at as string,
         };
       }) || []
     },

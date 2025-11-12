@@ -223,27 +223,27 @@ const CourseEditor = () => {
         description_fr: (c.description_fr as string) ?? '',
         category: (c.category as string) || '',
         minAge: (c.min_age as number) ?? 3,
-        maxAge: c.max_age ?? 12,
-        isFree: c.is_free ?? true,
-        isFeatured: c.is_published ?? false,
-        coverImagePath: c.cover_image || null,
-        learningObjectives: c.learning_objectives || c.learning_objectives_en || [],
-        learningObjectivesAr: c.learning_objectives_ar || [],
-        learningObjectivesFr: c.learning_objectives_fr || [],
-        instructorNameEn: c.instructor_name_en || c.instructor_name || '',
-        instructorNameAr: c.instructor_name_ar || '',
-        instructorNameFr: c.instructor_name_fr || '',
-        instructorBioEn: c.instructor_bio_en || c.instructor_bio || '',
-        instructorBioAr: c.instructor_bio_ar || '',
-        instructorBioFr: c.instructor_bio_fr || '',
-        instructorAvatar: c.instructor_avatar || '',
-        instructorUserId: c.instructor_user_id || null,
+        maxAge: (c.max_age as number) ?? 12,
+        isFree: (c.is_free as boolean) ?? true,
+        isFeatured: (c.is_published as boolean) ?? false,
+        coverImagePath: (c.cover_image as string | null) || null,
+        learningObjectives: (c.learning_objectives as string[]) || (c.learning_objectives_en as string[]) || [],
+        learningObjectivesAr: (c.learning_objectives_ar as string[]) || [],
+        learningObjectivesFr: (c.learning_objectives_fr as string[]) || [],
+        instructorNameEn: (c.instructor_name_en as string) || (c.instructor_name as string) || '',
+        instructorNameAr: (c.instructor_name_ar as string) || '',
+        instructorNameFr: (c.instructor_name_fr as string) || '',
+        instructorBioEn: (c.instructor_bio_en as string) || (c.instructor_bio as string) || '',
+        instructorBioAr: (c.instructor_bio_ar as string) || '',
+        instructorBioFr: (c.instructor_bio_fr as string) || '',
+        instructorAvatar: (c.instructor_avatar as string) || '',
+        instructorUserId: (c.instructor_user_id as string | null) || null,
         instructorType: c.instructor_user_id ? 'user' : 'custom',
       })
       
       // Handle instructor avatar preview
       if (c.instructor_avatar) {
-        const avatarUrl = getImageUrl(c.instructor_avatar)
+        const avatarUrl = getImageUrl(c.instructor_avatar as string)
         setInstructorAvatarPreview(avatarUrl)
       }
 
@@ -263,16 +263,16 @@ const CourseEditor = () => {
             description_ar: (lessonData.description_ar as string) || '',
             description_fr: (lessonData.description_fr as string) || '',
             videoPath: (lessonData.video_path as string) || '',
-            thumbnailPath: lessonData.thumbnail_path || '',
-            duration: lessonData.duration || 0,
-            isFree: lessonData.is_free !== undefined ? lessonData.is_free : course.is_free,
-            order: lessonData.lesson_order || 1,
-            createdAt: lessonData.created_at,
+            thumbnailPath: (lessonData.thumbnail_path as string) || '',
+            duration: (lessonData.duration as number) || 0,
+            isFree: lessonData.is_free !== undefined ? (lessonData.is_free as boolean) : (course.is_free as boolean),
+            order: (lessonData.lesson_order as number) || 1,
+            createdAt: lessonData.created_at as string,
             thumbnailPreview: lessonData.thumbnail_path
-              ? getImageUrl(lessonData.thumbnail_path)
+              ? getImageUrl(lessonData.thumbnail_path as string)
               : null,
-            videoUrl: lessonData.video_url || '',
-            uploadMethod: lessonData.video_url ? 'url' : 'upload',
+            videoUrl: (lessonData.video_url as string) || '',
+            uploadMethod: lessonData.video_url ? 'url' as const : 'upload' as const,
           }
         })
 
@@ -355,7 +355,10 @@ const CourseEditor = () => {
     value: string | number | boolean,
   ) => {
     const updatedLessons = [...courseLessons]
-    ;(updatedLessons[lessonIndex] as Record<string, unknown>)[field] = value
+    updatedLessons[lessonIndex] = {
+      ...updatedLessons[lessonIndex],
+      [field]: value,
+    }
     setCourseLessons(updatedLessons)
   }
 
@@ -526,7 +529,7 @@ const CourseEditor = () => {
             instructor_bio_fr: courseData.instructorBioFr || null,
             instructor_avatar: instructorAvatarUrl || null,
             instructor_user_id: courseData.instructorType === 'user' ? courseData.instructorUserId : null,
-          } as Record<string, unknown>)
+          })
           .select('id')
           .single()
 
@@ -561,7 +564,7 @@ const CourseEditor = () => {
             instructor_bio_fr: courseData.instructorBioFr || null,
             instructor_avatar: instructorAvatarUrl || null,
             instructor_user_id: courseData.instructorType === 'user' ? courseData.instructorUserId : null,
-          } as Record<string, unknown>)
+          })
           .eq('id', courseId)
 
         if (courseError) throw courseError

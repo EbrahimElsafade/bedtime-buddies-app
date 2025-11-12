@@ -296,12 +296,12 @@ const Course = () => {
 
                 {(() => {
                   const objectives =
-                    (course as Record<string, unknown>)[`learning_objectives_${lang}`] ||
+                    ((course as Record<string, unknown>)[`learning_objectives_${lang}`] as string[]) ||
                     course.learningObjectives ||
                     []
                   return (
                     objectives &&
-                    objectives.length > 0 && (
+                    (objectives as string[]).length > 0 && (
                       <>
                         <h2 className="mb-3 mt-6 font-bubbly text-xl text-primary-foreground">
                           {t('course.whatYouLearn')}
@@ -310,7 +310,7 @@ const Course = () => {
                           className="list-decimal ps-5"
                           dir={lang === 'ar' ? 'rtl' : 'ltr'}
                         >
-                          {objectives.map(
+                          {(objectives as string[]).map(
                             (objective: string, index: number) => (
                               <li key={index}>{objective}</li>
                             ),
