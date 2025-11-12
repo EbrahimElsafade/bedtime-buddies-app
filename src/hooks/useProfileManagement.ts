@@ -132,7 +132,7 @@ export const useProfileManagement = (user: User | null) => {
       setProfileLoaded(false);
       setError(null);
     }
-  }, [user?.id, fetchUserProfile, profileLoaded]);
+  }, [user, fetchUserProfile, profileLoaded]);
 
   return {
     profile,

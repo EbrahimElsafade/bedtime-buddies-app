@@ -1,7 +1,7 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "dolphoon",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "host": "bun run dev",
@@ -89,7 +89,7 @@
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.9",
     "tailwindcss": "^3.4.11",
-    "typescript": "^5.5.3",
+    "typescript": "^5.9.0",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1"
   }

@@ -2,10 +2,10 @@
  * Sanitizes error messages for display to users
  * Prevents leaking sensitive information in error messages
  */
-export const sanitizeErrorMessage = (error: any): string => {
+export const sanitizeErrorMessage = (error: unknown): string => {
   if (!error) return 'An unexpected error occurred';
   
-  const message = error.message || error.toString();
+  const message = error instanceof Error ? error.message : String(error);
   
   // Map of technical errors to user-friendly messages
   const errorMappings: Record<string, string> = {
@@ -44,7 +44,7 @@ export type LogLevel = 'error' | 'warn' | 'info';
  * Safe error logger that respects environment
  * Only logs detailed errors in development
  */
-export const logError = (error: any, context?: string, level: LogLevel = 'error') => {
+export const logError = (error: unknown, context?: string, level: LogLevel = 'error') => {
   const isDevelopment = import.meta.env.DEV;
   
   if (isDevelopment) {

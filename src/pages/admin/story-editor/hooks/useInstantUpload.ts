@@ -33,8 +33,9 @@ export const useInstantUpload = () => {
 
       toast.success('Video uploaded successfully');
       return filename;
-    } catch (error: any) {
-      toast.error(`Failed to upload video: ${error.message}`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred'
+      toast.error(`Failed to upload video: ${errorMessage}`);
       return null;
     } finally {
       setUploadingFiles(prev => ({ ...prev, [uploadKey]: false }));
@@ -74,8 +75,9 @@ export const useInstantUpload = () => {
 
       toast.success(`${language} audio uploaded successfully`);
       return filename;
-    } catch (error: any) {
-      toast.error(`Failed to upload ${language} audio: ${error.message}`);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred'
+      toast.error(`Failed to upload ${language} audio: ${errorMessage}`);
       return null;
     } finally {
       setUploadingFiles(prev => ({ ...prev, [uploadKey]: false }));

@@ -36,7 +36,7 @@ const Favorites = () => {
     if (authLoading) {
       setLoadingMessage(t('loading.data', { ns: 'common' }));
     }
-  }, [authLoading, t]);  if (!isAuthenticated) {
+  }, [authLoading, t, setIsLoading, setLoadingMessage]);  if (!isAuthenticated) {
     return (
       <div className="py-12 px-4 flex items-center justify-center min-h-[80vh]">
         <div className="text-center">

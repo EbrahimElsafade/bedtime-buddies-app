@@ -19,6 +19,28 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>
 }
 
+const getDeviceInfo = () => {
+  const userAgent = navigator.userAgent.toLowerCase()
+  const isIOS = /ipad|iphone|ipod/.test(userAgent)
+  const isSafari =
+    /safari/.test(userAgent) && !/chrome|crios|fxios/.test(userAgent)
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+  const isIOSWebApp = navigator.standalone === true
+  const isAndroid = /android/.test(userAgent)
+  const isChrome = /chrome/.test(userAgent)
+
+  return {
+    isIOS,
+    isSafari,
+    isStandalone,
+    isIOSWebApp,
+    isAndroid,
+    isChrome,
+    canInstallNatively:
+      (!isIOS && 'serviceWorker' in navigator) || (isAndroid && isChrome),
+  }
+}
+
 const PWAInstallPrompt = () => {
   const { t } = useTranslation('common')
   const [deferredPrompt, setDeferredPrompt] =
@@ -27,38 +49,6 @@ const PWAInstallPrompt = () => {
   const [showIOSInstructions, setShowIOSInstructions] = useState(false)
   const [isInstalled, setIsInstalled] = useState(false)
   const [isInstalling, setIsInstalling] = useState(false)
-
-  const getDeviceInfo = () => {
-    const userAgent = navigator.userAgent.toLowerCase()
-    const isIOS = /ipad|iphone|ipod/.test(userAgent)
-    const isSafari =
-      /safari/.test(userAgent) && !/chrome|crios|fxios/.test(userAgent)
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-    const isIOSWebApp = navigator.standalone === true
-    const isAndroid = /android/.test(userAgent)
-    const isChrome = /chrome/.test(userAgent)
-
-    // return {
-    //   isIOS: true,
-    //   isSafari: true,
-    //   isStandalone: false,
-    //   isIOSWebApp: false,
-    //   isAndroid: false,
-    //   isChrome: false,
-    //   canInstallNatively: false,
-    // }
-
-    return {
-      isIOS,
-      isSafari,
-      isStandalone,
-      isIOSWebApp,
-      isAndroid,
-      isChrome,
-      canInstallNatively:
-        (!isIOS && 'serviceWorker' in navigator) || (isAndroid && isChrome),
-    }
-  }
 
   const deviceInfo = getDeviceInfo()
 
@@ -132,7 +122,7 @@ const PWAInstallPrompt = () => {
         window.removeEventListener('appInstalled', handleAppInstalled)
       }
     }
-  }, [])
+  }, [deviceInfo])
 
   const handleInstallClick = async () => {
     // DIFFERENT ACTIONS based on device, but same popup

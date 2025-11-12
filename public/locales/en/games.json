@@ -71,6 +71,60 @@
     "newGame": "New Game",
     "backToMenu": "Back to Menu",
     "won": "won!"
+  },
+  "chooseColor": {
+    "title": "Choose the Color",
+    "description": "Click the correct color to match the box",
+    "correct": "Correct! 🎉",
+    "tryAgain": "Try again!",
+    "newRound": "New Round"
+  },
+  "guessNumber": {
+    "title": "Guess the Number",
+    "description": "I'm thinking of a number between 1 and 10",
+    "prompt": "What's your guess?",
+    "check": "Check",
+    "correct": "You got it! The number was {{number}}",
+    "higher": "Go higher!",
+    "lower": "Go lower!",
+    "won": "You won! 🎉"
+  },
+  "catchAnimal": {
+    "title": "Catch the Animal",
+    "description": "Tap the {{animal}} before it escapes!",
+    "score": "Score",
+    "reset": "Reset Score"
+  },
+  "puzzle": {
+    "title": "Picture Puzzle",
+    "description": "Drag and drop the pieces to complete the picture",
+    "solved": "Puzzle solved! 🎉",
+    "shuffle": "Shuffle"
+  },
+  "whereDidIt": {
+    "title": "Where Did It Go?",
+    "description": "Remember which item is missing",
+    "goCorrect": "Correct! 🎉",
+    "tryAgain": "Try again!",
+    "playAgain": "Play Again"
+  },
+  "colors": {
+    "red": "Red",
+    "green": "Green",
+    "blue": "Blue",
+    "yellow": "Yellow",
+    "purple": "Purple"
+  },
+  "animals": {
+    "rabbit": "🐰",
+    "cat": "🐱",
+    "dog": "🐕",
+    "fox": "🦊"
+  },
+  "items": {
+    "apple": "🍎",
+    "ball": "⚽",
+    "star": "⭐"
   }
 }
 

@@ -7,6 +7,11 @@ import RockPaperScissorsGame from '@/components/games/RockPaperScissorsGame'
 import HangmanGame from '@/components/games/HangmanGame'
 import MemoryCardGame from '@/components/games/MemoryCardGame'
 import SnakeGame from '@/components/games/SnakeGame'
+import ChooseColorGame from '@/components/games/ChooseColorGame'
+import GuessNumberGame from '@/components/games/GuessNumberGame'
+import CatchTheAnimalGame from '@/components/games/CatchTheAnimalGame'
+import PicturePuzzleGame from '@/components/games/PicturePuzzleGame'
+import WhereDidItGoGame from '@/components/games/WhereDidItGoGame'
 
 const Games = () => {
   const { t } = useTranslation(['games', 'common', 'navigation', 'meta'])
@@ -42,6 +47,11 @@ const Games = () => {
             <TabsTrigger value="rock-paper-scissors" className="min-w-fit">
               {t('rockPaperScissors.title')}
             </TabsTrigger>
+            <TabsTrigger value="choose-color" className="min-w-fit">{t('chooseColor.title')}</TabsTrigger>
+            <TabsTrigger value="guess-number" className="min-w-fit">{t('guessNumber.title')}</TabsTrigger>
+            <TabsTrigger value="catch-animal" className="min-w-fit">{t('catchAnimal.title')}</TabsTrigger>
+            <TabsTrigger value="puzzle" className="min-w-fit">{t('puzzle.title')}</TabsTrigger>
+            <TabsTrigger value="where-did-it-go" className="min-w-fit">{t('whereDidIt.title')}</TabsTrigger>
           </TabsList>
 
           <div className="mx-auto w-full max-w-4xl">
@@ -78,6 +88,26 @@ const Games = () => {
               className="mt-0 focus-visible:outline-none"
             >
               <RockPaperScissorsGame />
+            </TabsContent>
+
+            <TabsContent value="choose-color" className="mt-0 focus-visible:outline-none">
+              <ChooseColorGame />
+            </TabsContent>
+
+            <TabsContent value="guess-number" className="mt-0 focus-visible:outline-none">
+              <GuessNumberGame />
+            </TabsContent>
+
+            <TabsContent value="catch-animal" className="mt-0 focus-visible:outline-none">
+              <CatchTheAnimalGame />
+            </TabsContent>
+
+            <TabsContent value="puzzle" className="mt-0 focus-visible:outline-none">
+              <PicturePuzzleGame />
+            </TabsContent>
+
+            <TabsContent value="where-did-it-go" className="mt-0 focus-visible:outline-none">
+              <WhereDidItGoGame />
             </TabsContent>
           </div>
         </Tabs>

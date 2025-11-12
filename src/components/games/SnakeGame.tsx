@@ -110,24 +110,26 @@ const SnakeGame = () => {
     return () => clearInterval(gameInterval)
   }, [moveSnake, gameSpeed])
 
-  const handleDirectionChange = (newDirection: { x: number; y: number }) => {
-    if (gameState !== 'playing') return
+  const handleDirectionChange = useCallback((newDirection: { x: number; y: number }) => {
+    setDirection(prev => {
+      if (gameState !== 'playing') return prev
 
-    // Prevent reverse direction
-    if (
-      (newDirection.x === 1 && direction.x === -1) ||
-      (newDirection.x === -1 && direction.x === 1) ||
-      (newDirection.y === 1 && direction.y === -1) ||
-      (newDirection.y === -1 && direction.y === 1)
-    ) {
-      return
-    }
+      // Prevent reverse direction
+      if (
+        (newDirection.x === 1 && prev.x === -1) ||
+        (newDirection.x === -1 && prev.x === 1) ||
+        (newDirection.y === 1 && prev.y === -1) ||
+        (newDirection.y === -1 && prev.y === 1)
+      ) {
+        return prev
+      }
 
-    setDirection(newDirection)
-    if (!gameStarted) {
-      setGameStarted(true)
-    }
-  }
+      if (!gameStarted) {
+        setGameStarted(true)
+      }
+      return newDirection
+    })
+  }, [gameState, gameStarted])
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
@@ -155,7 +157,7 @@ const SnakeGame = () => {
 
     window.addEventListener('keydown', handleKeyPress)
     return () => window.removeEventListener('keydown', handleKeyPress)
-  }, [direction, gameState, gameStarted])
+  }, [gameState, handleDirectionChange])
 
   if (gameState === 'menu') {
     return (

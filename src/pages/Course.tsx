@@ -296,7 +296,7 @@ const Course = () => {
 
                 {(() => {
                   const objectives =
-                    (course as any)[`learning_objectives_${lang}`] ||
+                    (course as Record<string, unknown>)[`learning_objectives_${lang}`] ||
                     course.learningObjectives ||
                     []
                   return (

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -21,33 +21,32 @@ const HangmanGame = () => {
   )
   const [hint, setHint] = useState('')
 
-  const words = [
-    { word: 'RAINBOW', hint: t('hangman.hints.rainbow') },
-    { word: 'BUTTERFLY', hint: t('hangman.hints.butterfly') },
-    { word: 'ELEPHANT', hint: t('hangman.hints.elephant') },
-    { word: 'CHOCOLATE', hint: t('hangman.hints.chocolate') },
-    { word: 'AIRPLANE', hint: t('hangman.hints.airplane') },
-    { word: 'COMPUTER', hint: t('hangman.hints.computer') },
-    { word: 'BIRTHDAY', hint: t('hangman.hints.birthday') },
-    { word: 'MOUNTAIN', hint: t('hangman.hints.mountain') },
-  ]
-
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
   const maxWrongGuesses = 6
   const isRTL = i18n.language === 'ar'
 
-  const initializeGame = () => {
+  const initializeGame = useCallback(() => {
+    const words = [
+      { word: 'RAINBOW', hint: t('hangman.hints.rainbow') },
+      { word: 'BUTTERFLY', hint: t('hangman.hints.butterfly') },
+      { word: 'ELEPHANT', hint: t('hangman.hints.elephant') },
+      { word: 'CHOCOLATE', hint: t('hangman.hints.chocolate') },
+      { word: 'AIRPLANE', hint: t('hangman.hints.airplane') },
+      { word: 'COMPUTER', hint: t('hangman.hints.computer') },
+      { word: 'BIRTHDAY', hint: t('hangman.hints.birthday') },
+      { word: 'MOUNTAIN', hint: t('hangman.hints.mountain') },
+    ]
     const randomWord = words[Math.floor(Math.random() * words.length)]
     setCurrentWord(randomWord.word)
     setHint(randomWord.hint)
     setGuessedLetters([])
     setWrongGuesses(0)
     setGameStatus('playing')
-  }
+  }, [t])
 
   useEffect(() => {
     initializeGame()
-  }, [])
+  }, [initializeGame])
 
   const handleLetterClick = (letter: string) => {
     if (guessedLetters.includes(letter) || gameStatus !== 'playing') return

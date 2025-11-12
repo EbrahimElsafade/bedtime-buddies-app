@@ -61,7 +61,7 @@ const Dashboard = () => {
     };
     
     fetchStats();
-  }, []);
+  }, [setIsLoading]);
   
   return (
     <div>

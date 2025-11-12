@@ -213,16 +213,16 @@ const CourseEditor = () => {
         setCoverImagePreview(imageUrl)
       }
 
-      const c: any = course
+      const c: Record<string, unknown> = course
       setCourseData({
-        title_en: c.title_en ?? c.title ?? '',
-        title_ar: c.title_ar ?? '',
-        title_fr: c.title_fr ?? '',
-        description_en: c.description_en ?? c.description ?? '',
-        description_ar: c.description_ar ?? '',
-        description_fr: c.description_fr ?? '',
-        category: c.category || '',
-        minAge: c.min_age ?? 3,
+        title_en: (c.title_en as string) ?? (c.title as string) ?? '',
+        title_ar: (c.title_ar as string) ?? '',
+        title_fr: (c.title_fr as string) ?? '',
+        description_en: (c.description_en as string) ?? (c.description as string) ?? '',
+        description_ar: (c.description_ar as string) ?? '',
+        description_fr: (c.description_fr as string) ?? '',
+        category: (c.category as string) || '',
+        minAge: (c.min_age as number) ?? 3,
         maxAge: c.max_age ?? 12,
         isFree: c.is_free ?? true,
         isFeatured: c.is_published ?? false,
@@ -252,17 +252,17 @@ const CourseEditor = () => {
         console.log('Processing lessons:', lessons)
         const lessonsForForm: CourseLessonForm[] = lessons.map(lesson => {
           console.log('Processing lesson:', lesson)
-          const lessonData = lesson as any; // Type assertion for newly added is_free field
+          const lessonData = lesson as Record<string, unknown>; // Type assertion for newly added is_free field
 
           return {
-            id: lessonData.id,
-            title_en: lessonData.title_en || lessonData.title || '',
-            title_ar: lessonData.title_ar || '',
-            title_fr: lessonData.title_fr || '',
-            description_en: lessonData.description_en || lessonData.description || '',
-            description_ar: lessonData.description_ar || '',
-            description_fr: lessonData.description_fr || '',
-            videoPath: lessonData.video_path || '',
+            id: lessonData.id as string,
+            title_en: (lessonData.title_en as string) || (lessonData.title as string) || '',
+            title_ar: (lessonData.title_ar as string) || '',
+            title_fr: (lessonData.title_fr as string) || '',
+            description_en: (lessonData.description_en as string) || (lessonData.description as string) || '',
+            description_ar: (lessonData.description_ar as string) || '',
+            description_fr: (lessonData.description_fr as string) || '',
+            videoPath: (lessonData.video_path as string) || '',
             thumbnailPath: lessonData.thumbnail_path || '',
             duration: lessonData.duration || 0,
             isFree: lessonData.is_free !== undefined ? lessonData.is_free : course.is_free,
@@ -352,10 +352,10 @@ const CourseEditor = () => {
   const updateLessonField = (
     lessonIndex: number,
     field: keyof CourseLessonForm,
-    value: any,
+    value: string | number | boolean,
   ) => {
     const updatedLessons = [...courseLessons]
-    ;(updatedLessons[lessonIndex] as any)[field] = value
+    ;(updatedLessons[lessonIndex] as Record<string, unknown>)[field] = value
     setCourseLessons(updatedLessons)
   }
 
@@ -526,7 +526,7 @@ const CourseEditor = () => {
             instructor_bio_fr: courseData.instructorBioFr || null,
             instructor_avatar: instructorAvatarUrl || null,
             instructor_user_id: courseData.instructorType === 'user' ? courseData.instructorUserId : null,
-          } as any)
+          } as Record<string, unknown>)
           .select('id')
           .single()
 
@@ -561,7 +561,7 @@ const CourseEditor = () => {
             instructor_bio_fr: courseData.instructorBioFr || null,
             instructor_avatar: instructorAvatarUrl || null,
             instructor_user_id: courseData.instructorType === 'user' ? courseData.instructorUserId : null,
-          } as any)
+          } as Record<string, unknown>)
           .eq('id', courseId)
 
         if (courseError) throw courseError
@@ -666,10 +666,11 @@ const CourseEditor = () => {
 
       toast.success(`Course ${isEditing ? 'updated' : 'created'} successfully!`)
       navigate('/admin/courses')
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error saving course:', error)
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred'
       toast.error(
-        `Failed to ${isEditing ? 'update' : 'create'} course: ${error.message}`,
+        `Failed to ${isEditing ? 'update' : 'create'} course: ${errorMessage}`,
       )
     } finally {
       setIsSubmitting(false)

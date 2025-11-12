@@ -303,9 +303,10 @@ export const StoryEditorForm = ({
 
       toast.success(`Story ${isEditing ? 'updated' : 'created'} successfully!`)
       navigate('/admin/stories')
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred'
       toast.error(
-        `Failed to ${isEditing ? 'update' : 'create'} story: ${error.message}`,
+        `Failed to ${isEditing ? 'update' : 'create'} story: ${errorMessage}`,
       )
     } finally {
       setIsSubmitting(false)

@@ -52,17 +52,16 @@ const CourseOptions = () => {
         .order('name')
 
       if (error) throw error
-      return data?.map(categoryData => {
-        const category = categoryData as any;
+      return data?.map((categoryData: Record<string, unknown>) => {
         return {
-          id: category.id,
-          name: category.name_en || category.name || '',
-          name_en: category.name_en || category.name || '',
-          name_ar: category.name_ar || '',
-          name_fr: category.name_fr || '',
-          description_en: category.description_en || '',
-          description_ar: category.description_ar || '',
-          description_fr: category.description_fr || '',
+          id: categoryData.id as string,
+          name: (categoryData.name_en as string) || (categoryData.name as string) || '',
+          name_en: (categoryData.name_en as string) || (categoryData.name as string) || '',
+          name_ar: (categoryData.name_ar as string) || '',
+          name_fr: (categoryData.name_fr as string) || '',
+          description_en: (categoryData.description_en as string) || '',
+          description_ar: (categoryData.description_ar as string) || '',
+          description_fr: (categoryData.description_fr as string) || '',
           created_at: category.created_at,
           updated_at: category.updated_at,
         };

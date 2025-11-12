@@ -29,7 +29,7 @@ const LanguageProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   const t = (key: string, options?: Record<string, unknown>): string => {
-    const result = i18n.t(key, options as any)
+    const result = i18n.t(key, options as Record<string, unknown>)
     return typeof result === 'string' ? result : String(result)
   }
 
