@@ -125,7 +125,27 @@
     "apple": "🍎",
     "ball": "⚽",
     "star": "⭐"
-  }
+  },
+  "snakeLadder": {
+    "title": "Snake and Ladder",
+    "description": "Roll the dice and race to reach 100",
+    "you": "You",
+    "computer": "Computer",
+    "yourTurn": "Your Turn",
+    "computerTurn": "Computer's Turn",
+    "rollDice": "Roll Dice",
+    "newGame": "New Game",
+    "youWin": "You Win! 🎉",
+    "computerWins": "Computer Wins!",
+    "snakeBite": "Snake bite! {{from}} → {{to}}",
+    "climbLadder": "Climb ladder! {{from}} → {{to}}",
+    "exactRoll": "Need exact roll to win",
+    "legend": "Legend",
+    "snakes": "Snakes",
+    "ladders": "Ladders"
+  },
+  "free": "Free",
+  "premium": "Premium"
 }
 
 

@@ -13,9 +13,19 @@
     "users": "المستخدمين",
     "stories": "القصص",
     "courses": "الدورات",
+    "games": "الألعاب",
     "appearance": "المظهر",
     "settings": "الإعدادات",
     "logout": "تسجيل الخروج"
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "users": "المستخدمين",
+    "stories": "القصص",
+    "courses": "الدورات",
+    "games": "الألعاب",
+    "appearance": "المظهر",
+    "settings": "الإعدادات"
   },
   "users": {
     "title": "إدارة المستخدمين",

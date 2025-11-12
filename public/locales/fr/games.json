@@ -125,7 +125,27 @@
     "apple": "🍎",
     "ball": "⚽",
     "star": "⭐"
-  }
+  },
+  "snakeLadder": {
+    "title": "Serpents et Échelles",
+    "description": "Lance les dés et cours pour atteindre 100",
+    "you": "Toi",
+    "computer": "Ordinateur",
+    "yourTurn": "Ton tour",
+    "computerTurn": "Tour de l'ordinateur",
+    "rollDice": "Lancer les dés",
+    "newGame": "Nouvelle partie",
+    "youWin": "Tu as gagné ! 🎉",
+    "computerWins": "L'ordinateur a gagné !",
+    "snakeBite": "Morsure de serpent ! {{from}} → {{to}}",
+    "climbLadder": "Monte l'échelle ! {{from}} → {{to}}",
+    "exactRoll": "Besoin d'un lancer exact pour gagner",
+    "legend": "Légende",
+    "snakes": "Serpents",
+    "ladders": "Échelles"
+  },
+  "free": "Gratuit",
+  "premium": "Premium"
 }
 
 

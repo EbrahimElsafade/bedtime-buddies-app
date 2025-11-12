@@ -8,6 +8,7 @@ import {
   Settings,
   LogOut,
   Palette,
+  Gamepad2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -135,6 +136,18 @@ const AdminLayout = () => {
                   >
                     <Settings className="mr-3 h-5 w-5 rtl:ml-3" />
                     <span>{t('courseOptions.title')}</span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={isActive('/admin/games-management')}
+                  tooltip={t('nav.games')}
+                >
+                  <NavLink to="/admin/games-management" className="flex items-center">
+                    <Gamepad2 className="mr-3 h-5 w-5 rtl:ml-3" />
+                    <span>{t('nav.games')}</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>

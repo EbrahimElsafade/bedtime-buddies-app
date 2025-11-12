@@ -14,9 +14,19 @@
     "users": "Users",
     "stories": "Stories",
     "courses": "Courses",
+    "games": "Games",
     "appearance": "Appearance",
     "settings": "Settings",
     "logout": "Logout"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "users": "Users",
+    "stories": "Stories",
+    "courses": "Courses",
+    "games": "Games",
+    "appearance": "Appearance",
+    "settings": "Settings"
   },
   "common": {
     "verifying_access": "Verifying admin access..."

@@ -39,6 +39,7 @@ import AdminCourseOptions from "./pages/admin/CourseOptions";
 import AdminCoursesEditor from "./pages/admin/CourseEditor";
 import AdminSettings from "./pages/admin/Settings";
 import AdminAppearance from "./pages/admin/Appearance";
+import GamesManagement from "./pages/admin/GamesManagement";
 
 const queryClient = new QueryClient();
 
@@ -93,6 +94,7 @@ function App() {
                     <Route path="courses/edit/:id" element={<AdminCoursesEditor />} />
                     <Route path="settings" element={<AdminSettings />} />
                     <Route path="appearance" element={<AdminAppearance />} />
+                    <Route path="games-management" element={<GamesManagement />} />
                   </Route>
 
                   {/* 404 Route */}

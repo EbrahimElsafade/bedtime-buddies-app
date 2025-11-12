@@ -14,6 +14,7 @@ import GuessNumberGame from '@/components/games/GuessNumberGame'
 import CatchTheAnimalGame from '@/components/games/CatchTheAnimalGame'
 import PicturePuzzleGame from '@/components/games/PicturePuzzleGame'
 import WhereDidItGoGame from '@/components/games/WhereDidItGoGame'
+import SnakeLadderGame from '@/components/games/SnakeLadderGame'
 
 const GAMES = {
   'tic-tac-toe': {
@@ -65,6 +66,11 @@ const GAMES = {
     title: 'whereDidIt.title',
     description: 'whereDidIt.description',
     component: WhereDidItGoGame,
+  },
+  'snake-ladder': {
+    title: 'snakeLadder.title',
+    description: 'snakeLadder.description',
+    component: SnakeLadderGame,
   },
 }
 

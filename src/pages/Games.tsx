@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import {
   Card,
   CardContent,
@@ -8,11 +9,45 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { ArrowRight } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { supabase } from '@/integrations/supabase/client'
+import { useAuth } from '@/contexts/AuthContext'
+import { Lock } from 'lucide-react'
 
 const Games = () => {
   const { t } = useTranslation(['games', 'common', 'navigation', 'meta'])
+  const { user } = useAuth()
+  const [gameSettings, setGameSettings] = useState<Record<string, { is_free: boolean; is_active: boolean }>>({})
+  const [hasPremium, setHasPremium] = useState(false)
+
+  useEffect(() => {
+    const fetchGameSettings = async () => {
+      const { data } = await supabase.from('games').select('*')
+      if (data) {
+        const settings = data.reduce((acc, game) => {
+          acc[game.game_id] = { is_free: game.is_free, is_active: game.is_active }
+          return acc
+        }, {} as Record<string, { is_free: boolean; is_active: boolean }>)
+        setGameSettings(settings)
+      }
+    }
+
+    const checkPremium = async () => {
+      if (!user) return
+      const { data } = await supabase
+        .from('profiles')
+        .select('is_premium, subscription_end')
+        .eq('id', user.id)
+        .single()
+      
+      if (data?.is_premium && (!data.subscription_end || new Date(data.subscription_end) > new Date())) {
+        setHasPremium(true)
+      }
+    }
+
+    fetchGameSettings()
+    checkPremium()
+  }, [user])
 
   const games = [
     {
@@ -75,7 +110,15 @@ const Games = () => {
       description: 'whereDidIt.description',
       icon: '🔍',
     },
+    {
+      id: 'snake-ladder',
+      title: 'snakeLadder.title',
+      description: 'snakeLadder.description',
+      icon: '🎲',
+    },
   ]
+
+  const activeGames = games.filter(game => gameSettings[game.id]?.is_active !== false)
 
   return (
     <div className="min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-3 py-4 md:px-4 md:py-8 lg:py-12">
@@ -101,19 +144,40 @@ const Games = () => {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8 xl:grid-cols-4">
-          {games.map(game => (
-            <Link key={game.id} to={`/games/${game.id}`} className="group">
-              <Card className="flex h-full flex-col items-center justify-center text-center transition-all duration-300 hover:border-primary hover:shadow-lg">
-                <CardHeader className="pb-3">
-                  <div className="mb-4 text-6xl">{game.icon}</div>
-                  <CardTitle className="transition-colors group-hover:text-primary">
-                    {t(game.title)}
-                  </CardTitle>
-                  <CardDescription>{t(game.description)}</CardDescription>
-                </CardHeader>
-              </Card>
-            </Link>
-          ))}
+          {activeGames.map(game => {
+            const isFree = gameSettings[game.id]?.is_free !== false
+            const canAccess = isFree || hasPremium
+
+            return (
+              <Link 
+                key={game.id} 
+                to={canAccess ? `/games/${game.id}` : '/subscription'} 
+                className="group relative"
+              >
+                <Card className="flex h-full flex-col items-center justify-center text-center transition-all duration-300 hover:border-primary hover:shadow-lg">
+                  <CardHeader className="pb-3">
+                    <div className="mb-2 flex justify-center">
+                      <Badge variant={isFree ? 'success' : 'accent'}>
+                        {t(isFree ? 'free' : 'premium')}
+                      </Badge>
+                    </div>
+                    <div className="mb-4 text-6xl relative">
+                      {game.icon}
+                      {!canAccess && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <Lock className="h-8 w-8 text-foreground/50" />
+                        </div>
+                      )}
+                    </div>
+                    <CardTitle className="transition-colors group-hover:text-primary">
+                      {t(game.title)}
+                    </CardTitle>
+                    <CardDescription>{t(game.description)}</CardDescription>
+                  </CardHeader>
+                </Card>
+              </Link>
+            )
+          })}
         </div>
       </div>
     </div>

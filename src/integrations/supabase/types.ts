@@ -290,6 +290,33 @@ export type Database = {
           },
         ]
       }
+      games: {
+        Row: {
+          created_at: string
+          game_id: string
+          id: string
+          is_active: boolean
+          is_free: boolean
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          game_id: string
+          id?: string
+          is_active?: boolean
+          is_free?: boolean
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          game_id?: string
+          id?: string
+          is_active?: boolean
+          is_free?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           child_name: string | null

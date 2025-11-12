@@ -13,9 +13,19 @@
     "users": "Utilisateurs",
     "stories": "Histoires",
     "courses": "Cours",
+    "games": "Jeux",
     "appearance": "Appearance",
     "settings": "Paramètres",
     "logout": "Déconnexion"
+  },
+  "nav": {
+    "dashboard": "Tableau de Bord",
+    "users": "Utilisateurs",
+    "stories": "Histoires",
+    "courses": "Cours",
+    "games": "Jeux",
+    "appearance": "Apparence",
+    "settings": "Paramètres"
   },
   "users": {
     "title": "Gestion des Utilisateurs",
