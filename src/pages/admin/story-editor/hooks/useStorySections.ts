@@ -25,7 +25,14 @@ export const useStorySections = (
   }, [storyData.languages, storySections.length, setStorySections])
 
   const deleteSection = useCallback((index: number) => {
-    setStorySections(prev => prev.filter((_, i) => i !== index))
+    setStorySections(prev => 
+      prev
+        .filter((_, i) => i !== index)
+        .map((section, i) => ({
+          ...section,
+          order: i + 1
+        }))
+    )
   }, [setStorySections])
 
   const handleSectionImageChange = useCallback((sectionIndex: number, e: React.ChangeEvent<HTMLInputElement>) => {
