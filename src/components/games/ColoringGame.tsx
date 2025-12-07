@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -9,12 +9,8 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { useTranslation } from 'react-i18next'
-import { RotateCcw, Download } from 'lucide-react'
-
-interface ColorArea {
-  id: string
-  color: string
-}
+import { RotateCcw, Download, RefreshCw } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
 
 const COLORS = [
   { name: 'red', hex: '#ef4444', label: 'Red' },
@@ -25,54 +21,166 @@ const COLORS = [
   { name: 'pink', hex: '#ec4899', label: 'Pink' },
   { name: 'orange', hex: '#f97316', label: 'Orange' },
   { name: 'cyan', hex: '#06b6d4', label: 'Cyan' },
+  { name: 'brown', hex: '#92400e', label: 'Brown' },
+  { name: 'black', hex: '#1f2937', label: 'Black' },
+  { name: 'white', hex: '#ffffff', label: 'White' },
+  { name: 'skyblue', hex: '#7dd3fc', label: 'Sky Blue' },
 ]
 
-// Simple coloring areas that can be customized
-const createInitialAreas = (): ColorArea[] => [
-  { id: 'area-1', color: '#ffffff' },
-  { id: 'area-2', color: '#ffffff' },
-  { id: 'area-3', color: '#ffffff' },
-  { id: 'area-4', color: '#ffffff' },
-  { id: 'area-5', color: '#ffffff' },
-  { id: 'area-6', color: '#ffffff' },
+const COLORING_IMAGES = [
+  '/coloring/deer-scene.jpg',
+  '/coloring/minecraft.png',
+  '/coloring/mushroom-house.png',
+  '/coloring/mushrooms.png',
+  '/coloring/bear.png',
+  '/coloring/flowers-butterflies.png',
+  '/coloring/kids-walking.png',
 ]
 
 const ColoringGame = () => {
   const { t } = useTranslation('games')
-  const [areas, setAreas] = useState<ColorArea[]>(createInitialAreas())
+  const canvasRef = useRef<HTMLCanvasElement>(null)
   const [selectedColor, setSelectedColor] = useState(COLORS[0].hex)
-  const [completion, setCompletion] = useState(0)
+  const [isDrawing, setIsDrawing] = useState(false)
+  const [currentImage, setCurrentImage] = useState('')
+  const [isLoading, setIsLoading] = useState(true)
+  const [brushSize, setBrushSize] = useState(10)
 
-  const handleColorArea = (areaId: string) => {
-    setAreas(prev =>
-      prev.map(area => {
-        if (area.id === areaId) {
-          return { ...area, color: selectedColor }
-        }
-        return area
-      }),
-    )
-    // Calculate completion percentage
-    const colored = areas.filter(a => a.color !== '#ffffff').length + 1
-    setCompletion(Math.round((colored / areas.length) * 100))
+  const loadRandomImage = () => {
+    setIsLoading(true)
+    const randomIndex = Math.floor(Math.random() * COLORING_IMAGES.length)
+    setCurrentImage(COLORING_IMAGES[randomIndex])
+  }
+
+  useEffect(() => {
+    loadRandomImage()
+  }, [])
+
+  useEffect(() => {
+    if (!currentImage || !canvasRef.current) return
+
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => {
+      // Set canvas size to match image aspect ratio
+      const maxWidth = 400
+      const maxHeight = 400
+      let width = img.width
+      let height = img.height
+
+      if (width > maxWidth) {
+        height = (height * maxWidth) / width
+        width = maxWidth
+      }
+      if (height > maxHeight) {
+        width = (width * maxHeight) / height
+        height = maxHeight
+      }
+
+      canvas.width = width
+      canvas.height = height
+      ctx.drawImage(img, 0, 0, width, height)
+      setIsLoading(false)
+    }
+    img.src = currentImage
+  }, [currentImage])
+
+  const getCanvasCoordinates = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current
+    if (!canvas) return null
+
+    const rect = canvas.getBoundingClientRect()
+    const scaleX = canvas.width / rect.width
+    const scaleY = canvas.height / rect.height
+
+    if ('touches' in e) {
+      const touch = e.touches[0]
+      return {
+        x: (touch.clientX - rect.left) * scaleX,
+        y: (touch.clientY - rect.top) * scaleY,
+      }
+    }
+
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY,
+    }
+  }
+
+  const draw = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    if (!isDrawing) return
+
+    const canvas = canvasRef.current
+    const ctx = canvas?.getContext('2d')
+    if (!ctx) return
+
+    const coords = getCanvasCoordinates(e)
+    if (!coords) return
+
+    ctx.globalCompositeOperation = 'source-over'
+    ctx.fillStyle = selectedColor
+    ctx.beginPath()
+    ctx.arc(coords.x, coords.y, brushSize, 0, Math.PI * 2)
+    ctx.fill()
+  }
+
+  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+    setIsDrawing(true)
+    draw(e)
+  }
+
+  const stopDrawing = () => {
+    setIsDrawing(false)
   }
 
   const handleReset = () => {
-    setAreas(createInitialAreas())
-    setCompletion(0)
+    if (!currentImage || !canvasRef.current) return
+
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+    }
+    img.src = currentImage
+  }
+
+  const handleNewImage = () => {
+    loadRandomImage()
   }
 
   const handleDownload = () => {
-    // Create a simple canvas and download as image
-    const canvas = document.getElementById(
-      'coloring-canvas',
-    ) as HTMLCanvasElement
+    const canvas = canvasRef.current
     if (canvas) {
       const link = document.createElement('a')
       link.href = canvas.toDataURL('image/png')
       link.download = 'my-coloring.png'
       link.click()
     }
+  }
+
+  if (isLoading) {
+    return (
+      <Card className="overflow-hidden border-primary/20 bg-secondary/50 backdrop-blur-sm">
+        <CardHeader>
+          <Skeleton className="h-6 w-32" />
+          <Skeleton className="h-4 w-48" />
+        </CardHeader>
+        <CardContent>
+          <div className="flex justify-center">
+            <Skeleton className="h-[300px] w-[300px] rounded-lg" />
+          </div>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (
@@ -83,145 +191,40 @@ const ColoringGame = () => {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-6">
-          {/* Canvas-like coloring area */}
+          {/* Canvas coloring area */}
           <div className="flex justify-center">
-            <svg
-              id="coloring-canvas"
-              width="300"
-              height="300"
-              viewBox="0 0 300 300"
-              className="rounded-lg border-2 border-dashed border-primary/30 bg-white"
-            >
-              {/* Simple boat drawing with coloring areas */}
-              {/* Boat hull */}
-              <ellipse
-                cx="150"
-                cy="200"
-                rx="80"
-                ry="50"
-                fill={areas[0].color}
-                stroke="#333"
-                strokeWidth="2"
-                className="cursor-pointer transition-opacity hover:opacity-80"
-                onClick={() => handleColorArea('area-1')}
-              />
-
-              {/* Sail */}
-              <polygon
-                points="150,200 140,80 190,80"
-                fill={areas[1].color}
-                stroke="#333"
-                strokeWidth="2"
-                className="cursor-pointer transition-opacity hover:opacity-80"
-                onClick={() => handleColorArea('area-2')}
-              />
-
-              {/* Mast */}
-              <line
-                x1="150"
-                y1="80"
-                x2="150"
-                y2="200"
-                stroke="#333"
-                strokeWidth="3"
-              />
-
-              {/* Window */}
-              <circle
-                cx="150"
-                cy="210"
-                r="12"
-                fill={areas[2].color}
-                stroke="#333"
-                strokeWidth="2"
-                className="cursor-pointer transition-opacity hover:opacity-80"
-                onClick={() => handleColorArea('area-3')}
-              />
-
-              {/* Sky area 1 */}
-              <rect
-                x="50"
-                y="20"
-                width="60"
-                height="40"
-                fill={areas[3].color}
-                stroke="#333"
-                strokeWidth="1"
-                className="cursor-pointer transition-opacity hover:opacity-80"
-                onClick={() => handleColorArea('area-4')}
-              />
-
-              {/* Sky area 2 */}
-              <rect
-                x="190"
-                y="20"
-                width="60"
-                height="40"
-                fill={areas[4].color}
-                stroke="#333"
-                strokeWidth="1"
-                className="cursor-pointer transition-opacity hover:opacity-80"
-                onClick={() => handleColorArea('area-5')}
-              />
-
-              {/* Sun */}
-              <circle
-                cx="270"
-                cy="50"
-                r="20"
-                fill={areas[5].color}
-                stroke="#333"
-                strokeWidth="2"
-                className="cursor-pointer transition-opacity hover:opacity-80"
-                onClick={() => handleColorArea('area-6')}
-              />
-              <line
-                x1="270"
-                y1="20"
-                x2="270"
-                y2="5"
-                stroke="#333"
-                strokeWidth="2"
-              />
-              <line
-                x1="270"
-                y1="80"
-                x2="270"
-                y2="95"
-                stroke="#333"
-                strokeWidth="2"
-              />
-              <line
-                x1="240"
-                y1="50"
-                x2="225"
-                y2="50"
-                stroke="#333"
-                strokeWidth="2"
-              />
-              <line
-                x1="300"
-                y1="50"
-                x2="315"
-                y2="50"
-                stroke="#333"
-                strokeWidth="2"
-              />
-            </svg>
+            <canvas
+              ref={canvasRef}
+              className="max-w-full cursor-crosshair rounded-lg border-2 border-dashed border-primary/30 bg-white touch-none"
+              onMouseDown={startDrawing}
+              onMouseMove={draw}
+              onMouseUp={stopDrawing}
+              onMouseLeave={stopDrawing}
+              onTouchStart={startDrawing}
+              onTouchMove={draw}
+              onTouchEnd={stopDrawing}
+            />
           </div>
 
-          {/* Completion percentage */}
-          <div className="text-center">
-            <p className="mb-2 text-sm text-muted-foreground">
-              {t('coloring.completion')}:{' '}
-              <span className="font-bold text-primary">{completion}%</span>
-            </p>
-            <div className="h-2 w-full rounded-full bg-secondary">
-              <div
-                className="h-2 rounded-full bg-primary transition-all duration-300"
-                style={{ width: `${completion}%` }}
-              />
-            </div>
+          {/* Brush size slider */}
+          <div className="flex items-center justify-center gap-4">
+            <span className="text-sm text-muted-foreground">{t('coloring.brushSize') || 'Brush Size'}:</span>
+            <input
+              type="range"
+              min="2"
+              max="30"
+              value={brushSize}
+              onChange={(e) => setBrushSize(Number(e.target.value))}
+              className="w-32"
+            />
+            <div
+              className="rounded-full border border-foreground/30"
+              style={{
+                width: brushSize * 2,
+                height: brushSize * 2,
+                backgroundColor: selectedColor,
+              }}
+            />
           </div>
 
           {/* Color palette */}
@@ -232,8 +235,8 @@ const ColoringGame = () => {
                 onClick={() => setSelectedColor(color.hex)}
                 className={`h-10 w-10 rounded-full border-2 transition-all ${
                   selectedColor === color.hex
-                    ? 'scale-110 border-black shadow-lg'
-                    : 'border-gray-300 hover:scale-105'
+                    ? 'scale-110 border-foreground shadow-lg'
+                    : 'border-muted-foreground/30 hover:scale-105'
                 }`}
                 style={{ backgroundColor: color.hex }}
                 title={color.label}
@@ -248,7 +251,11 @@ const ColoringGame = () => {
         </div>
       </CardContent>
       <CardFooter>
-        <div className="flex w-full gap-2">
+        <div className="flex w-full flex-wrap gap-2">
+          <Button onClick={handleNewImage} variant="outline" className="flex-1">
+            <RefreshCw className="mr-2 h-4 w-4" />
+            {t('coloring.newImage') || 'New Image'}
+          </Button>
           <Button onClick={handleReset} variant="outline" className="flex-1">
             <RotateCcw className="mr-2 h-4 w-4" />
             {t('coloring.reset')}
