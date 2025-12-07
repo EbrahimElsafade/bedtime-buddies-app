@@ -97,7 +97,9 @@ const SortablePiece = ({ piece, imageUrl }: SortablePieceProps) => {
       className={`h-24 w-24 cursor-grab select-none rounded-md border-2 border-border/50 shadow-lg transition-shadow hover:shadow-xl sm:h-28 sm:w-28 md:h-32 md:w-32 ${
         isDragging ? 'scale-105 opacity-90' : ''
       }`}
-    />
+    >
+      {/* {piece.id} */}
+    </div>
   )
 }
 
@@ -167,7 +169,7 @@ const PicturePuzzleGame = () => {
           onDragEnd={handleDragEnd}
         >
           <SortableContext items={pieces} strategy={rectSortingStrategy}>
-            <div className="mx-auto grid w-fit grid-cols-3 gap-2">
+            <div dir='ltr' className="mx-auto grid w-fit grid-cols-3 gap-2">
               {pieces.map(piece => (
                 <SortablePiece
                   key={piece.id}
