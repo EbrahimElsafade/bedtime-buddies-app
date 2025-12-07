@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -9,6 +9,8 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { useTranslation } from 'react-i18next'
+import { supabase } from '@/integrations/supabase/client'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   DndContext,
   closestCenter,
@@ -108,10 +110,28 @@ const PicturePuzzleGame = () => {
   const [pieces, setPieces] = useState<PuzzlePiece[]>(() =>
     shuffleArray(createInitialPieces()),
   )
-  const [imageUrl] = useState(
-    'https://brxbtgzaumryxflkykpp.supabase.co/storage/v1/object/public/admin-content/story-covers/cover-1748118101626-SCENE-02_page-0001.jpg',
-  )
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const [showFeedback, setShowFeedback] = useState(false)
+
+  useEffect(() => {
+    fetchRandomImage()
+  }, [])
+
+  const fetchRandomImage = async () => {
+    setIsLoading(true)
+    const { data, error } = await supabase
+      .from('stories')
+      .select('cover_image')
+      .eq('is_published', true)
+      .not('cover_image', 'is', null)
+    
+    if (!error && data && data.length > 0) {
+      const randomIndex = Math.floor(Math.random() * data.length)
+      setImageUrl(data[randomIndex].cover_image)
+    }
+    setIsLoading(false)
+  }
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -146,6 +166,25 @@ const PicturePuzzleGame = () => {
   const reset = () => {
     setPieces(shuffleArray(createInitialPieces()))
     setShowFeedback(false)
+    fetchRandomImage()
+  }
+
+  if (isLoading || !imageUrl) {
+    return (
+      <Card className="overflow-hidden border-primary/20 bg-secondary/50 backdrop-blur-sm">
+        <CardHeader>
+          <Skeleton className="h-6 w-32" />
+          <Skeleton className="h-4 w-48" />
+        </CardHeader>
+        <CardContent>
+          <div className="mx-auto grid w-fit grid-cols-3 gap-2">
+            {Array.from({ length: 9 }).map((_, i) => (
+              <Skeleton key={i} className="h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32" />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (
