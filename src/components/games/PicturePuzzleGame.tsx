@@ -207,6 +207,7 @@ const PicturePuzzleGame = () => {
           className="size-24 rounded-sm pe-2 pt-2 sm:size-28 md:size-32"
         />
       </div>
+
       <CardContent>
         <DndContext
           sensors={sensors}
