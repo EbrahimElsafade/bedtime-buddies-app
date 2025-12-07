@@ -52,11 +52,11 @@ const GAMES = {
     description: 'guessNumber.description',
     component: GuessNumberGame,
   },
-  'catch-animal': {
-    title: 'catchAnimal.title',
-    description: 'catchAnimal.description',
-    component: CatchTheAnimalGame,
-  },
+  // 'catch-animal': {
+  //   title: 'catchAnimal.title',
+  //   description: 'catchAnimal.description',
+  //   component: CatchTheAnimalGame,
+  // },
   puzzle: {
     title: 'puzzle.title',
     description: 'puzzle.description',
@@ -95,7 +95,7 @@ const GamePage = () => {
   const GameComponent = game.component
 
   return (
-    <div className="min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-3 py-4 md:px-4 md:py-8 lg:py-12">
+    <div className="min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10  py-4 md:px-4 md:py-8 lg:py-12">
       <Helmet>
         <title>{t(game.title)} - {t('meta:titles.games')}</title>
         <meta name="description" content={t(game.description)} />
@@ -104,8 +104,8 @@ const GamePage = () => {
         <meta property="og:type" content="website" />
       </Helmet>
 
-      <div className="container mx-auto max-w-6xl">
-        <div className="mb-6 flex items-center gap-4">
+      <div className="container mx-auto max-w-6xl ">
+        <div className="mb-6 flex items-center gap-4 ">
           <Button
             variant="ghost"
             size="icon"

@@ -92,12 +92,12 @@ const Games = () => {
       description: 'guessNumber.description',
       icon: '🔢',
     },
-    {
-      id: 'catch-animal',
-      title: 'catchAnimal.title',
-      description: 'catchAnimal.description',
-      icon: '🦊',
-    },
+    // {
+    //   id: 'catch-animal',
+    //   title: 'catchAnimal.title',
+    //   description: 'catchAnimal.description',
+    //   icon: '🦊',
+    // },
     {
       id: 'puzzle',
       title: 'puzzle.title',
