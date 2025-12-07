@@ -26,6 +26,8 @@ const COLORING_IMAGES = [
   '/coloring/smiling-puppy.svg',
   '/coloring/dog-coloring.svg',
   '/coloring/easy_t_1.svg',
+  '/coloring/minimalist-horse-coloring-page-art-600nw-2329234791.svg',
+  '/coloring/coloring-pages-for-children-sonic-34208.svg',
 ]
 
 const ColoringGame = () => {
