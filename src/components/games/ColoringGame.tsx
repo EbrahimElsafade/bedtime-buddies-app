@@ -28,13 +28,10 @@ const COLORS = [
 ]
 
 const COLORING_IMAGES = [
-  '/coloring/deer-scene.jpg',
-  '/coloring/minecraft.png',
-  '/coloring/mushroom-house.png',
-  '/coloring/mushrooms.png',
-  '/coloring/bear.png',
-  '/coloring/flowers-butterflies.png',
-  '/coloring/kids-walking.png',
+  '/coloring/easy_t.svg',
+  '/coloring/smiling-puppy.svg',
+  '/coloring/dog-coloring.svg',
+  '/coloring/easy_t_1.svg',
 ]
 
 const ColoringGame = () => {
