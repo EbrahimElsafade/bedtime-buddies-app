@@ -28,6 +28,7 @@ import {
   rectSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { getImageUrl } from '@/utils/imageUtils'
 
 interface PuzzlePiece {
   id: string
@@ -125,7 +126,9 @@ const PicturePuzzleGame = () => {
       .select('cover_image')
       .eq('is_published', true)
       .not('cover_image', 'is', null)
-    
+      
+      console.log(data);
+
     if (!error && data && data.length > 0) {
       const randomIndex = Math.floor(Math.random() * data.length)
       setImageUrl(data[randomIndex].cover_image)
@@ -179,7 +182,10 @@ const PicturePuzzleGame = () => {
         <CardContent>
           <div className="mx-auto grid w-fit grid-cols-3 gap-2">
             {Array.from({ length: 9 }).map((_, i) => (
-              <Skeleton key={i} className="h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32" />
+              <Skeleton
+                key={i}
+                className="h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32"
+              />
             ))}
           </div>
         </CardContent>
@@ -196,7 +202,7 @@ const PicturePuzzleGame = () => {
         </CardHeader>
 
         <img
-          src={imageUrl}
+          src={getImageUrl(imageUrl)}
           alt="Puzzle reference"
           className="size-24 rounded-sm object-cover pe-2 pt-2 sm:size-28 md:size-32"
         />
@@ -208,12 +214,12 @@ const PicturePuzzleGame = () => {
           onDragEnd={handleDragEnd}
         >
           <SortableContext items={pieces} strategy={rectSortingStrategy}>
-            <div dir='ltr' className="mx-auto grid w-fit grid-cols-3 gap-2">
+            <div dir="ltr" className="mx-auto grid w-fit grid-cols-3 gap-2">
               {pieces.map(piece => (
                 <SortablePiece
                   key={piece.id}
                   piece={piece}
-                  imageUrl={imageUrl}
+                  imageUrl={getImageUrl(imageUrl)}
                 />
               ))}
             </div>
