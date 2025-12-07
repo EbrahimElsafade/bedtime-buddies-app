@@ -126,8 +126,8 @@ const PicturePuzzleGame = () => {
       .select('cover_image')
       .eq('is_published', true)
       .not('cover_image', 'is', null)
-      
-      console.log(data);
+
+    console.log(data)
 
     if (!error && data && data.length > 0) {
       const randomIndex = Math.floor(Math.random() * data.length)
@@ -204,7 +204,7 @@ const PicturePuzzleGame = () => {
         <img
           src={getImageUrl(imageUrl)}
           alt="Puzzle reference"
-          className="size-24 rounded-sm object-cover pe-2 pt-2 sm:size-28 md:size-32"
+          className="size-24 rounded-sm pe-2 pt-2 sm:size-28 md:size-32"
         />
       </div>
       <CardContent>
