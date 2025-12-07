@@ -126,6 +126,14 @@
     "ball": "⚽",
     "star": "⭐"
   },
+  "coloring": {
+    "title": "Jeu de Coloriage",
+    "description": "Colorez l'image pour créer votre œuvre d'art",
+    "instructions": "Cliquez sur les zones et sélectionnez des couleurs pour peindre l'image",
+    "completion": "Complément",
+    "reset": "Réinitialiser",
+    "download": "Télécharger"
+  },
   "snakeLadder": {
     "title": "Serpents et Échelles",
     "description": "Lance les dés et cours pour atteindre 100",

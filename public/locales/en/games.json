@@ -126,6 +126,14 @@
     "ball": "⚽",
     "star": "⭐"
   },
+  "coloring": {
+    "title": "Coloring Game",
+    "description": "Color the picture to create your artwork",
+    "instructions": "Click on areas and select colors to paint the picture",
+    "completion": "Completion",
+    "reset": "Reset",
+    "download": "Download"
+  },
   "snakeLadder": {
     "title": "Snake and Ladder",
     "description": "Roll the dice and race to reach 100",

@@ -116,6 +116,12 @@ const Games = () => {
       description: 'snakeLadder.description',
       icon: '🎲',
     },
+    {
+      id: 'coloring',
+      title: 'coloring.title',
+      description: 'coloring.description',
+      icon: '🎨',
+    },
   ]
 
   const activeGames = games.filter(game => gameSettings[game.id]?.is_active !== false)
