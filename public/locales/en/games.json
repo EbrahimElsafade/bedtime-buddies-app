@@ -129,9 +129,8 @@
   "coloring": {
     "title": "Coloring Game",
     "description": "Color the picture to create your artwork",
-    "instructions": "Draw on the picture with your finger or mouse to color it",
-    "brushSize": "Brush Size",
-    "newImage": "New Image",
+    "instructions": "Click on areas and select colors to paint the picture",
+    "completion": "Completion",
     "reset": "Reset",
     "download": "Download"
   },

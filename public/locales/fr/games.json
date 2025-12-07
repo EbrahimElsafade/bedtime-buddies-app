@@ -129,9 +129,8 @@
   "coloring": {
     "title": "Jeu de Coloriage",
     "description": "Colorez l'image pour créer votre œuvre d'art",
-    "instructions": "Dessinez sur l'image avec votre doigt ou souris pour la colorier",
-    "brushSize": "Taille du pinceau",
-    "newImage": "Nouvelle image",
+    "instructions": "Cliquez sur les zones et sélectionnez des couleurs pour peindre l'image",
+    "completion": "Complément",
     "reset": "Réinitialiser",
     "download": "Télécharger"
   },
