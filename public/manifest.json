@@ -22,5 +22,21 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Dolphoon Home - Stories, Games & Courses"
+    },
+    {
+      "src": "/screenshots/screenshot-mobile.png",
+      "sizes": "576x1024",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Dolphoon Mobile - Interactive Stories"
+    }
   ]
 }
