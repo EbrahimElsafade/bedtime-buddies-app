@@ -18,14 +18,28 @@
     },
     {
       "src": "/icons/icon-512x512.png",
-      "sizes": "512x512", 
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     }
   ],
   "screenshots": [
     {
-      "src": "/screenshots/screenshot-wide.png",
+      "src": "/screenshots/screenshot-wide-1920.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Dolphoon Home - Stories, Games & Courses"
+    },
+    {
+      "src": "/screenshots/screenshot-wide-1661.png",
+      "sizes": "1661x926",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Dolphoon Home - Stories, Games & Courses"
+    },
+    {
+      "src": "/screenshots/screenshot-wide-1280.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
