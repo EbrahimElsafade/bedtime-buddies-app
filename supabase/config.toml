@@ -1,1 +1,4 @@
 project_id = "brxbtgzaumryxflkykpp"
+
+[functions.transcode-video]
+verify_jwt = true
