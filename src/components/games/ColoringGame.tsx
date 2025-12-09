@@ -22,12 +22,6 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 
 const COLORING_IMAGES = [
-  '/coloring/7900558.svg',
-  '/coloring/7954259.svg',
-  '/coloring/8002718.svg',
-  '/coloring/8433396.svg',
-  '/coloring/10307746.svg',
-  
   '/coloring/minimalist-horse-coloring-page-art-600nw-2329234791.svg',
   '/coloring/coloring-pages-for-children-sonic-34208.svg',
   '/coloring/easy_t.svg',
