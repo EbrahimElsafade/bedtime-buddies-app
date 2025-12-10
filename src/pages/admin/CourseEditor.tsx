@@ -59,15 +59,25 @@ import { useTranslation } from 'react-i18next'
 import { UserAutocomplete } from '@/components/admin/UserAutocomplete'
 import { validateImageFile, validateVideoFile } from '@/utils/fileValidation'
 import { validateCourseData } from '@/utils/contentValidation'
-import { CourseVideoUpload } from '@/components/admin/CourseVideoUpload'
-import { useCourseVideoUpload } from '@/hooks/useCourseVideoUpload'
+import { YouTubeVideoInput } from '@/components/admin/YouTubeVideoInput'
 
-interface CourseLessonForm extends Omit<CourseVideo, 'id'> {
+interface CourseLessonForm {
   id?: string
+  title_en: string
+  title_ar: string
+  title_fr: string
+  description_en: string
+  description_ar: string
+  description_fr: string
+  videoPath: string
+  videoUrl: string
+  thumbnailPath: string
+  duration: number
+  isFree: boolean
+  order: number
+  createdAt: string
   thumbnailFile?: File | null
   thumbnailPreview?: string | null
-  videoUrl?: string
-  videoFiles?: File[] | null // Legacy support
 }
 
 const CourseEditor = () => {
@@ -76,7 +86,7 @@ const CourseEditor = () => {
   const { id } = useParams<{ id: string }>()
   const isEditing = id !== 'new' && !!id
   const { t } = useTranslation(['admin', 'common'])
-  const { uploadAndTranscodeVideo, getUploadState } = useCourseVideoUpload()
+  
 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [coverImageFile, setCoverImageFile] = useState<File | null>(null)
@@ -1541,35 +1551,21 @@ const CourseEditor = () => {
                                 </div>
                               </div>
 
-                              {/* Video Upload with HLS Transcoding */}
+                              {/* YouTube Video Input */}
                               <div className="sm:col-span-2">
-                                <CourseVideoUpload
+                                <YouTubeVideoInput
                                   lessonIndex={lessonIndex}
-                                  lessonOrder={lesson.order}
-                                  videoPath={lesson.videoPath || lesson.videoUrl}
-                                  isUploading={getUploadState(lesson.order).isUploading}
-                                  progress={getUploadState(lesson.order).progress}
-                                  error={getUploadState(lesson.order).error}
-                                  onVideoChange={async (idx, file) => {
-                                    const courseId = id || 'temp'
-                                    const result = await uploadAndTranscodeVideo(
-                                      file,
-                                      courseId,
-                                      lesson.order
-                                    )
-                                    if (result) {
-                                      const updatedLessons = [...courseLessons]
-                                      updatedLessons[idx].videoPath = result.hlsPath
-                                      updatedLessons[idx].videoUrl = ''
-                                      updatedLessons[idx].duration = result.duration
-                                      setCourseLessons(updatedLessons)
-                                    }
+                                  videoUrl={lesson.videoUrl}
+                                  onVideoChange={(idx, videoId) => {
+                                    const updatedLessons = [...courseLessons]
+                                    updatedLessons[idx].videoUrl = videoId
+                                    updatedLessons[idx].videoPath = '' // Clear old HLS path
+                                    setCourseLessons(updatedLessons)
                                   }}
                                   onClearVideo={(idx) => {
                                     const updatedLessons = [...courseLessons]
-                                    updatedLessons[idx].videoPath = ''
                                     updatedLessons[idx].videoUrl = ''
-                                    updatedLessons[idx].videoFiles = null
+                                    updatedLessons[idx].videoPath = ''
                                     setCourseLessons(updatedLessons)
                                   }}
                                 />

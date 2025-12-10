@@ -13,7 +13,7 @@ import { useCourseData } from '@/hooks/useCourseData'
 import { useCourseFavorites } from '@/hooks/useFavorites'
 import { useAuth } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
-import HLSVideoPlayer from '@/components/course/HLSVideoPlayer'
+import YouTubePlayer from '@/components/course/YouTubePlayer'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 import { useTranslation } from 'react-i18next'
@@ -103,6 +103,7 @@ const Course = () => {
   }
 
   const handleVideoSelect = (video: CourseVideo) => {
+    // Allow access if user is premium OR if the lesson is free
     if (!isPremium && !video.isFree) {
       toast({
         title: t('toast.premiumRequired'),
@@ -381,14 +382,16 @@ const Course = () => {
                   {selectedVideo ? (
                     <div className="space-y-4">
                       <div className="aspect-video overflow-hidden rounded-lg bg-black">
-                        {selectedVideo.videoPath ? (
-                          <HLSVideoPlayer
-                            videoPath={selectedVideo.videoPath}
+                        {selectedVideo.videoUrl ? (
+                          <YouTubePlayer
+                            videoId={selectedVideo.videoUrl}
                             title={getLocalized(selectedVideo, 'title', lang)}
                             className="rounded-lg"
-                            // muted={false}
-                            controls
                           />
+                        ) : selectedVideo.videoPath ? (
+                          <div className="flex h-full items-center justify-center text-secondary">
+                            <p>Legacy video format - please update to YouTube</p>
+                          </div>
                         ) : (
                           <div className="flex h-full items-center justify-center text-secondary">
                             <p>No video source available</p>
@@ -445,7 +448,7 @@ const Course = () => {
                                   alt={getLocalized(video, 'title', lang)}
                                   className="h-full w-full rounded object-cover"
                                 />
-                                {!isPremium && (
+                                {!isPremium && !video.isFree && (
                                   <div className="absolute inset-0 flex items-center justify-center rounded bg-black/50">
                                     <Lock className="h-6 w-6 text-secondary" />
                                   </div>
@@ -457,9 +460,16 @@ const Course = () => {
                                 </div>
                               </div>
                               <div className="min-w-0 flex-1">
-                                <h4 className="truncate text-sm font-medium text-primary-foreground">
-                                  {getLocalized(video, 'title', lang)}
-                                </h4>
+                                <div className="flex items-center gap-2">
+                                  <h4 className="truncate text-sm font-medium text-primary-foreground">
+                                    {getLocalized(video, 'title', lang)}
+                                  </h4>
+                                  {video.isFree && (
+                                    <Badge variant="secondary" className="text-xs px-1.5 py-0">
+                                      {t('common:free', 'Free')}
+                                    </Badge>
+                                  )}
+                                </div>
                                 <div className="mt-1 flex items-center text-xs text-primary-foreground/70">
                                   <Clock className="mx-1 h-3 w-3" />
                                   <span>

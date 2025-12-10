@@ -50,11 +50,12 @@ export const useCourseData = (courseId: string | undefined) => {
             description_ar: lesson.description_ar || '',
             description_fr: lesson.description_fr || '',
             videoPath: lesson.video_path || '',
+            videoUrl: lesson.video_url || '',
             thumbnailPath: lesson.thumbnail_path || '',
             duration: lesson.duration,
-            isFree: courseData.is_free,
+            isFree: lesson.is_free ?? courseData.is_free,
             order: lesson.lesson_order,
-            createdAt: lesson.created_at,
+            createdAt: lesson.created_at || '',
           };
         }) || []
 
