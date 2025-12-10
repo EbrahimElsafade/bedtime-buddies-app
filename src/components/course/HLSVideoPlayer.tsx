@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Hls from 'hls.js'
+import Plyr from 'plyr'
+import 'plyr/dist/plyr.css'
 import { supabase } from '@/integrations/supabase/client'
 
 interface HLSVideoPlayerProps {
@@ -11,8 +13,9 @@ interface HLSVideoPlayerProps {
   onVideoRef?: (ref: HTMLVideoElement | null) => void
 }
 
-const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, controls = false, onVideoRef }: HLSVideoPlayerProps) => {
+const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, controls = true, onVideoRef }: HLSVideoPlayerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const plyrRef = useRef<Plyr | null>(null)
   const hlsRef = useRef<Hls | null>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -26,7 +29,11 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
     const video = videoRef.current
     if (!video || !videoPath) return
 
-    // Cleanup previous instance
+    // Cleanup previous instances
+    if (plyrRef.current) {
+      plyrRef.current.destroy()
+      plyrRef.current = null
+    }
     if (hlsRef.current) {
       hlsRef.current.destroy()
       hlsRef.current = null
@@ -44,7 +51,7 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
         const isHLS = videoPath.endsWith('.m3u8')
 
         if (isHLS && Hls.isSupported()) {
-          // Use HLS.js for HLS streams in browsers that support it
+          // Use HLS.js for HLS streams
           const hls = new Hls({
             enableWorker: false,
             lowLatencyMode: true,
@@ -78,9 +85,35 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
           // For Safari, which has native HLS support
           video.src = videoUrl
         } else {
-          // For regular MP4/video files - direct playback
+          // For regular MP4/video files
           video.src = videoUrl
         }
+
+        // Initialize Plyr after video source is set
+        if (plyrRef.current) {
+          plyrRef.current.destroy()
+          plyrRef.current = null
+        }
+        
+        plyrRef.current = new Plyr(video, {
+          controls: [
+            'play-large',
+            'play',
+            'progress',
+            'current-time',
+            'mute',
+            'volume',
+            'settings',
+            'pip',
+            'fullscreen',
+          ],
+          settings: ['quality', 'speed', 'loop'],
+          speed: { selected: 1, options: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2] },
+          quality: { default: 720, options: [720, 1080] },
+          autoplay: false,
+          muted: muted,
+          title: title,
+        })
       } catch (err) {
         console.error('Error initializing video player:', err)
         setError('Failed to initialize video player')
@@ -91,16 +124,20 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
 
     // Cleanup
     return () => {
+      if (plyrRef.current) {
+        plyrRef.current.destroy()
+        plyrRef.current = null
+      }
       if (hlsRef.current) {
         hlsRef.current.destroy()
         hlsRef.current = null
       }
     }
-  }, [videoPath])
+  }, [videoPath, muted, title])
 
   if (error) {
     return (
-      <div className={`flex h-full w-full items-center justify-center bg-black/80 text-white ${className}`}>
+      <div className={`flex h-full w-full items-center justify-center bg-black/80 text-white rounded-lg ${className}`}>
         <p>{error}</p>
       </div>
     )
@@ -109,8 +146,7 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
   return (
     <video
       ref={videoRef}
-      className={`h-full w-full ${className}`}
-      controls={controls}
+      className={`plyr-react h-full w-full ${className}`}
       muted={muted}
       playsInline
       preload="metadata"
