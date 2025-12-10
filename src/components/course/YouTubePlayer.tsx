@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
 import Plyr from 'plyr'
 import 'plyr/dist/plyr.css'
+import dolphoonLogo from '@/assets/dolphoon-logo.png'
 
 interface YouTubePlayerProps {
   videoId: string
@@ -51,6 +52,7 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
         'settings',
         'pip',
         'fullscreen',
+        'speed',
       ],
       settings: ['quality', 'speed', 'loop'],
       quality: { default: 720, options: [720, 1080] },
@@ -59,6 +61,8 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
       title: title,
       youtube: {
         noCookie: true,
+        controls: 0,
+
       },
     })
 
@@ -74,7 +78,7 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
     return (
       <div
         className={cn(
-          'flex aspect-video items-center justify-center bg-muted text-muted-foreground rounded-lg',
+          'flex aspect-video items-center justify-center rounded-lg bg-muted text-muted-foreground',
           className,
         )}
       >
@@ -86,8 +90,17 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
   return (
     <div
       ref={containerRef}
-      className={cn('relative aspect-video w-full p-0.5', className)}
-    />
+      className={cn('relative player aspect-video w-full p-0.5', className)}
+    >
+      {/* Logo Watermark */}
+      <div className="absolute top-4 left-4 z-20 pointer-events-none opacity-80 hover:opacity-100 transition-opacity">
+        <img 
+          src={dolphoonLogo} 
+          alt="Dolphoon Logo" 
+          className="h-12 w-auto drop-shadow-lg"
+        />
+      </div>
+    </div>
   )
 }
 
