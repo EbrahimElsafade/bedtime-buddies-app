@@ -21,6 +21,7 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const githubToken = Deno.env.get('GITHUB_TOKEN');
     
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
     
@@ -33,99 +34,76 @@ serve(async (req) => {
       );
     }
 
-    console.log(`Starting transcode for video: ${videoPath}, course: ${courseId}, lesson: ${lessonOrder}`);
+    console.log('Triggering GitHub Actions for video conversion:');
+    console.log(`  Course ID: ${courseId}`);
+    console.log(`  Lesson Order: ${lessonOrder}`);
+    console.log(`  Video Path: ${videoPath}`);
 
-    // Download the original video from storage
-    const { data: videoData, error: downloadError } = await supabase.storage
-      .from('course-videos')
-      .download(videoPath);
+    // Update lesson status to "processing"
+    const { error: updateError } = await supabase
+      .from('course_lessons')
+      .update({ video_path: videoPath })
+      .eq('course_id', courseId)
+      .eq('lesson_order', lessonOrder);
 
-    if (downloadError) {
-      console.error('Download error:', downloadError);
+    if (updateError) {
+      console.error('Failed to update lesson status:', updateError);
+    }
+
+    // Trigger GitHub Actions workflow
+    if (!githubToken) {
+      console.error('GITHUB_TOKEN not configured');
       return new Response(
-        JSON.stringify({ error: `Failed to download video: ${downloadError.message}` }),
+        JSON.stringify({ 
+          error: 'GitHub token not configured',
+          success: false 
+        }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log(`Video downloaded, size: ${videoData.size} bytes`);
-
-    // For edge functions, we'll use a simplified approach:
-    // Since FFmpeg isn't available in Deno Deploy, we'll store the original video
-    // and create a manifest that points to it for direct playback
-    // In a production environment, you'd want to use a service like Mux or Cloudflare Stream
+    const githubApiUrl = 'https://api.github.com/repos/abdul-RahmanAlaa/convert_to_hsl/dispatches';
     
-    const timestamp = Date.now();
-    const hlsFolder = `${courseId}/lesson-${lessonOrder}-${timestamp}`;
-    
-    // Upload the original video to a new location
-    const videoFileName = `video.mp4`;
-    const { error: uploadVideoError } = await supabase.storage
-      .from('course-videos')
-      .upload(`${hlsFolder}/${videoFileName}`, videoData, {
-        cacheControl: '3600',
-        upsert: true,
-        contentType: 'video/mp4',
-      });
+    console.log(`Calling GitHub API: ${githubApiUrl}`);
 
-    if (uploadVideoError) {
-      console.error('Video upload error:', uploadVideoError);
+    const githubResponse = await fetch(githubApiUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${githubToken}`,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        event_type: 'convert-video',
+        client_payload: {
+          video_path: videoPath,
+          course_id: courseId,
+          lesson_order: lessonOrder,
+          supabase_url: supabaseUrl,
+        },
+      }),
+    });
+
+    if (!githubResponse.ok) {
+      const errorText = await githubResponse.text();
+      console.error('GitHub API error:', githubResponse.status, errorText);
       return new Response(
-        JSON.stringify({ error: `Failed to upload processed video: ${uploadVideoError.message}` }),
+        JSON.stringify({ 
+          error: `GitHub API error: ${githubResponse.status}`,
+          details: errorText,
+          success: false 
+        }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Get public URL for the video
-    const { data: publicUrlData } = supabase.storage
-      .from('course-videos')
-      .getPublicUrl(`${hlsFolder}/${videoFileName}`);
-
-    const videoUrl = publicUrlData.publicUrl;
-
-    // Create a simple HLS manifest pointing to the video
-    // This is a basic manifest - for true HLS with segments, you'd need FFmpeg
-    const hlsManifest = `#EXTM3U
-#EXT-X-VERSION:3
-#EXT-X-TARGETDURATION:30
-#EXT-X-MEDIA-SEQUENCE:0
-#EXT-X-PLAYLIST-TYPE:VOD
-#EXTINF:30.0,
-${videoUrl}
-#EXT-X-ENDLIST`;
-
-    // Upload the HLS manifest
-    const manifestPath = `${hlsFolder}/playlist.m3u8`;
-    const { error: manifestError } = await supabase.storage
-      .from('course-videos')
-      .upload(manifestPath, new Blob([hlsManifest], { type: 'application/x-mpegURL' }), {
-        cacheControl: '3600',
-        upsert: true,
-        contentType: 'application/x-mpegURL',
-      });
-
-    if (manifestError) {
-      console.error('Manifest upload error:', manifestError);
-      return new Response(
-        JSON.stringify({ error: `Failed to upload manifest: ${manifestError.message}` }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Optionally delete the original upload if it's different from the new location
-    if (videoPath !== `${hlsFolder}/${videoFileName}`) {
-      await supabase.storage
-        .from('course-videos')
-        .remove([videoPath]);
-    }
-
-    console.log(`Transcode complete. Manifest at: ${manifestPath}`);
+    console.log('✅ GitHub Actions workflow triggered successfully');
 
     return new Response(
       JSON.stringify({
         success: true,
-        hlsPath: manifestPath,
-        message: 'Video processed successfully',
+        hlsPath: videoPath, // Return original path for now, will be updated by GitHub Actions
+        message: 'Video conversion started. The HLS version will be available shortly.',
       }),
       { 
         status: 200, 
@@ -137,7 +115,7 @@ ${videoUrl}
     console.error('Transcode error:', error);
     const errorMessage = error instanceof Error ? error.message : 'Internal server error';
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ error: errorMessage, success: false }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
