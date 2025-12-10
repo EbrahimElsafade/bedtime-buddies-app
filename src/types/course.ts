@@ -19,7 +19,8 @@ export type CourseVideo = {
   description_en: string;
   description_ar: string;
   description_fr: string;
-  videoPath: string; // Supabase storage path
+  videoPath: string; // Supabase storage path (legacy)
+  videoUrl: string; // YouTube video ID
   thumbnailPath: string; // Supabase storage path
   duration: number; // in seconds
   isFree: boolean;
