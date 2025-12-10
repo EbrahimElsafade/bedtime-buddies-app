@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Hls from 'hls.js'
 import { supabase } from '@/integrations/supabase/client'
 
@@ -14,6 +14,7 @@ interface HLSVideoPlayerProps {
 const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, controls = false, onVideoRef }: HLSVideoPlayerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const hlsRef = useRef<Hls | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (onVideoRef && videoRef.current) {
@@ -25,6 +26,13 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
     const video = videoRef.current
     if (!video || !videoPath) return
 
+    // Cleanup previous instance
+    if (hlsRef.current) {
+      hlsRef.current.destroy()
+      hlsRef.current = null
+    }
+    setError(null)
+
     const initializePlayer = async () => {
       try {
         // Get the public URL from Supabase storage
@@ -33,9 +41,10 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
           .getPublicUrl(videoPath)
 
         const videoUrl = data.publicUrl
+        const isHLS = videoPath.endsWith('.m3u8')
 
-        if (Hls.isSupported()) {
-          // Use HLS.js for browsers that support it
+        if (isHLS && Hls.isSupported()) {
+          // Use HLS.js for HLS streams in browsers that support it
           const hls = new Hls({
             enableWorker: false,
             lowLatencyMode: true,
@@ -44,10 +53,6 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
           hlsRef.current = hls
           hls.loadSource(videoUrl)
           hls.attachMedia(video)
-          
-          // hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          //   console.log('HLS manifest loaded, ready to play')
-          // })
 
           hls.on(Hls.Events.ERROR, (event, data) => {
             console.error('HLS error:', data)
@@ -64,18 +69,21 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
                 default:
                   console.log('Fatal error, destroying HLS instance')
                   hls.destroy()
+                  setError('Failed to load video stream')
                   break
               }
             }
           })
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        } else if (isHLS && video.canPlayType('application/vnd.apple.mpegurl')) {
           // For Safari, which has native HLS support
           video.src = videoUrl
         } else {
-          console.error('HLS is not supported in this browser')
+          // For regular MP4/video files - direct playback
+          video.src = videoUrl
         }
-      } catch (error) {
-        console.error('Error initializing video player:', error)
+      } catch (err) {
+        console.error('Error initializing video player:', err)
+        setError('Failed to initialize video player')
       }
     }
 
@@ -89,6 +97,14 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
       }
     }
   }, [videoPath])
+
+  if (error) {
+    return (
+      <div className={`flex h-full w-full items-center justify-center bg-black/80 text-white ${className}`}>
+        <p>{error}</p>
+      </div>
+    )
+  }
 
   return (
     <video
