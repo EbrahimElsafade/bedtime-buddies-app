@@ -386,16 +386,9 @@ const Course = () => {
                             videoPath={selectedVideo.videoPath}
                             title={getLocalized(selectedVideo, 'title', lang)}
                             className="rounded-lg"
+                            // muted={false}
+                            controls
                           />
-                        ) : selectedVideo.videoPath ? (
-                          // Fallback for URL-based videos (if you still want to support them)
-                          <iframe
-                            src={selectedVideo.videoPath}
-                            title={getLocalized(selectedVideo, 'title', lang)}
-                            className="h-full w-full"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                          ></iframe>
                         ) : (
                           <div className="flex h-full items-center justify-center text-secondary">
                             <p>No video source available</p>
