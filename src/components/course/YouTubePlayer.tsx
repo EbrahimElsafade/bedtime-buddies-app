@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 import Plyr from 'plyr'
 import 'plyr/dist/plyr.css'
-import dolphoonLogo from '@/assets/dolphoon-logo.png'
 
 interface YouTubePlayerProps {
   videoId: string
@@ -27,11 +26,28 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
   const plyrRef = useRef<Plyr | null>(null)
   const [showCountdown, setShowCountdown] = useState(false)
   const [countdown, setCountdown] = useState(5)
+  const [isPlaying, setIsPlaying] = useState(autoplay)
 
   const handleCancelCountdown = () => {
     setShowCountdown(false)
     setCountdown(5)
     onCountdownCancel?.()
+  }
+
+  const handlePlayClick = () => {
+    if (!plyrRef.current) return
+
+    // Toggle playback: pause if playing, otherwise play
+    try {
+      if (plyrRef.current.playing) {
+        plyrRef.current.pause()
+      } else {
+        plyrRef.current.play()
+      }
+    } catch (e) {
+      // Fallback: try calling play()
+      plyrRef.current.play()
+    }
   }
 
   useEffect(() => {
@@ -89,11 +105,19 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
       }
     }
 
+    const handlePlayStateChange = () => {
+      setIsPlaying(plyrRef.current?.playing ?? false)
+    }
+
     plyrRef.current.on('ended', handleVideoEnded)
+    plyrRef.current.on('play', handlePlayStateChange)
+    plyrRef.current.on('pause', handlePlayStateChange)
 
     return () => {
       if (plyrRef.current) {
         plyrRef.current.off('ended', handleVideoEnded)
+        plyrRef.current.off('play', handlePlayStateChange)
+        plyrRef.current.off('pause', handlePlayStateChange)
         plyrRef.current.destroy()
         plyrRef.current = null
       }
@@ -134,20 +158,39 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
     <div className={cn('relative', className)}>
       <div
         ref={containerRef}
-        className={cn('player')}
+        className={cn('player relative cursor-pointer')}
+        onClick={handlePlayClick}
       />
+
+      {/* Play Button Overlay - shows when paused */}
+      {!isPlaying && !showCountdown && (
+        <div
+          onClick={handlePlayClick}
+          role="button"
+          aria-label="Play video"
+          className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/30 backdrop-blur-sm transition-colors hover:bg-black/50"
+        >
+          <div className="flex h-24 w-24 transform items-center justify-center rounded-full bg-accent/90 shadow-lg transition-transform hover:scale-110 hover:bg-accent">
+            <svg
+              className="ml-1 h-12 w-12 text-secondary"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+        </div>
+      )}
 
       {/* Countdown Overlay */}
       {showCountdown && (
         <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/70 backdrop-blur-sm">
           <div className="flex flex-col items-center gap-4">
             <p className="text-lg font-semibold text-white">Next Lesson In</p>
-            <div className="text-6xl font-bold text-accent">
-              {countdown}
-            </div>
+            <div className="text-6xl font-bold text-accent">{countdown}</div>
             <button
               onClick={handleCancelCountdown}
-              className="mt-2 rounded-lg bg-red-500 px-6 py-2 font-medium text-white hover:bg-red-600 transition-colors"
+              className="mt-2 rounded-lg bg-red-500 px-6 py-2 font-medium text-white transition-colors hover:bg-red-600"
             >
               Cancel
             </button>
