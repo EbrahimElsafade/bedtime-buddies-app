@@ -52,6 +52,7 @@ const VideoPlayer = ({
       style={{ objectFit: 'cover' }}
       controls={false}
       muted
+      loop
       playsInline
       preload="metadata"
       title={title}

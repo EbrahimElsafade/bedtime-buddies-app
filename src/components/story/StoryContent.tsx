@@ -68,9 +68,32 @@ export const StoryContent = ({
     setAudioCurrentTime(currentTime)
     setAudioDuration(duration)
 
-    // Gentle sync: only sync if video is significantly out of sync (more than 0.5s)
-    if (videoRef.current && Math.abs(videoRef.current.currentTime - currentTime) > 0.5) {
-      videoRef.current.currentTime = currentTime
+    // Gentle sync: only sync while audio is playing. If the video loops,
+    // map the audio time into the video's timeline using modulo to avoid
+    // large jumps (e.g., when audio is longer than video).
+    if (isAudioPlaying && videoRef.current) {
+      const vid = videoRef.current
+      const vidDuration = Number.isFinite(vid.duration) && vid.duration > 0 ? vid.duration : 0
+
+      if (vidDuration > 0) {
+        const target = currentTime % vidDuration
+        if (Math.abs(vid.currentTime - target) > 1.0) {
+          try {
+            vid.currentTime = target
+          } catch (e) {
+            console.warn('Failed to sync video time (modulo):', e)
+          }
+        }
+      } else {
+        // Fallback if duration unknown
+        if (Math.abs(vid.currentTime - currentTime) > 1.0) {
+          try {
+            vid.currentTime = currentTime
+          } catch (e) {
+            console.warn('Failed to sync video time (fallback):', e)
+          }
+        }
+      }
     }
   }
 

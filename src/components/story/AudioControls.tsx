@@ -52,9 +52,15 @@ export const AudioControls = ({
 
     // Reset duration when audio source changes
     setDuration(0)
+    // Ensure browser attempts to load metadata for new source
+    try {
+      audio.load()
+    } catch (e) {
+      /* ignore */
+    }
 
     const handleCanPlay = () => {
-      if (audio.duration && !isNaN(audio.duration)) {
+      if (Number.isFinite(audio.duration) && audio.duration > 0) {
         setDuration(audio.duration)
       }
     }
@@ -62,13 +68,13 @@ export const AudioControls = ({
     const handleTimeUpdate = () => {
       setCurrentTime(audio.currentTime)
       // Double-check duration is set
-      if (audio.duration && !isNaN(audio.duration) && duration === 0) {
+      if (Number.isFinite(audio.duration) && audio.duration > 0 && duration === 0) {
         setDuration(audio.duration)
       }
     }
 
     const handleLoadedMetadata = () => {
-      if (audio.duration && !isNaN(audio.duration)) {
+      if (Number.isFinite(audio.duration) && audio.duration > 0) {
         setDuration(audio.duration)
       }
     }
@@ -110,7 +116,6 @@ export const AudioControls = ({
     onSectionChange,
     currentSectionIndex,
     story.sections.length,
-    duration,
   ])
 
   // Reset time when section changes
@@ -275,7 +280,7 @@ export const AudioControls = ({
             <Slider
               value={[volume]}
               max={1}
-              step={0.1}
+              step={0.01}
               onValueChange={handleVolumeChange}
               className="w-24"
             />
