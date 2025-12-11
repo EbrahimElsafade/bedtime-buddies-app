@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 import Plyr from 'plyr'
 import 'plyr/dist/plyr.css'
@@ -9,6 +9,9 @@ interface YouTubePlayerProps {
   title?: string
   className?: string
   autoplay?: boolean
+  onVideoEnd?: () => void
+  showCountdownOnEnd?: boolean
+  onCountdownCancel?: () => void
 }
 
 const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
@@ -16,9 +19,20 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
   title = 'YouTube video player',
   className,
   autoplay = false,
+  onVideoEnd,
+  showCountdownOnEnd = true,
+  onCountdownCancel,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const plyrRef = useRef<Plyr | null>(null)
+  const [showCountdown, setShowCountdown] = useState(false)
+  const [countdown, setCountdown] = useState(5)
+
+  const handleCancelCountdown = () => {
+    setShowCountdown(false)
+    setCountdown(5)
+    onCountdownCancel?.()
+  }
 
   useEffect(() => {
     if (!containerRef.current || !videoId) return
@@ -65,13 +79,43 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
       },
     })
 
+    // Add event listener for video end
+    const handleVideoEnded = () => {
+      if (showCountdownOnEnd) {
+        setShowCountdown(true)
+        setCountdown(5)
+      } else {
+        onVideoEnd?.()
+      }
+    }
+
+    plyrRef.current.on('ended', handleVideoEnded)
+
     return () => {
       if (plyrRef.current) {
+        plyrRef.current.off('ended', handleVideoEnded)
         plyrRef.current.destroy()
         plyrRef.current = null
       }
     }
-  }, [videoId, autoplay, title])
+  }, [videoId, autoplay, title, showCountdownOnEnd, onVideoEnd])
+
+  // Handle countdown
+  useEffect(() => {
+    if (!showCountdown) return
+
+    if (countdown === 0) {
+      setShowCountdown(false)
+      onVideoEnd?.()
+      return
+    }
+
+    const timer = setTimeout(() => {
+      setCountdown(countdown - 1)
+    }, 1000)
+
+    return () => clearTimeout(timer)
+  }, [showCountdown, countdown, onVideoEnd])
 
   if (!videoId) {
     return (
@@ -87,10 +131,30 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
   }
 
   return (
-    <div
-      ref={containerRef}
-      className={cn('player', className)}
-    />
+    <div className={cn('relative', className)}>
+      <div
+        ref={containerRef}
+        className={cn('player')}
+      />
+
+      {/* Countdown Overlay */}
+      {showCountdown && (
+        <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/70 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-4">
+            <p className="text-lg font-semibold text-white">Next Lesson In</p>
+            <div className="text-6xl font-bold text-accent">
+              {countdown}
+            </div>
+            <button
+              onClick={handleCancelCountdown}
+              className="mt-2 rounded-lg bg-red-500 px-6 py-2 font-medium text-white hover:bg-red-600 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   )
 }
 

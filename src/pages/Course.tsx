@@ -28,6 +28,7 @@ const Course = () => {
   const { toast } = useToast()
   const [activeTab, setActiveTab] = useState('overview')
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
+  const [autoplayNext, setAutoplayNext] = useState(false)
 
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
@@ -63,6 +64,7 @@ const Course = () => {
       // Set the first video as selected by default if there are videos
       if (course.videos && course.videos.length > 0) {
         setSelectedVideo(course.videos[0])
+        setAutoplayNext(false)
       }
     } else {
       document.title = 'Course Not Found | Dolphoon'
@@ -113,6 +115,31 @@ const Course = () => {
       return
     }
     setSelectedVideo(video)
+  }
+
+  const handleVideoEnd = () => {
+    // Find the index of the current video
+    if (!course?.videos || !selectedVideo) return
+
+    const currentIndex = course.videos.findIndex(v => v.id === selectedVideo.id)
+    const nextIndex = currentIndex + 1
+
+    // If there's a next video, select it and set autoplay
+    if (nextIndex < course.videos.length) {
+      const nextVideo = course.videos[nextIndex]
+      setAutoplayNext(true)
+      handleVideoSelect(nextVideo)
+    }
+  }
+
+  const getNextVideoExists = (): boolean => {
+    if (!course?.videos || !selectedVideo) return false
+    const currentIndex = course.videos.findIndex(v => v.id === selectedVideo.id)
+    return currentIndex + 1 < course.videos.length
+  }
+
+  const handleCountdownCancel = () => {
+    setAutoplayNext(false)
   }
 
   // Redirect to login if not authenticated (but wait while auth is loading)
@@ -387,6 +414,10 @@ const Course = () => {
                             videoId={selectedVideo.videoUrl}
                             title={getLocalized(selectedVideo, 'title', lang)}
                             className="rounded-lg"
+                            onVideoEnd={handleVideoEnd}
+                            showCountdownOnEnd={getNextVideoExists()}
+                            autoplay={autoplayNext}
+                            onCountdownCancel={handleCountdownCancel}
                           />
                         ) : selectedVideo.videoPath ? (
                           <div className="flex h-full items-center justify-center text-secondary">
