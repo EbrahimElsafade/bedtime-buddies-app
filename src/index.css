@@ -402,13 +402,24 @@ input[type='color']::-moz-color-swatch {
   position: relative;
 
   .plyr--paused::after {
-    display: none;
     pointer-events: none;
+    content: '';
+    position: absolute;
+    top: -8px;
+    right: 0px;
+    width: 100px;
+    height: 100px;
+    border-radius: 100rem;
+    background-image: url('@/assets/dolphoon-logo-removebg-preview.png');
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: contain;
+    z-index: 10;
   }
 
   .plyr--paused::before {
     content: '';
-    background: linear-gradient(0deg, #000 0%, transparent 50%, #000 93%);
+    background: linear-gradient(0deg, #000 10%, transparent 50%, #000 90%);
     position: absolute;
     inset: 0;
     width: 100%;
