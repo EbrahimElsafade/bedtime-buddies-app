@@ -24,7 +24,7 @@ const Course = () => {
   const { id: courseId } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { t } = useTranslation(['courses', 'meta', 'common'])
-  const { isAuthenticated, profile, user } = useAuth()
+  const { isAuthenticated, isLoading: authLoading, profile, user } = useAuth()
   const { toast } = useToast()
   const [activeTab, setActiveTab] = useState('overview')
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
@@ -115,8 +115,8 @@ const Course = () => {
     setSelectedVideo(video)
   }
 
-  // Redirect to login if not authenticated
-  if (!isAuthenticated) {
+  // Redirect to login if not authenticated (but wait while auth is loading)
+  if (!isAuthenticated && !authLoading) {
     navigate('/login')
     return null
   }
