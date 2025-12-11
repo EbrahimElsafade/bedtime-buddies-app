@@ -120,7 +120,8 @@
 ## story
 
 - the story video repeat when finished [ ]
-- set a loader between the languages in the story to indicate the change [ ]
+- the story timer is not working as intended [ ]
+- set a loader between the languages in the story to indicate the change [x]
 
 ## home
 

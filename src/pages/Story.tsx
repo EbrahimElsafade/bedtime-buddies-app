@@ -38,6 +38,11 @@ const Story = () => {
     }
   }, [isLoading, setIsLoading, setLoadingMessage, t])
 
+  // Clear loading state when language changes
+  useEffect(() => {
+    setIsLoading(false)
+  }, [currentLanguage, setIsLoading])
+
   // Get title and description for current language
   const getStoryTitle = () => {
     return (
@@ -86,6 +91,12 @@ const Story = () => {
   const canAccessStory =
     story.is_free || (isAuthenticated && profile?.is_premium)
 
+  const handleLanguageChange = (newLanguage) => {
+    setIsLoading(true)
+    setLoadingMessage(t('loading.languageChange', { ns: 'common' }))
+    setCurrentLanguage(newLanguage)
+  }
+
   return (
     <div className="px-4 py-8 bg-gradient-to-b min-h-[82.7svh] from-primary/20 to-primary/10">
       <Helmet>
@@ -111,9 +122,7 @@ const Story = () => {
         <LanguageSelector
           languages={story.languages}
           currentLanguage={currentLanguage}
-          onLanguageChange={value =>
-            setCurrentLanguage(value as 'en' | 'ar-eg' | 'ar-fos7a' | 'fr')
-          }
+          onLanguageChange={handleLanguageChange}
         />
 
         <StoryInfo
