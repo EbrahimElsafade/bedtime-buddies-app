@@ -113,8 +113,6 @@
 
 ## course
 
-- in the course card when the user is not logged in just keep the login button but remove the overlay [ ]
-- in the courses card there is a 'S' letter remove it [ ]
 - in the courses page change the image from object-cover to fill [ ]
 - create a new layer in the courses => first layer just the course info => then the second layer the lessons with the playlist [ ]
 - add communicate with a spacial agent button in the course page [ ]
@@ -128,6 +126,8 @@
 
 - in the home page change the courses section color to white [ ]
 - in the home page move show more content to the bottom middle of the section [ ]
+- in the course card when the user is not logged in just keep the login button but remove the overlay [ ]
+- in the courses card there is a 'S' letter next to the word lesson remove it [ ]
 
 ## games
 
