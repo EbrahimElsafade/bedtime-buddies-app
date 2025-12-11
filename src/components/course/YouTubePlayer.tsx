@@ -62,7 +62,6 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
       youtube: {
         noCookie: true,
         controls: 0,
-
       },
     })
 
@@ -90,17 +89,8 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
   return (
     <div
       ref={containerRef}
-      className={cn('relative player aspect-video w-full p-0.5', className)}
-    >
-      {/* Logo Watermark */}
-      <div className="absolute top-4 left-4 z-20 pointer-events-none opacity-80 hover:opacity-100 transition-opacity">
-        <img 
-          src={dolphoonLogo} 
-          alt="Dolphoon Logo" 
-          className="h-12 w-auto drop-shadow-lg"
-        />
-      </div>
-    </div>
+      className={cn('player aspect-video w-full', className)}
+    />
   )
 }
 
