@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTranslation } from 'react-i18next'
 import { Category } from '@/types/language'
+import { Badge } from '@/components/ui/badge'
 
 interface StoriesFiltersProps {
   searchTerm: string
@@ -44,8 +45,8 @@ export const StoriesFilters = ({
         </TabsList>
       </Tabs>
 
-      <div className="flex flex-wrap items-center justify-between">
-        <div className="relative w-full max-w-md">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="relative w-full lg:max-w-md">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground rtl:left-auto rtl:right-3" />
           <Input
             type="text"
@@ -56,8 +57,13 @@ export const StoriesFilters = ({
           />
         </div>
 
-        <div className="rounded-lg bg-primary px-4 py-2 text-white">
-          here well be the age filters
+        <div className="flex gap-4 justify-between w-full lg:max-w-md rounded-lg px-4 py-2 flex-wrap">
+          <Badge>here</Badge>
+          <Badge>well</Badge>
+          <Badge>be</Badge>
+          <Badge>the</Badge>
+          <Badge>age</Badge>
+          <Badge>filters</Badge>
         </div>
       </div>
     </div>

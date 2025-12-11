@@ -136,7 +136,7 @@ const Profile = () => {
         </div>
 
         <Tabs defaultValue="profile" className="w-full">
-          <TabsList>
+          <TabsList className="mb-4 w-full justify-start gap-2 overflow-x-auto p-1 md:mb-6 lg:mb-8">
             <TabsTrigger value="profile">{t('common:profile')}</TabsTrigger>
             <TabsTrigger value="story-favorites">
               {t('common:storyFavorites')}

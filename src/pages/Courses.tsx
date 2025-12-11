@@ -102,26 +102,18 @@ const Courses = () => {
             value={activeCategory}
           >
             <TabsList className="mb-4 w-full justify-start gap-2 overflow-x-auto p-1 md:mb-6 lg:mb-8">
-              <TabsTrigger
-                value="all"
-                className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
-              >
-                {t('courses.allCourses')}
-              </TabsTrigger>
+              <TabsTrigger value="all">{t('courses.allCourses')}</TabsTrigger>
+
               {categories.map(category => (
-                <TabsTrigger
-                  key={category.id}
-                  value={category.name}
-                  className="px-3 py-1.5 text-xs md:px-4 md:py-2 md:text-sm"
-                >
+                <TabsTrigger key={category.id} value={category.name}>
                   {getCategoryText(category, 'name', lang)}
                 </TabsTrigger>
               ))}
             </TabsList>
           </Tabs>
 
-          <div className="flex flex-wrap items-center justify-between">
-            <div className="relative w-full max-w-md">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="relative w-full lg:max-w-md">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground rtl:left-auto rtl:right-3" />
               <Input
                 type="search"
@@ -132,8 +124,13 @@ const Courses = () => {
               />
             </div>
 
-            <div className="rounded-lg bg-primary px-4 py-2 text-white">
-              here well be the age filters
+            <div className="flex w-full flex-wrap justify-between gap-4 rounded-lg px-4 py-2 lg:max-w-md">
+              <Badge>here</Badge>
+              <Badge>well</Badge>
+              <Badge>be</Badge>
+              <Badge>the</Badge>
+              <Badge>age</Badge>
+              <Badge>filters</Badge>
             </div>
           </div>
         </div>
