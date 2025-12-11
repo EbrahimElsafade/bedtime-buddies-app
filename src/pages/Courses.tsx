@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { Search, BookOpen, Clock, Lock } from 'lucide-react'
+import { Search, BookOpen, Clock } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useUserRole } from '@/hooks/useUserRole'
 import { Input } from '@/components/ui/input'
@@ -77,7 +77,10 @@ const Courses = () => {
         <title>{t('meta:titles.courses')}</title>
         <meta name="description" content={t('meta:descriptions.courses')} />
         <meta property="og:title" content={t('meta:titles.courses')} />
-        <meta property="og:description" content={t('meta:descriptions.courses')} />
+        <meta
+          property="og:description"
+          content={t('meta:descriptions.courses')}
+        />
         <meta property="og:type" content="website" />
       </Helmet>
 
@@ -85,24 +88,13 @@ const Courses = () => {
 
       <div className="container mx-auto max-w-7xl">
         <div className="mb-4 text-center md:mb-6 lg:mb-8">
-          <h1 className="mb-2 font-bubbly text-2xl leading-tight text-primary-foreground md:mb-3 md:text-3xl lg:mb-4 lg:text-4xl">
+          <h1 className="mb-2 text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
             {t('courses.exploreTitle')}
           </h1>
         </div>
 
         {/* Controls - match Stories page layout */}
         <div className="mb-4 space-y-3 md:mb-6 md:space-y-4 lg:mb-8">
-          <div className="relative mx-auto max-w-md">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder={t('courses.searchPlaceholder')}
-              className="pl-10 text-sm"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-            />
-          </div>
-
           <Tabs
             defaultValue="all"
             className="w-full"
@@ -127,6 +119,23 @@ const Courses = () => {
               ))}
             </TabsList>
           </Tabs>
+
+          <div className="flex flex-wrap items-center justify-between">
+            <div className="relative w-full max-w-md">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground rtl:left-auto rtl:right-3" />
+              <Input
+                type="search"
+                placeholder={t('courses.searchPlaceholder')}
+                className="w-full py-2 ps-10 text-start text-sm md:text-base"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+              />
+            </div>
+
+            <div className="rounded-lg bg-primary px-4 py-2 text-white">
+              here well be the age filters
+            </div>
+          </div>
         </div>
 
         {/* Courses Grid */}
@@ -143,11 +152,11 @@ const Courses = () => {
                 cat =>
                   cat.id === course.category || cat.name === course.category,
               )
-              
+
               // Show login overlay for non-authenticated users
               if (!isAuthenticated) {
                 return (
-                  <div 
+                  <div
                     key={course.id}
                     onClick={() => navigate('/login')}
                     className="cursor-pointer"
@@ -163,69 +172,25 @@ const Courses = () => {
                               'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
                           }}
                         />
-                        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center">
-                          <Lock className="h-12 w-12 text-muted-foreground" />
-                        </div>
                       </div>
-                      <div className="flex flex-col items-center justify-center flex-1 p-6 text-center">
-                        <h3 className="font-bubbly text-lg mb-2 text-primary-foreground line-clamp-1">
+                      <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
+                        <h3 className="mb-2 line-clamp-1 font-bubbly text-lg text-primary-foreground">
                           {getLocalized(course, 'title', lang)}
                         </h3>
-                        <p className="text-muted-foreground text-sm mb-4">
+                        <p className="mb-4 text-sm text-muted-foreground">
                           Please log in to view courses
                         </p>
-                        <Button className="w-full">
-                          Log In
-                        </Button>
+                        <Button className="w-full">Log In</Button>
                       </div>
                     </Card>
                   </div>
-                )
-              }
-              
-              // Show premium message for premium courses when user is not premium
-              if (!course.is_free && !isPremium) {
-                return (
-                  <Card key={course.id} className="story-card relative z-20 flex h-[25rem] w-full flex-col overflow-hidden border-primary/20 bg-secondary/10 backdrop-blur-sm">
-                    <div className="relative h-48 overflow-hidden">
-                      <img
-                        src={getImageUrl(course.coverImagePath)}
-                        alt={getLocalized(course, 'title', lang)}
-                        className="h-full w-full object-cover blur-sm"
-                        onError={e => {
-                          e.currentTarget.src =
-                            'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
-                        }}
-                      />
-                      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center">
-                        <Lock className="h-12 w-12 text-muted-foreground" />
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-center justify-center flex-1 p-6 text-center">
-                      <span className="inline-block px-3 py-1 bg-accent/20 text-accent rounded-full text-sm font-medium mb-3">
-                        {t('premium:tag')}
-                      </span>
-                      <h3 className="font-bubbly text-lg mb-2 text-primary-foreground line-clamp-1">
-                        {getLocalized(course, 'title', lang)}
-                      </h3>
-                      <p className="text-muted-foreground text-sm mb-4">
-                        {t('premium:message.description')}
-                      </p>
-                      <Button 
-                        onClick={() => navigate('/subscription')}
-                        className="w-full"
-                      >
-                        {t('premium:message.subscriptionButton')}
-                      </Button>
-                    </div>
-                  </Card>
                 )
               }
 
               return (
                 <Link key={course.id} to={`/courses/${course.id}`}>
                   <Card className="story-card relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-secondary/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg">
-                     <div className="relative h-48 overflow-hidden">
+                    <div className="relative h-48 overflow-hidden">
                       <img
                         src={getImageUrl(course.coverImagePath)}
                         alt={getLocalized(course, 'title', lang)}
@@ -240,12 +205,12 @@ const Courses = () => {
                         }}
                       />
                       {course.is_free && (
-                        <Badge className="absolute top-2 right-2 bg-green-500 hover:bg-green-600">
+                        <Badge className="absolute right-2 top-2 bg-green-500 hover:bg-green-600">
                           {t('courses:free.tag')}
                         </Badge>
                       )}
                       {!course.is_free && (
-                        <Badge className="absolute top-2 right-2 bg-gradient-to-r from-purple-500 to-pink-500">
+                        <Badge className="absolute right-2 top-2 bg-gradient-to-r from-purple-500 to-pink-500">
                           {t('premium:tag')}
                         </Badge>
                       )}

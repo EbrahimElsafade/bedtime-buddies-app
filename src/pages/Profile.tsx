@@ -128,10 +128,12 @@ const Profile = () => {
         <meta name="robots" content="noindex" />
       </Helmet>
 
-      <div className="container mx-auto max-w-5xl">
-        <h1 className="mb-6 font-bubbly text-3xl md:text-4xl">
-          {t('common:myProfile')}
-        </h1>
+      <div className="container mx-auto max-w-7xl">
+        <div className="mb-4 text-center md:mb-6 lg:mb-8">
+          <h1 className="mb-2 text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
+            {t('common:myProfile')}
+          </h1>
+        </div>
 
         <Tabs defaultValue="profile" className="w-full">
           <TabsList>

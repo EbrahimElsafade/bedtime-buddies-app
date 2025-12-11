@@ -23,17 +23,6 @@ export const StoriesFilters = ({
 
   return (
     <div className="mb-4 space-y-3 md:mb-6 md:space-y-4 lg:mb-8">
-      <div className="relative mx-auto max-w-md">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground rtl:left-auto rtl:right-3" />
-        <Input
-          type="text"
-          placeholder={t('searchStories')}
-          value={searchTerm}
-          onChange={e => onSearchChange(e.target.value)}
-          className="w-full py-2 ps-10 text-start text-sm md:text-base"
-        />
-      </div>
-
       <Tabs
         defaultValue="all"
         className="w-full"
@@ -54,6 +43,23 @@ export const StoriesFilters = ({
           ))}
         </TabsList>
       </Tabs>
+
+      <div className="flex flex-wrap items-center justify-between">
+        <div className="relative w-full max-w-md">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground rtl:left-auto rtl:right-3" />
+          <Input
+            type="text"
+            placeholder={t('searchStories')}
+            value={searchTerm}
+            onChange={e => onSearchChange(e.target.value)}
+            className="w-full py-2 ps-10 text-start text-sm md:text-base"
+          />
+        </div>
+
+        <div className="rounded-lg bg-primary px-4 py-2 text-white">
+          here well be the age filters
+        </div>
+      </div>
     </div>
   )
 }

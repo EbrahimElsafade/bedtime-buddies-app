@@ -16,7 +16,6 @@ import { useTranslation } from 'react-i18next'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getMultilingualText } from '@/utils/multilingualUtils'
 import { useLanguage } from '@/contexts/LanguageContext'
-import { StoriesHeader } from './Stories/StoriesHeader'
 import { StoriesFilters } from './Stories/StoriesFilters'
 
 const Stories = () => {
@@ -98,13 +97,20 @@ const Stories = () => {
         <title>{t('meta:titles.stories')}</title>
         <meta name="description" content={t('meta:descriptions.stories')} />
         <meta property="og:title" content={t('meta:titles.stories')} />
-        <meta property="og:description" content={t('meta:descriptions.stories')} />
+        <meta
+          property="og:description"
+          content={t('meta:descriptions.stories')}
+        />
         <meta property="og:type" content="website" />
       </Helmet>
 
       <div className="container mx-auto max-w-7xl">
-        <StoriesHeader />
-        
+        <div className="mb-4 text-center md:mb-6 lg:mb-8">
+          <h1 className="mb-2 text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
+            {t('allStories')}
+          </h1>
+        </div>
+
         <StoriesFilters
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}

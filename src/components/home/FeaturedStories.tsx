@@ -14,6 +14,7 @@ import { supabase } from '@/integrations/supabase/client'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getMultilingualText } from '@/utils/multilingualUtils'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { Button } from '../ui/button'
 
 const FeaturedStories = () => {
   const { t, i18n } = useTranslation(['misc', 'stories'])
@@ -40,11 +41,6 @@ const FeaturedStories = () => {
     },
   })
 
-  const handleViewAllClick = e => {
-    console.log('View All Stories button clicked in FeaturedStories')
-    // Don't prevent default - let Link handle navigation
-  }
-
   if (isLoading) {
     return (
       <section className="relative bg-secondary/50 px-4 py-8 md:py-12">
@@ -57,7 +53,7 @@ const FeaturedStories = () => {
               to="/stories"
               className="flex items-center text-sm font-medium text-primary-foreground hover:underline"
             >
-              {t('misc:free.viewAll')}{' '}
+              {t('misc:free.viewAll')}
               <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
             </Link>
           </div>
@@ -97,20 +93,12 @@ const FeaturedStories = () => {
   }
 
   return (
-    <section className="relative  px-4 py-8 md:py-12">
+    <section className="relative px-4 py-8 md:py-12">
       <div className="container mx-auto">
-        <div className="mb-4 relative z-10 flex items-center justify-between gap-2 sm:flex-row sm:items-center md:mb-6">
+        <div className="relative z-10 mb-4 flex items-center justify-between gap-2 sm:flex-row sm:items-center md:mb-6">
           <h2 className="font-bubbly text-lg text-primary-foreground md:text-3xl">
             {t('stories:featured.title')}
           </h2>
-          <Link
-            to="/stories"
-            className="flex shrink-0 items-center text-xs font-medium text-primary-foreground hover:underline md:text-sm"
-            onClick={handleViewAllClick}
-          >
-            {t('misc:free.viewAll')}{' '}
-            <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
-          </Link>
         </div>
 
         <div className="relative z-40 grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
@@ -184,6 +172,7 @@ const FeaturedStories = () => {
                           </div>
                         </div>
                       </div>
+
                       <CardDescription className="line-clamp-2 text-sm leading-relaxed text-primary-foreground">
                         {storyDescription}
                       </CardDescription>
@@ -194,6 +183,12 @@ const FeaturedStories = () => {
             )
           })}
         </div>
+      </div>
+
+      <div className="mt-4 flex items-center justify-center">
+        <Link to="/stories">
+          <Button>{t('misc:free.viewAll')}</Button>
+        </Link>
       </div>
 
       {/* Fun decorative elements for stories section */}

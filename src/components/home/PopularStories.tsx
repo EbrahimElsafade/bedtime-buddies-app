@@ -38,11 +38,6 @@ const PopularStories = () => {
     },
   })
 
-  const handleViewAllClick = e => {
-    console.log('View All Stories button clicked in PopularStories')
-    // Don't prevent default - let Link handle navigation
-  }
-
   if (isLoading) {
     return (
       <section className="relative overflow-hidden px-4 py-12">
@@ -59,7 +54,7 @@ const PopularStories = () => {
               <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 gap-4 md:gap-6 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
             {[1, 2, 3].map(i => (
               <Card
                 key={i}
@@ -82,14 +77,13 @@ const PopularStories = () => {
   return (
     <section className="relative overflow-hidden px-4 py-12">
       <div className="container mx-auto">
-        <div className="mb-6 relative z-10 flex items-center justify-between">
+        <div className="relative z-10 mb-6 flex items-center justify-between">
           <h2 className="font-bubbly text-lg text-primary-foreground md:text-3xl">
             {t('stories:popular')}
           </h2>
           <Link
             to="/stories"
             className="flex items-center text-xs font-medium text-primary-foreground hover:underline md:text-sm"
-            onClick={handleViewAllClick}
           >
             {t('misc:free.viewAll')}{' '}
             <ArrowRight className="ms-1 h-4 w-4 rtl:rotate-180" />

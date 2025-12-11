@@ -113,7 +113,7 @@
 
 ## course
 
-- in the courses page change the image from object-cover to fill [ ]
+- in the courses page change the image from object-cover to fill [x]
 - create a new layer in the courses => first layer just the course info => then the second layer the lessons with the playlist [ ]
 - add communicate with a spacial agent button in the course page [ ]
 
@@ -124,10 +124,10 @@
 
 ## home
 
-- in the home page change the courses section color to white [ ]
-- in the home page move show more content to the bottom middle of the section [ ]
-- in the course card when the user is not logged in just keep the login button but remove the overlay [ ]
-- in the courses card there is a 'S' letter next to the word lesson remove it [ ]
+- in the home page change the courses section color to white [x]
+- in the home page move show more content to the bottom middle of the section [x]
+- in the course card when the user is not logged in just keep the login button but remove the overlay [x]
+- in the courses card there is a 'S' letter next to the word lesson remove it [x]
 
 ## games
 
@@ -135,7 +135,7 @@
 
 ## general
 
-- unify the header of all the pages [ ]
+- unify the header of all the pages [x]
 - in the free content put a join now button [ ]
 
 ## profile
@@ -143,9 +143,9 @@
 - new tab in the profile for the courses and stories that finished [ ]
 - review the translations of the profile [ ]
 - set milestones in the profile and give it tags {
-  5&5:"name1",
-  10&10: "name2",
-  15&15: "name3",
+  05&05 : "name1",
+  10&10 : "name2",
+  15&15 : "name3",
   20&20 : "name4",
   25&25 : "name5"
   } [ ]

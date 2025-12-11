@@ -161,7 +161,7 @@ export const useFeaturedCourses = () => {
         .from('courses')
         .select('*')
         .eq('is_published', true)
-        .limit(3)
+        .limit(6)
         .order('created_at', { ascending: false })
 
       if (coursesError) {

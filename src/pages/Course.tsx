@@ -249,7 +249,7 @@ const Course = () => {
                 <img
                   src={getImageUrl(course.coverImagePath)}
                   alt={getLocalized(course, 'title', lang)}
-                  className="aspect-[4/3] h-auto w-full object-cover"
+                  className="aspect-[4/3] h-auto w-full object-fill"
                 />
               </Card>
             </div>

@@ -17,17 +17,25 @@ import { Lock } from 'lucide-react'
 const Games = () => {
   const { t } = useTranslation(['games', 'common', 'navigation', 'meta'])
   const { user } = useAuth()
-  const [gameSettings, setGameSettings] = useState<Record<string, { is_free: boolean; is_active: boolean }>>({})
+  const [gameSettings, setGameSettings] = useState<
+    Record<string, { is_free: boolean; is_active: boolean }>
+  >({})
   const [hasPremium, setHasPremium] = useState(false)
 
   useEffect(() => {
     const fetchGameSettings = async () => {
       const { data } = await supabase.from('games').select('*')
       if (data) {
-        const settings = data.reduce((acc, game) => {
-          acc[game.game_id] = { is_free: game.is_free, is_active: game.is_active }
-          return acc
-        }, {} as Record<string, { is_free: boolean; is_active: boolean }>)
+        const settings = data.reduce(
+          (acc, game) => {
+            acc[game.game_id] = {
+              is_free: game.is_free,
+              is_active: game.is_active,
+            }
+            return acc
+          },
+          {} as Record<string, { is_free: boolean; is_active: boolean }>,
+        )
         setGameSettings(settings)
       }
     }
@@ -39,8 +47,11 @@ const Games = () => {
         .select('is_premium, subscription_end')
         .eq('id', user.id)
         .single()
-      
-      if (data?.is_premium && (!data.subscription_end || new Date(data.subscription_end) > new Date())) {
+
+      if (
+        data?.is_premium &&
+        (!data.subscription_end || new Date(data.subscription_end) > new Date())
+      ) {
         setHasPremium(true)
       }
     }
@@ -124,7 +135,9 @@ const Games = () => {
     },
   ]
 
-  const activeGames = games.filter(game => gameSettings[game.id]?.is_active !== false)
+  const activeGames = games.filter(
+    game => gameSettings[game.id]?.is_active !== false,
+  )
 
   return (
     <div className="min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-3 py-4 md:px-4 md:py-8 lg:py-12">
@@ -139,14 +152,11 @@ const Games = () => {
         <meta property="og:type" content="website" />
       </Helmet>
 
-      <div className="container mx-auto max-w-6xl">
-        <div className="mb-8 text-center md:mb-10 lg:mb-12">
-          <h1 className="mb-2 bg-gradient-to-r from-primary-foreground to-purple-600 bg-clip-text text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
+      <div className="container mx-auto max-w-7xl">
+        <div className="mb-4 text-center md:mb-6 lg:mb-8">
+          <h1 className="mb-2 text-xl font-bold leading-tight md:mb-3 md:text-2xl lg:mb-4 lg:text-3xl xl:text-4xl">
             {t('title')}
           </h1>
-          <p className="mx-auto max-w-2xl px-2 text-xs text-muted-foreground md:text-sm lg:text-base">
-            {t('subtitle')}
-          </p>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8 xl:grid-cols-4">
@@ -155,9 +165,9 @@ const Games = () => {
             const canAccess = isFree || hasPremium
 
             return (
-              <Link 
-                key={game.id} 
-                to={canAccess ? `/games/${game.id}` : '/subscription'} 
+              <Link
+                key={game.id}
+                to={canAccess ? `/games/${game.id}` : '/subscription'}
                 className="group relative"
               >
                 <Card className="flex h-full flex-col items-center justify-center text-center transition-all duration-300 hover:border-primary hover:shadow-lg">
@@ -167,7 +177,7 @@ const Games = () => {
                         {t(isFree ? 'free' : 'premium')}
                       </Badge>
                     </div>
-                    <div className="mb-4 text-6xl relative">
+                    <div className="relative mb-4 text-6xl">
                       {game.icon}
                       {!canAccess && (
                         <div className="absolute inset-0 flex items-center justify-center">

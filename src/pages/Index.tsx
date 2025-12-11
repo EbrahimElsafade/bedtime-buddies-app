@@ -83,7 +83,7 @@ const Index = () => {
 
       {homePageSettings?.storiesSection !== false && <FeaturedStories />}
       {homePageSettings?.courses !== false && <FeaturedCourses />}
-      {homePageSettings?.topRated !== false && <PopularStories />}
+      {/* {homePageSettings?.topRated !== false && <PopularStories />}  */}
       {/* {homePageSettings?.specialStory !== false && <EntertainmentStories />} */}
 
       {homePageSettings?.features !== false && <Features />}
