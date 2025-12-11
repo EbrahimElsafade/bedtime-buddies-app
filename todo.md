@@ -24,6 +24,7 @@
     ]
 
 ## ✅ COMPLETED: TypeScript Type Safety (Latest)
+
     [✓] Replaced all `Function` types with explicit function signatures
     [✓] Replaced all `any` types with proper interfaces and types
     [✓] Created type definitions: Language, Category, StorySection, FavoriteItem
@@ -107,3 +108,26 @@
     [ ] link a user as instructor to a course or set the instructor data manually 🡅
     [ ] course objectives, instructors, and lessons data not localized 🡅
     [ ] course duration calc 🡅
+
+# TODO 11-12-2025:
+- review the translations of the profile [ ]
+- the story video repeat when finished [ ]
+- set a loader between the languages in the story to indicate the change [ ]
+- in the course card when the user is not logged in just keep the login button but remove the overlay [ ]
+- in the home page change the courses section color to white [ ]
+- in the home page move show more content to the bottom middle of the section [ ]
+- in the snake and lader game make the control float in the screen instead of being all the way down [ ]
+- in the courses card there is a 'S' letter remove it [ ]
+- in the courses page change the image from object-cover to fill [ ]
+- create a new layer in the courses => first layer just the course info => then the second layer the lessons with the playlist [ ]
+- add communicate with a spacial agent button in the course page [ ]
+- unify the header of all the pages [ ]
+- new tab in the profile for the courses and stories that finished [ ]
+- in the free content put a join now button [ ]
+- set milestones in the profile and give it tags {
+  5&5:"name1",
+  10&10: "name2",
+  15&15: "name3",
+  20&20 : "name4",
+  25&25 : "name5"
+  } [ ]
