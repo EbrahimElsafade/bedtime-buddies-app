@@ -89,7 +89,7 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
   return (
     <div
       ref={containerRef}
-      className={cn('player aspect-video w-full', className)}
+      className={cn('player', className)}
     />
   )
 }
