@@ -58,12 +58,12 @@ export const StoriesFilters = ({
         </div>
 
         <div className="flex gap-4 justify-between w-full lg:max-w-md rounded-lg px-4 py-2 flex-wrap">
-          <Badge>here</Badge>
-          <Badge>well</Badge>
-          <Badge>be</Badge>
           <Badge>the</Badge>
           <Badge>age</Badge>
           <Badge>filters</Badge>
+          <Badge>well</Badge>
+          <Badge>be</Badge>
+          <Badge>here</Badge>
         </div>
       </div>
     </div>

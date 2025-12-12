@@ -125,12 +125,12 @@ const Courses = () => {
             </div>
 
             <div className="flex w-full flex-wrap justify-between gap-4 rounded-lg px-4 py-2 lg:max-w-md">
-              <Badge>here</Badge>
-              <Badge>well</Badge>
-              <Badge>be</Badge>
               <Badge>the</Badge>
               <Badge>age</Badge>
               <Badge>filters</Badge>
+              <Badge>well</Badge>
+              <Badge>be</Badge>
+              <Badge>here</Badge>
             </div>
           </div>
         </div>
