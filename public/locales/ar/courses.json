@@ -17,7 +17,7 @@
   "button": {
     "backToCourses": "العودة إلى الدورات",
     "startLearning": "ابدأ التعلم",
-    "communicateWithASpecialist": "تواصل مع متخصصص"
+    "communicateWithASpecialist": "تواصل مع متخصص"
   },
   "free": {
     "tag": "مجاني"
@@ -25,5 +25,23 @@
   "premium": {
     "tag": "مميز"
   },
-  "duration": "دقيقة"
+  "duration": "دقيقة",
+  "contact": {
+    "title": "تواصل مع متخصص",
+    "description": "املأ النموذج أدناه وسنتواصل معك في أقرب وقت ممكن.",
+    "name": "الاسم",
+    "namePlaceholder": "أدخل اسمك",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "أدخل بريدك الإلكتروني",
+    "phone": "رقم الهاتف (اختياري)",
+    "phonePlaceholder": "أدخل رقم هاتفك",
+    "message": "الرسالة",
+    "messagePlaceholder": "كيف يمكننا مساعدتك؟",
+    "submit": "إرسال الرسالة",
+    "cancel": "إلغاء",
+    "successTitle": "تم إرسال الرسالة!",
+    "successMessage": "لقد استلمنا رسالتك وسنتواصل معك قريباً.",
+    "errorTitle": "فشل الإرسال",
+    "errorMessage": "حدث خطأ أثناء إرسال رسالتك. يرجى المحاولة مرة أخرى."
+  }
 }

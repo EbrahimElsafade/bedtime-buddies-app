@@ -17,7 +17,8 @@
   },
   "button": {
     "backToCourses": "Retour aux Cours",
-    "startLearning": "Commencer l'Apprentissage"
+    "startLearning": "Commencer l'Apprentissage",
+    "communicateWithASpecialist": "Contacter un Spécialiste"
   },
   "free": {
     "tag": "Gratuit"
@@ -25,5 +26,23 @@
   "premium": {
     "tag": "Premium"
   },
-  "duration": "min"
+  "duration": "min",
+  "contact": {
+    "title": "Contacter un Spécialiste",
+    "description": "Remplissez le formulaire ci-dessous et nous vous répondrons dès que possible.",
+    "name": "Nom",
+    "namePlaceholder": "Entrez votre nom",
+    "email": "Email",
+    "emailPlaceholder": "Entrez votre email",
+    "phone": "Téléphone (optionnel)",
+    "phonePlaceholder": "Entrez votre numéro de téléphone",
+    "message": "Message",
+    "messagePlaceholder": "Comment pouvons-nous vous aider?",
+    "submit": "Envoyer le Message",
+    "cancel": "Annuler",
+    "successTitle": "Message Envoyé!",
+    "successMessage": "Nous avons reçu votre message et vous répondrons bientôt.",
+    "errorTitle": "Échec de l'Envoi",
+    "errorMessage": "Une erreur s'est produite lors de l'envoi de votre message. Veuillez réessayer."
+  }
 }
