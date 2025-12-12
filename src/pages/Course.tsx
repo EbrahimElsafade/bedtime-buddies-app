@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { ArrowLeft, Clock, BookOpen } from 'lucide-react'
@@ -14,6 +14,7 @@ import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 import { useTranslation } from 'react-i18next'
 import { CourseHeader } from '@/components/course/CourseHeader'
+import { ContactFormModal } from '@/components/course/ContactFormModal'
 import { useUserRole } from '@/hooks/useUserRole'
 import { getCategoryText } from '@/utils/courseUtils'
 
@@ -30,6 +31,7 @@ const Course = () => {
   const { isFavorite, addFavorite, removeFavorite } = useCourseFavorites()
   const { isPremium } = useUserRole(user)
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false)
 
   // Compute category from course data
   const category = course
@@ -282,7 +284,7 @@ const Course = () => {
                   {t('button.startLearning')}
                 </Button>
 
-                <Button variant="secondary">
+                <Button variant="secondary" onClick={() => setIsContactModalOpen(true)}>
                   {t('button.communicateWithASpecialist')}
                 </Button>
               </div>
@@ -321,6 +323,11 @@ const Course = () => {
           })()}
         </div>
       </div>
+
+      <ContactFormModal 
+        open={isContactModalOpen} 
+        onOpenChange={setIsContactModalOpen} 
+      />
     </div>
   )
 }

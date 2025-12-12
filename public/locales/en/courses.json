@@ -17,7 +17,8 @@
   },
   "button": {
     "backToCourses": "Back to Courses",
-    "startLearning": "Start Learning"
+    "startLearning": "Start Learning",
+    "communicateWithASpecialist": "Contact a Specialist"
   },
   "free": {
     "tag": "Free"
@@ -25,5 +26,23 @@
   "premium": {
     "tag": "Premium"
   },
-  "duration": "min"
+  "duration": "min",
+  "contact": {
+    "title": "Contact a Specialist",
+    "description": "Fill out the form below and we'll get back to you as soon as possible.",
+    "name": "Name",
+    "namePlaceholder": "Enter your name",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "phone": "Phone (optional)",
+    "phonePlaceholder": "Enter your phone number",
+    "message": "Message",
+    "messagePlaceholder": "How can we help you?",
+    "submit": "Send Message",
+    "cancel": "Cancel",
+    "successTitle": "Message Sent!",
+    "successMessage": "We've received your message and will get back to you soon.",
+    "errorTitle": "Failed to Send",
+    "errorMessage": "There was an error sending your message. Please try again."
+  }
 }
