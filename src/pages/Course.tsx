@@ -178,7 +178,7 @@ const Course = () => {
 
         <div className="grid">
           {/* Course Header */}
-          <div className="flex flex-col items-start gap-8 md:flex-row">
+          <div className="flex flex-col items-start gap-4 md:flex-row">
             <div className="my-auto md:w-1/3">
               <Card className="overflow-hidden border-primary/30">
                 <img
@@ -277,11 +277,15 @@ const Course = () => {
                 </div>
               )}
 
-              <Button onClick={handleStartCourse}>
-                {isAuthenticated && isPremium
-                  ? t('button.startLearning')
-                  : t('button.goToPremium')}
-              </Button>
+              <div className="flex gap-4">
+                <Button onClick={handleStartCourse}>
+                  {t('button.startLearning')}
+                </Button>
+
+                <Button variant="secondary">
+                  {t('button.communicateWithASpecialist')}
+                </Button>
+              </div>
             </div>
           </div>
 

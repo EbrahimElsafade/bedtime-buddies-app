@@ -115,7 +115,7 @@
 
 - in the courses page change the image from object-cover to fill [x]
 - create a new layer in the courses => first layer just the course info => then the second layer the lessons with the playlist [x]
-- add communicate with a spacial agent button in the course page [ ]
+- add communicate with a spacial agent button in the course page [ ] <!-- the button is there but the popup not yet  -->
 
 ## story
 
@@ -137,7 +137,7 @@
 ## general
 
 - unify the header of all the pages [x]
-- in the free content put a join now button [ ]
+- in the free content put a join now button [ ] <!-- I don't actually get this one we will need to talk about it  -->
 
 ## profile
 
