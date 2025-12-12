@@ -1,19 +1,15 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { ArrowLeft, Clock, BookOpen, Play, Lock } from 'lucide-react'
+import { ArrowLeft, Clock, BookOpen } from 'lucide-react'
 import { useLoading } from '@/contexts/LoadingContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Card } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
-import { CourseVideo } from '@/types/course'
 import { useCourseData } from '@/hooks/useCourseData'
 import { useCourseFavorites } from '@/hooks/useFavorites'
 import { useAuth } from '@/contexts/AuthContext'
-import { cn } from '@/lib/utils'
-import YouTubePlayer from '@/components/course/YouTubePlayer'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 import { useTranslation } from 'react-i18next'
@@ -24,11 +20,8 @@ const Course = () => {
   const { id: courseId } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { t } = useTranslation(['courses', 'meta', 'common'])
-  const { isAuthenticated, isLoading: authLoading, profile, user } = useAuth()
+  const { isAuthenticated, isLoading: authLoading, user } = useAuth()
   const { toast } = useToast()
-  const [activeTab, setActiveTab] = useState('overview')
-  const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
-  const [autoplayNext, setAutoplayNext] = useState(false)
 
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
@@ -43,29 +36,9 @@ const Course = () => {
     }
   }, [isLoading, setIsLoading, setLoadingMessage, t])
 
-  const tabsRef = useRef<HTMLDivElement>(null)
-
-  const scrollToTabs = () => {
-    setTimeout(() => {
-      requestAnimationFrame(() => {
-        if (tabsRef.current) {
-          tabsRef.current.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-          })
-        }
-      })
-    })
-  }
-
   useEffect(() => {
     if (course) {
       document.title = `${getLocalized(course, 'title', lang)} | Dolphoon`
-      // Set the first video as selected by default if there are videos
-      if (course.videos && course.videos.length > 0) {
-        setSelectedVideo(course.videos[0])
-        setAutoplayNext(false)
-      }
     } else {
       document.title = 'Course Not Found | Dolphoon'
     }
@@ -78,6 +51,7 @@ const Course = () => {
         description: t('toast.pleaseLoginToStart'),
         variant: 'destructive',
       })
+      navigate('/login')
       return
     }
 
@@ -90,56 +64,8 @@ const Course = () => {
       return
     }
 
-    // If authentication and premium check passes, we would start the course
-    toast({
-      title: t('toast.courseStarted'),
-      description: `${t('toast.enjoyLearning')} ${getLocalized(course, 'title', lang)}!`,
-    })
-
-    // Select first video and switch to content tab
-    if (course?.videos && course.videos.length > 0) {
-      setSelectedVideo(course.videos[0])
-      setActiveTab('content')
-      scrollToTabs()
-    }
-  }
-
-  const handleVideoSelect = (video: CourseVideo) => {
-    // Allow access if user is premium OR if the lesson is free
-    if (!isPremium && !video.isFree) {
-      toast({
-        title: t('toast.premiumRequired'),
-        description: t('toast.upgradeToPremium'),
-        variant: 'destructive',
-      })
-      return
-    }
-    setSelectedVideo(video)
-  }
-
-  const handleVideoEnd = () => {
-    // Find the index of the current video
-    if (!course?.videos || !selectedVideo) return
-
-    const currentIndex = course.videos.findIndex(v => v.id === selectedVideo.id)
-    const nextIndex = currentIndex + 1
-
-    // If there's a next video, select it and set autoplay
-    if (nextIndex < course.videos.length) {
-      const nextVideo = course.videos[nextIndex]
-      setAutoplayNext(true)
-      handleVideoSelect(nextVideo)
-    }
-  }
-
-  const getNextVideoExists = (): boolean => {
-    if (!course?.videos || !selectedVideo) return false
-    const currentIndex = course.videos.findIndex(v => v.id === selectedVideo.id)
-    return currentIndex + 1 < course.videos.length
-  }
-
-  const handleCountdownCancel = () => {
-    setAutoplayNext(false)
+    // Navigate to the lessons page
+    navigate(`/courses/${courseId}/lessons`)
   }
 
   // Redirect to login if not authenticated (but wait while auth is loading)
@@ -302,226 +228,92 @@ const Course = () => {
             </div>
           </div>
 
-          {/* Tabs Section */}
-          <Tabs
-            ref={tabsRef}
-            value={activeTab}
-            onValueChange={setActiveTab}
-            className="w-full"
-          >
-            <TabsList className="mb-8">
-              <TabsTrigger value="overview">{t('course.overview')}</TabsTrigger>
-              <TabsTrigger value="content">{t('course.content')}</TabsTrigger>
-            </TabsList>
+          {/* Overview Section */}
+          <div className="space-y-8">
+            <div className="prose prose-dream mb-8 max-w-none text-primary-foreground">
+              <h2 className="mb-3 font-bubbly text-xl text-primary-foreground">
+                {t('course.about')}
+              </h2>
+              <p>{getLocalized(course, 'description', lang)}</p>
 
-            {/* Overview Tab */}
-            <TabsContent value="overview" className="space-y-8">
-              <div className="prose prose-dream mb-8 max-w-none text-primary-foreground">
-                <h2 className="mb-3 font-bubbly text-xl text-primary-foreground">
-                  {t('course.about')}
-                </h2>
-                <p>{getLocalized(course, 'description', lang)}</p>
-
-                {(() => {
-                  const objectives =
-                    ((course as Record<string, unknown>)[`learning_objectives_${lang}`] as string[]) ||
-                    course.learningObjectives ||
-                    []
-                  return (
-                    objectives &&
-                    (objectives as string[]).length > 0 && (
-                      <>
-                        <h2 className="mb-3 mt-6 font-bubbly text-xl text-primary-foreground">
-                          {t('course.whatYouLearn')}
-                        </h2>
-                        <ul
-                          className="list-decimal ps-5"
-                          dir={lang === 'ar' ? 'rtl' : 'ltr'}
-                        >
-                          {(objectives as string[]).map(
-                            (objective: string, index: number) => (
-                              <li key={index}>{objective}</li>
-                            ),
-                          )}
-                        </ul>
-                      </>
-                    )
-                  )
-                })()}
-
-                {course.instructor && (
-                  <div dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-                    <h2 className="mb-3 mt-6 font-bubbly text-xl text-primary-foreground">
-                      {t('course.instructor')}
-                    </h2>
-                    <div className="flex items-start gap-4">
-                      {course.instructor.avatar && (
-                        <img
-                          src={course.instructor.avatar}
-                          alt={getLocalized(course.instructor, 'name', lang)}
-                          className="h-16 w-16 rounded-full object-cover"
-                        />
-                      )}
-                      <div>
-                        <h3 className="font-medium text-primary-foreground">
-                          {getLocalized(course.instructor, 'name', lang)}
-                        </h3>
-                        <p className="mt-1 text-sm text-primary-foreground/80">
-                          {getLocalized(course.instructor, 'bio', lang)}
-                        </p>
-                        {(() => {
-                          const expertise = getLocalized(
-                            course.instructor,
-                            'expertise',
-                            lang,
-                          )
-                          return (
-                            Array.isArray(expertise) &&
-                            expertise.length > 0 && (
-                              <div className="mt-2 flex flex-wrap gap-1">
-                                {expertise.map(
-                                  (skill: string, index: number) => (
-                                    <Badge
-                                      key={index}
-                                      variant="secondary"
-                                      className="text-xs"
-                                    >
-                                      {skill}
-                                    </Badge>
-                                  ),
-                                )}
-                              </div>
-                            )
-                          )
-                        })()}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </TabsContent>
-
-            {/* Content Tab */}
-            <TabsContent value="content" className="space-y-8">
-              <div className="flex flex-col gap-8 lg:flex-row rtl:lg:flex-row-reverse">
-                {/* Video Player */}
-                <div className="lg:flex-[2]">
-                  {selectedVideo ? (
-                    <div className="space-y-4">
-                      <div className="aspect-video overflow-hidden rounded-lg bg-black">
-                        {selectedVideo.videoUrl ? (
-                          <YouTubePlayer
-                            videoId={selectedVideo.videoUrl}
-                            title={getLocalized(selectedVideo, 'title', lang)}
-                            className="rounded-lg"
-                            onVideoEnd={handleVideoEnd}
-                            showCountdownOnEnd={getNextVideoExists()}
-                            autoplay={autoplayNext}
-                            onCountdownCancel={handleCountdownCancel}
-                          />
-                        ) : selectedVideo.videoPath ? (
-                          <div className="flex h-full items-center justify-center text-secondary">
-                            <p>Legacy video format - please update to YouTube</p>
-                          </div>
-                        ) : (
-                          <div className="flex h-full items-center justify-center text-secondary">
-                            <p>No video source available</p>
-                          </div>
+              {(() => {
+                const objectives =
+                  ((course as Record<string, unknown>)[`learning_objectives_${lang}`] as string[]) ||
+                  course.learningObjectives ||
+                  []
+                return (
+                  objectives &&
+                  (objectives as string[]).length > 0 && (
+                    <>
+                      <h2 className="mb-3 mt-6 font-bubbly text-xl text-primary-foreground">
+                        {t('course.whatYouLearn')}
+                      </h2>
+                      <ul
+                        className="list-decimal ps-5"
+                        dir={lang === 'ar' ? 'rtl' : 'ltr'}
+                      >
+                        {(objectives as string[]).map(
+                          (objective: string, index: number) => (
+                            <li key={index}>{objective}</li>
+                          ),
                         )}
-                      </div>
-                      <div>
-                        <h3 className="mb-2 font-bubbly text-xl text-primary-foreground">
-                          {getLocalized(selectedVideo, 'title', lang)}
-                        </h3>
-                        <div className="mb-2 flex items-center text-sm text-primary-foreground">
-                          <Clock className="mr-1 h-4 w-4" />
-                          <span>
-                            {Math.floor(selectedVideo.duration / 60)}:{String(selectedVideo.duration % 60).padStart(2, '0')} {t('duration')}
-                          </span>
-                        </div>
-                        <p className="text-primary-foreground">
-                          {getLocalized(selectedVideo, 'description', lang)}
-                        </p>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="flex aspect-video items-center justify-center rounded-lg bg-secondary">
-                      <p className="text-center text-muted-foreground">
-                        {t('course.selectVideo')}
-                      </p>
-                    </div>
-                  )}
-                </div>
+                      </ul>
+                    </>
+                  )
+                )
+              })()}
 
-                {/* Video List */}
-                <div className="lg:flex-1">
-                  <h3 className="mb-4 font-bubbly text-xl text-primary-foreground">
-                    {t('course.courseVideos')}
-                  </h3>
-
-                  <div className="space-y-3">
-                    {course.videos && course.videos.length > 0 ? (
-                      course.videos.map(video => (
-                        <Card
-                          key={video.id}
-                          className={cn(
-                            'cursor-pointer transition-all hover:border-primary-foreground',
-                            selectedVideo?.id === video.id &&
-                              'border-primary-foreground',
-                          )}
-                          onClick={() => handleVideoSelect(video)}
-                        >
-                          <CardContent className="p-3">
-                            <div className="flex items-start gap-3">
-                              <div className="relative h-16 w-24 flex-shrink-0">
-                                <img
-                                  src={getImageUrl(video.thumbnailPath)}
-                                  alt={getLocalized(video, 'title', lang)}
-                                  className="h-full w-full rounded object-cover"
-                                />
-                                {!isPremium && !video.isFree && (
-                                  <div className="absolute inset-0 flex items-center justify-center rounded bg-black/50">
-                                    <Lock className="h-6 w-6 text-secondary" />
-                                  </div>
-                                )}
-                                <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity hover:opacity-100">
-                                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-foreground">
-                                    <Play className="h-4 w-4 text-secondary" />
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <div className="flex items-center gap-2">
-                                  <h4 className="truncate text-sm font-medium text-primary-foreground">
-                                    {getLocalized(video, 'title', lang)}
-                                  </h4>
-                                  {video.isFree && (
-                                    <Badge variant="secondary" className="text-xs px-1.5 py-0">
-                                      {t('common:free', 'Free')}
-                                    </Badge>
-                                  )}
-                                </div>
-                                <div className="mt-1 flex items-center text-xs text-primary-foreground/70">
-                                  <Clock className="mx-1 h-3 w-3" />
-                                  <span>
-                                    {Math.floor(video.duration / 60)}:{String(video.duration % 60).padStart(2, '0')}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))
-                    ) : (
-                      <p className="py-4 text-center text-muted-foreground">
-                        {t('course.noVideos')}
-                      </p>
+              {course.instructor && (
+                <div dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+                  <h2 className="mb-3 mt-6 font-bubbly text-xl text-primary-foreground">
+                    {t('course.instructor')}
+                  </h2>
+                  <div className="flex items-start gap-4">
+                    {course.instructor.avatar && (
+                      <img
+                        src={course.instructor.avatar}
+                        alt={getLocalized(course.instructor, 'name', lang)}
+                        className="h-16 w-16 rounded-full object-cover"
+                      />
                     )}
+                    <div>
+                      <h3 className="font-medium text-primary-foreground">
+                        {getLocalized(course.instructor, 'name', lang)}
+                      </h3>
+                      <p className="mt-1 text-sm text-primary-foreground/80">
+                        {getLocalized(course.instructor, 'bio', lang)}
+                      </p>
+                      {(() => {
+                        const expertise = getLocalized(
+                          course.instructor,
+                          'expertise',
+                          lang,
+                        )
+                        return (
+                          Array.isArray(expertise) &&
+                          expertise.length > 0 && (
+                            <div className="mt-2 flex flex-wrap gap-1">
+                              {expertise.map(
+                                (skill: string, index: number) => (
+                                  <Badge
+                                    key={index}
+                                    variant="secondary"
+                                    className="text-xs"
+                                  >
+                                    {skill}
+                                  </Badge>
+                                ),
+                              )}
+                            </div>
+                          )
+                        )
+                      })()}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </TabsContent>
-          </Tabs>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
