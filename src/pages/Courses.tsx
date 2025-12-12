@@ -150,7 +150,7 @@ const Courses = () => {
                   cat.id === course.category || cat.name === course.category,
               )
 
-              // Show login overlay for non-authenticated users
+              // Show login overlay for non-authenticated users (use homepage card style)
               if (!isAuthenticated) {
                 return (
                   <div
@@ -158,12 +158,12 @@ const Courses = () => {
                     onClick={() => navigate('/login')}
                     className="cursor-pointer"
                   >
-                    <Card className="story-card relative z-20 flex h-[25rem] w-full flex-col overflow-hidden border-primary/20 bg-secondary/10 backdrop-blur-sm">
-                      <div className="relative h-48 overflow-hidden">
+                    <Card className="story-card relative z-10 h-[500px] overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm">
+                      <div className="relative aspect-[3/2]">
                         <img
                           src={getImageUrl(course.coverImagePath)}
                           alt={getLocalized(course, 'title', lang)}
-                          className="h-full w-full object-cover blur-sm"
+                          className="h-full w-full overflow-hidden object-cover"
                           onError={e => {
                             e.currentTarget.src =
                               'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
@@ -185,87 +185,67 @@ const Courses = () => {
               }
 
               return (
-                <Link key={course.id} to={`/courses/${course.id}`}>
-                  <Card className="story-card relative z-20 flex h-[25rem] w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-secondary/10 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg">
-                    <div className="relative h-48 overflow-hidden">
+                <Link key={course.id} to={`/courses/${course.id}`} className="block">
+                  <Card className="story-card relative z-10 cursor-pointer overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-transform hover:scale-105">
+                    <div className="relative aspect-[3/2] ">
                       <img
                         src={getImageUrl(course.coverImagePath)}
                         alt={getLocalized(course, 'title', lang)}
-                        className="h-full w-full object-cover"
+                        className="h-full w-full overflow-hidden object-cover"
                         onError={e => {
-                          console.log(
-                            'Course image failed to load:',
-                            course.coverImagePath,
-                          )
                           e.currentTarget.src =
                             'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
                         }}
                       />
+                      <div className="absolute right-2 top-2 rounded-full bg-secondary/80 px-2 py-1 text-xs text-primary-foreground shadow-md">
+                        {course.minAge}-{course.maxAge} {t('misc:courses.years')}
+                      </div>
                       {course.is_free && (
-                        <Badge className="absolute right-2 top-2 bg-green-500 hover:bg-green-600">
+                        <Badge className="absolute left-2 top-2 bg-green-500 hover:bg-green-600">
                           {t('courses:free.tag')}
                         </Badge>
                       )}
                       {!course.is_free && (
-                        <Badge className="absolute right-2 top-2 bg-gradient-to-r from-purple-500 to-pink-500">
+                        <Badge className="absolute left-2 top-2 bg-gradient-to-r from-purple-500 to-pink-500">
                           {t('premium:tag')}
                         </Badge>
                       )}
                     </div>
-
-                    <div className="grid gap-4">
-                      <CardHeader className="px-4 pt-4">
-                        <CardTitle className="line-clamp-2 flex-1 text-lg text-primary-foreground">
-                          {getLocalized(course, 'title', lang)}
-                        </CardTitle>
-
-                        <div className="grid grid-cols-2 gap-2">
-                          <Badge
-                            variant="secondary"
-                            className="bg-primary/30 text-xs text-primary-foreground"
-                          >
-                            {category
-                              ? getCategoryText(category, 'name', lang)
-                              : 'General'}
-                          </Badge>
-
-                          <Badge
-                            variant="secondary"
-                            className="flex items-center gap-2 bg-primary/30 text-xs text-primary-foreground"
-                          >
-                            <Clock className="h-3 w-3" />
-                            <span>
-                              {Math.floor(course.duration / 60)} {t('duration')}
-                            </span>
-                          </Badge>
-
-                          <Badge
-                            variant="secondary"
-                            className="flex items-center gap-2 bg-primary/30 text-xs text-primary-foreground"
-                          >
-                            <BookOpen className="mr-1 h-3 w-3" />
-                            <span>
-                              {course.lessons} {t('courses.lessons')}
-                            </span>
-                          </Badge>
-
-                          <Badge
-                            variant="secondary"
-                            className="flex items-center gap-2 bg-primary/30 text-xs text-primary-foreground"
-                          >
-                            <BookOpen className="mr-1 h-3 w-3" />
-                            <span>
-                              {course.minAge}-{course.maxAge}{' '}
-                              {t('courses.years')}
-                            </span>
-                          </Badge>
-                        </div>
-                      </CardHeader>
-
-                      <CardDescription className="line-clamp-2 px-4 text-sm leading-relaxed text-primary-foreground">
+                    <CardHeader className="h-28 pb-2">
+                      <CardTitle className="text-xl text-primary-foreground">
+                        {getLocalized(course, 'title', lang)}
+                      </CardTitle>
+                      <CardDescription className="line-clamp-2 text-primary-foreground">
                         {getLocalized(course, 'description', lang)}
                       </CardDescription>
-                    </div>
+                    </CardHeader>
+
+                    <CardContent className="pb-4">
+                      <div className="mb-2 flex flex-wrap gap-2">
+                        <Badge
+                          variant="secondary"
+                          className="bg-primary/30 text-primary-foreground"
+                        >
+                          {getCategoryText(category, 'name', lang) ||
+                            course.category ||
+                            'General'}
+                        </Badge>
+                      </div>
+                      <div className="flex items-center justify-between text-sm text-primary-foreground">
+                        <div className="flex items-center gap-2">
+                          <BookOpen className="mr-1 h-4 w-4" />
+                          <span>
+                            {course.lessons} {t('misc:courses.lessons')}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="mr-1 h-4 w-4" />
+                          <span>
+                            {Math.floor(course.duration / 60)} {t('misc:duration')}
+                          </span>
+                        </div>
+                      </div>
+                    </CardContent>
                   </Card>
                 </Link>
               )
