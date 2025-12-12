@@ -114,7 +114,7 @@
 ## course
 
 - in the courses page change the image from object-cover to fill [x]
-- create a new layer in the courses => first layer just the course info => then the second layer the lessons with the playlist [ ]
+- create a new layer in the courses => first layer just the course info => then the second layer the lessons with the playlist [x]
 - add communicate with a spacial agent button in the course page [ ]
 
 ## story

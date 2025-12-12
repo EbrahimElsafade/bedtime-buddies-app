@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
-import { useCourseData } from '@/hooks/useCourseData'
+import { useCourseData, useCourseCategories } from '@/hooks/useCourseData'
 import { useCourseFavorites } from '@/hooks/useFavorites'
 import { useAuth } from '@/contexts/AuthContext'
 import { getImageUrl } from '@/utils/imageUtils'
@@ -15,6 +15,7 @@ import { getLocalized } from '@/utils/getLocalized'
 import { useTranslation } from 'react-i18next'
 import { CourseHeader } from '@/components/course/CourseHeader'
 import { useUserRole } from '@/hooks/useUserRole'
+import { getCategoryText } from '@/utils/courseUtils'
 
 const Course = () => {
   const { id: courseId } = useParams<{ id: string }>()
@@ -25,9 +26,17 @@ const Course = () => {
 
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
+  const { data: categories = [] } = useCourseCategories()
   const { isFavorite, addFavorite, removeFavorite } = useCourseFavorites()
   const { isPremium } = useUserRole(user)
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
+
+  // Compute category from course data
+  const category = course
+    ? categories.find(
+        cat => cat.id === course.category || cat.name === course.category,
+      )
+    : null
 
   useEffect(() => {
     setIsLoading(isLoading)
@@ -167,10 +176,10 @@ const Course = () => {
           courseDescription={getLocalized(course, 'description', lang)}
         />
 
-        <div className="grid grid-cols-1 gap-8">
+        <div className="grid">
           {/* Course Header */}
           <div className="flex flex-col items-start gap-8 md:flex-row">
-            <div className="md:w-1/3">
+            <div className="my-auto md:w-1/3">
               <Card className="overflow-hidden border-primary/30">
                 <img
                   src={getImageUrl(course.coverImagePath)}
@@ -180,14 +189,16 @@ const Course = () => {
               </Card>
             </div>
 
-            <div className="md:w-2/3">
-              <h1 className="mb-4 font-bubbly text-3xl text-primary-foreground md:text-4xl">
+            <div className="grid gap-4 md:w-2/3">
+              <h1 className="font-bubbly text-3xl text-primary-foreground md:text-4xl">
                 {getLocalized(course, 'title', lang)}
               </h1>
 
-              <div className="mb-4 flex max-w-60 flex-wrap gap-2 sm:max-w-none">
+              <div className="flex max-w-60 flex-wrap gap-2 sm:max-w-none">
                 <Badge variant="secondary" className="px-4 py-2 shadow-md">
-                  {course.category || 'General'}
+                  {getCategoryText(category, 'name', lang) ||
+                    course.category ||
+                    'General'}
                 </Badge>
                 <Badge variant="secondary" className="px-4 py-2 shadow-md">
                   {course.minAge}-{course.maxAge} {t('courses.years')}
@@ -195,79 +206,34 @@ const Course = () => {
 
                 <Badge
                   variant="secondary"
-                  className="flex items-center px-4 py-2 shadow-md"
+                  className="flex items-center gap-2 px-4 py-2 shadow-md"
                 >
-                  <Clock className="mr-2 h-4 w-4" />
+                  <Clock className="size-4" />
                   <span>
                     {Math.floor(course.duration / 60)} {t('duration')}
                   </span>
                 </Badge>
                 <Badge
                   variant="secondary"
-                  className="flex items-center px-4 py-2 shadow-md"
+                  className="flex items-center gap-2 px-4 py-2 shadow-md"
                 >
-                  <BookOpen className="mr-2 h-4 w-4" />
+                  <BookOpen className="size-4" />
                   <span>
                     {course.lessons} {t('courses.lessons')}
                   </span>
                 </Badge>
               </div>
 
-              <p className="mb-6 text-primary-foreground">
+              <p className="text-primary-foreground">
                 {getLocalized(course, 'description', lang)}
               </p>
 
-              <Button
-                onClick={handleStartCourse}
-                className="rounded-full bg-accent px-8 py-2 text-secondary hover:bg-primary"
-              >
-                {isAuthenticated && isPremium
-                  ? t('button.startLearning')
-                  : t('button.goToPremium')}
-              </Button>
-            </div>
-          </div>
-
-          {/* Overview Section */}
-          <div className="space-y-8">
-            <div className="prose prose-dream mb-8 max-w-none text-primary-foreground">
-              <h2 className="mb-3 font-bubbly text-xl text-primary-foreground">
-                {t('course.about')}
-              </h2>
-              <p>{getLocalized(course, 'description', lang)}</p>
-
-              {(() => {
-                const objectives =
-                  ((course as Record<string, unknown>)[`learning_objectives_${lang}`] as string[]) ||
-                  course.learningObjectives ||
-                  []
-                return (
-                  objectives &&
-                  (objectives as string[]).length > 0 && (
-                    <>
-                      <h2 className="mb-3 mt-6 font-bubbly text-xl text-primary-foreground">
-                        {t('course.whatYouLearn')}
-                      </h2>
-                      <ul
-                        className="list-decimal ps-5"
-                        dir={lang === 'ar' ? 'rtl' : 'ltr'}
-                      >
-                        {(objectives as string[]).map(
-                          (objective: string, index: number) => (
-                            <li key={index}>{objective}</li>
-                          ),
-                        )}
-                      </ul>
-                    </>
-                  )
-                )
-              })()}
-
               {course.instructor && (
-                <div dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-                  <h2 className="mb-3 mt-6 font-bubbly text-xl text-primary-foreground">
+                <div dir={lang === 'ar' ? 'rtl' : 'ltr'} className="grid gap-4">
+                  <h2 className="font-bubbly text-xl text-primary-foreground">
                     {t('course.instructor')}
                   </h2>
+
                   <div className="flex items-start gap-4">
                     {course.instructor.avatar && (
                       <img
@@ -293,17 +259,15 @@ const Course = () => {
                           Array.isArray(expertise) &&
                           expertise.length > 0 && (
                             <div className="mt-2 flex flex-wrap gap-1">
-                              {expertise.map(
-                                (skill: string, index: number) => (
-                                  <Badge
-                                    key={index}
-                                    variant="secondary"
-                                    className="text-xs"
-                                  >
-                                    {skill}
-                                  </Badge>
-                                ),
-                              )}
+                              {expertise.map((skill: string, index: number) => (
+                                <Badge
+                                  key={index}
+                                  variant="secondary"
+                                  className="text-xs"
+                                >
+                                  {skill}
+                                </Badge>
+                              ))}
                             </div>
                           )
                         )
@@ -312,8 +276,45 @@ const Course = () => {
                   </div>
                 </div>
               )}
+
+              <Button onClick={handleStartCourse}>
+                {isAuthenticated && isPremium
+                  ? t('button.startLearning')
+                  : t('button.goToPremium')}
+              </Button>
             </div>
           </div>
+
+          {/* Overview Section */}
+
+          {(() => {
+            const objectives =
+              ((course as Record<string, unknown>)[
+                `learning_objectives_${lang}`
+              ] as string[]) ||
+              course.learningObjectives ||
+              []
+            return (
+              objectives &&
+              (objectives as string[]).length > 0 && (
+                <>
+                  <h2 className="mb-3 mt-6 font-bubbly text-xl text-primary-foreground">
+                    {t('course.whatYouLearn')}
+                  </h2>
+                  <ul
+                    className="list-decimal ps-5"
+                    dir={lang === 'ar' ? 'rtl' : 'ltr'}
+                  >
+                    {(objectives as string[]).map(
+                      (objective: string, index: number) => (
+                        <li key={index}>{objective}</li>
+                      ),
+                    )}
+                  </ul>
+                </>
+              )
+            )
+          })()}
         </div>
       </div>
     </div>
