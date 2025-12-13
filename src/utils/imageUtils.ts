@@ -16,6 +16,15 @@ export const getImageUrl = (imagePath: string | null): string => {
     return imagePath
   }
 
+  // For instructor avatars
+  if (imagePath.includes('instructor-avatar-')) {
+    const { data: urlData } = supabase.storage
+      .from('admin-content')
+      .getPublicUrl(`instructor-avatars/${imagePath}`)
+
+    return urlData.publicUrl
+  }
+
   // For story section images
   if (imagePath.includes('section-')) {
     const { data: urlData } = supabase.storage

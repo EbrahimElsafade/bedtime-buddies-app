@@ -1,16 +1,16 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useTranslation } from "react-i18next";
-import { Loader2 } from "lucide-react";
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { useTranslation } from 'react-i18next'
+import { Loader2 } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -18,80 +18,96 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Button } from '@/components/ui/button'
+import { useToast } from '@/hooks/use-toast'
+import { supabase } from '@/integrations/supabase/client'
 
 const contactFormSchema = z.object({
-  name: z.string().min(1, "Name is required").max(100, "Name is too long"),
-  email: z.string().email("Invalid email address").max(255, "Email is too long"),
-  phone: z.string().max(20, "Phone number is too long").optional().or(z.literal("")),
-  message: z.string().min(1, "Message is required").max(1000, "Message is too long"),
-});
+  name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
+  email: z
+    .string()
+    .email('Invalid email address')
+    .max(255, 'Email is too long'),
+  phone: z
+    .string()
+    .max(20, 'Phone number is too long')
+    .optional()
+    .or(z.literal('')),
+  message: z
+    .string()
+    .min(1, 'Message is required')
+    .max(1000, 'Message is too long'),
+})
 
-type ContactFormData = z.infer<typeof contactFormSchema>;
+type ContactFormData = z.infer<typeof contactFormSchema>
 
 interface ContactFormModalProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
-export const ContactFormModal = ({ open, onOpenChange }: ContactFormModalProps) => {
-  const { t } = useTranslation('courses');
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export const ContactFormModal = ({
+  open,
+  onOpenChange,
+}: ContactFormModalProps) => {
+  const { t } = useTranslation('courses')
+  const { toast } = useToast()
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      phone: "",
-      message: "",
+      name: '',
+      email: '',
+      phone: '',
+      message: '',
     },
-  });
+  })
 
   const onSubmit = async (data: ContactFormData) => {
-    setIsSubmitting(true);
+    setIsSubmitting(true)
     try {
-      const { data: response, error } = await supabase.functions.invoke("send-email", {
-        body: {
-          name: data.name,
-          email: data.email,
-          phone: data.phone || undefined,
-          message: data.message,
+      const { data: response, error } = await supabase.functions.invoke(
+        'send-email',
+        {
+          body: {
+            name: data.name,
+            email: data.email,
+            phone: data.phone || undefined,
+            message: data.message,
+          },
         },
-      });
+      )
 
       if (error) {
-        throw new Error(error.message);
+        throw new Error(error.message)
       }
 
       if (!response?.success) {
-        throw new Error(response?.error || "Failed to send message");
+        throw new Error(response?.error || 'Failed to send message')
       }
 
       toast({
         title: t('contact.successTitle'),
         description: t('contact.successMessage'),
-      });
+      })
 
-      form.reset();
-      onOpenChange(false);
+      form.reset()
+      onOpenChange(false)
     } catch (error: any) {
-      console.error("Error sending contact form:", error);
+      console.error('Error sending contact form:', error)
       toast({
         title: t('contact.errorTitle'),
         description: t('contact.errorMessage'),
-        variant: "destructive",
-      });
+        variant: 'destructive',
+      })
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -110,7 +126,10 @@ export const ContactFormModal = ({ open, onOpenChange }: ContactFormModalProps) 
                 <FormItem>
                   <FormLabel>{t('contact.name')}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t('contact.namePlaceholder')} {...field} />
+                    <Input
+                      placeholder={t('contact.namePlaceholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -124,7 +143,11 @@ export const ContactFormModal = ({ open, onOpenChange }: ContactFormModalProps) 
                 <FormItem>
                   <FormLabel>{t('contact.email')}</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder={t('contact.emailPlaceholder')} {...field} />
+                    <Input
+                      type="email"
+                      placeholder={t('contact.emailPlaceholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -138,7 +161,11 @@ export const ContactFormModal = ({ open, onOpenChange }: ContactFormModalProps) 
                 <FormItem>
                   <FormLabel>{t('contact.phone')}</FormLabel>
                   <FormControl>
-                    <Input type="tel" placeholder={t('contact.phonePlaceholder')} {...field} />
+                    <Input
+                      type="tel"
+                      placeholder={t('contact.phonePlaceholder')}
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -173,7 +200,9 @@ export const ContactFormModal = ({ open, onOpenChange }: ContactFormModalProps) 
                 {t('contact.cancel')}
               </Button>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isSubmitting && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
                 {t('contact.submit')}
               </Button>
             </div>
@@ -181,5 +210,5 @@ export const ContactFormModal = ({ open, onOpenChange }: ContactFormModalProps) 
         </Form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

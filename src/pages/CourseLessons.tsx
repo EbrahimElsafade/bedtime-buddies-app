@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { ArrowLeft, Clock, Play, Lock } from 'lucide-react'
+import { ArrowLeft, Clock, Play, Lock, ChevronLeft } from 'lucide-react'
 import { useLoading } from '@/contexts/LoadingContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -156,33 +156,27 @@ const CourseLessons = () => {
 
       <div className="container mx-auto">
         {/* Header */}
-        <div className="mb-8 flex items-center gap-4">
+        <div className="mb-8 grid gap-4 lg:gap-8">
           <Button
-            variant="ghost"
-            size="icon"
+            variant="tertiary"
             onClick={() => navigate(`/courses/${courseId}`)}
-            className="text-primary-foreground hover:bg-primary/20"
+            className="w-fit rounded-md shadow"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ChevronLeft className="me-1 h-4 w-4 rtl:rotate-180" />{' '}
+            {t('button.backToCourses')}
           </Button>
+
           <div>
             <h1 className="font-bubbly text-2xl text-primary-foreground md:text-3xl">
               {getLocalized(course, 'title', lang)}
             </h1>
-            <p className="text-sm text-primary-foreground/70">
-              {t('course.lessons')}
-            </p>
           </div>
         </div>
 
         {/* Content */}
         <div className="flex flex-col gap-8 lg:flex-row rtl:lg:flex-row-reverse">
           {/* Video List */}
-          <div className="max-h-[63vh] lg:flex-1 lg:overflow-y-scroll pe-4">
-            <h3 className="mb-4 font-bubbly text-xl text-primary-foreground">
-              {t('course.courseVideos')}
-            </h3>
-
+          <div className="max-h-[55vh] pe-4 lg:flex-1 lg:overflow-y-scroll">
             <div className="space-y-3">
               {course.videos && course.videos.length > 0 ? (
                 course.videos.map(video => (
@@ -252,25 +246,6 @@ const CourseLessons = () => {
           <div className="lg:flex-[2]">
             {selectedVideo ? (
               <div className="grid gap-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="mb-2 font-bubbly text-xl text-primary-foreground">
-                    {getLocalized(selectedVideo, 'title', lang)}
-                  </h3>
-
-                  <div className="mb-2 flex items-center gap-2 text-sm text-primary-foreground">
-                    <Clock className="size-4" />
-
-                    <span>
-                      {Math.floor(selectedVideo.duration / 60)}:
-                      {String(selectedVideo.duration % 60).padStart(2, '0')}{' '}
-                      {t('duration')}
-                    </span>
-                  </div>
-                  {/* <p className="text-primary-foreground">
-                    {getLocalized(selectedVideo, 'description', lang)}
-                  </p> */}
-                </div>
-
                 <div className="aspect-video overflow-hidden rounded-lg bg-black">
                   {selectedVideo.videoUrl ? (
                     <YouTubePlayer
@@ -291,6 +266,22 @@ const CourseLessons = () => {
                       <p>No video source available</p>
                     </div>
                   )}
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <h3 className="mb-2 font-bubbly text-xl text-primary-foreground">
+                    {getLocalized(selectedVideo, 'title', lang)}
+                  </h3>
+
+                  <div className="mb-2 flex items-center gap-2 text-sm text-primary-foreground">
+                    <Clock className="size-4" />
+
+                    <span>
+                      {Math.floor(selectedVideo.duration / 60)}:
+                      {String(selectedVideo.duration % 60).padStart(2, '0')}{' '}
+                      {t('duration')}
+                    </span>
+                  </div>
                 </div>
               </div>
             ) : (

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { ArrowLeft, Clock, BookOpen } from 'lucide-react'
+import { ArrowLeft, Clock, BookOpen, BookA, Hourglass } from 'lucide-react'
 import { useLoading } from '@/contexts/LoadingContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -197,28 +197,30 @@ const Course = () => {
               </h1>
 
               <div className="flex max-w-60 flex-wrap gap-2 sm:max-w-none">
-                <Badge variant="secondary" className="px-4 py-2 shadow-md">
-                  {getCategoryText(category, 'name', lang) ||
-                    course.category ||
-                    'General'}
+                <Badge className="flex items-center gap-2 px-4 py-2 shadow-md hover:bg-primary">
+                  <BookA className="size-4" />
+
+                  <span>
+                    {getCategoryText(category, 'name', lang) ||
+                      course.category ||
+                      'General'}
+                  </span>
                 </Badge>
-                <Badge variant="secondary" className="px-4 py-2 shadow-md">
-                  {course.minAge}-{course.maxAge} {t('courses.years')}
+                <Badge className="flex items-center gap-2 px-4 py-2 shadow-md hover:bg-primary">
+                  <Hourglass className="size-4" />
+
+                  <span>
+                    {course.minAge}-{course.maxAge} {t('courses.years')}
+                  </span>
                 </Badge>
 
-                <Badge
-                  variant="secondary"
-                  className="flex items-center gap-2 px-4 py-2 shadow-md"
-                >
+                <Badge className="flex items-center gap-2 px-4 py-2 shadow-md hover:bg-primary">
                   <Clock className="size-4" />
                   <span>
                     {Math.floor(course.duration / 60)} {t('duration')}
                   </span>
                 </Badge>
-                <Badge
-                  variant="secondary"
-                  className="flex items-center gap-2 px-4 py-2 shadow-md"
-                >
+                <Badge className="flex items-center gap-2 px-4 py-2 shadow-md hover:bg-primary">
                   <BookOpen className="size-4" />
                   <span>
                     {course.lessons} {t('courses.lessons')}
@@ -239,7 +241,7 @@ const Course = () => {
                   <div className="flex items-start gap-4">
                     {course.instructor.avatar && (
                       <img
-                        src={course.instructor.avatar}
+                        src={getImageUrl(course.instructor.avatar)}
                         alt={getLocalized(course.instructor, 'name', lang)}
                         className="h-16 w-16 rounded-full object-cover"
                       />
@@ -280,11 +282,14 @@ const Course = () => {
               )}
 
               <div className="flex gap-4">
-                <Button onClick={handleStartCourse}>
+                <Button variant="accent" onClick={handleStartCourse}>
                   {t('button.startLearning')}
                 </Button>
 
-                <Button variant="secondary" onClick={() => setIsContactModalOpen(true)}>
+                <Button
+                  variant="secondary"
+                  onClick={() => setIsContactModalOpen(true)}
+                >
                   {t('button.communicateWithASpecialist')}
                 </Button>
               </div>
@@ -324,9 +329,9 @@ const Course = () => {
         </div>
       </div>
 
-      <ContactFormModal 
-        open={isContactModalOpen} 
-        onOpenChange={setIsContactModalOpen} 
+      <ContactFormModal
+        open={isContactModalOpen}
+        onOpenChange={setIsContactModalOpen}
       />
     </div>
   )

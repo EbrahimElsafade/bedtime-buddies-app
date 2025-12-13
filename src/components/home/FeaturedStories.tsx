@@ -187,7 +187,7 @@ const FeaturedStories = () => {
 
       <div className="mt-4 flex items-center justify-center">
         <Link to="/stories">
-          <Button>{t('misc:free.viewAll')}</Button>
+          <Button variant="accent">{t('misc:free.viewAll')}</Button>
         </Link>
       </div>
 

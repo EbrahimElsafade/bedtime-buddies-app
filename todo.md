@@ -115,13 +115,17 @@
 
 - in the courses page change the image from object-cover to fill [x]
 - create a new layer in the courses => first layer just the course info => then the second layer the lessons with the playlist [x]
-- add communicate with a spacial agent button in the course page [ ] <!-- the button is there but the popup not yet  -->
+- add communicate with a spacial agent button in the course page [x]
+-  course badges color [x]
+-  instructor image [x]
+-  fix the duration [ ]
 
 ## story
 
 - the story video repeat when finished [x]
 - the story timer is not working as intended [x]
 - set a loader between the languages in the story to indicate the change [x]
+- next and prev [ ]
 
 ## home
 
@@ -129,6 +133,7 @@
 - in the home page move show more content to the bottom middle of the section [x]
 - in the course card when the user is not logged in just keep the login button but remove the overlay [x]
 - in the courses card there is a 'S' letter next to the word lesson remove it [x]
+- change the button variant in the important places to accent [x]
 
 ## games
 
@@ -137,7 +142,7 @@
 ## general
 
 - unify the header of all the pages [x]
-- in the free content put a join now button [ ] <!-- I don't actually get this one we will need to talk about it  -->
+- pagination [ ]
 
 ## profile
 
