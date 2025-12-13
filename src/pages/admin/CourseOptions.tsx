@@ -251,7 +251,7 @@ const CourseOptions = () => {
             </div>
 
             {categoriesLoading ? (
-              <div className="py-4 text-center">{t('admin:loading.categories')}</div>
+              <div className="py-4 text-center">Loading categories...</div>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {categories.map(category => (

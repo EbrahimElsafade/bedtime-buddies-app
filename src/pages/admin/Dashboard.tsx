@@ -79,7 +79,7 @@ const Dashboard = () => {
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalUsers}</div>
             <p className="text-xs text-muted-foreground">
-              {`${stats.premiumUsers} ${t('dashboard.premiumUsers')}`}
+              {`${stats.premiumUsers} premium users`}
             </p>
           </CardContent>
         </Card>
@@ -91,7 +91,7 @@ const Dashboard = () => {
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalStories}</div>
             <p className="text-xs text-muted-foreground">
-              {`${stats.publishedStories} ${t('dashboard.published')}`}
+              {`${stats.publishedStories} published`}
             </p>
           </CardContent>
         </Card>
@@ -103,7 +103,7 @@ const Dashboard = () => {
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalCourses}</div>
             <p className="text-xs text-muted-foreground">
-              {`${stats.publishedCourses} ${t('dashboard.published')}`}
+              {`${stats.publishedCourses} published`}
             </p>
           </CardContent>
         </Card>
@@ -118,16 +118,16 @@ const Dashboard = () => {
           <Card>
             <CardHeader>
               <CardTitle>{t('dashboard.recentActivity')}</CardTitle>
-              <CardDescription>{t('dashboard.latestActions')}</CardDescription>
+              <CardDescription>Latest actions performed in the admin panel</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
                   <CalendarClock className="h-8 w-8 text-muted-foreground" />
                   <div>
-                    <p className="font-medium">{t('dashboard.activityLogPlaceholder')}</p>
+                    <p className="font-medium">Activity log will be shown here</p>
                     <p className="text-sm text-muted-foreground">
-                      {t('dashboard.recentActionsDescription')}
+                      Recent actions will be tracked and displayed in this section
                     </p>
                   </div>
                 </div>
@@ -138,22 +138,22 @@ const Dashboard = () => {
         <TabsContent value="overview" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>{t('dashboard.systemOverview')}</CardTitle>
-              <CardDescription>{t('dashboard.systemStatus')}</CardDescription>
+              <CardTitle>System Overview</CardTitle>
+              <CardDescription>Current system status and information</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-muted rounded-md p-4">
-                    <h3 className="font-medium mb-2">{t('dashboard.userDistribution')}</h3>
+                    <h3 className="font-medium mb-2">User Distribution</h3>
                     <p className="text-sm text-muted-foreground">
                       {`${stats.premiumUsers} Premium / ${stats.totalUsers - stats.premiumUsers} Free`}
                     </p>
                   </div>
                   <div className="bg-muted rounded-md p-4">
-                    <h3 className="font-medium mb-2">{t('dashboard.contentStatus')}</h3>
+                    <h3 className="font-medium mb-2">Content Status</h3>
                     <p className="text-sm text-muted-foreground">
-                      {`${stats.publishedStories + stats.publishedCourses} ${t('dashboard.published')} / ${(stats.totalStories + stats.totalCourses) - (stats.publishedStories + stats.publishedCourses)} ${t('dashboard.draft')}`}
+                      {`${stats.publishedStories + stats.publishedCourses} Published / ${(stats.totalStories + stats.totalCourses) - (stats.publishedStories + stats.publishedCourses)} Draft`}
                     </p>
                   </div>
                 </div>

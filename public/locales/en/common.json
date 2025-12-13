@@ -79,46 +79,5 @@
       "step3": "Tap 'Add' to install",
       "showInstructions": "Show How"
     }
-  },
-  "error": {
-    "somethingWentWrong": "Something went wrong",
-    "errorDescription": "We're sorry, but something unexpected happened. The error has been logged and we'll look into it.",
-    "returnToHome": "Return to Home"
-  },
-  "pagination": {
-    "previous": "Previous",
-    "next": "Next",
-    "morePages": "More pages",
-    "goToPreviousPage": "Go to previous page",
-    "goToNextPage": "Go to next page",
-    "pagination": "pagination"
-  },
-  "carousel": {
-    "previousSlide": "Previous slide",
-    "nextSlide": "Next slide"
-  },
-  "profile": {
-    "noSocialAccountsLinked": "No social accounts linked",
-    "allAccountsLinked": "All accounts are linked",
-    "connectedAccounts": "Connected Accounts",
-    "addAccount": "Add Account",
-    "addSkillPlaceholder": "Add a skill (e.g., Mathematics, Art)"
-  },
-  "games": {
-    "snakesAndLadders": "Snakes and Ladders"
-  },
-  "finishedContent": {
-    "title": "Finished Content",
-    "milestones": "Achievements",
-    "totalPoints": "{{count}} points earned",
-    "noMilestone": "Keep going!",
-    "nextMilestone": "Next",
-    "pointsNeeded": "more points",
-    "finishedStories": "Finished Stories",
-    "storiesCompleted": "stories completed",
-    "noFinishedStories": "You haven't finished any stories yet. Start exploring!",
-    "finishedCourses": "Finished Courses",
-    "coursesCompleted": "courses completed",
-    "noFinishedCourses": "You haven't finished any courses yet. Start learning!"
   }
 }

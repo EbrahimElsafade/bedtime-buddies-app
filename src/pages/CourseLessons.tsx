@@ -192,11 +192,11 @@ const CourseLessons = () => {
                     />
                   ) : selectedVideo.videoPath ? (
                     <div className="flex h-full items-center justify-center text-secondary">
-                      <p>{t('video.legacyVideoFormat')}</p>
+                      <p>Legacy video format - please update to YouTube</p>
                     </div>
                   ) : (
                     <div className="flex h-full items-center justify-center text-secondary">
-                      <p>{t('video.noVideoSourceAvailable')}</p>
+                      <p>No video source available</p>
                     </div>
                   )}
                 </div>

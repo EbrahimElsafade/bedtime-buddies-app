@@ -44,12 +44,5 @@
     "successMessage": "We've received your message and will get back to you soon.",
     "errorTitle": "Failed to Send",
     "errorMessage": "There was an error sending your message. Please try again."
-  },
-  "video": {
-    "noVideoAvailable": "No video available",
-    "legacyVideoFormat": "Legacy video format - please update to YouTube",
-    "noVideoSourceAvailable": "No video source available",
-    "nextLessonIn": "Next Lesson In",
-    "cancel": "Cancel"
   }
 }

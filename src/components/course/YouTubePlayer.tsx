@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/utils'
 import Plyr from 'plyr'
 import 'plyr/dist/plyr.css'
-import { useTranslation } from 'react-i18next'
 
 interface YouTubePlayerProps {
   videoId: string
@@ -23,7 +22,6 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
   showCountdownOnEnd = true,
   onCountdownCancel,
 }) => {
-  const { t } = useTranslation(['courses', 'common'])
   const containerRef = useRef<HTMLDivElement>(null)
   const plyrRef = useRef<Plyr | null>(null)
   const [showCountdown, setShowCountdown] = useState(false)
@@ -151,7 +149,7 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
           className,
         )}
       >
-        <p>{t('video.noVideoAvailable')}</p>
+        <p>No video available</p>
       </div>
     )
   }
@@ -168,13 +166,13 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
       {showCountdown && (
         <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/70 backdrop-blur-sm">
           <div className="flex flex-col items-center gap-4">
-            <p className="text-lg font-semibold text-white">{t('video.nextLessonIn')}</p>
+            <p className="text-lg font-semibold text-white">Next Lesson In</p>
             <div className="text-6xl font-bold text-accent">{countdown}</div>
             <button
               onClick={handleCancelCountdown}
               className="mt-2 rounded-lg bg-red-500 px-6 py-2 font-medium text-white transition-colors hover:bg-red-600"
             >
-              {t('video.cancel')}
+              Cancel
             </button>
           </div>
         </div>

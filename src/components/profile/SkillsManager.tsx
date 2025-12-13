@@ -5,10 +5,8 @@ import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'sonner'
 import { Plus, X } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 export const SkillsManager = () => {
-  const { t } = useTranslation('common')
   const { profile, updateProfile } = useAuth()
   const [newSkill, setNewSkill] = useState('')
   const [saving, setSaving] = useState(false)
@@ -59,7 +57,7 @@ export const SkillsManager = () => {
       
       <div className="flex gap-2">
         <Input
-          placeholder={t('profile.addSkillPlaceholder')}
+          placeholder="Add a skill (e.g., Mathematics, Art)"
           value={newSkill}
           onChange={(e) => setNewSkill(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleAddSkill()}

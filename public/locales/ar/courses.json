@@ -43,12 +43,5 @@
     "successMessage": "لقد استلمنا رسالتك وسنتواصل معك قريباً.",
     "errorTitle": "فشل الإرسال",
     "errorMessage": "حدث خطأ أثناء إرسال رسالتك. يرجى المحاولة مرة أخرى."
-  },
-  "video": {
-    "noVideoAvailable": "لا يوجد فيديو متاح",
-    "legacyVideoFormat": "تنسيق فيديو قديم - يرجى التحديث إلى YouTube",
-    "noVideoSourceAvailable": "لا يوجد مصدر فيديو متاح",
-    "nextLessonIn": "الدرس التالي خلال",
-    "cancel": "إلغاء"
   }
 }

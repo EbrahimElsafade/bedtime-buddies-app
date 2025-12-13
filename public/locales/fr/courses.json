@@ -44,12 +44,5 @@
     "successMessage": "Nous avons reçu votre message et vous répondrons bientôt.",
     "errorTitle": "Échec de l'Envoi",
     "errorMessage": "Une erreur s'est produite lors de l'envoi de votre message. Veuillez réessayer."
-  },
-  "video": {
-    "noVideoAvailable": "Aucune vidéo disponible",
-    "legacyVideoFormat": "Format vidéo obsolète - veuillez mettre à jour vers YouTube",
-    "noVideoSourceAvailable": "Aucune source vidéo disponible",
-    "nextLessonIn": "Leçon Suivante Dans",
-    "cancel": "Annuler"
   }
 }

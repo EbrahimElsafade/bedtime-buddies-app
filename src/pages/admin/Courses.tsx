@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
-import { useTranslation } from 'react-i18next'
 import {
   Table,
   TableBody,
@@ -86,7 +85,6 @@ type Course = {
 }
 
 const Courses = () => {
-  const { t } = useTranslation('admin')
   const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
   const [filter, setFilter] = useState<'all' | 'published' | 'draft'>('all')
@@ -212,30 +210,30 @@ const Courses = () => {
       <header className="mb-8">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold">{t('courses.title')}</h1>
+            <h1 className="text-3xl font-bold">Courses</h1>
             <p className="text-muted-foreground">
-              {t('courses.manageAll')}
+              Manage all educational courses
             </p>
           </div>
           <Button onClick={() => navigate('/admin/courses/new')}>
             <PlusCircle className="mr-2 h-4 w-4" />
-            {t('courses.addNew')}
+            Add New Course
           </Button>
         </div>
       </header>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-xl">{t('courses.allCourses')}</CardTitle>
+          <CardTitle className="text-xl">All Courses</CardTitle>
           <CardDescription>
-            {t('courses.total')}: {courses.length} {t('courses.courses')} | {t('courses.published')}:{' '}
-            {courses.filter(c => c.is_published).length} {t('courses.courses')}
+            Total: {courses.length} courses | Published:{' '}
+            {courses.filter(c => c.is_published).length} courses
           </CardDescription>
           <div className="mt-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
             <div className="relative w-full flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder={t('courses.searchPlaceholder')}
+                placeholder="Search courses..."
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
                 className="w-full pl-8"
@@ -261,7 +259,7 @@ const Courses = () => {
                 size="sm"
                 onClick={() => setFilter('draft')}
               >
-                {t('courses.draft')}
+                Draft
               </Button>
               <Button
                 variant="outline"
@@ -333,7 +331,7 @@ const Courses = () => {
                 {isLoading ? (
                   <TableRow>
                     <TableCell colSpan={6} className="py-8 text-center">
-                      {t('admin:loading.courses')}
+                      Loading courses...
                     </TableCell>
                   </TableRow>
                 ) : filteredCourses.length === 0 ? (
@@ -382,10 +380,10 @@ const Courses = () => {
                             variant="default"
                             className="bg-green-600 hover:bg-green-700"
                           >
-                            {t('courses.published')}
+                            Published
                           </Badge>
                         ) : (
-                          <Badge variant="outline">{t('courses.draft')}</Badge>
+                          <Badge variant="outline">Draft</Badge>
                         )}
                       </TableCell>
                       <TableCell className="text-right">
@@ -437,7 +435,7 @@ const Courses = () => {
         </CardContent>
         <CardFooter className="flex justify-between">
           <p className="text-sm text-muted-foreground">
-            {t('courses.showing')} {filteredCourses.length} {t('courses.of')} {courses.length} {t('courses.courses')}
+            Showing {filteredCourses.length} of {courses.length} courses
           </p>
         </CardFooter>
       </Card>

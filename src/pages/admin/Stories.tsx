@@ -76,7 +76,7 @@ const Stories = () => {
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
   const [storyToDelete, setStoryToDelete] = useState<string | null>(null)
 
-  const { t, i18n } = useTranslation(['admin', 'common'])
+  const { i18n } = useTranslation()
 
   const fetchStories = async () => {
     const { data, error } = await supabase.from('stories').select('*')
@@ -209,7 +209,7 @@ const Stories = () => {
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-3xl font-bold">Stories</h1>
-            <p className="text-muted-foreground">{t('admin:stories.manageAll')}</p>
+            <p className="text-muted-foreground">Manage all Dolphoon</p>
           </div>
           <Button onClick={() => navigate('/admin/stories/new')}>
             <PlusCircle className="mr-2 h-4 w-4" />

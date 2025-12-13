@@ -3,9 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertTriangle } from 'lucide-react';
 import { logError } from '@/utils/errorHandling';
-import { withTranslation, WithTranslation } from 'react-i18next';
 
-interface Props extends WithTranslation {
+interface Props {
   children: ReactNode;
   fallback?: ReactNode;
 }
@@ -19,7 +18,7 @@ interface State {
  * Error Boundary component to catch and handle React errors gracefully
  * Prevents the entire app from crashing when an error occurs
  */
-class ErrorBoundaryBase extends Component<Props, State> {
+export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -62,10 +61,10 @@ class ErrorBoundaryBase extends Component<Props, State> {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <AlertTriangle className="h-6 w-6 text-destructive" />
-                <CardTitle>{this.props.t('error.somethingWentWrong', { ns: 'common' })}</CardTitle>
+                <CardTitle>Something went wrong</CardTitle>
               </div>
               <CardDescription>
-                {this.props.t('error.errorDescription', { ns: 'common' })}
+                We're sorry, but something unexpected happened. The error has been logged and we'll look into it.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -79,7 +78,7 @@ class ErrorBoundaryBase extends Component<Props, State> {
             </CardContent>
             <CardFooter>
               <Button onClick={this.handleReset} className="w-full">
-                {this.props.t('error.returnToHome', { ns: 'common' })}
+                Return to Home
               </Button>
             </CardFooter>
           </Card>
@@ -90,8 +89,6 @@ class ErrorBoundaryBase extends Component<Props, State> {
     return this.props.children;
   }
 }
-
-export const ErrorBoundary = withTranslation('common')(ErrorBoundaryBase);
 
 /**
  * Hook-based error boundary wrapper for functional components
