@@ -72,5 +72,32 @@
       "step3": "Appuyez sur 'Ajouter' pour installer",
       "showInstructions": "Afficher Comment Installer"
     }
+  },
+  "error": {
+    "somethingWentWrong": "Quelque chose s'est mal passé",
+    "errorDescription": "Nous sommes désolés, mais quelque chose d'inattendu s'est produit. L'erreur a été enregistrée et nous l'examinerons.",
+    "returnToHome": "Retour à l'Accueil"
+  },
+  "pagination": {
+    "previous": "Précédent",
+    "next": "Suivant",
+    "morePages": "Plus de pages",
+    "goToPreviousPage": "Aller à la page précédente",
+    "goToNextPage": "Aller à la page suivante",
+    "pagination": "pagination"
+  },
+  "carousel": {
+    "previousSlide": "Diapositive précédente",
+    "nextSlide": "Diapositive suivante"
+  },
+  "profile": {
+    "noSocialAccountsLinked": "Aucun compte social lié",
+    "allAccountsLinked": "Tous les comptes sont liés",
+    "connectedAccounts": "Comptes Connectés",
+    "addAccount": "Ajouter un Compte",
+    "addSkillPlaceholder": "Ajouter une compétence (ex: Mathématiques, Art)"
+  },
+  "games": {
+    "snakesAndLadders": "Serpents et Échelles"
   }
 }

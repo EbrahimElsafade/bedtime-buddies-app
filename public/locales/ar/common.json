@@ -72,5 +72,32 @@
       "step3": "اضغط على 'إضافة' للتثبيت",
       "showInstructions": "عرض كيفية التثبيت"
     }
+  },
+  "error": {
+    "somethingWentWrong": "حدث خطأ ما",
+    "errorDescription": "نأسف، لكن حدث شيء غير متوقع. تم تسجيل الخطأ وسننظر فيه.",
+    "returnToHome": "العودة إلى الرئيسية"
+  },
+  "pagination": {
+    "previous": "السابق",
+    "next": "التالي",
+    "morePages": "المزيد من الصفحات",
+    "goToPreviousPage": "الانتقال إلى الصفحة السابقة",
+    "goToNextPage": "الانتقال إلى الصفحة التالية",
+    "pagination": "ترقيم الصفحات"
+  },
+  "carousel": {
+    "previousSlide": "الشريحة السابقة",
+    "nextSlide": "الشريحة التالية"
+  },
+  "profile": {
+    "noSocialAccountsLinked": "لا توجد حسابات اجتماعية مرتبطة",
+    "allAccountsLinked": "جميع الحسابات مرتبطة",
+    "connectedAccounts": "الحسابات المتصلة",
+    "addAccount": "إضافة حساب",
+    "addSkillPlaceholder": "أضف مهارة (مثل: الرياضيات، الفن)"
+  },
+  "games": {
+    "snakesAndLadders": "الثعبان والسلم"
   }
 }

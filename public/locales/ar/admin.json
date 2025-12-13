@@ -6,7 +6,17 @@
     "totalUsers": "إجمالي المستخدمين",
     "totalStories": "إجمالي القصص",
     "totalCourses": "إجمالي الدورات",
-    "recentActivity": "النشاط الأخير"
+    "recentActivity": "النشاط الأخير",
+    "premiumUsers": "مستخدمين مميزين",
+    "published": "منشور",
+    "latestActions": "أحدث الإجراءات التي تمت في لوحة الإدارة",
+    "activityLogPlaceholder": "سيعرض سجل النشاط هنا",
+    "recentActionsDescription": "سيتم تتبع الإجراءات الأخيرة وعرضها في هذا القسم",
+    "systemOverview": "نظرة عامة على النظام",
+    "systemStatus": "حالة ومعلومات النظام الحالية",
+    "userDistribution": "توزيع المستخدمين",
+    "contentStatus": "حالة المحتوى",
+    "draft": "مسودة"
   },
   "navigation": {
     "dashboard": "لوحة التحكم",
@@ -71,7 +81,8 @@
     "published": "منشور",
     "draft": "مسودة",
     "free": "مجاني",
-    "premium": "مميز"
+    "premium": "مميز",
+    "manageAll": "إدارة جميع دولفون"
   },
   "storyEditor": {
     "title": "محرر القصص",
@@ -115,7 +126,14 @@
     "publish": "نشر",
     "unpublish": "إلغاء النشر",
     "published": "منشور",
-    "draft": "مسودة"
+    "draft": "مسودة",
+    "manageAll": "إدارة جميع الدورات التعليمية",
+    "allCourses": "جميع الدورات",
+    "total": "الإجمالي",
+    "courses": "دورات",
+    "all": "الكل",
+    "showing": "عرض",
+    "of": "من"
   },
   "settings": {
     "title": "إعدادات الإدارة",
@@ -166,5 +184,36 @@
     "error": "حدث خطأ",
     "deleteConfirm": "هل أنت متأكد من حذف هذا العنصر؟",
     "deleteWarning": "لا يمكن التراجع عن هذا الإجراء."
+  },
+  "loading": {
+    "courseDetails": "جاري تحميل تفاصيل الدورة...",
+    "storyDetails": "جاري تحميل تفاصيل القصة...",
+    "categories": "جاري تحميل الفئات...",
+    "languages": "جاري تحميل اللغات...",
+    "courses": "جاري تحميل الدورات..."
+  },
+  "courseOptions": {
+    "title": "خيارات الدورات",
+    "description": "إدارة الفئات المتاحة للدورات"
+  },
+  "common": {
+    "verifying_access": "التحقق من وصول الإدارة...",
+    "error_loading": "خطأ في تحميل البيانات",
+    "error_saving": "خطأ في حفظ البيانات",
+    "updated_successfully": "تم التحديث بنجاح",
+    "loading": "جاري التحميل..."
+  },
+  "games": {
+    "ticTacToe": "تيك تاك تو",
+    "hangman": "المشنقة",
+    "memoryMatch": "تطابق الذاكرة",
+    "snake": "الأفعى",
+    "rockPaperScissors": "حجر ورقة مقص",
+    "chooseColor": "اختر اللون",
+    "guessNumber": "خمن الرقم",
+    "catchAnimal": "اصطاد الحيوان",
+    "picturePuzzle": "لغز الصورة",
+    "whereDidItGo": "أين ذهب؟",
+    "snakeAndLadder": "الثعبان والسلم"
   }
 }

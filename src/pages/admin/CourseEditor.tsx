@@ -629,7 +629,7 @@ const CourseEditor = () => {
       {isEditing && isLoading ? (
         <div className="flex items-center justify-center p-12">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-          <span className="ml-2 text-lg">Loading course details...</span>
+          <span className="ml-2 text-lg">{t('admin:loading.courseDetails')}</span>
         </div>
       ) : (
         <form onSubmit={handleSubmit}>

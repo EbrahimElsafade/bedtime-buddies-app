@@ -6,7 +6,17 @@
     "totalUsers": "Total Utilisateurs",
     "totalStories": "Total Histoires",
     "totalCourses": "Total Cours",
-    "recentActivity": "Activité Récente"
+    "recentActivity": "Activité Récente",
+    "premiumUsers": "utilisateurs premium",
+    "published": "publié",
+    "latestActions": "Dernières actions effectuées dans le panneau d'administration",
+    "activityLogPlaceholder": "Le journal d'activité sera affiché ici",
+    "recentActionsDescription": "Les actions récentes seront suivies et affichées dans cette section",
+    "systemOverview": "Vue d'ensemble du système",
+    "systemStatus": "État actuel et informations du système",
+    "userDistribution": "Répartition des utilisateurs",
+    "contentStatus": "Statut du contenu",
+    "draft": "Brouillon"
   },
   "navigation": {
     "dashboard": "Tableau de Bord",
@@ -71,7 +81,8 @@
     "published": "Publié",
     "draft": "Brouillon",
     "free": "Gratuit",
-    "premium": "Premium"
+    "premium": "Premium",
+    "manageAll": "Gérer tous les Dolphoon"
   },
   "storyEditor": {
     "title": "Éditeur d'Histoire",
@@ -115,7 +126,14 @@
     "publish": "Publier",
     "unpublish": "Dépublier",
     "published": "Publié",
-    "draft": "Brouillon"
+    "draft": "Brouillon",
+    "manageAll": "Gérer tous les cours éducatifs",
+    "allCourses": "Tous les Cours",
+    "total": "Total",
+    "courses": "cours",
+    "all": "Tous",
+    "showing": "Affichage",
+    "of": "de"
   },
   "settings": {
     "title": "Paramètres Admin",
@@ -166,5 +184,36 @@
     "error": "Une erreur s'est produite",
     "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cet élément ?",
     "deleteWarning": "Cette action ne peut pas être annulée."
+  },
+  "loading": {
+    "courseDetails": "Chargement des détails du cours...",
+    "storyDetails": "Chargement des détails de l'histoire...",
+    "categories": "Chargement des catégories...",
+    "languages": "Chargement des langues...",
+    "courses": "Chargement des cours..."
+  },
+  "courseOptions": {
+    "title": "Options des Cours",
+    "description": "Gérer les catégories disponibles pour les cours"
+  },
+  "common": {
+    "verifying_access": "Vérification de l'accès admin...",
+    "error_loading": "Erreur lors du chargement des données",
+    "error_saving": "Erreur lors de l'enregistrement des données",
+    "updated_successfully": "Mis à jour avec succès",
+    "loading": "Chargement..."
+  },
+  "games": {
+    "ticTacToe": "Morpion",
+    "hangman": "Le Pendu",
+    "memoryMatch": "Jeu de Mémoire",
+    "snake": "Serpent",
+    "rockPaperScissors": "Pierre Papier Ciseaux",
+    "chooseColor": "Choisir la Couleur",
+    "guessNumber": "Deviner le Nombre",
+    "catchAnimal": "Attraper l'Animal",
+    "picturePuzzle": "Puzzle d'Image",
+    "whereDidItGo": "Où est-il allé ?",
+    "snakeAndLadder": "Serpents et Échelles"
   }
 }

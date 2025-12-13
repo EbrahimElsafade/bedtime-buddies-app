@@ -8,5 +8,8 @@
   "noMedia": "لا توجد وسائط",
   "contentNotAvailable": "المحتوى غير متاح باللغة المحددة",
   "previousSection": "القسم السابق",
-  "nextSection": "القسم التالي"
+  "nextSection": "القسم التالي",
+  "untitledStory": "قصة بدون عنوان",
+  "noDescriptionAvailable": "لا يوجد وصف متاح",
+  "noAudioAvailable": "لا يوجد صوت متاح"
 }

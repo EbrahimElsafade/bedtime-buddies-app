@@ -7,7 +7,17 @@
     "totalUsers": "Total Users",
     "totalStories": "Total Stories",
     "totalCourses": "Total Courses",
-    "recentActivity": "Recent Activity"
+    "recentActivity": "Recent Activity",
+    "premiumUsers": "premium users",
+    "published": "published",
+    "latestActions": "Latest actions performed in the admin panel",
+    "activityLogPlaceholder": "Activity log will be shown here",
+    "recentActionsDescription": "Recent actions will be tracked and displayed in this section",
+    "systemOverview": "System Overview",
+    "systemStatus": "Current system status and information",
+    "userDistribution": "User Distribution",
+    "contentStatus": "Content Status",
+    "draft": "Draft"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -46,6 +56,10 @@
       "en": "Lesson description (English)",
       "ar": "Lesson description (Arabic)"
     }
+  },
+  "courseOptions": {
+    "title": "Course Options",
+    "description": "Manage categories available for courses"
   },
   "story_editor": {
     "title_label": {
@@ -110,7 +124,8 @@
     "published": "Published",
     "draft": "Draft",
     "free": "Free",
-    "premium": "Premium"
+    "premium": "Premium",
+    "manageAll": "Manage all Dolphoon"
   },
   "storyEditor": {
     "title": "Story Editor",
@@ -154,7 +169,14 @@
     "publish": "Publish",
     "unpublish": "Unpublish",
     "published": "Published",
-    "draft": "Draft"
+    "draft": "Draft",
+    "manageAll": "Manage all educational courses",
+    "allCourses": "All Courses",
+    "total": "Total",
+    "courses": "courses",
+    "all": "All",
+    "showing": "Showing",
+    "of": "of"
   },
   "settings": {
     "title": "Admin Settings",
@@ -237,19 +259,11 @@
     "languageRemovedDesc": "Language '{{language}}' has been removed successfully"
   },
   "common": {
-    "verifying_access": "Verifying admin access..."
-  },
-  "users": {
-    "showing_users": "Showing {{showing}} of {{total}} users"
-  },
-  "course_editor": {
-    "duration_label": "Duration (minutes)",
-    "duration_placeholder": "Duration in minutes",
-    "lesson_description_label": "Lesson Description",
-    "lesson_description_placeholder": {
-      "en": "Lesson description (English)",
-      "ar": "Lesson description (Arabic)"
-    }
+    "verifying_access": "Verifying admin access...",
+    "error_loading": "Error loading data",
+    "error_saving": "Error saving data",
+    "updated_successfully": "Updated successfully",
+    "loading": "Loading..."
   },
   "forms": {
     "required": "This field is required",
@@ -261,5 +275,25 @@
     "error": "An error occurred",
     "deleteConfirm": "Are you sure you want to delete this item?",
     "deleteWarning": "This action cannot be undone."
+  },
+  "loading": {
+    "courseDetails": "Loading course details...",
+    "storyDetails": "Loading story details...",
+    "categories": "Loading categories...",
+    "languages": "Loading languages...",
+    "courses": "Loading courses..."
+  },
+  "games": {
+    "ticTacToe": "Tic Tac Toe",
+    "hangman": "Hangman",
+    "memoryMatch": "Memory Match",
+    "snake": "Snake",
+    "rockPaperScissors": "Rock Paper Scissors",
+    "chooseColor": "Choose the Color",
+    "guessNumber": "Guess the Number",
+    "catchAnimal": "Catch the Animal",
+    "picturePuzzle": "Picture Puzzle",
+    "whereDidItGo": "Where Did It Go?",
+    "snakeAndLadder": "Snake and Ladder"
   }
 }

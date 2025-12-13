@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Dices, RefreshCw, Trophy } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 const LadderIcon = ({ className = 'size-4' }) => (
   <svg
@@ -17,6 +18,7 @@ const LadderIcon = ({ className = 'size-4' }) => (
 )
 
 const SnakeLadderGame = () => {
+  const { t } = useTranslation('common')
   const BOARD_SIZE = 100
   const WINNING_POSITION = 100
 
@@ -219,7 +221,7 @@ const SnakeLadderGame = () => {
       <div className="mx-auto max-w-6xl">
         <h1 className="mb-8 flex items-center justify-center gap-4 text-4xl font-bold text-purple-800">
           <span>🐍</span>
-          <span>Snakes and Ladders</span>
+          <span>{t('games.snakesAndLadders')}</span>
           <LadderIcon className="size-8" />
         </h1>
 

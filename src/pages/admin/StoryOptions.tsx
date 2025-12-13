@@ -365,7 +365,7 @@ const StoryOptions = () => {
             </div>
 
             {categoriesLoading ? (
-              <div className="py-4 text-center">Loading categories...</div>
+              <div className="py-4 text-center">{t('admin:loading.categories')}</div>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {categories.map(category => (
@@ -463,7 +463,7 @@ const StoryOptions = () => {
             </div>
 
             {languagesLoading ? (
-              <div className="py-4 text-center">Loading languages...</div>
+              <div className="py-4 text-center">{t('admin:loading.languages')}</div>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {languages.map(language => (

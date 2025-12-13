@@ -45,7 +45,7 @@ export const StoryInfo = ({
     <div className="mb-4" dir={currentSectionDir}>
       <div className="mb-2 flex flex-col items-center justify-between gap-4 sm:flex-row">
         <h1 className="font-bubbly text-3xl md:text-4xl">
-          {getStoryText('title', 'Untitled Story')}
+          {getStoryText('title', t('untitledStory', { lng: translationLang }))}
         </h1>
 
         <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
@@ -68,7 +68,7 @@ export const StoryInfo = ({
       </div>
 
       <p className="mb-4 text-start text-muted-foreground">
-        {getStoryText('description', 'No description available')}
+        {getStoryText('description', t('noDescriptionAvailable', { lng: translationLang }))}
       </p>
     </div>
   )

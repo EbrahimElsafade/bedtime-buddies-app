@@ -5,6 +5,7 @@ import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Loader2 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { StoryDetailsForm } from '@/components/admin/story-editor/StoryDetailsForm'
 import { StoryLanguageManager } from '@/components/admin/story-editor/StoryLanguageManager'
 import { StoryPublishControls } from '@/components/admin/story-editor/StoryPublishControls'
@@ -32,6 +33,7 @@ export const StoryEditorForm = ({
   languages,
   languagesLoading,
 }: StoryEditorFormProps) => {
+  const { t } = useTranslation('admin')
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { id } = useParams<{ id: string }>()
@@ -317,7 +319,7 @@ export const StoryEditorForm = ({
     return (
       <div className="flex items-center justify-center p-12">
         <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-        <span className="ml-2 text-lg">Loading story details...</span>
+        <span className="ml-2 text-lg">{t('loading.storyDetails')}</span>
       </div>
     )
   }

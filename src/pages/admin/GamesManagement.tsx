@@ -15,24 +15,24 @@ interface GameSetting {
   is_active: boolean
 }
 
-const GAME_INFO = {
-  'tic-tac-toe': { icon: '⭕', title: 'Tic Tac Toe' },
-  'hangman': { icon: '🎯', title: 'Hangman' },
-  'memory': { icon: '🧠', title: 'Memory Match' },
-  'snake': { icon: '🐍', title: 'Snake' },
-  'rock-paper-scissors': { icon: '✂️', title: 'Rock Paper Scissors' },
-  'choose-color': { icon: '🎨', title: 'Choose the Color' },
-  'guess-number': { icon: '🔢', title: 'Guess the Number' },
-  'catch-animal': { icon: '🦊', title: 'Catch the Animal' },
-  'puzzle': { icon: '🧩', title: 'Picture Puzzle' },
-  'where-did-it-go': { icon: '🔍', title: 'Where Did It Go?' },
-  'snake-ladder': { icon: '🎲', title: 'Snake and Ladder' },
-}
-
 const GamesManagement = () => {
   const { t } = useTranslation(['admin', 'games'])
   const [games, setGames] = useState<GameSetting[]>([])
   const [loading, setLoading] = useState(true)
+
+  const GAME_INFO = {
+    'tic-tac-toe': { icon: '⭕', title: t('admin:games.ticTacToe') },
+    'hangman': { icon: '🎯', title: t('admin:games.hangman') },
+    'memory': { icon: '🧠', title: t('admin:games.memoryMatch') },
+    'snake': { icon: '🐍', title: t('admin:games.snake') },
+    'rock-paper-scissors': { icon: '✂️', title: t('admin:games.rockPaperScissors') },
+    'choose-color': { icon: '🎨', title: t('admin:games.chooseColor') },
+    'guess-number': { icon: '🔢', title: t('admin:games.guessNumber') },
+    'catch-animal': { icon: '🦊', title: t('admin:games.catchAnimal') },
+    'puzzle': { icon: '🧩', title: t('admin:games.picturePuzzle') },
+    'where-did-it-go': { icon: '🔍', title: t('admin:games.whereDidItGo') },
+    'snake-ladder': { icon: '🎲', title: t('admin:games.snakeAndLadder') },
+  }
 
   useEffect(() => {
     fetchGames()

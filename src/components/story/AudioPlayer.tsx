@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslation } from "react-i18next";
 
 interface AudioPlayerProps {
   audioUrl: string;
@@ -33,6 +34,7 @@ export const AudioPlayer = ({
   hasPrevious = false,
   currentSectionDir,
 }: AudioPlayerProps) => {
+  const { t } = useTranslation(['story']);
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -178,7 +180,7 @@ export const AudioPlayer = ({
   if (!audioSrc) {
     return (
       <Card className="p-4 bg-secondary/90  backdrop-blur-sm border-primary/20">
-        <div className="text-center text-gray-500">No audio available</div>
+        <div className="text-center text-gray-500">{t('noAudioAvailable')}</div>
       </Card>
     );
   }

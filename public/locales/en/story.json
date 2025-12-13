@@ -8,5 +8,8 @@
   "noMedia": "No media",
   "contentNotAvailable": "Content not available in selected language",
   "previousSection": "Previous section",
-  "nextSection": "Next section"
+  "nextSection": "Next section",
+  "untitledStory": "Untitled Story",
+  "noDescriptionAvailable": "No description available",
+  "noAudioAvailable": "No audio available"
 }

@@ -6,8 +6,10 @@ import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'sonner'
 import { Loader2, Plus, X } from 'lucide-react'
 import { SocialAccount } from '@/types/auth'
+import { useTranslation } from 'react-i18next'
 
 export const SocialAccountsManager = () => {
+  const { t } = useTranslation('common')
   const { profile, user, linkSocialAccount, unlinkSocialAccount } = useAuth()
   const [linking, setLinking] = useState(false)
   const [unlinking, setUnlinking] = useState<SocialAccount | null>(null)
@@ -72,9 +74,9 @@ export const SocialAccountsManager = () => {
       <CardContent className="space-y-4">
         {/* Currently Linked Accounts */}
         <div className="space-y-2">
-          <h4 className="text-sm font-medium">Connected Accounts</h4>
+          <h4 className="text-sm font-medium">{t('profile.connectedAccounts')}</h4>
           {actualLinkedProviders.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No social accounts linked</p>
+            <p className="text-sm text-muted-foreground">{t('profile.noSocialAccountsLinked')}</p>
           ) : (
             <div className="flex flex-wrap gap-2">
               {actualLinkedProviders.map((account) => (
@@ -99,7 +101,7 @@ export const SocialAccountsManager = () => {
 
         {/* Available Accounts to Link */}
         <div className="space-y-2">
-          <h4 className="text-sm font-medium">Add Account</h4>
+          <h4 className="text-sm font-medium">{t('profile.addAccount')}</h4>
           <div className="grid grid-cols-2 gap-2">
             {availableAccounts
               .filter(account => !actualLinkedProviders.includes(account))
@@ -122,7 +124,7 @@ export const SocialAccountsManager = () => {
               ))}
           </div>
           {availableAccounts.filter(a => !actualLinkedProviders.includes(a)).length === 0 && (
-            <p className="text-sm text-muted-foreground">All accounts are linked</p>
+            <p className="text-sm text-muted-foreground">{t('profile.allAccountsLinked')}</p>
           )}
         </div>
 
