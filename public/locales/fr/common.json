@@ -99,5 +99,19 @@
   },
   "games": {
     "snakesAndLadders": "Serpents et Échelles"
+  },
+  "finishedContent": {
+    "title": "Contenu Terminé",
+    "milestones": "Réalisations",
+    "totalPoints": "{{count}} points gagnés",
+    "noMilestone": "Continuez!",
+    "nextMilestone": "Suivant",
+    "pointsNeeded": "points de plus",
+    "finishedStories": "Histoires Terminées",
+    "storiesCompleted": "histoires terminées",
+    "noFinishedStories": "Vous n'avez pas encore terminé d'histoire. Commencez à explorer!",
+    "finishedCourses": "Cours Terminés",
+    "coursesCompleted": "cours terminés",
+    "noFinishedCourses": "Vous n'avez pas encore terminé de cours. Commencez à apprendre!"
   }
 }

@@ -106,5 +106,19 @@
   },
   "games": {
     "snakesAndLadders": "Snakes and Ladders"
+  },
+  "finishedContent": {
+    "title": "Finished Content",
+    "milestones": "Achievements",
+    "totalPoints": "{{count}} points earned",
+    "noMilestone": "Keep going!",
+    "nextMilestone": "Next",
+    "pointsNeeded": "more points",
+    "finishedStories": "Finished Stories",
+    "storiesCompleted": "stories completed",
+    "noFinishedStories": "You haven't finished any stories yet. Start exploring!",
+    "finishedCourses": "Finished Courses",
+    "coursesCompleted": "courses completed",
+    "noFinishedCourses": "You haven't finished any courses yet. Start learning!"
   }
 }

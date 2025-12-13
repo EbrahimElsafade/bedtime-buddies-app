@@ -1,7 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
-import { Resend } from "npm:resend@2.0.0";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -39,49 +38,66 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("Sending email from:", email, "Name:", name);
 
-    const emailResponse = await resend.emails.send({
-      from: "Dolphoon Contact <onboarding@resend.dev>",
-      to: ["abdoalaaabdo17@gmail.com"],
-      subject: `New Contact Request from ${name}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h1 style="color: #333; border-bottom: 2px solid #0ea5e9; padding-bottom: 10px;">
-            New Contact Request
-          </h1>
-          
-          <div style="margin: 20px 0;">
-            <h3 style="color: #555; margin-bottom: 5px;">Name:</h3>
-            <p style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 5px;">${name}</p>
-          </div>
-          
-          <div style="margin: 20px 0;">
-            <h3 style="color: #555; margin-bottom: 5px;">Email:</h3>
-            <p style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 5px;">
-              <a href="mailto:${email}">${email}</a>
-            </p>
-          </div>
-          
-          ${phone ? `
-          <div style="margin: 20px 0;">
-            <h3 style="color: #555; margin-bottom: 5px;">Phone:</h3>
-            <p style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 5px;">${phone}</p>
-          </div>
-          ` : ''}
-          
-          <div style="margin: 20px 0;">
-            <h3 style="color: #555; margin-bottom: 5px;">Message:</h3>
-            <p style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 5px; white-space: pre-wrap;">${message}</p>
-          </div>
-          
-          <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;" />
-          <p style="color: #888; font-size: 12px;">
-            This message was sent from the Dolphoon course contact form.
+    const emailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h1 style="color: #333; border-bottom: 2px solid #0ea5e9; padding-bottom: 10px;">
+          New Contact Request
+        </h1>
+        
+        <div style="margin: 20px 0;">
+          <h3 style="color: #555; margin-bottom: 5px;">Name:</h3>
+          <p style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 5px;">${name}</p>
+        </div>
+        
+        <div style="margin: 20px 0;">
+          <h3 style="color: #555; margin-bottom: 5px;">Email:</h3>
+          <p style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 5px;">
+            <a href="mailto:${email}">${email}</a>
           </p>
         </div>
-      `,
+        
+        ${phone ? `
+        <div style="margin: 20px 0;">
+          <h3 style="color: #555; margin-bottom: 5px;">Phone:</h3>
+          <p style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 5px;">${phone}</p>
+        </div>
+        ` : ''}
+        
+        <div style="margin: 20px 0;">
+          <h3 style="color: #555; margin-bottom: 5px;">Message:</h3>
+          <p style="margin: 0; padding: 10px; background: #f5f5f5; border-radius: 5px; white-space: pre-wrap;">${message}</p>
+        </div>
+        
+        <hr style="margin: 30px 0; border: none; border-top: 1px solid #ddd;" />
+        <p style="color: #888; font-size: 12px;">
+          This message was sent from the Dolphoon course contact form.
+        </p>
+      </div>
+    `;
+
+    const emailResponse = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+      },
+      body: JSON.stringify({
+        from: "Dolphoon Contact <onboarding@resend.dev>",
+        to: ["abdoalaaabdo17@gmail.com"],
+        subject: `New Contact Request from ${name}`,
+        html: emailHtml,
+      }),
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    if (!emailResponse.ok) {
+      const errorData = await emailResponse.text();
+      console.error("Resend API error:", errorData);
+      throw new Error(`Failed to send email: ${errorData}`);
+    }
+
+    const responseData = await emailResponse.json();
+
+    console.log("Email sent successfully:", responseData);
 
     return new Response(JSON.stringify({ success: true }), {
       status: 200,

@@ -99,5 +99,19 @@
   },
   "games": {
     "snakesAndLadders": "الثعبان والسلم"
+  },
+  "finishedContent": {
+    "title": "المحتوى المكتمل",
+    "milestones": "الإنجازات",
+    "totalPoints": "{{count}} نقطة مكتسبة",
+    "noMilestone": "استمر!",
+    "nextMilestone": "التالي",
+    "pointsNeeded": "نقطة أخرى",
+    "finishedStories": "القصص المكتملة",
+    "storiesCompleted": "قصة مكتملة",
+    "noFinishedStories": "لم تكمل أي قصة بعد. ابدأ بالاستكشاف!",
+    "finishedCourses": "الدورات المكتملة",
+    "coursesCompleted": "دورة مكتملة",
+    "noFinishedCourses": "لم تكمل أي دورة بعد. ابدأ بالتعلم!"
   }
 }
