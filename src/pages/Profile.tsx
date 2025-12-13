@@ -12,6 +12,7 @@ import { useLoading } from '@/contexts/LoadingContext'
 import { ProfileInfo } from './Profile/ProfileInfo'
 import { FavoritesList } from './Profile/FavoritesList'
 import { SubscriptionTab } from './Profile/SubscriptionTab'
+import { FinishedContentTab } from './Profile/FinishedContentTab'
 
 const Profile = () => {
   const navigate = useNavigate()
@@ -144,6 +145,9 @@ const Profile = () => {
             <TabsTrigger value="course-favorites">
               {t('common:courseFavorites')}
             </TabsTrigger>
+            <TabsTrigger value="finished-content">
+              {t('common:finishedContent.title')}
+            </TabsTrigger>
             <TabsTrigger value="subscription">
               {t('common:subscription')}
             </TabsTrigger>
@@ -182,6 +186,11 @@ const Profile = () => {
               language={language}
               t={t}
             />
+          </TabsContent>
+
+          {/* Finished Content Tab */}
+          <TabsContent value="finished-content">
+            <FinishedContentTab />
           </TabsContent>
 
           {/* Subscription Tab */}
