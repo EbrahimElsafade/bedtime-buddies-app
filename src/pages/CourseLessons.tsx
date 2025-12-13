@@ -135,7 +135,7 @@ const CourseLessons = () => {
   }
 
   return (
-    <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-12">
+    <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-8">
       <Helmet>
         <title>
           {getLocalized(course, 'title', lang)} - {t('course.lessons')} |{' '}
@@ -174,9 +174,60 @@ const CourseLessons = () => {
         </div>
 
         {/* Content */}
-        <div className="flex flex-col gap-8 lg:flex-row rtl:lg:flex-row-reverse">
+        <div className="flex flex-col gap-8 lg:flex-row">
+          {/* Video Player */}
+          <div className="lg:flex-[2]">
+            {selectedVideo ? (
+              <div className="grid gap-4">
+                <div className="aspect-video overflow-hidden rounded-lg bg-black">
+                  {selectedVideo.videoUrl ? (
+                    <YouTubePlayer
+                      videoId={selectedVideo.videoUrl}
+                      title={getLocalized(selectedVideo, 'title', lang)}
+                      className="rounded-lg"
+                      onVideoEnd={handleVideoEnd}
+                      showCountdownOnEnd={getNextVideoExists()}
+                      autoplay={autoplayNext}
+                      onCountdownCancel={handleCountdownCancel}
+                    />
+                  ) : selectedVideo.videoPath ? (
+                    <div className="flex h-full items-center justify-center text-secondary">
+                      <p>Legacy video format - please update to YouTube</p>
+                    </div>
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-secondary">
+                      <p>No video source available</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <h3 className="mb-2 font-bubbly text-xl text-primary-foreground">
+                    {getLocalized(selectedVideo, 'title', lang)}
+                  </h3>
+
+                  <div className="mb-2 flex items-center gap-2 text-sm text-primary-foreground">
+                    <Clock className="size-4" />
+
+                    <span>
+                      {Math.floor(selectedVideo.duration / 60)}:
+                      {String(selectedVideo.duration % 60).padStart(2, '0')}{' '}
+                      {t('duration')}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex aspect-video items-center justify-center rounded-lg bg-secondary">
+                <p className="text-center text-muted-foreground">
+                  {t('course.selectVideo')}
+                </p>
+              </div>
+            )}
+          </div>
+
           {/* Video List */}
-          <div className="max-h-[55vh] pe-4 lg:flex-1 lg:overflow-y-scroll">
+          <div className="max-h-[55vh] pe-4 flex-1 overflow-y-scroll">
             <div className="space-y-3">
               {course.videos && course.videos.length > 0 ? (
                 course.videos.map(video => (
@@ -240,57 +291,6 @@ const CourseLessons = () => {
                 </p>
               )}
             </div>
-          </div>
-
-          {/* Video Player */}
-          <div className="lg:flex-[2]">
-            {selectedVideo ? (
-              <div className="grid gap-4">
-                <div className="aspect-video overflow-hidden rounded-lg bg-black">
-                  {selectedVideo.videoUrl ? (
-                    <YouTubePlayer
-                      videoId={selectedVideo.videoUrl}
-                      title={getLocalized(selectedVideo, 'title', lang)}
-                      className="rounded-lg"
-                      onVideoEnd={handleVideoEnd}
-                      showCountdownOnEnd={getNextVideoExists()}
-                      autoplay={autoplayNext}
-                      onCountdownCancel={handleCountdownCancel}
-                    />
-                  ) : selectedVideo.videoPath ? (
-                    <div className="flex h-full items-center justify-center text-secondary">
-                      <p>Legacy video format - please update to YouTube</p>
-                    </div>
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-secondary">
-                      <p>No video source available</p>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <h3 className="mb-2 font-bubbly text-xl text-primary-foreground">
-                    {getLocalized(selectedVideo, 'title', lang)}
-                  </h3>
-
-                  <div className="mb-2 flex items-center gap-2 text-sm text-primary-foreground">
-                    <Clock className="size-4" />
-
-                    <span>
-                      {Math.floor(selectedVideo.duration / 60)}:
-                      {String(selectedVideo.duration % 60).padStart(2, '0')}{' '}
-                      {t('duration')}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="flex aspect-video items-center justify-center rounded-lg bg-secondary">
-                <p className="text-center text-muted-foreground">
-                  {t('course.selectVideo')}
-                </p>
-              </div>
-            )}
           </div>
         </div>
       </div>

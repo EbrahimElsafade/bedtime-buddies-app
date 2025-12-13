@@ -2,5 +2,11 @@
   "stopVideo": "stop video",
   "playVideo": "play video",
   "stopStory": "stop story",
-  "readStory": "read story"
+  "readStory": "read story",
+  "previous": "previous",
+  "next": "next",
+  "noMedia": "No media",
+  "contentNotAvailable": "Content not available in selected language",
+  "previousSection": "Previous section",
+  "nextSection": "Next section"
 }

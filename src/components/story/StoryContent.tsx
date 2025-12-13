@@ -8,6 +8,7 @@ import { TextHighlight } from './TextHighlight'
 import VideoPlayer from './VideoPlayer'
 import { useEffect, useRef, useState } from 'react'
 import { usePreloadNextSection } from '@/hooks/usePreloadNextSection'
+import { useTranslation } from 'react-i18next'
 
 interface StoryContentProps {
   story: Story
@@ -26,6 +27,7 @@ export const StoryContent = ({
   currentSectionIndex = 0,
   onSectionChange,
 }: StoryContentProps) => {
+  const { t } = useTranslation(['story'])
   const [isAudioPlaying, setIsAudioPlaying] = useState(false)
   const [audioCurrentTime, setAudioCurrentTime] = useState(0)
   const [audioDuration, setAudioDuration] = useState(0)
@@ -37,7 +39,7 @@ export const StoryContent = ({
   const currentSection = story.sections[currentSectionIndex]
   const currentText =
     currentSection?.texts[currentLanguage] ||
-    'Content not available in selected language'
+    t('contentNotAvailable')
 
   const currentVideo = currentSection?.video ? currentSection.video : null
 
@@ -73,7 +75,8 @@ export const StoryContent = ({
     // large jumps (e.g., when audio is longer than video).
     if (isAudioPlaying && videoRef.current) {
       const vid = videoRef.current
-      const vidDuration = Number.isFinite(vid.duration) && vid.duration > 0 ? vid.duration : 0
+      const vidDuration =
+        Number.isFinite(vid.duration) && vid.duration > 0 ? vid.duration : 0
 
       if (vidDuration > 0) {
         const target = currentTime % vidDuration
@@ -109,7 +112,9 @@ export const StoryContent = ({
             // Try again with muted video on mobile
             if (videoRef.current) {
               videoRef.current.muted = true
-              videoRef.current.play().catch(e => console.error('Muted video play failed:', e))
+              videoRef.current
+                .play()
+                .catch(e => console.error('Muted video play failed:', e))
             }
           })
         }
@@ -149,7 +154,7 @@ export const StoryContent = ({
             />
           ) : (
             <div className="flex aspect-square h-64 w-full items-center justify-center bg-muted md:aspect-auto md:h-full">
-              <span className="text-muted-foreground">No media</span>
+              <span className="text-muted-foreground">{t('noMedia')}</span>
             </div>
           )}
 
@@ -171,12 +176,11 @@ export const StoryContent = ({
         {(story.audio_mode !== 'single_story' || story.sections.length > 1) && (
           <div className="flex items-center justify-between p-4 pb-0 md:p-6">
             <Button
-              size="icon"
-              variant="ghost"
+              variant="outline"
               onClick={handlePrevSection}
               disabled={currentSectionIndex === 0}
-              aria-label="Previous section"
-              className="h-8 w-8 shadow-lg md:h-10 md:w-10"
+              aria-label={t('previousSection')}
+              className="flex items-center shadow-xl"
             >
               <ChevronLeft
                 className={
@@ -185,6 +189,8 @@ export const StoryContent = ({
                     : 'h-4 w-4 md:h-5 md:w-5'
                 }
               />
+
+              <span>{t('previous')}</span>
             </Button>
 
             <span className="px-2 text-xs text-muted-foreground md:text-sm">
@@ -192,13 +198,14 @@ export const StoryContent = ({
             </span>
 
             <Button
-              size="icon"
-              variant="ghost"
+              variant="outline"
               onClick={handleNextSection}
               disabled={currentSectionIndex === story.sections.length - 1}
-              aria-label="Next section"
-              className="h-8 w-8 shadow-lg md:h-10 md:w-10"
+              aria-label={t('nextSection')}
+              className="flex items-center shadow-xl"
             >
+              <span>{t('next')}</span>
+
               <ChevronRight
                 className={
                   storyDirection === 'rtl'

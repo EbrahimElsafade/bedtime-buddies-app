@@ -2,5 +2,11 @@
   "stopVideo": "arrêter la vidéo",
   "playVideo": "lire la vidéo",
   "stopStory": "arrêter l'histoire",
-  "readStory": "lire l'histoire"
+  "readStory": "lire l'histoire",
+  "previous": "précédent",
+  "next": "suivant",
+  "noMedia": "Aucun média",
+  "contentNotAvailable": "Contenu non disponible dans la langue sélectionnée",
+  "previousSection": "Section précédente",
+  "nextSection": "Section suivante"
 }

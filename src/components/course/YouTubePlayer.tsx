@@ -162,26 +162,6 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
         onClick={handlePlayClick}
       />
 
-      {/* Play Button Overlay - shows when paused */}
-      {!isPlaying && !showCountdown && (
-        <div
-          onClick={handlePlayClick}
-          role="button"
-          aria-label="Play video"
-          className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/30 backdrop-blur-sm transition-colors hover:bg-black/50"
-        >
-          <div className="flex h-24 w-24 transform items-center justify-center rounded-full bg-accent/90 shadow-lg transition-transform hover:scale-110 hover:bg-accent">
-            <svg
-              className="ml-1 h-12 w-12 text-secondary"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-        </div>
-      )}
-
       {/* Countdown Overlay */}
       {showCountdown && (
         <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-black/70 backdrop-blur-sm">

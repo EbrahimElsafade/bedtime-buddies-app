@@ -2,5 +2,11 @@
   "stopVideo": "إيقاف الفيديو",
   "playVideo": "تشغيل الفيديو",
   "stopStory": "إيقاف القصة",
-  "readStory": "قراءة القصة"
+  "readStory": "قراءة القصة",
+  "previous": "السابق",
+  "next": "التالي",
+  "noMedia": "لا توجد وسائط",
+  "contentNotAvailable": "المحتوى غير متاح باللغة المحددة",
+  "previousSection": "القسم السابق",
+  "nextSection": "القسم التالي"
 }

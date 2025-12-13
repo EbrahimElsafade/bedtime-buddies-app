@@ -128,7 +128,7 @@ const Course = () => {
   }
 
   return (
-    <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-12">
+    <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-8">
       <Helmet>
         <title>
           {getLocalized(course, 'title', lang)} - {t('meta:name')}
