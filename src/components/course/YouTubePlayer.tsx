@@ -34,22 +34,6 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
     onCountdownCancel?.()
   }
 
-  const handlePlayClick = () => {
-    if (!plyrRef.current) return
-
-    // Toggle playback: pause if playing, otherwise play
-    try {
-      if (plyrRef.current.playing) {
-        plyrRef.current.pause()
-      } else {
-        plyrRef.current.play()
-      }
-    } catch (e) {
-      // Fallback: try calling play()
-      plyrRef.current.play()
-    }
-  }
-
   useEffect(() => {
     if (!containerRef.current || !videoId) return
 
@@ -122,7 +106,7 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
         plyrRef.current = null
       }
     }
-  }, [videoId, autoplay, title, showCountdownOnEnd, onVideoEnd])
+  }, [videoId])
 
   // Handle countdown
   useEffect(() => {
@@ -159,7 +143,6 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
       <div
         ref={containerRef}
         className={cn('player relative cursor-pointer')}
-        onClick={handlePlayClick}
       />
 
       {/* Countdown Overlay */}
