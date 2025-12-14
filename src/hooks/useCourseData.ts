@@ -39,8 +39,6 @@ export const useCourseData = (courseId: string | undefined) => {
       }
 
       // Transform lessons to match our interface
-      // Ignore DB-provided durations (we switched to YouTube embeds)
-      // Duration will be computed on the client from the iframe/player
       const videos: CourseVideo[] =
         lessonsData?.map((lesson: LessonRow) => {
           return {
@@ -54,7 +52,7 @@ export const useCourseData = (courseId: string | undefined) => {
             videoPath: lesson.video_path || '',
             videoUrl: lesson.video_url || '',
             thumbnailPath: lesson.thumbnail_path || '',
-            duration: 0, // ignore DB duration
+            duration: lesson.duration,
             isFree: lesson.is_free ?? courseData.is_free,
             order: lesson.lesson_order,
             createdAt: lesson.created_at || '',
@@ -75,7 +73,7 @@ export const useCourseData = (courseId: string | undefined) => {
         category: courseData.category || '',
         minAge: courseData.min_age || 3,
         maxAge: courseData.max_age || 12,
-        duration: courseData.total_duration || 0, // Use stored total_duration
+        duration: 0, // Will be calculated from lessons duration
         lessons: courseData.lessons || videos.length,
         cover_image: courseData.cover_image || '',
         coverImagePath: courseData.cover_image || '',
@@ -138,7 +136,7 @@ export const useCoursesData = () => {
             category: courseData.category || '',
             minAge: courseData.min_age || 3,
             maxAge: courseData.max_age || 12,
-            duration: courseData.total_duration || 0, // Use stored total_duration
+            duration: 0, // Will be calculated from lessons duration
             lessons: courseData.lessons || 0,
             cover_image: courseData.cover_image || '',
             coverImagePath: courseData.cover_image || '',
@@ -186,7 +184,7 @@ export const useFeaturedCourses = () => {
             category: courseData.category || '',
             minAge: courseData.min_age || 3,
             maxAge: courseData.max_age || 12,
-            duration: courseData.total_duration || 0, // Use stored total_duration
+            duration: 0, // Will be calculated from lessons duration
             lessons: courseData.lessons || 0,
             cover_image: courseData.cover_image || '',
             coverImagePath: courseData.cover_image || '',

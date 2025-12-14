@@ -73,7 +73,6 @@ interface CourseLessonForm {
   videoUrl: string
   thumbnailPath: string
   duration: number
-  manualDuration: boolean
   isFree: boolean
   order: number
   createdAt: string
@@ -122,8 +121,6 @@ const CourseEditor = () => {
     instructorAvatar: '',
     instructorUserId: null as string | null,
     instructorType: 'custom' as 'custom' | 'user',
-    manualTotalDuration: false,
-    totalDuration: 0,
   })
   
   const [instructorAvatarFile, setInstructorAvatarFile] = useState<File | null>(null)
@@ -231,7 +228,6 @@ const CourseEditor = () => {
       }
 
       const c: Record<string, unknown> = course
-      const storedTotalDuration = (c.total_duration as number) || 0
       setCourseData({
         title_en: (c.title_en as string) ?? (c.title as string) ?? '',
         title_ar: (c.title_ar as string) ?? '',
@@ -257,8 +253,6 @@ const CourseEditor = () => {
         instructorAvatar: (c.instructor_avatar as string) || '',
         instructorUserId: (c.instructor_user_id as string | null) || null,
         instructorType: c.instructor_user_id ? 'user' : 'custom',
-        manualTotalDuration: storedTotalDuration > 0,
-        totalDuration: storedTotalDuration,
       })
       
       // Handle instructor avatar preview
@@ -285,7 +279,6 @@ const CourseEditor = () => {
             videoPath: (lessonData.video_path as string) || '',
             thumbnailPath: (lessonData.thumbnail_path as string) || '',
             duration: (lessonData.duration as number) || 0,
-            manualDuration: (lessonData.duration as number) > 0,
             isFree: lessonData.is_free !== undefined ? (lessonData.is_free as boolean) : (course.is_free as boolean),
             order: (lessonData.lesson_order as number) || 1,
             createdAt: lessonData.created_at as string,
@@ -341,7 +334,6 @@ const CourseEditor = () => {
       videoPath: '',
       thumbnailPath: '',
       duration: 0,
-      manualDuration: false,
       isFree: courseData.isFree,
       order: courseLessons.length + 1,
       createdAt: new Date().toISOString(),
@@ -351,9 +343,6 @@ const CourseEditor = () => {
 
     setCourseLessons([...courseLessons, newLesson])
   }
-
-  // Calculate total duration from lessons
-  const calculatedTotalDuration = courseLessons.reduce((sum, lesson) => sum + (lesson.duration || 0), 0)
 
   const handleDeleteLessonClick = (index: number) => {
     setLessonToDelete(index)
@@ -472,11 +461,7 @@ const CourseEditor = () => {
         instructorAvatarUrl = filename
       }
 
-      // Calculate total course duration (manual or auto)
-      const finalTotalDuration = courseData.manualTotalDuration 
-        ? courseData.totalDuration 
-        : calculatedTotalDuration
-
+      // Calculate total course duration
       // Create or update the course
       let courseId = id
       if (!isEditing) {
@@ -496,7 +481,6 @@ const CourseEditor = () => {
             is_free: courseData.isFree,
             is_published: courseData.isFeatured,
             lessons: courseLessons.length,
-            total_duration: finalTotalDuration,
             learning_objectives: courseData.learningObjectives,
             learning_objectives_en: courseData.learningObjectives,
             learning_objectives_ar: courseData.learningObjectivesAr,
@@ -532,7 +516,6 @@ const CourseEditor = () => {
             is_free: courseData.isFree,
             is_published: courseData.isFeatured,
             lessons: courseLessons.length,
-            total_duration: finalTotalDuration,
             learning_objectives: courseData.learningObjectives,
             learning_objectives_en: courseData.learningObjectives,
             learning_objectives_ar: courseData.learningObjectivesAr,
@@ -890,67 +873,6 @@ const CourseEditor = () => {
                           setCourseData({ ...courseData, isFeatured: checked })
                         }
                       />
-                    </div>
-
-                    {/* Total Course Duration */}
-                    <div className="space-y-3 rounded-lg border p-4">
-                      <div className="flex items-center justify-between">
-                        <Label>Total Course Duration</Label>
-                        <div className="flex items-center gap-2">
-                          <Label htmlFor="manual-total-duration" className="text-xs text-muted-foreground">
-                            Manual
-                          </Label>
-                          <Switch
-                            id="manual-total-duration"
-                            checked={courseData.manualTotalDuration}
-                            onCheckedChange={checked =>
-                              setCourseData({ ...courseData, manualTotalDuration: checked })
-                            }
-                          />
-                        </div>
-                      </div>
-                      {courseData.manualTotalDuration ? (
-                        <div className="flex items-center gap-2">
-                          <Input
-                            type="number"
-                            min="0"
-                            placeholder="Minutes"
-                            value={Math.floor(courseData.totalDuration / 60) || ''}
-                            onChange={e => {
-                              const minutes = parseInt(e.target.value) || 0
-                              const seconds = courseData.totalDuration % 60
-                              setCourseData({ ...courseData, totalDuration: minutes * 60 + seconds })
-                            }}
-                            className="w-20"
-                          />
-                          <span>min</span>
-                          <Input
-                            type="number"
-                            min="0"
-                            max="59"
-                            placeholder="Seconds"
-                            value={courseData.totalDuration % 60 || ''}
-                            onChange={e => {
-                              const seconds = Math.min(59, parseInt(e.target.value) || 0)
-                              const minutes = Math.floor(courseData.totalDuration / 60)
-                              setCourseData({ ...courseData, totalDuration: minutes * 60 + seconds })
-                            }}
-                            className="w-20"
-                          />
-                          <span>sec</span>
-                        </div>
-                      ) : (
-                        <div className="rounded-md bg-muted px-3 py-2">
-                          <p className="text-sm font-medium">
-                            {calculatedTotalDuration > 0 
-                              ? `${Math.floor(calculatedTotalDuration / 60)} min ${calculatedTotalDuration % 60} sec` 
-                              : 'No lessons added yet'}
-                          </p>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            Auto-calculated from lesson durations
-                          </p>
-                        </div>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -1501,62 +1423,17 @@ const CourseEditor = () => {
                                 </div>
                               </div>
                               <div className="space-y-2">
-                                <div className="flex items-center justify-between">
-                                  <Label>Video Duration</Label>
-                                  <div className="flex items-center gap-2">
-                                    <Label htmlFor={`lesson-manual-duration-${lessonIndex}`} className="text-xs text-muted-foreground">
-                                      Manual
-                                    </Label>
-                                    <Switch
-                                      id={`lesson-manual-duration-${lessonIndex}`}
-                                      checked={lesson.manualDuration || false}
-                                      onCheckedChange={(checked) => 
-                                        updateLessonField(lessonIndex, 'manualDuration', checked)
-                                      }
-                                    />
-                                  </div>
+                                <Label>Video Duration</Label>
+                                <div className="rounded-md border bg-muted px-3 py-2">
+                                  <p className="text-sm">
+                                    {lesson.duration > 0 
+                                      ? `${Math.floor(lesson.duration / 60)}:${String(lesson.duration % 60).padStart(2, '0')}` 
+                                      : 'Upload video to calculate'}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground mt-1">
+                                    Duration will be auto-calculated from video
+                                  </p>
                                 </div>
-                                {lesson.manualDuration ? (
-                                  <div className="flex items-center gap-2">
-                                    <Input
-                                      type="number"
-                                      min="0"
-                                      placeholder="Minutes"
-                                      value={Math.floor(lesson.duration / 60) || ''}
-                                      onChange={e => {
-                                        const minutes = parseInt(e.target.value) || 0
-                                        const seconds = lesson.duration % 60
-                                        updateLessonField(lessonIndex, 'duration', minutes * 60 + seconds)
-                                      }}
-                                      className="w-20"
-                                    />
-                                    <span>:</span>
-                                    <Input
-                                      type="number"
-                                      min="0"
-                                      max="59"
-                                      placeholder="Seconds"
-                                      value={lesson.duration % 60 || ''}
-                                      onChange={e => {
-                                        const seconds = Math.min(59, parseInt(e.target.value) || 0)
-                                        const minutes = Math.floor(lesson.duration / 60)
-                                        updateLessonField(lessonIndex, 'duration', minutes * 60 + seconds)
-                                      }}
-                                      className="w-20"
-                                    />
-                                  </div>
-                                ) : (
-                                  <div className="rounded-md border bg-muted px-3 py-2">
-                                    <p className="text-sm">
-                                      {lesson.duration > 0 
-                                        ? `${Math.floor(lesson.duration / 60)}:${String(lesson.duration % 60).padStart(2, '0')}` 
-                                        : 'Auto-calculated from video'}
-                                    </p>
-                                    <p className="text-xs text-muted-foreground mt-1">
-                                      Enable "Manual" to set duration manually
-                                    </p>
-                                  </div>
-                                )}
                               </div>
                             </div>
 

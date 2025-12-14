@@ -16,7 +16,6 @@ import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 import { useTranslation } from 'react-i18next'
 import { useUserRole } from '@/hooks/useUserRole'
-import { getYouTubeDuration } from '@/hooks/useYouTubeDuration'
 
 const CourseLessons = () => {
   const { id: courseId } = useParams<{ id: string }>()
@@ -31,7 +30,6 @@ const CourseLessons = () => {
   const { data: course, isLoading, error } = useCourseData(courseId)
   const { isPremium } = useUserRole(user)
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
-  const [videoDurations, setVideoDurations] = useState<Record<string, number>>({})
 
   useEffect(() => {
     setIsLoading(isLoading)
@@ -50,43 +48,6 @@ const CourseLessons = () => {
       }
     }
   }, [course, lang, t, selectedVideo])
-
-  // When a video is selected, try to compute its duration from YouTube
-  useEffect(() => {
-    const load = async () => {
-      if (!selectedVideo) return
-      if (!selectedVideo.videoUrl) return
-      // If we already have a computed duration, skip
-      if (videoDurations[selectedVideo.id] && videoDurations[selectedVideo.id] > 0) return
-
-      const d = await getYouTubeDuration(selectedVideo.videoUrl)
-      if (d && d > 0) {
-        setVideoDurations(prev => ({ ...prev, [selectedVideo.id]: d }))
-      }
-    }
-
-    load()
-  }, [selectedVideo, videoDurations])
-
-  // Compute durations for all videos in the course (background)
-  useEffect(() => {
-    let mounted = true
-    const loadAll = async () => {
-      if (!course?.videos) return
-      for (const v of course.videos) {
-        if (!mounted) return
-        if (!v.videoUrl) continue
-        if (videoDurations[v.id] && videoDurations[v.id] > 0) continue
-        const d = await getYouTubeDuration(v.videoUrl)
-        if (d && d > 0 && mounted) {
-          setVideoDurations(prev => ({ ...prev, [v.id]: d }))
-        }
-      }
-    }
-
-    loadAll()
-    return () => { mounted = false }
-  }, [course, videoDurations])
 
   const handleVideoSelect = (video: CourseVideo) => {
     // Allow access if user is premium OR if the lesson is free
@@ -249,12 +210,9 @@ const CourseLessons = () => {
                     <Clock className="size-4" />
 
                     <span>
-                      {(() => {
-                        const dur = videoDurations[selectedVideo.id] ?? selectedVideo.duration ?? 0
-                        const m = Math.floor(dur / 60)
-                        const s = String(dur % 60).padStart(2, '0')
-                        return `${m}:${s} ${t('duration')}`
-                      })()}
+                      {Math.floor(selectedVideo.duration / 60)}:
+                      {String(selectedVideo.duration % 60).padStart(2, '0')}{' '}
+                      {t('duration')}
                     </span>
                   </div>
                 </div>
@@ -318,12 +276,8 @@ const CourseLessons = () => {
                           <div className="mt-1 flex items-center text-xs text-primary-foreground/70">
                             <Clock className="mx-1 h-3 w-3" />
                             <span>
-                              {(() => {
-                                const dur = videoDurations[video.id] ?? video.duration ?? 0
-                                const m = Math.floor(dur / 60)
-                                const s = String(dur % 60).padStart(2, '0')
-                                return `${m}:${s}`
-                              })()}
+                              {Math.floor(video.duration / 60)}:
+                              {String(video.duration % 60).padStart(2, '0')}
                             </span>
                           </div>
                         </div>
