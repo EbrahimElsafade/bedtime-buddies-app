@@ -75,7 +75,7 @@ export const useCourseData = (courseId: string | undefined) => {
         category: courseData.category || '',
         minAge: courseData.min_age || 3,
         maxAge: courseData.max_age || 12,
-        duration: 0, // Will be calculated from lessons duration
+        duration: courseData.total_duration || 0, // Use stored total_duration
         lessons: courseData.lessons || videos.length,
         cover_image: courseData.cover_image || '',
         coverImagePath: courseData.cover_image || '',
@@ -138,7 +138,7 @@ export const useCoursesData = () => {
             category: courseData.category || '',
             minAge: courseData.min_age || 3,
             maxAge: courseData.max_age || 12,
-            duration: 0, // Will be calculated from lessons duration
+            duration: courseData.total_duration || 0, // Use stored total_duration
             lessons: courseData.lessons || 0,
             cover_image: courseData.cover_image || '',
             coverImagePath: courseData.cover_image || '',
@@ -186,7 +186,7 @@ export const useFeaturedCourses = () => {
             category: courseData.category || '',
             minAge: courseData.min_age || 3,
             maxAge: courseData.max_age || 12,
-            duration: 0, // Will be calculated from lessons duration
+            duration: courseData.total_duration || 0, // Use stored total_duration
             lessons: courseData.lessons || 0,
             cover_image: courseData.cover_image || '',
             coverImagePath: courseData.cover_image || '',
