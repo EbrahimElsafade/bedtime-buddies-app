@@ -210,6 +210,7 @@ export type Database = {
           title_ar: string | null
           title_en: string
           title_fr: string | null
+          total_duration: number | null
           updated_at: string | null
         }
         Insert: {
@@ -244,6 +245,7 @@ export type Database = {
           title_ar?: string | null
           title_en: string
           title_fr?: string | null
+          total_duration?: number | null
           updated_at?: string | null
         }
         Update: {
@@ -278,6 +280,7 @@ export type Database = {
           title_ar?: string | null
           title_en?: string
           title_fr?: string | null
+          total_duration?: number | null
           updated_at?: string | null
         }
         Relationships: [
@@ -584,6 +587,33 @@ export type Database = {
           },
         ]
       }
+      user_content_progress: {
+        Row: {
+          completed_at: string
+          content_id: string
+          content_type: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          content_id: string
+          content_type: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_favorites: {
         Row: {
           created_at: string
@@ -675,6 +705,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_course_duration: {
+        Args: { course_uuid: string }
+        Returns: number
+      }
       has_any_role: {
         Args: {
           _roles: Database["public"]["Enums"]["app_role"][]

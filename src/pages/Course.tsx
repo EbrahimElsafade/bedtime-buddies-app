@@ -57,11 +57,14 @@ const Course = () => {
     }
   }, [course, lang])
 
-  // Compute durations for YouTube videos (client-side)
+  // Use stored duration from database, fallback to calculated if not set
+  const storedDuration = course?.duration || 0
+  
+  // Compute durations for YouTube videos (client-side) only if no stored duration
   useEffect(() => {
     let mounted = true
     const load = async () => {
-      if (!course || !course.videos) return
+      if (!course || !course.videos || storedDuration > 0) return
       for (const v of course.videos) {
         if (!mounted) return
         if (!v.videoUrl) continue
@@ -75,14 +78,17 @@ const Course = () => {
 
     load()
     return () => { mounted = false }
-  }, [course, videoDurations])
+  }, [course, videoDurations, storedDuration])
 
-  const totalDuration = course
-    ? course.videos.reduce(
-        (sum, v) => sum + (videoDurations[v.id] ?? v.duration ?? 0),
-        0,
-      )
-    : 0
+  // Use stored duration if available, otherwise calculate from videos
+  const totalDuration = storedDuration > 0
+    ? storedDuration
+    : course
+      ? course.videos.reduce(
+          (sum, v) => sum + (videoDurations[v.id] ?? v.duration ?? 0),
+          0,
+        )
+      : 0
 
   const handleStartCourse = () => {
     if (!isAuthenticated) {
