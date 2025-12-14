@@ -39,6 +39,8 @@ export const useCourseData = (courseId: string | undefined) => {
       }
 
       // Transform lessons to match our interface
+      // Ignore DB-provided durations (we switched to YouTube embeds)
+      // Duration will be computed on the client from the iframe/player
       const videos: CourseVideo[] =
         lessonsData?.map((lesson: LessonRow) => {
           return {
@@ -52,7 +54,7 @@ export const useCourseData = (courseId: string | undefined) => {
             videoPath: lesson.video_path || '',
             videoUrl: lesson.video_url || '',
             thumbnailPath: lesson.thumbnail_path || '',
-            duration: lesson.duration,
+            duration: 0, // ignore DB duration
             isFree: lesson.is_free ?? courseData.is_free,
             order: lesson.lesson_order,
             createdAt: lesson.created_at || '',
