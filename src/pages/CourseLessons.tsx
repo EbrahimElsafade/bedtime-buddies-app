@@ -49,7 +49,7 @@ const CourseLessons = () => {
     }
   }, [course, lang, t, selectedVideo])
 
-  const handleVideoSelect = (video: CourseVideo) => {
+  const handleVideoSelect = (video: CourseVideo, autoplay = false) => {
     // Allow access if user is premium OR if the lesson is free
     if (!isPremium && !video.isFree) {
       toast({
@@ -60,7 +60,7 @@ const CourseLessons = () => {
       return
     }
     setSelectedVideo(video)
-    setAutoplayNext(false)
+    setAutoplayNext(autoplay)
   }
 
   const handleVideoEnd = () => {
@@ -71,8 +71,8 @@ const CourseLessons = () => {
 
     if (nextIndex < course.videos.length) {
       const nextVideo = course.videos[nextIndex]
-      setAutoplayNext(true)
-      handleVideoSelect(nextVideo)
+      // select next video and request autoplay
+      handleVideoSelect(nextVideo, true)
     }
   }
 
