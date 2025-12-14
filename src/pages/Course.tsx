@@ -16,7 +16,6 @@ import { useTranslation } from 'react-i18next'
 import { CourseHeader } from '@/components/course/CourseHeader'
 import { ContactFormModal } from '@/components/course/ContactFormModal'
 import { useUserRole } from '@/hooks/useUserRole'
-import { getYouTubeDuration } from '@/hooks/useYouTubeDuration'
 import { getCategoryText } from '@/utils/courseUtils'
 
 const Course = () => {
@@ -33,7 +32,6 @@ const Course = () => {
   const { isPremium } = useUserRole(user)
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
-  const [videoDurations, setVideoDurations] = useState<Record<string, number>>({})
 
   // Compute category from course data
   const category = course
@@ -56,33 +54,6 @@ const Course = () => {
       document.title = 'Course Not Found | Dolphoon'
     }
   }, [course, lang])
-
-  // Compute durations for YouTube videos (client-side)
-  useEffect(() => {
-    let mounted = true
-    const load = async () => {
-      if (!course || !course.videos) return
-      for (const v of course.videos) {
-        if (!mounted) return
-        if (!v.videoUrl) continue
-        if (videoDurations[v.id] && videoDurations[v.id] > 0) continue
-        const d = await getYouTubeDuration(v.videoUrl)
-        if (d && d > 0 && mounted) {
-          setVideoDurations(prev => ({ ...prev, [v.id]: d }))
-        }
-      }
-    }
-
-    load()
-    return () => { mounted = false }
-  }, [course, videoDurations])
-
-  const totalDuration = course
-    ? course.videos.reduce(
-        (sum, v) => sum + (videoDurations[v.id] ?? v.duration ?? 0),
-        0,
-      )
-    : 0
 
   const handleStartCourse = () => {
     if (!isAuthenticated) {
@@ -245,9 +216,9 @@ const Course = () => {
 
                 <Badge className="flex items-center gap-2 px-4 py-2 shadow-md hover:bg-primary">
                   <Clock className="size-4" />
-                    <span>
-                      {Math.floor(totalDuration / 60)} {t('duration')}
-                    </span>
+                  <span>
+                    {Math.floor(course.duration / 60)} {t('duration')}
+                  </span>
                 </Badge>
                 <Badge className="flex items-center gap-2 px-4 py-2 shadow-md hover:bg-primary">
                   <BookOpen className="size-4" />
