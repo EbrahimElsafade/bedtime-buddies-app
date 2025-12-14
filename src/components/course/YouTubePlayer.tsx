@@ -143,6 +143,28 @@ const YouTubePlayer: React.FC<YouTubePlayerProps> = ({
       <div
         ref={containerRef}
         className={cn('player relative cursor-pointer')}
+        onClick={(e) => {
+          // If the user tapped one of the Plyr controls, don't toggle playback here
+          const target = e.target as HTMLElement | null
+          if (!target) return
+          if (target.closest('.plyr__controls') || target.closest('button') || target.closest('input')) {
+            return
+          }
+
+          const player = plyrRef.current
+          try {
+            if (player) {
+              // Plyr exposes a `playing` boolean and play()/pause() methods
+              if (player.playing) {
+                player.pause()
+              } else {
+                player.play()
+              }
+            }
+          } catch (err) {
+            console.warn('Failed to toggle Plyr playback', err)
+          }
+        }}
       />
 
       {/* Countdown Overlay */}
