@@ -9,9 +9,11 @@ import { useTranslation } from 'react-i18next'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useStoryFavorites, useCourseFavorites } from '@/hooks/useFavorites'
 import { useLoading } from '@/contexts/LoadingContext'
+import { useGamification } from '@/hooks/useGamification'
 import { ProfileInfo } from './Profile/ProfileInfo'
 import { FavoritesList } from './Profile/FavoritesList'
 import { SubscriptionTab } from './Profile/SubscriptionTab'
+import { FinishedContentTab } from './Profile/FinishedContentTab'
 
 const Profile = () => {
   const navigate = useNavigate()
@@ -21,6 +23,7 @@ const Profile = () => {
   const { language } = useLanguage()
   const { favorites: storyFavorites } = useStoryFavorites()
   const { favorites: courseFavorites } = useCourseFavorites()
+  const { stats, finishedStories, finishedCourses, isLoading: gamificationLoading } = useGamification()
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -138,6 +141,9 @@ const Profile = () => {
         <Tabs defaultValue="profile" className="w-full">
           <TabsList className="mb-4 w-full justify-start gap-2 overflow-x-auto p-1 md:mb-6 lg:mb-8">
             <TabsTrigger value="profile">{t('common:profile')}</TabsTrigger>
+            <TabsTrigger value="finished-content">
+              {t('common:finishedContent')}
+            </TabsTrigger>
             <TabsTrigger value="story-favorites">
               {t('common:storyFavorites')}
             </TabsTrigger>
@@ -161,6 +167,18 @@ const Profile = () => {
               setProfileLanguage={setProfileLanguage}
               onSave={handleSaveProfile}
               onLogout={handleLogout}
+            />
+          </TabsContent>
+
+          {/* Finished Content Tab */}
+          <TabsContent value="finished-content">
+            <FinishedContentTab
+              stats={stats}
+              finishedStories={finishedStories}
+              finishedCourses={finishedCourses}
+              language={language}
+              t={t}
+              isLoading={gamificationLoading}
             />
           </TabsContent>
 

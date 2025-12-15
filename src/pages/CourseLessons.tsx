@@ -16,6 +16,7 @@ import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 import { useTranslation } from 'react-i18next'
 import { useUserRole } from '@/hooks/useUserRole'
+import { useGamification } from '@/hooks/useGamification'
 
 const CourseLessons = () => {
   const { id: courseId } = useParams<{ id: string }>()
@@ -29,6 +30,7 @@ const CourseLessons = () => {
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
   const { isPremium } = useUserRole(user)
+  const { recordProgress } = useGamification()
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
 
   useEffect(() => {
@@ -43,13 +45,19 @@ const CourseLessons = () => {
       document.title = `${getLocalized(course, 'title', lang)} - ${t('course.lessons')} | Dolphoon`
       // Set the first video as selected by default if there are videos
       if (course.videos && course.videos.length > 0 && !selectedVideo) {
-        setSelectedVideo(course.videos[0])
+        const firstVideo = course.videos[0]
+        setSelectedVideo(firstVideo)
         setAutoplayNext(false)
+        
+        // Record initial lesson progress
+        if (courseId && firstVideo.id && (isPremium || firstVideo.isFree)) {
+          recordProgress('course_lesson', firstVideo.id, courseId)
+        }
       }
     }
-  }, [course, lang, t, selectedVideo])
+  }, [course, lang, t, selectedVideo, courseId, isPremium, recordProgress])
 
-  const handleVideoSelect = (video: CourseVideo, autoplay = false) => {
+  const handleVideoSelect = async (video: CourseVideo, autoplay = false) => {
     // Allow access if user is premium OR if the lesson is free
     if (!isPremium && !video.isFree) {
       toast({
@@ -61,6 +69,11 @@ const CourseLessons = () => {
     }
     setSelectedVideo(video)
     setAutoplayNext(autoplay)
+    
+    // Record lesson progress for gamification
+    if (courseId && video.id) {
+      await recordProgress('course_lesson', video.id, courseId)
+    }
   }
 
   const handleVideoEnd = () => {
