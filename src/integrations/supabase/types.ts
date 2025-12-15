@@ -333,6 +333,8 @@ export type Database = {
           skills: string[] | null
           subscription_end: string | null
           subscription_tier: string | null
+          total_points: number
+          unlocked_milestones: number[]
           updated_at: string
         }
         Insert: {
@@ -347,6 +349,8 @@ export type Database = {
           skills?: string[] | null
           subscription_end?: string | null
           subscription_tier?: string | null
+          total_points?: number
+          unlocked_milestones?: number[]
           updated_at?: string
         }
         Update: {
@@ -361,6 +365,8 @@ export type Database = {
           skills?: string[] | null
           subscription_end?: string | null
           subscription_tier?: string | null
+          total_points?: number
+          unlocked_milestones?: number[]
           updated_at?: string
         }
         Relationships: []
@@ -587,33 +593,6 @@ export type Database = {
           },
         ]
       }
-      user_content_progress: {
-        Row: {
-          completed_at: string
-          content_id: string
-          content_type: string
-          created_at: string
-          id: string
-          user_id: string
-        }
-        Insert: {
-          completed_at?: string
-          content_id: string
-          content_type: string
-          created_at?: string
-          id?: string
-          user_id: string
-        }
-        Update: {
-          completed_at?: string
-          content_id?: string
-          content_type?: string
-          created_at?: string
-          id?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       user_favorites: {
         Row: {
           created_at: string
@@ -642,6 +621,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_finished_content: {
+        Row: {
+          content_id: string
+          content_type: string
+          finished_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          content_id: string
+          content_type: string
+          finished_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          content_id?: string
+          content_type?: string
+          finished_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_role_audit_log: {
         Row: {
@@ -700,6 +703,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_section_progress: {
+        Row: {
+          content_id: string
+          content_type: string
+          id: string
+          opened_at: string
+          parent_id: string
+          user_id: string
+        }
+        Insert: {
+          content_id: string
+          content_type: string
+          id?: string
+          opened_at?: string
+          parent_id: string
+          user_id: string
+        }
+        Update: {
+          content_id?: string
+          content_type?: string
+          id?: string
+          opened_at?: string
+          parent_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -709,6 +739,15 @@ export type Database = {
         Args: { course_uuid: string }
         Returns: number
       }
+      check_course_completion: {
+        Args: { _course_id: string; _user_id: string }
+        Returns: boolean
+      }
+      check_story_completion: {
+        Args: { _story_id: string; _user_id: string }
+        Returns: boolean
+      }
+      get_user_gamification_stats: { Args: { _user_id: string }; Returns: Json }
       has_any_role: {
         Args: {
           _roles: Database["public"]["Enums"]["app_role"][]
@@ -725,6 +764,16 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: { _user_id?: string }; Returns: boolean }
+      record_content_progress: {
+        Args: {
+          _content_id: string
+          _content_type: string
+          _parent_id: string
+          _user_id: string
+        }
+        Returns: Json
+      }
+      update_user_milestones: { Args: { _user_id: string }; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user" | "premium" | "editor"

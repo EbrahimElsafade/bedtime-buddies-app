@@ -9,6 +9,7 @@ import VideoPlayer from './VideoPlayer'
 import { useEffect, useRef, useState } from 'react'
 import { usePreloadNextSection } from '@/hooks/usePreloadNextSection'
 import { useTranslation } from 'react-i18next'
+import { useContentProgress } from '@/hooks/useContentProgress'
 
 interface StoryContentProps {
   story: Story
@@ -37,6 +38,15 @@ export const StoryContent = ({
   usePreloadNextSection(story, currentSectionIndex)
 
   const currentSection = story.sections[currentSectionIndex]
+  
+  // Track section progress for gamification
+  useContentProgress({
+    contentType: 'story_section',
+    contentId: currentSection?.id || '',
+    parentId: story.id,
+    enabled: !!currentSection?.id,
+  })
+
   const currentText =
     currentSection?.texts[currentLanguage] ||
     t('contentNotAvailable')
