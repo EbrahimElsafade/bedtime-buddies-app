@@ -20,7 +20,7 @@ export type CourseVideo = {
   description_ar: string;
   description_fr: string;
   videoPath: string; // Supabase storage path (legacy)
-  videoUrl: string; // YouTube video ID
+  videoUrl: string; // Google Drive file ID
   thumbnailPath: string; // Supabase storage path
   duration: number; // in seconds
   isFree: boolean;

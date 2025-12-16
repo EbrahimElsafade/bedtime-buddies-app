@@ -59,7 +59,7 @@ import { useTranslation } from 'react-i18next'
 import { UserAutocomplete } from '@/components/admin/UserAutocomplete'
 import { validateImageFile, validateVideoFile } from '@/utils/fileValidation'
 import { validateCourseData } from '@/utils/contentValidation'
-import { YouTubeVideoInput } from '@/components/admin/YouTubeVideoInput'
+import { GoogleDriveVideoInput } from '@/components/admin/GoogleDriveVideoInput'
 
 interface CourseLessonForm {
   id?: string
@@ -1551,14 +1551,14 @@ const CourseEditor = () => {
                                 </div>
                               </div>
 
-                              {/* YouTube Video Input */}
+                              {/* Google Drive Video Input */}
                               <div className="sm:col-span-2">
-                                <YouTubeVideoInput
+                                <GoogleDriveVideoInput
                                   lessonIndex={lessonIndex}
                                   videoUrl={lesson.videoUrl}
-                                  onVideoChange={(idx, videoId) => {
+                                  onVideoChange={(idx, fileId) => {
                                     const updatedLessons = [...courseLessons]
-                                    updatedLessons[idx].videoUrl = videoId
+                                    updatedLessons[idx].videoUrl = fileId
                                     updatedLessons[idx].videoPath = '' // Clear old HLS path
                                     setCourseLessons(updatedLessons)
                                   }}
