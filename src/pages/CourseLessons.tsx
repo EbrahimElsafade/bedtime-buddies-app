@@ -11,7 +11,7 @@ import { CourseVideo } from '@/types/course'
 import { useCourseData } from '@/hooks/useCourseData'
 import { useAuth } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
-import YouTubePlayer from '@/components/course/YouTubePlayer'
+import GoogleDrivePlayer from '@/components/course/GoogleDrivePlayer'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 import { useTranslation } from 'react-i18next'
@@ -194,8 +194,8 @@ const CourseLessons = () => {
               <div className="grid gap-4">
                 <div className="aspect-video overflow-hidden rounded-lg bg-black">
                   {selectedVideo.videoUrl ? (
-                    <YouTubePlayer
-                      videoId={selectedVideo.videoUrl}
+                    <GoogleDrivePlayer
+                      fileId={selectedVideo.videoUrl}
                       title={getLocalized(selectedVideo, 'title', lang)}
                       className="rounded-lg"
                       onVideoEnd={handleVideoEnd}
@@ -205,7 +205,7 @@ const CourseLessons = () => {
                     />
                   ) : selectedVideo.videoPath ? (
                     <div className="flex h-full items-center justify-center text-secondary">
-                      <p>Legacy video format - please update to YouTube</p>
+                      <p>Legacy video format - please update to Google Drive</p>
                     </div>
                   ) : (
                     <div className="flex h-full items-center justify-center text-secondary">
