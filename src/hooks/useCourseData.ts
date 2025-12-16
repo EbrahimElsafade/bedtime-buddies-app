@@ -60,6 +60,9 @@ export const useCourseData = (courseId: string | undefined) => {
         }) || []
 
       const course = courseData as CourseRow;
+      // Calculate total duration from lessons if not set in DB
+      const totalDuration = courseData.total_duration || videos.reduce((sum, v) => sum + v.duration, 0);
+      
       return {
         id: course.id,
         title: course.title_en || '',
@@ -73,7 +76,7 @@ export const useCourseData = (courseId: string | undefined) => {
         category: courseData.category || '',
         minAge: courseData.min_age || 3,
         maxAge: courseData.max_age || 12,
-        duration: 0, // Will be calculated from lessons duration
+        duration: totalDuration,
         lessons: courseData.lessons || videos.length,
         cover_image: courseData.cover_image || '',
         coverImagePath: courseData.cover_image || '',
@@ -136,7 +139,7 @@ export const useCoursesData = () => {
             category: courseData.category || '',
             minAge: courseData.min_age || 3,
             maxAge: courseData.max_age || 12,
-            duration: 0, // Will be calculated from lessons duration
+            duration: courseData.total_duration || 0,
             lessons: courseData.lessons || 0,
             cover_image: courseData.cover_image || '',
             coverImagePath: courseData.cover_image || '',
@@ -184,7 +187,7 @@ export const useFeaturedCourses = () => {
             category: courseData.category || '',
             minAge: courseData.min_age || 3,
             maxAge: courseData.max_age || 12,
-            duration: 0, // Will be calculated from lessons duration
+            duration: courseData.total_duration || 0,
             lessons: courseData.lessons || 0,
             cover_image: courseData.cover_image || '',
             coverImagePath: courseData.cover_image || '',

@@ -1424,16 +1424,42 @@ const CourseEditor = () => {
                               </div>
                               <div className="space-y-2">
                                 <Label>Video Duration</Label>
-                                <div className="rounded-md border bg-muted px-3 py-2">
-                                  <p className="text-sm">
-                                    {lesson.duration > 0 
-                                      ? `${Math.floor(lesson.duration / 60)}:${String(lesson.duration % 60).padStart(2, '0')}` 
-                                      : 'Upload video to calculate'}
-                                  </p>
-                                  <p className="text-xs text-muted-foreground mt-1">
-                                    Duration will be auto-calculated from video
-                                  </p>
+                                <div className="flex items-center gap-2">
+                                  <div className="flex items-center gap-1">
+                                    <Input
+                                      type="number"
+                                      min="0"
+                                      placeholder="0"
+                                      value={Math.floor(lesson.duration / 60) || ''}
+                                      onChange={e => {
+                                        const minutes = parseInt(e.target.value) || 0
+                                        const seconds = lesson.duration % 60
+                                        updateLessonField(lessonIndex, 'duration', minutes * 60 + seconds)
+                                      }}
+                                      className="w-20"
+                                    />
+                                    <span className="text-sm text-muted-foreground">min</span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <Input
+                                      type="number"
+                                      min="0"
+                                      max="59"
+                                      placeholder="0"
+                                      value={lesson.duration % 60 || ''}
+                                      onChange={e => {
+                                        const seconds = Math.min(59, parseInt(e.target.value) || 0)
+                                        const minutes = Math.floor(lesson.duration / 60)
+                                        updateLessonField(lessonIndex, 'duration', minutes * 60 + seconds)
+                                      }}
+                                      className="w-20"
+                                    />
+                                    <span className="text-sm text-muted-foreground">sec</span>
+                                  </div>
                                 </div>
+                                <p className="text-xs text-muted-foreground">
+                                  Enter the video duration manually
+                                </p>
                               </div>
                             </div>
 
