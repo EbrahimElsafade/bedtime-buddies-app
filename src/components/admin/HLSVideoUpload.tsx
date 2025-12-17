@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Video, X, FolderOpen, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
-interface VideoUploadProps {
+interface HLSVideoUploadProps {
   sectionIndex: number;
   videoPreview?: string | null;
   videoUrl?: string | null;
@@ -14,7 +14,7 @@ interface VideoUploadProps {
   onClearVideo: (sectionIndex: number) => void;
 }
 
-export const VideoUpload: React.FC<VideoUploadProps> = ({
+export const HLSVideoUpload: React.FC<HLSVideoUploadProps> = ({
   sectionIndex,
   videoPreview,
   videoUrl,

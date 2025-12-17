@@ -20,7 +20,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { VoiceFileUpload } from '@/components/admin/VoiceFileUpload'
-import { VideoUpload } from '@/components/admin/VideoUpload'
+import { HLSVideoUpload } from '@/components/admin/HLSVideoUpload'
 import { Language } from '@/types/language'
 
 interface StorySectionFormProps {
@@ -153,7 +153,7 @@ export const StorySectionForm = ({
           </div>
 
           {/* Section Video */}
-          <VideoUpload
+          <HLSVideoUpload
             sectionIndex={sectionIndex}
             videoPreview={section.videoPreview}
             videoUrl={section.video}
