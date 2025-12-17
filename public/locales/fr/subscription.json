@@ -1,4 +1,3 @@
-
 {
   "title": "Choisissez Votre Plan",
   "subtitle": "Débloquez un accès illimité à toutes les histoires et fonctionnalités avec nos plans premium. Choisissez l'option qui convient le mieux à vous et votre famille.",
@@ -8,53 +7,26 @@
       "description": "Parfait pour essayer nos fonctionnalités premium",
       "features": [
         "Accès illimité à toutes les histoires",
-        "Expérience sans publicité",
         "Nouvelles histoires chaque semaine",
-        "Télécharger les histoires hors ligne",
         "Accès à toutes les langues"
       ]
     },
-    "quarterly": {
-      "name": "Trimestriel", 
-      "description": "Économisez 20% avec la facturation trimestrielle",
-      "features": [
-        "Accès illimité à toutes les histoires",
-        "Expérience sans publicité",
-        "Nouvelles histoires chaque semaine", 
-        "Télécharger les histoires hors ligne",
-        "Accès à toutes les langues",
-        "Accès prioritaire aux nouvelles fonctionnalités"
-      ]
-    },
+
     "yearly": {
       "name": "Annuel",
       "description": "Meilleure valeur, économisez plus de 30%",
       "features": [
         "Accès illimité à toutes les histoires",
-        "Expérience sans publicité",
         "Nouvelles histoires chaque semaine",
-        "Télécharger les histoires hors ligne",
-        "Accès à toutes les langues", 
-        "Accès prioritaire aux nouvelles fonctionnalités",
-        "Option d'envoi en cadeau"
-      ]
-    },
-    "lifetime": {
-      "name": "À vie",
-      "description": "Paiement unique pour un accès à vie",
-      "features": [
-        "Accès illimité à toutes les histoires pour toujours",
-        "Expérience sans publicité",
-        "Nouvelles histoires chaque semaine",
-        "Télécharger les histoires hors ligne",
         "Accès à toutes les langues",
-        "Accès prioritaire aux nouvelles fonctionnalités", 
-        "Badge spécial membre à vie"
+        "Accès prioritaire aux nouvelles fonctionnalités"
       ]
     }
   },
   "mostPopular": "Plus Populaire",
-  "subscribeNow": "S'abonner Maintenant", 
+  "subscribeNow": "S'abonner Maintenant",
+  "subscribeViaWhatsapp": "S'abonner via WhatsApp",
+  "currency": "EGP",
   "sendAsGift": "Envoyer en cadeau",
   "giftDescription": "Ajoutez un message personnalisé et envoyez cet abonnement en cadeau",
   "faq": {

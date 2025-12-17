@@ -1,4 +1,3 @@
-
 {
   "title": "Choose Your Plan",
   "subtitle": "Unlock unlimited access to all stories and features with our premium plans. Choose the option that works best for you and your family.",
@@ -8,53 +7,26 @@
       "description": "Perfect for trying out our premium features",
       "features": [
         "Unlimited access to all stories",
-        "Ad-free experience",
         "New stories weekly",
-        "Download stories for offline use",
         "Access to all languages"
       ]
     },
-    "quarterly": {
-      "name": "Quarterly",
-      "description": "Save 20% with quarterly billing",
-      "features": [
-        "Unlimited access to all stories",
-        "Ad-free experience", 
-        "New stories weekly",
-        "Download stories for offline use",
-        "Access to all languages",
-        "Priority access to new features"
-      ]
-    },
+
     "yearly": {
       "name": "Yearly",
       "description": "Best value, save over 30%",
       "features": [
         "Unlimited access to all stories",
-        "Ad-free experience",
-        "New stories weekly", 
-        "Download stories for offline use",
-        "Access to all languages",
-        "Priority access to new features",
-        "Send as a gift option"
-      ]
-    },
-    "lifetime": {
-      "name": "Lifetime",
-      "description": "One-time payment for lifetime access",
-      "features": [
-        "Unlimited access to all stories forever",
-        "Ad-free experience",
         "New stories weekly",
-        "Download stories for offline use", 
         "Access to all languages",
-        "Priority access to new features",
-        "Special lifetime member badge"
+        "Priority access to new features"
       ]
     }
   },
   "mostPopular": "Most Popular",
   "subscribeNow": "Subscribe Now",
+  "subscribeViaWhatsapp": "Subscribe via WhatsApp",
+  "currency": "EGP",
   "sendAsGift": "Send as a gift",
   "giftDescription": "Add a personalized message and send this subscription as a gift",
   "faq": {

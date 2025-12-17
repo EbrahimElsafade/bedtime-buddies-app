@@ -146,12 +146,12 @@
 
 ## profile
 
-- review the translations of the profile [ ]
-- new tab in the profile for the courses and stories that finished [ ]
+- review the translations of the profile [x]
+- new tab in the profile for the courses and stories that finished [x]
 - set milestones in the profile and give it tags {
   05&05 : "name1",
   10&10 : "name2",
   15&15 : "name3",
   20&20 : "name4",
   25&25 : "name5"
-  } [ ]
+  } [x]
