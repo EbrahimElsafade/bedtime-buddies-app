@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
+import { supabase } from '@/integrations/supabase/client'
 
 interface VideoPlayerProps {
   videoUrl: string
@@ -9,6 +10,20 @@ interface VideoPlayerProps {
   onVideoEnd?: () => void
   showCountdownOnEnd?: boolean
   onCountdownCancel?: () => void
+}
+
+// Helper to get the proper video URL
+const getVideoSource = (videoUrl: string): string => {
+  if (!videoUrl) return ''
+  
+  // If it's already a full URL, use it directly
+  if (videoUrl.startsWith('http://') || videoUrl.startsWith('https://')) {
+    return videoUrl
+  }
+  
+  // Otherwise, assume it's a Supabase storage path
+  const { data } = supabase.storage.from('course-videos').getPublicUrl(videoUrl)
+  return data.publicUrl
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
@@ -23,6 +38,10 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const videoRef = useRef<HTMLVideoElement>(null)
   const [showCountdown, setShowCountdown] = useState(false)
   const [countdown, setCountdown] = useState(5)
+  const [error, setError] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  const videoSource = getVideoSource(videoUrl)
 
   const handleCancelCountdown = () => {
     setShowCountdown(false)
@@ -34,14 +53,18 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   useEffect(() => {
     setShowCountdown(false)
     setCountdown(5)
+    setError(null)
+    setIsLoading(true)
   }, [videoUrl])
 
   // Handle autoplay when video changes
   useEffect(() => {
-    if (autoplay && videoRef.current) {
-      videoRef.current.play().catch(console.error)
+    if (autoplay && videoRef.current && !error) {
+      videoRef.current.play().catch((err) => {
+        console.warn('Autoplay failed:', err)
+      })
     }
-  }, [videoUrl, autoplay])
+  }, [videoUrl, autoplay, error])
 
   // Handle countdown
   useEffect(() => {
@@ -69,6 +92,16 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
   }
 
+  const handleVideoError = () => {
+    setError('Unable to load video. Please try again later.')
+    setIsLoading(false)
+  }
+
+  const handleVideoLoaded = () => {
+    setIsLoading(false)
+    setError(null)
+  }
+
   if (!videoUrl) {
     return (
       <div
@@ -82,16 +115,40 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     )
   }
 
+  if (error) {
+    return (
+      <div
+        className={cn(
+          'flex aspect-video items-center justify-center rounded-lg bg-muted text-muted-foreground',
+          className,
+        )}
+      >
+        <p>{error}</p>
+      </div>
+    )
+  }
+
   return (
     <div className={cn('relative', className)}>
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-muted">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        </div>
+      )}
+      
       <video
         ref={videoRef}
-        src={videoUrl}
+        key={videoSource}
+        src={videoSource}
         title={title}
         className="aspect-video w-full rounded-lg bg-black"
         controls
         playsInline
+        controlsList="nodownload"
         onEnded={handleVideoEnded}
+        onError={handleVideoError}
+        onLoadedData={handleVideoLoaded}
+        onCanPlay={handleVideoLoaded}
       />
 
       {/* Countdown Overlay */}
