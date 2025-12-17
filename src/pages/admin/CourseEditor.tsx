@@ -59,7 +59,7 @@ import { useTranslation } from 'react-i18next'
 import { UserAutocomplete } from '@/components/admin/UserAutocomplete'
 import { validateImageFile, validateVideoFile } from '@/utils/fileValidation'
 import { validateCourseData } from '@/utils/contentValidation'
-import { GoogleDriveVideoInput } from '@/components/admin/GoogleDriveVideoInput'
+
 
 interface CourseLessonForm {
   id?: string
@@ -1577,24 +1577,36 @@ const CourseEditor = () => {
                                 </div>
                               </div>
 
-                              {/* Google Drive Video Input */}
+                              {/* Video URL Input */}
                               <div className="sm:col-span-2">
-                                <GoogleDriveVideoInput
-                                  lessonIndex={lessonIndex}
-                                  videoUrl={lesson.videoUrl}
-                                  onVideoChange={(idx, fileId) => {
-                                    const updatedLessons = [...courseLessons]
-                                    updatedLessons[idx].videoUrl = fileId
-                                    updatedLessons[idx].videoPath = '' // Clear old HLS path
-                                    setCourseLessons(updatedLessons)
-                                  }}
-                                  onClearVideo={(idx) => {
-                                    const updatedLessons = [...courseLessons]
-                                    updatedLessons[idx].videoUrl = ''
-                                    updatedLessons[idx].videoPath = ''
-                                    setCourseLessons(updatedLessons)
-                                  }}
-                                />
+                                <Label>Video URL (MP4)</Label>
+                                <div className="mt-1.5 flex gap-2">
+                                  <Input
+                                    type="url"
+                                    value={lesson.videoUrl}
+                                    onChange={(e) => {
+                                      const updatedLessons = [...courseLessons]
+                                      updatedLessons[lessonIndex].videoUrl = e.target.value
+                                      setCourseLessons(updatedLessons)
+                                    }}
+                                    placeholder="https://example.com/video.mp4"
+                                    className="flex-1"
+                                  />
+                                  {lesson.videoUrl && (
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="icon"
+                                      onClick={() => {
+                                        const updatedLessons = [...courseLessons]
+                                        updatedLessons[lessonIndex].videoUrl = ''
+                                        setCourseLessons(updatedLessons)
+                                      }}
+                                    >
+                                      <X className="h-4 w-4" />
+                                    </Button>
+                                  )}
+                                </div>
                               </div>
                             </div>
                           </div>

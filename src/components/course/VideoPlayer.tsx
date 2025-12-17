@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { cn } from '@/lib/utils'
 
-interface GoogleDrivePlayerProps {
-  fileId: string
+interface VideoPlayerProps {
+  videoUrl: string
   title?: string
   className?: string
   autoplay?: boolean
@@ -11,8 +11,8 @@ interface GoogleDrivePlayerProps {
   onCountdownCancel?: () => void
 }
 
-const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
-  fileId,
+const VideoPlayer: React.FC<VideoPlayerProps> = ({
+  videoUrl,
   title = 'Video player',
   className,
   autoplay = false,
@@ -20,10 +20,9 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
   showCountdownOnEnd = true,
   onCountdownCancel,
 }) => {
+  const videoRef = useRef<HTMLVideoElement>(null)
   const [showCountdown, setShowCountdown] = useState(false)
   const [countdown, setCountdown] = useState(5)
-  const [hasEnded, setHasEnded] = useState(false)
-  const iframeRef = useRef<HTMLIFrameElement>(null)
 
   const handleCancelCountdown = () => {
     setShowCountdown(false)
@@ -31,12 +30,18 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
     onCountdownCancel?.()
   }
 
-  // Reset state when fileId changes
+  // Reset state when videoUrl changes
   useEffect(() => {
     setShowCountdown(false)
     setCountdown(5)
-    setHasEnded(false)
-  }, [fileId])
+  }, [videoUrl])
+
+  // Handle autoplay when video changes
+  useEffect(() => {
+    if (autoplay && videoRef.current) {
+      videoRef.current.play().catch(console.error)
+    }
+  }, [videoUrl, autoplay])
 
   // Handle countdown
   useEffect(() => {
@@ -55,11 +60,8 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
     return () => clearTimeout(timer)
   }, [showCountdown, countdown, onVideoEnd])
 
-  // Mark video as ended (manual trigger since iframe doesn't expose events)
-  const handleMarkAsEnded = () => {
-    if (hasEnded) return
-    setHasEnded(true)
-    if (showCountdownOnEnd) {
+  const handleVideoEnded = () => {
+    if (showCountdownOnEnd && onVideoEnd) {
       setShowCountdown(true)
       setCountdown(5)
     } else {
@@ -67,7 +69,7 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
     }
   }
 
-  if (!fileId) {
+  if (!videoUrl) {
     return (
       <div
         className={cn(
@@ -80,30 +82,17 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
     )
   }
 
-  // Google Drive embed URL
-  const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`
-
   return (
     <div className={cn('relative', className)}>
-      <iframe
-        ref={iframeRef}
-        src={embedUrl}
+      <video
+        ref={videoRef}
+        src={videoUrl}
         title={title}
-        className="aspect-video w-full rounded-lg"
-        allow="autoplay; encrypted-media"
-        allowFullScreen
-        sandbox="allow-scripts allow-same-origin allow-presentation"
+        className="aspect-video w-full rounded-lg bg-black"
+        controls
+        playsInline
+        onEnded={handleVideoEnded}
       />
-
-      {/* Next Lesson Button - shown since we can't detect video end in iframe */}
-      {onVideoEnd && !showCountdown && (
-        <button
-          onClick={handleMarkAsEnded}
-          className="absolute bottom-4 right-4 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-lg transition-colors hover:bg-primary/90"
-        >
-          Next Lesson →
-        </button>
-      )}
 
       {/* Countdown Overlay */}
       {showCountdown && (
@@ -124,4 +113,4 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
   )
 }
 
-export default GoogleDrivePlayer
+export default VideoPlayer
