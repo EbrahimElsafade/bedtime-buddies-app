@@ -12,9 +12,31 @@ interface VideoPlayerProps {
   onCountdownCancel?: () => void
 }
 
+// Helper to extract Google Drive file ID from various URL formats
+const extractGoogleDriveId = (url: string): string | null => {
+  // Format: https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+  const fileMatch = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/)
+  if (fileMatch) return fileMatch[1]
+  
+  // Format: https://drive.google.com/open?id=FILE_ID
+  const openMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/)
+  if (openMatch) return openMatch[1]
+  
+  return null
+}
+
 // Helper to get the proper video URL
 const getVideoSource = (videoUrl: string): string => {
   if (!videoUrl) return ''
+  
+  // Check if it's a Google Drive URL
+  if (videoUrl.includes('drive.google.com')) {
+    const fileId = extractGoogleDriveId(videoUrl)
+    if (fileId) {
+      // Use the direct download URL format for Google Drive
+      return `https://drive.google.com/uc?export=download&id=${fileId}`
+    }
+  }
   
   // If it's already a full URL, use it directly
   if (videoUrl.startsWith('http://') || videoUrl.startsWith('https://')) {
