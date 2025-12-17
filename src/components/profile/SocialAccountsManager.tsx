@@ -5,10 +5,12 @@ import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'sonner'
 import { Loader2, Plus, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { SocialAccount } from '@/types/auth'
 
 export const SocialAccountsManager = () => {
   const { profile, user, linkSocialAccount, unlinkSocialAccount } = useAuth()
+  const { t } = useTranslation('common')
   const [linking, setLinking] = useState(false)
   const [unlinking, setUnlinking] = useState<SocialAccount | null>(null)
 
@@ -20,16 +22,13 @@ export const SocialAccountsManager = () => {
   const availableAccounts: SocialAccount[] = ['google', 'facebook']
 
   const getProviderDisplayName = (provider: SocialAccount): string => {
-    const names: Record<SocialAccount, string> = {
-      google: 'Google',
-      facebook: 'Facebook'
-    }
-    return names[provider] || provider
+    const label = t(`providers.${provider}`)
+    return label || provider
   }
 
   const handleLinkAccount = async (account: SocialAccount) => {
     if (actualLinkedProviders.includes(account)) {
-      toast.error('This account is already linked')
+      toast.error(t('accountAlreadyLinked'))
       return
     }
 
@@ -47,7 +46,7 @@ export const SocialAccountsManager = () => {
   const handleUnlinkAccount = async (account: SocialAccount) => {
     // Prevent unlinking the last authentication method
     if (actualLinkedProviders.length <= 1) {
-      toast.error('You must keep at least one authentication method')
+      toast.error(t('mustKeepOneAuthMethod'))
       return
     }
 
@@ -64,17 +63,17 @@ export const SocialAccountsManager = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Linked Social Accounts</CardTitle>
+        <CardTitle>{t('linkedSocialAccounts')}</CardTitle>
         <CardDescription>
-          Manage your connected social accounts for login and profile display
+          {t('manageSocialAccounts')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Currently Linked Accounts */}
         <div className="space-y-2">
-          <h4 className="text-sm font-medium">Connected Accounts</h4>
+          <h4 className="text-sm font-medium">{t('connectedAccounts')}</h4>
           {actualLinkedProviders.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No social accounts linked</p>
+            <p className="text-sm text-muted-foreground">{t('noSocialAccountsLinked')}</p>
           ) : (
             <div className="flex flex-wrap gap-2">
               {actualLinkedProviders.map((account) => (
@@ -99,7 +98,7 @@ export const SocialAccountsManager = () => {
 
         {/* Available Accounts to Link */}
         <div className="space-y-2">
-          <h4 className="text-sm font-medium">Add Account</h4>
+          <h4 className="text-sm font-medium">{t('addAccount')}</h4>
           <div className="grid grid-cols-2 gap-2">
             {availableAccounts
               .filter(account => !actualLinkedProviders.includes(account))
@@ -122,14 +121,13 @@ export const SocialAccountsManager = () => {
               ))}
           </div>
           {availableAccounts.filter(a => !actualLinkedProviders.includes(a)).length === 0 && (
-            <p className="text-sm text-muted-foreground">All accounts are linked</p>
+            <p className="text-sm text-muted-foreground">{t('allAccountsLinked')}</p>
           )}
         </div>
 
         <div className="pt-4 border-t">
           <p className="text-xs text-muted-foreground">
-            <strong>Note:</strong> You must keep at least one authentication method linked. 
-            Linking accounts allows you to sign in using any of your connected providers.
+            <strong>{t('noteLabel')}:</strong> {t('socialAccountsNote')}
           </p>
         </div>
       </CardContent>

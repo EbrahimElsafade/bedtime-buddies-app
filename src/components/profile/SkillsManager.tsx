@@ -5,9 +5,11 @@ import { Badge } from '@/components/ui/badge'
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'sonner'
 import { Plus, X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export const SkillsManager = () => {
   const { profile, updateProfile } = useAuth()
+  const { t } = useTranslation('common')
   const [newSkill, setNewSkill] = useState('')
   const [saving, setSaving] = useState(false)
   const skills = profile?.skills || []
@@ -16,7 +18,7 @@ export const SkillsManager = () => {
     if (!newSkill.trim()) return
     
     if (skills.includes(newSkill.trim())) {
-      toast.error('Skill already added')
+      toast.error(t('skillAlreadyAdded'))
       return
     }
 
@@ -25,9 +27,9 @@ export const SkillsManager = () => {
       const updatedSkills = [...skills, newSkill.trim()]
       await updateProfile({ skills: updatedSkills })
       setNewSkill('')
-      toast.success('Skill added')
+      toast.success(t('skillAdded'))
     } catch (error) {
-      toast.error('Failed to add skill')
+      toast.error(t('failedAddSkill'))
     } finally {
       setSaving(false)
     }
@@ -38,9 +40,9 @@ export const SkillsManager = () => {
       setSaving(true)
       const updatedSkills = skills.filter(s => s !== skill)
       await updateProfile({ skills: updatedSkills })
-      toast.success('Skill removed')
+      toast.success(t('skillRemoved'))
     } catch (error) {
-      toast.error('Failed to remove skill')
+      toast.error(t('failedRemoveSkill'))
     } finally {
       setSaving(false)
     }
@@ -49,15 +51,15 @@ export const SkillsManager = () => {
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="text-sm font-medium mb-2">Skills (For Instructors)</h3>
+        <h3 className="text-sm font-medium mb-2">{t('skillsForInstructors')}</h3>
         <p className="text-xs text-muted-foreground mb-4">
-          Add your expertise and skills to help students know what you can teach
+          {t('skillsDescription')}
         </p>
       </div>
       
       <div className="flex gap-2">
         <Input
-          placeholder="Add a skill (e.g., Mathematics, Art)"
+          placeholder={t('addSkillPlaceholder')}
           value={newSkill}
           onChange={(e) => setNewSkill(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleAddSkill()}

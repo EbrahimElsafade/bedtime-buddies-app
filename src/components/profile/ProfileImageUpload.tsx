@@ -4,10 +4,12 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
 import { Upload, Loader2, User } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/contexts/AuthContext'
 
 export const ProfileImageUpload = () => {
   const { user, profile, updateProfile } = useAuth()
+  const { t } = useTranslation('common')
   const [uploading, setUploading] = useState(false)
   const [imageUrl, setImageUrl] = useState(profile?.profile_image || '')
 
@@ -24,14 +26,14 @@ export const ProfileImageUpload = () => {
       // Validate file type
       const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
       if (!allowedTypes.includes(file.type)) {
-        toast.error('Please upload a valid image (JPEG, PNG, or WebP)')
+        toast.error(t('invalidImageFormat'))
         return
       }
 
       // Validate file size (5MB max)
       const maxSize = 5 * 1024 * 1024
       if (file.size > maxSize) {
-        toast.error('Image must be less than 5MB')
+        toast.error(t('imageTooLarge'))
         return
       }
 
@@ -68,7 +70,7 @@ export const ProfileImageUpload = () => {
       // Update profile
       await updateProfile({ profile_image: publicUrl })
       setImageUrl(publicUrl)
-      toast.success('Profile image updated successfully')
+      toast.success(t('profileImageUpdated'))
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to upload image';
       toast.error(errorMessage)
@@ -103,17 +105,17 @@ export const ProfileImageUpload = () => {
           {uploading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Uploading...
+              {t('uploading')}
             </>
           ) : (
             <>
               <Upload className="mr-2 h-4 w-4" />
-              Upload Photo
+              {t('uploadPhoto')}
             </>
           )}
         </Button>
         <p className="mt-2 text-xs text-muted-foreground">
-          JPEG, PNG or WebP (max 5MB)
+          {t('imageFormatsAndSize')}
         </p>
       </div>
     </div>

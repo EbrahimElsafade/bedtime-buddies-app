@@ -99,14 +99,14 @@ export const ProfileInfo = ({
       <CardContent>
         <div className="space-y-6">
           <div>
-            <h3 className="text-sm font-medium mb-4">Profile Picture</h3>
+            <h3 className="text-sm font-medium mb-4">{t('profilePicture')}</h3>
             <ProfileImageUpload />
           </div>
 
           <Separator />
 
           <div className="space-y-4">
-            <h3 className="text-sm font-medium">Personal Information</h3>
+            <h3 className="text-sm font-medium">{t('personalInformation')}</h3>
             <div className="space-y-2">
               <Label htmlFor="name">{t('yourName')}</Label>
               <Input
@@ -183,7 +183,7 @@ export const ProfileInfo = ({
         ) : (
           <>
             <Button variant="outline" onClick={onLogout}>
-              {t('logout', { ns: 'auth' })}
+              {t('logout')}
             </Button>
             <Button onClick={() => setIsEditing(true)}>
               {t('editProfile')}

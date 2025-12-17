@@ -43,7 +43,6 @@ export const SubscriptionTab = ({ isPremium, t }: SubscriptionTabProps) => {
           {!isPremium && (
             <Button
               onClick={() => navigate('/subscription')}
-              className="bg-moon-DEFAULT hover:bg-moon-dark"
             >
               {t('upgradeToPremium')}
             </Button>
