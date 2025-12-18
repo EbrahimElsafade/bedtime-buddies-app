@@ -17,6 +17,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog'
 import { useTranslation } from 'react-i18next'
 import { profileUpdateSchema } from '@/utils/validation'
 import { toast } from 'sonner'
@@ -24,6 +33,8 @@ import { ProfileImageUpload } from '@/components/profile/ProfileImageUpload'
 import { SocialAccountsManager } from '@/components/profile/SocialAccountsManager'
 import { SkillsManager } from '@/components/profile/SkillsManager'
 import { Separator } from '@/components/ui/separator'
+import { supabase } from '@/integrations/supabase/client'
+import { Loader2, KeyRound } from 'lucide-react'
 
 interface ProfileInfoProps {
   name: string
@@ -50,6 +61,11 @@ export const ProfileInfo = ({
 }: ProfileInfoProps) => {
   const { t } = useTranslation('common')
   const [isEditing, setIsEditing] = useState(false)
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [isChangingPassword, setIsChangingPassword] = useState(false)
 
   const getLanguageDisplayName = (langCode: string) => {
     switch (langCode) {
@@ -84,6 +100,39 @@ export const ProfileInfo = ({
 
     onSave()
     setIsEditing(false)
+  }
+
+  const handleChangePassword = async () => {
+    if (newPassword.length < 6) {
+      toast.error(t('passwordTooShort'))
+      return
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error(t('passwordsDoNotMatch'))
+      return
+    }
+
+    setIsChangingPassword(true)
+
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword
+      })
+
+      if (error) throw error
+
+      toast.success(t('passwordChanged'))
+      setIsPasswordDialogOpen(false)
+      setCurrentPassword('')
+      setNewPassword('')
+      setConfirmPassword('')
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to change password'
+      toast.error(errorMessage)
+    } finally {
+      setIsChangingPassword(false)
+    }
   }
 
   return (
@@ -161,6 +210,72 @@ export const ProfileInfo = ({
                 <Input value={getLanguageDisplayName(profileLanguage)} disabled />
               )}
             </div>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium">{t('security')}</h3>
+            <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="w-full sm:w-auto">
+                  <KeyRound className="mr-2 h-4 w-4" />
+                  {t('changePassword')}
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>{t('changePassword')}</DialogTitle>
+                  <DialogDescription>
+                    {t('changePasswordDescription')}
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="newPassword">{t('newPassword')}</Label>
+                    <Input
+                      id="newPassword"
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="••••••••"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmNewPassword">{t('confirmPassword')}</Label>
+                    <Input
+                      id="confirmNewPassword"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="••••••••"
+                    />
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    variant="outline"
+                    onClick={() => setIsPasswordDialogOpen(false)}
+                    disabled={isChangingPassword}
+                  >
+                    {t('cancel')}
+                  </Button>
+                  <Button
+                    onClick={handleChangePassword}
+                    disabled={isChangingPassword || !newPassword || !confirmPassword}
+                  >
+                    {isChangingPassword ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        {t('saving')}
+                      </>
+                    ) : (
+                      t('changePassword')
+                    )}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
 
           <Separator />

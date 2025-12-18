@@ -29,6 +29,7 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Favorites from "./pages/Favorites";
 import Subscription from "./pages/Subscription";
+import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminStories from "./pages/admin/Stories";
@@ -73,6 +74,7 @@ function App() {
                     <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                     <Route path="favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
                     <Route path="subscription" element={<Subscription />} />
+                    <Route path="reset-password" element={<ResetPassword />} />
                   </Route>
 
                   {/* Admin Routes */}
