@@ -23,6 +23,15 @@ interface UpdateUserRequest {
   parentName?: string;
   childName?: string;
   preferredLanguage?: string;
+  isPremium?: boolean;
+  subscriptionTier?: string;
+  subscriptionEnd?: string | null;
+}
+
+interface ChangePasswordRequest {
+  action: "changePassword";
+  userId: string;
+  newPassword: string;
 }
 
 interface DeleteUserRequest {
@@ -30,7 +39,7 @@ interface DeleteUserRequest {
   userId: string;
 }
 
-type AdminUserRequest = CreateUserRequest | UpdateUserRequest | DeleteUserRequest;
+type AdminUserRequest = CreateUserRequest | UpdateUserRequest | DeleteUserRequest | ChangePasswordRequest;
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
@@ -132,12 +141,15 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     if (body.action === "update") {
-      const { userId, parentName, childName, preferredLanguage } = body;
+      const { userId, parentName, childName, preferredLanguage, isPremium, subscriptionTier, subscriptionEnd } = body;
 
       const updates: Record<string, unknown> = {};
       if (parentName !== undefined) updates.parent_name = parentName;
       if (childName !== undefined) updates.child_name = childName;
       if (preferredLanguage !== undefined) updates.preferred_language = preferredLanguage;
+      if (isPremium !== undefined) updates.is_premium = isPremium;
+      if (subscriptionTier !== undefined) updates.subscription_tier = subscriptionTier;
+      if (subscriptionEnd !== undefined) updates.subscription_end = subscriptionEnd;
 
       const { error: updateError } = await supabaseAdmin
         .from("profiles")
@@ -148,6 +160,35 @@ const handler = async (req: Request): Promise<Response> => {
         console.error("Update user error:", updateError);
         return new Response(
           JSON.stringify({ error: updateError.message }),
+          { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
+
+      return new Response(
+        JSON.stringify({ success: true }),
+        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    if (body.action === "changePassword") {
+      const { userId, newPassword } = body;
+
+      if (!newPassword || newPassword.length < 6) {
+        return new Response(
+          JSON.stringify({ error: "Password must be at least 6 characters" }),
+          { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
+
+      const { error: passwordError } = await supabaseAdmin.auth.admin.updateUserById(
+        userId,
+        { password: newPassword }
+      );
+
+      if (passwordError) {
+        console.error("Change password error:", passwordError);
+        return new Response(
+          JSON.stringify({ error: passwordError.message }),
           { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
       }
