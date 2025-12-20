@@ -5,7 +5,8 @@
     "allCourses": "All Courses",
     "noResults": "No courses found matching your search criteria",
     "lessons": "Lessons",
-    "years": "Years"
+    "years": "Years",
+    "loginToView": "Please log in to view courses"
   },
   "course": {
     "content": "Course Content",

@@ -10,7 +10,8 @@
     "login": "Dolphoon - Connexion",
     "register": "Dolphoon - Inscription",
     "notFound": "Dolphoon - Page non trouvée",
-    "admin": "Dolphoon - Administration"
+    "admin": "Dolphoon - Administration",
+    "subscription": "Dolphoon - Abonnement"
   },
   "descriptions": {
     "home": "Découvrez un monde magique d'histoires interactives, de cours éducatifs et de jeux amusants conçus pour rendre l'apprentissage agréable pour les enfants.",
@@ -22,6 +23,7 @@
     "login": "Connectez-vous à votre compte pour accéder à du contenu personnalisé, sauvegarder vos progrès et suivre votre parcours d'apprentissage.",
     "register": "Créez votre compte pour débloquer un monde d'histoires interactives, de cours éducatifs et de jeux amusants pour les enfants.",
     "notFound": "Page non trouvée. Retournez à notre collection d'histoires interactives, de cours éducatifs et de jeux pour enfants.",
-    "admin": "Interface d'administration pour gérer le contenu sur la plateforme."
+    "admin": "Interface d'administration pour gérer le contenu sur la plateforme.",
+    "subscription": "Choisissez le plan d'abonnement qui convient le mieux à vous et votre famille pour un accès illimité à toutes les histoires et fonctionnalités."
   }
 }

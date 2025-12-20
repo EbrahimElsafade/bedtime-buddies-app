@@ -10,7 +10,8 @@
     "login": "Dolphoon - Login",
     "register": "Dolphoon - Register",
     "notFound": "Dolphoon - Not Found",
-    "admin": "Dolphoon - Admin"
+    "admin": "Dolphoon - Admin",
+    "subscription": "Dolphoon - Subscription"
   },
   "descriptions": {
     "home": "Discover a magical world of interactive Dolphoon, educational courses, and fun games designed to make learning enjoyable for children.",
@@ -22,6 +23,7 @@
     "login": "Sign in to your Dolphoon account to access personalized content, save your progress, and track your learning journey.",
     "register": "Create your Dolphoon account to unlock a world of interactive stories, educational courses, and fun games for children.",
     "notFound": "Page not found. Return to our collection of interactive stories, educational courses, and games for children.",
-    "admin": "Administrative interface for managing content on Dolphoon platform."
+    "admin": "Administrative interface for managing content on Dolphoon platform.",
+    "subscription": "Choose the subscription plan that works best for you and your family for unlimited access to all stories and features."
   }
 }

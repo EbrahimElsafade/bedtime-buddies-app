@@ -116,6 +116,8 @@
   "contentCompleted": "تم إكمال {{content}}!",
   "pointEarned": "لقد حصلت على نقطة واحدة!",
   "free": "مجاني",
+  "login": "تسجيل الدخول",
+  "backHome": "العودة للرئيسية",
   "pwa": {
     "installApp": "تثبيت التطبيق",
     "installAppDescription": "احصل على وصول فوري وميزات دون اتصال على جهازك!",

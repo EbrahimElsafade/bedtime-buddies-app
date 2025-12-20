@@ -116,6 +116,8 @@
   "contentCompleted": "{{content}} Terminé!",
   "pointEarned": "Vous avez gagné 1 point!",
   "free": "Gratuit",
+  "login": "Connexion",
+  "backHome": "Retour à l'accueil",
   "pwa": {
     "installApp": "Installer l'application",
     "installAppDescription": "Accédez instantanément et utilisez l'application hors ligne !",
