@@ -68,7 +68,10 @@ import {
   Trash2,
   Loader2,
   AlertTriangle,
+  Key,
+  Crown,
 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 
 type UserWithRole = {
   id: string;
@@ -105,6 +108,15 @@ const Users = () => {
   const [editParentName, setEditParentName] = useState("");
   const [editChildName, setEditChildName] = useState("");
   const [editLanguage, setEditLanguage] = useState("");
+  const [editIsPremium, setEditIsPremium] = useState(false);
+  const [editSubscriptionTier, setEditSubscriptionTier] = useState<string>("");
+  
+  // Change password dialog state
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [passwordUser, setPasswordUser] = useState<UserWithRole | null>(null);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   
   // Delete user dialog state
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -274,7 +286,16 @@ const Users = () => {
     setEditParentName(user.parent_name);
     setEditChildName(user.child_name || "");
     setEditLanguage(user.preferred_language);
+    setEditIsPremium(user.is_premium);
+    setEditSubscriptionTier(user.subscription_tier || "");
     setIsEditDialogOpen(true);
+  };
+
+  const openPasswordDialog = (user: UserWithRole) => {
+    setPasswordUser(user);
+    setNewPassword("");
+    setConfirmPassword("");
+    setIsPasswordDialogOpen(true);
   };
 
   const handleEditUser = async () => {
@@ -293,6 +314,9 @@ const Users = () => {
           parentName: editParentName,
           childName: editChildName || undefined,
           preferredLanguage: editLanguage,
+          isPremium: editIsPremium,
+          subscriptionTier: editIsPremium ? (editSubscriptionTier || "premium") : null,
+          subscriptionEnd: editIsPremium ? null : null, // No expiration for admin-set premium
         },
       });
 
@@ -313,6 +337,51 @@ const Users = () => {
       toast.error(error instanceof Error ? error.message : "Failed to update user");
     } finally {
       setIsEditing(false);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    if (!passwordUser) return;
+
+    if (!newPassword || newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    setIsChangingPassword(true);
+
+    try {
+      const response = await supabase.functions.invoke("admin-users", {
+        body: {
+          action: "changePassword",
+          userId: passwordUser.id,
+          newPassword: newPassword,
+        },
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+
+      if (response.data?.error) {
+        throw new Error(response.data.error);
+      }
+
+      toast.success("Password changed successfully");
+      setIsPasswordDialogOpen(false);
+      setPasswordUser(null);
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (error) {
+      console.error("Error changing password:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to change password");
+    } finally {
+      setIsChangingPassword(false);
     }
   };
 
@@ -584,6 +653,9 @@ const Users = () => {
                             <DropdownMenuItem onClick={() => openEditDialog(user)}>
                               <Pencil className="mr-2 h-4 w-4" /> Edit User
                             </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => openPasswordDialog(user)}>
+                              <Key className="mr-2 h-4 w-4" /> Change Password
+                            </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem 
                               onClick={() => changeUserRole(user, 'user')}
@@ -667,6 +739,37 @@ const Users = () => {
                 </SelectContent>
               </Select>
             </div>
+            <div className="flex items-center justify-between rounded-lg border p-4">
+              <div className="space-y-0.5">
+                <Label htmlFor="editPremium" className="flex items-center gap-2">
+                  <Crown className="h-4 w-4 text-yellow-500" />
+                  Premium Status
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Grant premium access to this user
+                </p>
+              </div>
+              <Switch
+                id="editPremium"
+                checked={editIsPremium}
+                onCheckedChange={setEditIsPremium}
+              />
+            </div>
+            {editIsPremium && (
+              <div className="space-y-2">
+                <Label htmlFor="editSubscriptionTier">Subscription Tier</Label>
+                <Select value={editSubscriptionTier} onValueChange={setEditSubscriptionTier}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select tier" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="premium">Premium</SelectItem>
+                    <SelectItem value="family">Family</SelectItem>
+                    <SelectItem value="lifetime">Lifetime</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
@@ -680,6 +783,58 @@ const Users = () => {
                 </>
               ) : (
                 "Save Changes"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Change Password Dialog */}
+      <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Key className="h-5 w-5" />
+              Change Password
+            </DialogTitle>
+            <DialogDescription>
+              Set a new password for <strong>{passwordUser?.parent_name}</strong>.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="newPassword">New Password *</Label>
+              <Input
+                id="newPassword"
+                type="password"
+                placeholder="••••••••"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="confirmPassword">Confirm Password *</Label>
+              <Input
+                id="confirmPassword"
+                type="password"
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsPasswordDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleChangePassword} disabled={isChangingPassword}>
+              {isChangingPassword ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Changing...
+                </>
+              ) : (
+                "Change Password"
               )}
             </Button>
           </DialogFooter>
