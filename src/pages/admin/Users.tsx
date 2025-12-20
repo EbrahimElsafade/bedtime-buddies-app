@@ -213,7 +213,7 @@ const Users = () => {
       toast.success(`User ${user.parent_name} role updated to ${newRole}`);
       refetch();
     } catch (error) {
-      console.error("Error updating user role:", error);
+      logger.error("Error updating user role:", error);
       toast.error("Failed to update user role");
     }
   };
@@ -265,7 +265,7 @@ const Users = () => {
       resetCreateForm();
       refetch();
     } catch (error) {
-      console.error("Error creating user:", error);
+      logger.error("Error creating user:", error);
       toast.error(error instanceof Error ? error.message : "Failed to create user");
     } finally {
       setIsCreating(false);
@@ -333,7 +333,7 @@ const Users = () => {
       setEditingUser(null);
       refetch();
     } catch (error) {
-      console.error("Error updating user:", error);
+      logger.error("Error updating user:", error);
       toast.error(error instanceof Error ? error.message : "Failed to update user");
     } finally {
       setIsEditing(false);
@@ -378,7 +378,7 @@ const Users = () => {
       setNewPassword("");
       setConfirmPassword("");
     } catch (error) {
-      console.error("Error changing password:", error);
+      logger.error("Error changing password:", error);
       toast.error(error instanceof Error ? error.message : "Failed to change password");
     } finally {
       setIsChangingPassword(false);
@@ -416,7 +416,7 @@ const Users = () => {
       setDeletingUser(null);
       refetch();
     } catch (error) {
-      console.error("Error deleting user:", error);
+      logger.error("Error deleting user:", error);
       toast.error(error instanceof Error ? error.message : "Failed to delete user");
     } finally {
       setIsDeleting(false);

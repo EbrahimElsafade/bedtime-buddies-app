@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { supabase } from '@/integrations/supabase/client'
+import { logger } from '@/utils/logger'
 import { useLoading } from '@/contexts/LoadingContext'
 import {
   Card,
@@ -35,7 +36,7 @@ const Stories = () => {
         .order('created_at', { ascending: false })
 
       if (error) {
-        console.error('Error fetching stories:', error)
+        logger.error('Error fetching stories:', error)
         throw error
       }
 
@@ -52,7 +53,7 @@ const Stories = () => {
         .order('name')
 
       if (error) {
-        console.error('Error fetching categories:', error)
+        logger.error('Error fetching categories:', error)
         throw error
       }
 
@@ -153,7 +154,7 @@ const Stories = () => {
                           alt={storyTitle}
                           className="aspect-[3/2] h-56 w-full object-fill"
                           onError={e => {
-                            console.log(
+                            logger.debug(
                               'Story image failed to load:',
                               story.cover_image,
                             )

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
+import { logger } from '@/utils/logger'
 import {
   Table,
   TableBody,
@@ -179,7 +180,7 @@ const Courses = () => {
       toast.success('Course deleted successfully')
       refetch()
     } catch (error) {
-      console.error('Error deleting course:', error)
+      logger.error('Error deleting course:', error)
       toast.error('Failed to delete course')
     } finally {
       setCourseToDelete(null)
@@ -200,7 +201,7 @@ const Courses = () => {
       )
       refetch()
     } catch (error) {
-      console.error('Error updating course status:', error)
+      logger.error('Error updating course status:', error)
       toast.error('Failed to update course status')
     }
   }

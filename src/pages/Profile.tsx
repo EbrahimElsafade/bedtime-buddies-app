@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
+import { logger } from '@/utils/logger'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useAuth } from '@/contexts/AuthContext'
@@ -48,7 +49,7 @@ const Profile = () => {
   // Check authentication and redirect if needed
   useEffect(() => {
     if (!isAuthenticated) {
-      console.log('Profile - Not authenticated, redirecting to login')
+      logger.info('Profile - Not authenticated, redirecting to login')
       navigate('/login', { replace: true })
     }
   }, [isAuthenticated, navigate])

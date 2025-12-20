@@ -1,3 +1,5 @@
+import { logger } from './logger'
+
 export const parseHLSDuration = async (hlsUrl: string): Promise<number> => {
   try {
     const response = await fetch(hlsUrl)
@@ -21,7 +23,7 @@ export const parseHLSDuration = async (hlsUrl: string): Promise<number> => {
 
     return Math.round(totalDuration) // Return duration in seconds, rounded
   } catch (error) {
-    console.error('Error parsing HLS duration:', error)
+    logger.error('Error parsing HLS duration:', error)
     return 0 // Return 0 if we can't parse the duration
   }
 }
@@ -58,7 +60,7 @@ export const getVideoDurations = async (
         const duration = await parseHLSDuration(video.videoPath)
         return { id: video.id, duration }
       } catch (error) {
-        console.error(`Failed to get duration for video ${video.id}:`, error)
+        logger.error(`Failed to get duration for video ${video.id}:`, error)
         return { id: video.id, duration: 0 }
       }
     })

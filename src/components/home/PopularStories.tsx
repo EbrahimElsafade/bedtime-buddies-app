@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, Clock } from 'lucide-react'
+import { logger } from '@/utils/logger'
 import {
   Card,
   CardHeader,
@@ -30,7 +31,7 @@ const PopularStories = () => {
         .order('created_at', { ascending: false })
 
       if (error) {
-        console.error('Error fetching popular stories:', error)
+        logger.error('Error fetching popular stories:', error)
         throw error
       }
 
@@ -114,7 +115,7 @@ const PopularStories = () => {
                         alt={storyTitle}
                         className="h-full w-full object-cover"
                         onError={e => {
-                          console.log(
+                          logger.debug(
                             'Popular story image failed to load:',
                             story.cover_image,
                           )

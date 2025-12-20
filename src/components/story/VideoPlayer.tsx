@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { supabase } from '@/integrations/supabase/client'
+import { logger } from '@/utils/logger'
 
 interface VideoPlayerProps {
   videoPath: string
@@ -62,7 +63,7 @@ const VideoPlayer = ({
         if (videoRef.current) {
           videoRef.current
             .play()
-            .catch(err => console.warn('Video play failed:', err))
+            .catch(err => logger.warn('Video play failed:', err))
         }
       }}
     >

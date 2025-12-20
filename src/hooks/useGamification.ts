@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client'
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
+import { logger } from '@/utils/logger'
 
 export interface GamificationStats {
   totalPoints: number
@@ -78,7 +79,7 @@ export const useGamification = () => {
         })
       }
     } catch (error) {
-      console.error('Error fetching gamification stats:', error)
+      logger.error('Error fetching gamification stats:', error)
     }
   }, [user])
 
@@ -159,7 +160,7 @@ export const useGamification = () => {
         setFinishedCourses([])
       }
     } catch (error) {
-      console.error('Error fetching finished content:', error)
+      logger.error('Error fetching finished content:', error)
     } finally {
       setIsLoading(false)
     }
@@ -198,7 +199,7 @@ export const useGamification = () => {
 
         return result
       } catch (error) {
-        console.error('Error recording progress:', error)
+        logger.error('Error recording progress:', error)
         return null
       }
     },

@@ -3,16 +3,17 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
+import { logger } from '@/utils/logger'
 import { Helmet } from 'react-helmet-async'
-import PricingPopup from '@/components/PricingPopup'
+// import PricingPopup from '@/components/PricingPopup'
 import Hero from '@/components/home/Hero'
 import FreeStory from '@/components/home/FreeStory'
 import FeaturedStories from '@/components/home/FeaturedStories'
 import Features from '@/components/home/Features'
 import SubscribeBanner from '@/components/home/SubscribeBanner'
-import PopularStories from '@/components/home/PopularStories'
+// import PopularStories from '@/components/home/PopularStories'
 import FeaturedCourses from '@/components/home/FeaturedCourses'
-import FunElements from '@/components/home/FunElements'
+// import FunElements from '@/components/home/FunElements'
 
 interface HomePageSettings {
   freeStory: string
@@ -26,7 +27,7 @@ interface HomePageSettings {
 }
 
 const Index = () => {
-  const { isAuthenticated } = useAuth()
+  // const { isAuthenticated } = useAuth()
   const { i18n, t } = useTranslation(['meta'])
 
   // Fetch home page appearance settings
@@ -40,7 +41,7 @@ const Index = () => {
         .maybeSingle()
 
       if (error) {
-        console.error('Error fetching home page settings:', error)
+        logger.error('Error fetching home page settings:', error)
         throw error
       }
 

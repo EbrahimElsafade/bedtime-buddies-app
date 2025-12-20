@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
+import { logger } from '@/utils/logger'
 import {
   Card,
   CardContent,
@@ -127,7 +128,7 @@ const PicturePuzzleGame = () => {
       .eq('is_published', true)
       .not('cover_image', 'is', null)
 
-    console.log(data)
+    logger.debug(data)
 
     if (!error && data && data.length > 0) {
       const randomIndex = Math.floor(Math.random() * data.length)

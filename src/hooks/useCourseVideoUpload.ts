@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { logger } from '@/utils/logger';
 
 interface UploadState {
   isUploading: boolean;
@@ -56,7 +57,7 @@ export const useCourseVideoUpload = () => {
       try {
         duration = await getVideoDuration(file);
       } catch (err) {
-        console.warn('Could not get video duration:', err);
+        logger.warn('Could not get video duration:', err);
       }
 
       setUploadStates(prev => ({
@@ -115,7 +116,7 @@ export const useCourseVideoUpload = () => {
 
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Upload failed';
-      console.error('Video upload error:', error);
+      logger.error('Video upload error:', error);
       
       setUploadStates(prev => ({
         ...prev,

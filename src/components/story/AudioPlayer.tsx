@@ -8,6 +8,7 @@ import {
   // SkipForward,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { logger } from "@/utils/logger";
 import { Slider } from "@/components/ui/slider";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -70,7 +71,7 @@ export const AudioPlayer = ({
     };
 
     const url = getAudioUrl();
-    console.log("Audio URL generated:", url, "from original:", audioUrl);
+    logger.debug("Audio URL generated:", url, "from original:", audioUrl);
     setAudioSrc(url);
   }, [audioUrl]);
 
@@ -105,8 +106,8 @@ export const AudioPlayer = ({
     };
 
     const handleError = (e: Event) => {
-      console.error("Audio loading error:", e);
-      console.error("Audio src:", audioSrc);
+      logger.error("Audio loading error:", e);
+      logger.error("Audio src:", audioSrc);
       setIsLoading(false);
     };
 
@@ -145,7 +146,7 @@ export const AudioPlayer = ({
         setIsPlaying(true);
       }
     } catch (error) {
-      console.error("Error playing audio:", error);
+      logger.error("Error playing audio:", error);
       setIsPlaying(false);
     }
   };

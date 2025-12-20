@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, Clock } from 'lucide-react'
+import { logger } from '@/utils/logger'
 import {
   Card,
   CardHeader,
@@ -31,11 +32,11 @@ const FeaturedStories = () => {
         .order('created_at', { ascending: false })
 
       if (error) {
-        console.error('Error fetching featured stories:', error)
+        logger.error('Error fetching featured stories:', error)
         throw error
       }
 
-      console.log('data:', data)
+      logger.debug('data:', data)
 
       return data || []
     },
@@ -125,7 +126,7 @@ const FeaturedStories = () => {
                         alt={storyTitle}
                         className="h-full w-full object-cover"
                         onError={e => {
-                          console.log(
+                          logger.debug(
                             'Featured story image failed to load:',
                             story.cover_image,
                           )

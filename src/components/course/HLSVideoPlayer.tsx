@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Hls from 'hls.js'
 import Plyr from 'plyr'
+import { logger } from '@/utils/logger'
 import 'plyr/dist/plyr.css'
 import { supabase } from '@/integrations/supabase/client'
 
@@ -62,19 +63,19 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
           hls.attachMedia(video)
 
           hls.on(Hls.Events.ERROR, (event, data) => {
-            console.error('HLS error:', data)
+            logger.error('HLS error:', data)
             if (data.fatal) {
               switch (data.type) {
                 case Hls.ErrorTypes.NETWORK_ERROR:
-                  console.log('Network error, trying to recover...')
+                  logger.debug('Network error, trying to recover...')
                   hls.startLoad()
                   break
                 case Hls.ErrorTypes.MEDIA_ERROR:
-                  console.log('Media error, trying to recover...')
+                  logger.debug('Media error, trying to recover...')
                   hls.recoverMediaError()
                   break
                 default:
-                  console.log('Fatal error, destroying HLS instance')
+                  logger.debug('Fatal error, destroying HLS instance')
                   hls.destroy()
                   setError('Failed to load video stream')
                   break
@@ -115,7 +116,7 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
           title: title,
         })
       } catch (err) {
-        console.error('Error initializing video player:', err)
+        logger.error('Error initializing video player:', err)
         setError('Failed to initialize video player')
       }
     }

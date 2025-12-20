@@ -3,6 +3,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { X, Download, Smartphone, Plus, Home, Share } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { logger } from '@/utils/logger'
 
 declare global {
   interface Navigator {
@@ -149,7 +150,7 @@ const PWAInstallPrompt = () => {
 
       setDeferredPrompt(null)
     } catch (error) {
-      console.error('Install prompt failed:', error)
+      logger.error('Install prompt failed:', error)
     } finally {
       setIsInstalling(false)
     }

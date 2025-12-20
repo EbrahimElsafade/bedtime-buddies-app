@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
+import { logger } from '@/utils/logger'
 import { Course, CourseVideo, Category } from '@/types/course'
 import { Database } from '@/integrations/supabase/types'
 
@@ -22,7 +23,7 @@ export const useCourseData = (courseId: string | undefined) => {
         .single()
 
       if (courseError) {
-        console.error('Error fetching course:', courseError)
+        logger.error('Error fetching course:', courseError)
         throw courseError
       }
 
@@ -34,7 +35,7 @@ export const useCourseData = (courseId: string | undefined) => {
         .order('lesson_order', { ascending: true })
 
       if (lessonsError) {
-        console.error('Error fetching lessons:', lessonsError)
+        logger.error('Error fetching lessons:', lessonsError)
         throw lessonsError
       }
 
@@ -120,7 +121,7 @@ export const useCoursesData = () => {
         .order('created_at', { ascending: false })
 
       if (coursesError) {
-        console.error('Error fetching courses:', coursesError)
+        logger.error('Error fetching courses:', coursesError)
         throw coursesError
       }
 
@@ -168,7 +169,7 @@ export const useFeaturedCourses = () => {
         .order('created_at', { ascending: false })
 
       if (coursesError) {
-        console.error('Error fetching featured courses:', coursesError)
+        logger.error('Error fetching featured courses:', coursesError)
         throw coursesError
       }
 
@@ -214,7 +215,7 @@ export const useCourseCategories = () => {
         .order('name')
 
       if (error) {
-        console.error('Error fetching course categories:', error)
+        logger.error('Error fetching course categories:', error)
         throw error
       }
 

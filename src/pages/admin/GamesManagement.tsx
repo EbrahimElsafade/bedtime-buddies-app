@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { supabase } from '@/integrations/supabase/client'
+import { logger } from '@/utils/logger'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
@@ -48,7 +49,7 @@ const GamesManagement = () => {
       if (error) throw error
       setGames(data || [])
     } catch (error) {
-      console.error('Error fetching games:', error)
+      logger.error('Error fetching games:', error)
       toast.error(t('admin:common.error_loading'))
     } finally {
       setLoading(false)
@@ -70,7 +71,7 @@ const GamesManagement = () => {
 
       toast.success(t('admin:common.updated_successfully'))
     } catch (error) {
-      console.error('Error updating game:', error)
+      logger.error('Error updating game:', error)
       toast.error(t('admin:common.error_saving'))
     }
   }

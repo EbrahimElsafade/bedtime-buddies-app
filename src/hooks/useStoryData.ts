@@ -1,6 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { logger } from "@/utils/logger";
 import { getImageUrl } from "@/utils/imageUtils";
 import { Story as StoryType, StorySection } from "@/types/story";
 import { Json } from "@/integrations/supabase/types";
@@ -20,7 +21,7 @@ export const useStoryData = (storyId: string | undefined) => {
         .single();
       
       if (storyError) {
-        console.error("Error fetching story:", storyError);
+        logger.error("Error fetching story:", storyError);
         throw storyError;
       }
 
@@ -32,7 +33,7 @@ export const useStoryData = (storyId: string | undefined) => {
         .order("order", { ascending: true });
       
       if (sectionsError) {
-        console.error("Error fetching sections:", sectionsError);
+        logger.error("Error fetching sections:", sectionsError);
         throw sectionsError;
       }
 

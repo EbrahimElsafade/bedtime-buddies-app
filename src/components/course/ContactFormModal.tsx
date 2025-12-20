@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 import { Loader2 } from 'lucide-react'
+import { logger } from '@/utils/logger'
 import {
   Dialog,
   DialogContent,
@@ -98,7 +99,7 @@ export const ContactFormModal = ({
       form.reset()
       onOpenChange(false)
     } catch (error: any) {
-      console.error('Error sending contact form:', error)
+      logger.error('Error sending contact form:', error)
       toast({
         title: t('contact.errorTitle'),
         description: t('contact.errorMessage'),

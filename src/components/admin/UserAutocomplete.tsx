@@ -7,6 +7,7 @@ import { Check, ChevronsUpDown, User } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
+import { logger } from '@/utils/logger'
 
 type UserProfile = {
   id: string
@@ -44,7 +45,7 @@ export const UserAutocomplete = ({ value, onValueChange, placeholder = 'Select u
       setUsers(data || [])
     } catch (error) {
       toast.error('Failed to load users')
-      console.error('Error fetching users:', error)
+      logger.error('Error fetching users:', error)
     } finally {
       setLoading(false)
     }

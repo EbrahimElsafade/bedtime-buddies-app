@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Story } from '@/types/story'
 import { getImageUrl } from '@/utils/imageUtils'
+import { logger } from '@/utils/logger'
 import { AudioControls } from './AudioControls'
 import { TextHighlight } from './TextHighlight'
 import VideoPlayer from './VideoPlayer'
@@ -94,7 +95,7 @@ export const StoryContent = ({
           try {
             vid.currentTime = target
           } catch (e) {
-            console.warn('Failed to sync video time (modulo):', e)
+            logger.warn('Failed to sync video time (modulo):', e)
           }
         }
       } else {
@@ -103,7 +104,7 @@ export const StoryContent = ({
           try {
             vid.currentTime = currentTime
           } catch (e) {
-            console.warn('Failed to sync video time (fallback):', e)
+            logger.warn('Failed to sync video time (fallback):', e)
           }
         }
       }
@@ -118,13 +119,13 @@ export const StoryContent = ({
         const playPromise = videoRef.current.play()
         if (playPromise !== undefined) {
           playPromise.catch(error => {
-            console.warn('Video play failed:', error)
+            logger.warn('Video play failed:', error)
             // Try again with muted video on mobile
             if (videoRef.current) {
               videoRef.current.muted = true
               videoRef.current
                 .play()
-                .catch(e => console.error('Muted video play failed:', e))
+                .catch(e => logger.error('Muted video play failed:', e))
             }
           })
         }

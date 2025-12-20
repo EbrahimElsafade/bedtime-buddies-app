@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Share, Copy, Check, X } from 'lucide-react'
+import { logger } from '@/utils/logger'
 import {
   FacebookShareButton,
   TwitterShareButton,
@@ -54,13 +55,13 @@ export const ShareDialog = ({ storyTitle }: ShareDialogProps) => {
           setCopied(true)
           setTimeout(() => setCopied(false), 2000)
         } catch (err) {
-          console.error('Fallback copy failed:', err)
+          logger.error('Fallback copy failed:', err)
         } finally {
           textArea.remove()
         }
       }
     } catch (err) {
-      console.error('Failed to copy: ', err)
+      logger.error('Failed to copy: ', err)
     }
   }
 

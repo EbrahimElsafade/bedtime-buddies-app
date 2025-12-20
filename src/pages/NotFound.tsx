@@ -2,6 +2,7 @@
 import { useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { Helmet } from 'react-helmet-async';
+import { logger } from '@/utils/logger';
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 
@@ -10,7 +11,7 @@ const NotFound = () => {
   const { t } = useTranslation(['notFound', 'misc', 'meta']);
 
   useEffect(() => {
-    console.error(
+    logger.error(
       "404 Error: User attempted to access non-existent route:",
       location.pathname
     );
