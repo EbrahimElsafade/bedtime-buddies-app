@@ -175,9 +175,9 @@ const Courses = () => {
                           {getLocalized(course, 'title', lang)}
                         </h3>
                         <p className="mb-4 text-sm text-muted-foreground">
-                          Please log in to view courses
+                          {t('courses.loginToView')}
                         </p>
-                        <Button className="w-full">Log In</Button>
+                        <Button className="w-full">{t('common:login')}</Button>
                       </div>
                     </Card>
                   </div>

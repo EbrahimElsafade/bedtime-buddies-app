@@ -5,7 +5,8 @@
     "allCourses": "Tous les Cours",
     "noResults": "Aucun cours ne correspond à vos critères de recherche",
     "lessons": "Leçons",
-    "years": "Ans"
+    "years": "Ans",
+    "loginToView": "Veuillez vous connecter pour voir les cours"
   },
   "course": {
     "content": "Contenu du Cours",

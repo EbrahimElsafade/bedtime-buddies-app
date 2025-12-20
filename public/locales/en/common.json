@@ -123,6 +123,8 @@
   "contentCompleted": "{{content}} Completed!",
   "pointEarned": "You earned 1 point!",
   "free": "Free",
+  "login": "Log In",
+  "backHome": "Back to Home",
   "pwa": {
     "installApp": "Install App",
     "installAppDescription": "Get instant access and offline features on your device!",
