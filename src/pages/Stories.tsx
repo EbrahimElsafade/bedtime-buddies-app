@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
+import { useSearchParams } from 'react-router-dom'
 import { supabase } from '@/integrations/supabase/client'
 import { logger } from '@/utils/logger'
 import { useLoading } from '@/contexts/LoadingContext'
@@ -20,11 +21,35 @@ import { useLanguage } from '@/contexts/LanguageContext'
 import { StoriesFilters } from './Stories/StoriesFilters'
 
 const Stories = () => {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<string>('all')
+  const [searchParams, setSearchParams] = useSearchParams()
+  
+  // Get filters from URL or use defaults
+  const searchTerm = searchParams.get('search') || ''
+  const selectedCategory = searchParams.get('category') || 'all'
+  
   const { t, i18n } = useTranslation(['stories', 'misc', 'meta', 'common'])
   const { language } = useLanguage()
   const { setIsLoading, setLoadingMessage } = useLoading()
+
+  const handleSearchChange = (value: string) => {
+    const newParams = new URLSearchParams(searchParams)
+    if (value) {
+      newParams.set('search', value)
+    } else {
+      newParams.delete('search')
+    }
+    setSearchParams(newParams)
+  }
+
+  const handleCategoryChange = (value: string) => {
+    const newParams = new URLSearchParams(searchParams)
+    if (value && value !== 'all') {
+      newParams.set('category', value)
+    } else {
+      newParams.delete('category')
+    }
+    setSearchParams(newParams)
+  }
 
   const { data: stories = [], isLoading } = useQuery({
     queryKey: ['stories', language],
@@ -114,9 +139,9 @@ const Stories = () => {
 
         <StoriesFilters
           searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
+          onSearchChange={handleSearchChange}
           selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
+          onCategoryChange={handleCategoryChange}
           categories={categories}
         />
 
