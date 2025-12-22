@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { logger } from '@/utils/logger'
 import { Button } from '@/components/ui/button'
@@ -17,15 +17,27 @@ import { SubscriptionTab } from './Profile/SubscriptionTab'
 import { SubscriptionProfile } from './Profile/SubscriptionProfile'
 import { FinishedContentTab } from './Profile/FinishedContentTab'
 
+const VALID_TABS = ['profile', 'finished-content', 'story-favorites', 'course-favorites', 'subscription'] as const
+type TabValue = typeof VALID_TABS[number]
+
 const Profile = () => {
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
   const { user, profile, isAuthenticated, updateProfile, logout } = useAuth()
   const { setIsLoading: setGlobalLoading } = useLoading()
-  const { t, i18n } = useTranslation(['common', 'auth', 'meta'])
+  const { t, i18n } = useTranslation(['common', 'auth', 'meta', 'subscription'])
   const { language } = useLanguage()
   const { favorites: storyFavorites } = useStoryFavorites()
   const { favorites: courseFavorites } = useCourseFavorites()
   const { stats, finishedStories, finishedCourses, isLoading: gamificationLoading } = useGamification()
+
+  // Get current tab from URL or default to 'profile'
+  const tabFromUrl = searchParams.get('tab') as TabValue | null
+  const currentTab = tabFromUrl && VALID_TABS.includes(tabFromUrl) ? tabFromUrl : 'profile'
+
+  const handleTabChange = (value: string) => {
+    setSearchParams({ tab: value })
+  }
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -140,7 +152,7 @@ const Profile = () => {
           </h1>
         </div>
 
-        <Tabs defaultValue="profile" className="w-full">
+        <Tabs value={currentTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="mb-4 w-full justify-start gap-2 overflow-x-auto p-1 md:mb-6 lg:mb-8">
             <TabsTrigger value="profile">{t('common:profile')}</TabsTrigger>
             <TabsTrigger value="finished-content">
