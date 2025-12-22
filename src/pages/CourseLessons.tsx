@@ -25,8 +25,7 @@ const CourseLessons = () => {
   const { isAuthenticated, isLoading: authLoading, user } = useAuth()
   const { toast } = useToast()
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
-  const [autoplayNext, setAutoplayNext] = useState(false)
-
+  
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
   const { isPremium } = useUserRole(user)
@@ -44,10 +43,10 @@ const CourseLessons = () => {
     if (course) {
       document.title = `${getLocalized(course, 'title', lang)} - ${t('course.lessons')} | Dolphoon`
       // Set the first video as selected by default if there are videos
-      if (course.videos && course.videos.length > 0 && !selectedVideo) {
+        if (course.videos && course.videos.length > 0 && !selectedVideo) {
         const firstVideo = course.videos[0]
         setSelectedVideo(firstVideo)
-        setAutoplayNext(false)
+        
         
         // Record initial lesson progress
         if (courseId && firstVideo.id && (isPremium || firstVideo.isFree)) {
@@ -57,7 +56,7 @@ const CourseLessons = () => {
     }
   }, [course, lang, t, selectedVideo, courseId, isPremium, recordProgress])
 
-  const handleVideoSelect = async (video: CourseVideo, autoplay = false) => {
+  const handleVideoSelect = async (video: CourseVideo) => {
     // Allow access if user is premium OR if the lesson is free
     if (!isPremium && !video.isFree) {
       toast({
@@ -68,7 +67,6 @@ const CourseLessons = () => {
       return
     }
     setSelectedVideo(video)
-    setAutoplayNext(autoplay)
     
     // Record lesson progress for gamification
     if (courseId && video.id) {
@@ -84,8 +82,8 @@ const CourseLessons = () => {
 
     if (nextIndex < course.videos.length) {
       const nextVideo = course.videos[nextIndex]
-      // select next video and request autoplay
-      handleVideoSelect(nextVideo, true)
+      // select next video
+      handleVideoSelect(nextVideo)
     }
   }
 
@@ -95,9 +93,7 @@ const CourseLessons = () => {
     return currentIndex + 1 < course.videos.length
   }
 
-  const handleCountdownCancel = () => {
-    setAutoplayNext(false)
-  }
+  
 
   // Redirect to login if not authenticated
   if (!isAuthenticated && !authLoading) {
@@ -200,8 +196,7 @@ const CourseLessons = () => {
                       className="rounded-lg"
                       onVideoEnd={handleVideoEnd}
                       showCountdownOnEnd={getNextVideoExists()}
-                      autoplay={autoplayNext}
-                      onCountdownCancel={handleCountdownCancel}
+                      
                     />
                   ) : selectedVideo.videoPath ? (
                     <div className="flex h-full items-center justify-center text-secondary">
