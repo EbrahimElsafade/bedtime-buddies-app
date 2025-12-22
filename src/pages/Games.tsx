@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import {
   Card,
@@ -16,6 +16,9 @@ import { useAuth } from '@/contexts/AuthContext'
 import { Lock, Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 
+const VALID_CATEGORIES = ['all', 'single', 'multi'] as const
+type GameCategory = typeof VALID_CATEGORIES[number]
+
 const Games = () => {
   const { t, i18n } = useTranslation([
     'games',
@@ -24,10 +27,37 @@ const Games = () => {
     'meta',
   ])
   const { user } = useAuth()
+  const [searchParams, setSearchParams] = useSearchParams()
+  
+  // Get filters from URL
+  const categoryFromUrl = searchParams.get('category') as GameCategory | null
+  const selectedCategory = categoryFromUrl && VALID_CATEGORIES.includes(categoryFromUrl) ? categoryFromUrl : 'all'
+  const searchTerm = searchParams.get('search') || ''
+  
   const [gameSettings, setGameSettings] = useState<
     Record<string, { is_free: boolean; is_active: boolean }>
   >({})
   const [hasPremium, setHasPremium] = useState(false)
+
+  const handleCategoryChange = (value: string) => {
+    const newParams = new URLSearchParams(searchParams)
+    if (value && value !== 'all') {
+      newParams.set('category', value)
+    } else {
+      newParams.delete('category')
+    }
+    setSearchParams(newParams)
+  }
+
+  const handleSearchChange = (value: string) => {
+    const newParams = new URLSearchParams(searchParams)
+    if (value) {
+      newParams.set('search', value)
+    } else {
+      newParams.delete('search')
+    }
+    setSearchParams(newParams)
+  }
 
   useEffect(() => {
     const fetchGameSettings = async () => {
@@ -157,10 +187,6 @@ const Games = () => {
     game => gameSettings[game.id]?.is_active !== false,
   )
 
-  const [searchTerm, setSearchTerm] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState<
-    'all' | 'single' | 'multi'
-  >('all')
 
   const filteredGames = activeGames
     .filter(game => {
@@ -198,9 +224,7 @@ const Games = () => {
 
         <Tabs
           value={selectedCategory}
-          onValueChange={(v: string) =>
-            setSelectedCategory(v as 'all' | 'single' | 'multi')
-          }
+          onValueChange={handleCategoryChange}
           className="mb-6"
           dir={i18n.dir()}
         >
@@ -218,7 +242,7 @@ const Games = () => {
                   type="text"
                   placeholder={t('searchGames', { ns: 'common' })}
                   value={searchTerm}
-                  onChange={e => setSearchTerm(e.target.value)}
+                  onChange={e => handleSearchChange(e.target.value)}
                   className="w-full py-2 ps-10 text-start text-sm md:text-base"
                 />
               </div>

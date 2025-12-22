@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { Search, BookOpen, Clock } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
@@ -23,8 +23,12 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTranslation } from 'react-i18next'
 
 const Courses = () => {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [activeCategory, setActiveCategory] = useState<string>('all')
+  const [searchParams, setSearchParams] = useSearchParams()
+  
+  // Get filters from URL
+  const searchQuery = searchParams.get('search') || ''
+  const activeCategory = searchParams.get('category') || 'all'
+  
   const { t } = useTranslation(['courses', 'meta', 'common', 'premium'])
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const navigate = useNavigate()
@@ -34,6 +38,26 @@ const Courses = () => {
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: courses = [], isLoading } = useCoursesData()
   const { data: categories = [] } = useCourseCategories()
+
+  const handleSearchChange = (value: string) => {
+    const newParams = new URLSearchParams(searchParams)
+    if (value) {
+      newParams.set('search', value)
+    } else {
+      newParams.delete('search')
+    }
+    setSearchParams(newParams)
+  }
+
+  const handleCategoryChange = (category: string) => {
+    const newParams = new URLSearchParams(searchParams)
+    if (category && category !== 'all') {
+      newParams.set('category', category)
+    } else {
+      newParams.delete('category')
+    }
+    setSearchParams(newParams)
+  }
 
   useEffect(() => {
     setIsLoading(isLoading)
@@ -54,10 +78,6 @@ const Courses = () => {
       return categoryMatch && searchMatch
     })
   }, [courses, activeCategory, lang, searchQuery])
-
-  const handleCategoryChange = (category: string) => {
-    setActiveCategory(category)
-  }
 
   const ageCounts = useMemo(() => {
     const counts: Record<string, number> = {}
@@ -120,7 +140,7 @@ const Courses = () => {
                 placeholder={t('courses.searchPlaceholder')}
                 className="w-full py-2 ps-10 text-start text-sm md:text-base"
                 value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
+                onChange={e => handleSearchChange(e.target.value)}
               />
             </div>
 
