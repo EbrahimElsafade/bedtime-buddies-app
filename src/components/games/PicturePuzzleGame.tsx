@@ -128,7 +128,7 @@ const PicturePuzzleGame = () => {
       .eq('is_published', true)
       .not('cover_image', 'is', null)
 
-    logger.debug(data)
+    logger.debug('Fetched puzzle images:', data)
 
     if (!error && data && data.length > 0) {
       const randomIndex = Math.floor(Math.random() * data.length)
