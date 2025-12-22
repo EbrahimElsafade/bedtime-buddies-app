@@ -1,17 +1,7 @@
 {
   "title": "Choisissez Votre Plan",
-  "subtitle": "Débloquez un accès illimité à toutes les histoires et fonctionnalités avec nos plans premium. Choisissez l'option qui convient le mieux à vous et votre famille.",
+  "subtitle": "Débloquez un accès illimité à toutes les histoires et fonctionnalités avec notre plan premium. Choisissez l'option qui convient le mieux à vous et votre famille.",
   "plans": {
-    "monthly": {
-      "name": "Mensuel",
-      "description": "Parfait pour essayer nos fonctionnalités premium",
-      "features": [
-        "Accès illimité à toutes les histoires",
-        "Nouvelles histoires chaque semaine",
-        "Accès à toutes les langues"
-      ]
-    },
-
     "yearly": {
       "name": "Annuel",
       "description": "Meilleure valeur, économisez plus de 30%",

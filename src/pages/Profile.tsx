@@ -14,6 +14,7 @@ import { useGamification } from '@/hooks/useGamification'
 import { ProfileInfo } from './Profile/ProfileInfo'
 import { FavoritesList } from './Profile/FavoritesList'
 import { SubscriptionTab } from './Profile/SubscriptionTab'
+import { SubscriptionProfile } from './Profile/SubscriptionProfile'
 import { FinishedContentTab } from './Profile/FinishedContentTab'
 
 const Profile = () => {
@@ -166,6 +167,7 @@ const Profile = () => {
               setChildName={setChildName}
               profileLanguage={profileLanguage}
               setProfileLanguage={setProfileLanguage}
+              isPremium={profile?.is_premium || false}
               onSave={handleSaveProfile}
               onLogout={handleLogout}
             />

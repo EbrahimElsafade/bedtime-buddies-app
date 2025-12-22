@@ -32,6 +32,7 @@ import { toast } from 'sonner'
 import { ProfileImageUpload } from '@/components/profile/ProfileImageUpload'
 import { SocialAccountsManager } from '@/components/profile/SocialAccountsManager'
 import { SkillsManager } from '@/components/profile/SkillsManager'
+import { SubscriptionProfile } from './SubscriptionProfile'
 import { Separator } from '@/components/ui/separator'
 import { supabase } from '@/integrations/supabase/client'
 import { Loader2, KeyRound } from 'lucide-react'
@@ -44,6 +45,7 @@ interface ProfileInfoProps {
   setChildName: (name: string) => void
   profileLanguage: 'en' | 'ar-eg' | 'ar-fos7a' | 'fr'
   setProfileLanguage: (lang: 'en' | 'ar-eg' | 'ar-fos7a' | 'fr') => void
+  isPremium?: boolean
   onSave: () => void
   onLogout: () => void
 }
@@ -56,6 +58,7 @@ export const ProfileInfo = ({
   setChildName,
   profileLanguage,
   setProfileLanguage,
+  isPremium = false,
   onSave,
   onLogout,
 }: ProfileInfoProps) => {
@@ -285,6 +288,10 @@ export const ProfileInfo = ({
           <Separator />
 
           <SkillsManager />
+
+          <Separator />
+
+          <SubscriptionProfile isPremium={isPremium} />
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">

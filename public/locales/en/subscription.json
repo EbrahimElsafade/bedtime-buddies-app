@@ -1,17 +1,7 @@
 {
   "title": "Choose Your Plan",
-  "subtitle": "Unlock unlimited access to all stories and features with our premium plans. Choose the option that works best for you and your family.",
+  "subtitle": "Unlock unlimited access to all stories and features with our premium plan. Choose the option that works best for you and your family.",
   "plans": {
-    "monthly": {
-      "name": "Monthly",
-      "description": "Perfect for trying out our premium features",
-      "features": [
-        "Unlimited access to all stories",
-        "New stories weekly",
-        "Access to all languages"
-      ]
-    },
-
     "yearly": {
       "name": "Yearly",
       "description": "Best value, save over 30%",

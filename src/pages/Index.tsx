@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
+// import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
