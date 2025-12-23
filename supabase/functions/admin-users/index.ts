@@ -25,6 +25,7 @@ interface UpdateUserRequest {
   preferredLanguage?: string;
   isPremium?: boolean;
   subscriptionTier?: string;
+  subscriptionStart?: string | null;
   subscriptionEnd?: string | null;
 }
 
@@ -141,7 +142,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     if (body.action === "update") {
-      const { userId, parentName, childName, preferredLanguage, isPremium, subscriptionTier, subscriptionEnd } = body;
+      const { userId, parentName, childName, preferredLanguage, isPremium, subscriptionTier, subscriptionStart, subscriptionEnd } = body;
 
       const updates: Record<string, unknown> = {};
       if (parentName !== undefined) updates.parent_name = parentName;
@@ -149,6 +150,7 @@ const handler = async (req: Request): Promise<Response> => {
       if (preferredLanguage !== undefined) updates.preferred_language = preferredLanguage;
       if (isPremium !== undefined) updates.is_premium = isPremium;
       if (subscriptionTier !== undefined) updates.subscription_tier = subscriptionTier;
+      if (subscriptionStart !== undefined) updates.subscription_start = subscriptionStart;
       if (subscriptionEnd !== undefined) updates.subscription_end = subscriptionEnd;
 
       const { error: updateError } = await supabaseAdmin
