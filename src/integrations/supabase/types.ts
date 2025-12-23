@@ -332,6 +332,7 @@ export type Database = {
           profile_image: string | null
           skills: string[] | null
           subscription_end: string | null
+          subscription_start: string | null
           subscription_tier: string | null
           total_points: number
           unlocked_milestones: number[]
@@ -348,6 +349,7 @@ export type Database = {
           profile_image?: string | null
           skills?: string[] | null
           subscription_end?: string | null
+          subscription_start?: string | null
           subscription_tier?: string | null
           total_points?: number
           unlocked_milestones?: number[]
@@ -364,6 +366,7 @@ export type Database = {
           profile_image?: string | null
           skills?: string[] | null
           subscription_end?: string | null
+          subscription_start?: string | null
           subscription_tier?: string | null
           total_points?: number
           unlocked_milestones?: number[]

@@ -81,6 +81,7 @@ type UserWithRole = {
   preferred_language: string;
   is_premium: boolean;
   subscription_tier: string | null;
+  subscription_start: string | null;
   subscription_end: string | null;
   roles?: Array<{ role: string }>;
   created_at: string;
@@ -111,6 +112,8 @@ const Users = () => {
   const [editLanguage, setEditLanguage] = useState("");
   const [editIsPremium, setEditIsPremium] = useState(false);
   const [editSubscriptionTier, setEditSubscriptionTier] = useState<string>("");
+  const [editSubscriptionStart, setEditSubscriptionStart] = useState<string>("");
+  const [editSubscriptionEnd, setEditSubscriptionEnd] = useState<string>("");
   
   // Change password dialog state
   const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
@@ -289,6 +292,8 @@ const Users = () => {
     setEditLanguage(user.preferred_language);
     setEditIsPremium(user.is_premium);
     setEditSubscriptionTier(user.subscription_tier || "");
+    setEditSubscriptionStart(user.subscription_start ? user.subscription_start.split('T')[0] : "");
+    setEditSubscriptionEnd(user.subscription_end ? user.subscription_end.split('T')[0] : "");
     setIsEditDialogOpen(true);
   };
 
@@ -317,7 +322,8 @@ const Users = () => {
           preferredLanguage: editLanguage,
           isPremium: editIsPremium,
           subscriptionTier: editIsPremium ? (editSubscriptionTier || "premium") : null,
-          subscriptionEnd: editIsPremium ? null : null, // No expiration for admin-set premium
+          subscriptionStart: editIsPremium && editSubscriptionStart ? editSubscriptionStart : null,
+          subscriptionEnd: editIsPremium && editSubscriptionEnd ? editSubscriptionEnd : null,
         },
       });
 
@@ -579,6 +585,7 @@ const Users = () => {
                       <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                     )}
                   </TableHead>
+                  <TableHead>Subscription Period</TableHead>
                   <TableHead>Preferred Language</TableHead>
                   <TableHead onClick={() => toggleSort("role")} className="cursor-pointer">
                     Role
@@ -598,13 +605,13 @@ const Users = () => {
               <TableBody>
                 {isLoading ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8">
+                    <TableCell colSpan={8} className="text-center py-8">
                       Loading users...
                     </TableCell>
                   </TableRow>
                 ) : filteredUsers.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8">
+                    <TableCell colSpan={8} className="text-center py-8">
                       No users found
                     </TableCell>
                   </TableRow>
@@ -620,6 +627,24 @@ const Users = () => {
                           </Badge>
                         ) : (
                           <Badge variant="outline">Free</Badge>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {user.is_premium ? (
+                          <div className="text-xs space-y-0.5">
+                            <div className="text-muted-foreground">
+                              Start: {user.subscription_start 
+                                ? new Date(user.subscription_start).toLocaleDateString() 
+                                : "-"}
+                            </div>
+                            <div className="text-muted-foreground">
+                              End: {user.subscription_end 
+                                ? new Date(user.subscription_end).toLocaleDateString() 
+                                : "∞"}
+                            </div>
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground text-xs">-</span>
                         )}
                       </TableCell>
                       <TableCell>{user.preferred_language}</TableCell>
@@ -757,18 +782,41 @@ const Users = () => {
               />
             </div>
             {editIsPremium && (
-              <div className="space-y-2">
-                <Label htmlFor="editSubscriptionTier">Subscription Tier</Label>
-                <Select value={editSubscriptionTier} onValueChange={setEditSubscriptionTier}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select tier" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="premium">Premium</SelectItem>
-                    <SelectItem value="family">Family</SelectItem>
-                    <SelectItem value="lifetime">Lifetime</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="editSubscriptionTier">Subscription Tier</Label>
+                  <Select value={editSubscriptionTier} onValueChange={setEditSubscriptionTier}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select tier" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="premium">Premium</SelectItem>
+                      <SelectItem value="family">Family</SelectItem>
+                      <SelectItem value="lifetime">Lifetime</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="editSubscriptionStart">Start Date</Label>
+                    <Input
+                      id="editSubscriptionStart"
+                      type="date"
+                      value={editSubscriptionStart}
+                      onChange={(e) => setEditSubscriptionStart(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="editSubscriptionEnd">End Date</Label>
+                    <Input
+                      id="editSubscriptionEnd"
+                      type="date"
+                      value={editSubscriptionEnd}
+                      onChange={(e) => setEditSubscriptionEnd(e.target.value)}
+                    />
+                    <p className="text-xs text-muted-foreground">Leave empty for unlimited</p>
+                  </div>
+                </div>
               </div>
             )}
           </div>
