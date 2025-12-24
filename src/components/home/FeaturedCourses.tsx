@@ -82,7 +82,7 @@ const FeaturedCourses = () => {
                 to={`/courses/${course.id}`}
                 className="block"
               >
-                <Card className="story-card relative z-10 h-[500px] cursor-pointer overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-transform hover:scale-105">
+                <Card className="story-card relative z-10 grid h-full cursor-pointer gap-4 overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-transform hover:scale-105">
                   <div className="relative aspect-[3/2]">
                     <img
                       src={getImageUrl(course.coverImagePath)}
@@ -107,7 +107,8 @@ const FeaturedCourses = () => {
                       </Badge>
                     )}
                   </div>
-                  <CardHeader className="h-28 pb-2">
+
+                  <CardHeader className="grid gap-4 py-0">
                     <CardTitle className="text-xl text-primary-foreground">
                       {getLocalized(course, 'title', lang)}
                     </CardTitle>
@@ -116,8 +117,33 @@ const FeaturedCourses = () => {
                     </CardDescription>
                   </CardHeader>
 
-                  <CardContent className="pb-4">
-                    <div className="mb-2 flex flex-wrap gap-2">
+                  <CardContent className="grid gap-2 !pt-0 w-full">
+                    <div className="mb-2 flex flex-wrap justify-between gap-2">
+                      {course.instructor && (
+                        <div className="flex items-center gap-2">
+                          <Avatar className="h-6 w-6">
+                            <AvatarImage
+                              src={
+                                course.instructor.avatar
+                                  ? getImageUrl(course.instructor.avatar)
+                                  : undefined
+                              }
+                              alt={getLocalized(
+                                course.instructor,
+                                'name',
+                                lang,
+                              )}
+                            />
+                            <AvatarFallback className="bg-primary/20 text-xs text-primary-foreground">
+                              <User className="h-3 w-3" />
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="text-sm text-primary-foreground">
+                            {getLocalized(course.instructor, 'name', lang)}
+                          </span>
+                        </div>
+                      )}
+
                       <Badge
                         variant="secondary"
                         className="bg-primary/30 text-primary-foreground"
@@ -127,22 +153,7 @@ const FeaturedCourses = () => {
                           'General'}
                       </Badge>
                     </div>
-                    {course.instructor && (
-                      <div className="mb-3 flex items-center gap-2">
-                        <Avatar className="h-6 w-6">
-                          <AvatarImage 
-                            src={course.instructor.avatar ? getImageUrl(course.instructor.avatar) : undefined} 
-                            alt={getLocalized(course.instructor, 'name', lang)}
-                          />
-                          <AvatarFallback className="bg-primary/20 text-xs text-primary-foreground">
-                            <User className="h-3 w-3" />
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm text-primary-foreground">
-                          {getLocalized(course.instructor, 'name', lang)}
-                        </span>
-                      </div>
-                    )}
+
                     <div className="flex items-center justify-between text-sm text-primary-foreground">
                       <div className="flex items-center gap-2">
                         <BookOpen className="mr-1 h-4 w-4" />
