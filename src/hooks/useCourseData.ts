@@ -150,6 +150,18 @@ export const useCoursesData = () => {
             is_published: courseData.is_published,
             languages: courseData.languages || ['en'],
             createdAt: courseData.created_at,
+            instructor: courseData.instructor_name_en || courseData.instructor_name
+              ? {
+                  name_en: courseData.instructor_name_en || courseData.instructor_name || '',
+                  name_ar: courseData.instructor_name_ar || '',
+                  name_fr: courseData.instructor_name_fr || '',
+                  bio_en: courseData.instructor_bio_en || courseData.instructor_bio || '',
+                  bio_ar: courseData.instructor_bio_ar || '',
+                  bio_fr: courseData.instructor_bio_fr || '',
+                  avatar: courseData.instructor_avatar || undefined,
+                  expertise: courseData.instructor_expertise || [],
+                }
+              : undefined,
           };
         }) || []
       )
@@ -198,6 +210,18 @@ export const useFeaturedCourses = () => {
             is_published: courseData.is_published,
             languages: courseData.languages || ['en'],
             createdAt: courseData.created_at,
+            instructor: courseData.instructor_name_en || courseData.instructor_name
+              ? {
+                  name_en: courseData.instructor_name_en || courseData.instructor_name || '',
+                  name_ar: courseData.instructor_name_ar || '',
+                  name_fr: courseData.instructor_name_fr || '',
+                  bio_en: courseData.instructor_bio_en || courseData.instructor_bio || '',
+                  bio_ar: courseData.instructor_bio_ar || '',
+                  bio_fr: courseData.instructor_bio_fr || '',
+                  avatar: courseData.instructor_avatar || undefined,
+                  expertise: courseData.instructor_expertise || [],
+                }
+              : undefined,
           };
         }) || []
       )
