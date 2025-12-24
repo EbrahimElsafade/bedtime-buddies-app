@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { ArrowRight, BookOpen, Clock } from 'lucide-react'
+import { ArrowRight, BookOpen, Clock, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/contexts/AuthContext'
 import { useUserRole } from '@/hooks/useUserRole'
@@ -11,6 +11,7 @@ import {
   CardContent,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useTranslation } from 'react-i18next'
 import { useFeaturedCourses, useCourseCategories } from '@/hooks/useCourseData'
 import { getImageUrl } from '@/utils/imageUtils'
@@ -126,6 +127,22 @@ const FeaturedCourses = () => {
                           'General'}
                       </Badge>
                     </div>
+                    {course.instructor && (
+                      <div className="mb-3 flex items-center gap-2">
+                        <Avatar className="h-6 w-6">
+                          <AvatarImage 
+                            src={course.instructor.avatar ? getImageUrl(course.instructor.avatar) : undefined} 
+                            alt={getLocalized(course.instructor, 'name', lang)}
+                          />
+                          <AvatarFallback className="bg-primary/20 text-xs text-primary-foreground">
+                            <User className="h-3 w-3" />
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm text-primary-foreground">
+                          {getLocalized(course.instructor, 'name', lang)}
+                        </span>
+                      </div>
+                    )}
                     <div className="flex items-center justify-between text-sm text-primary-foreground">
                       <div className="flex items-center gap-2">
                         <BookOpen className="mr-1 h-4 w-4" />

@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { Search, BookOpen, Clock } from 'lucide-react'
+import { Search, BookOpen, Clock, User } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useUserRole } from '@/hooks/useUserRole'
 import { Input } from '@/components/ui/input'
@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { useCoursesData, useCourseCategories } from '@/hooks/useCourseData'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
@@ -251,6 +252,22 @@ const Courses = () => {
                             'General'}
                         </Badge>
                       </div>
+                      {course.instructor && (
+                        <div className="mb-3 flex items-center gap-2">
+                          <Avatar className="h-6 w-6">
+                            <AvatarImage 
+                              src={course.instructor.avatar ? getImageUrl(course.instructor.avatar) : undefined} 
+                              alt={getLocalized(course.instructor, 'name', lang)}
+                            />
+                            <AvatarFallback className="bg-primary/20 text-xs text-primary-foreground">
+                              <User className="h-3 w-3" />
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="text-sm text-primary-foreground">
+                            {getLocalized(course.instructor, 'name', lang)}
+                          </span>
+                        </div>
+                      )}
                       <div className="flex items-center justify-between text-sm text-primary-foreground">
                         <div className="flex items-center gap-2">
                           <BookOpen className="mr-1 h-4 w-4" />
