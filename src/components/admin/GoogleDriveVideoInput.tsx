@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { HardDrive, X, ExternalLink, CheckCircle } from 'lucide-react';
+import { HardDrive, X, ExternalLink, CheckCircle, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface GoogleDriveVideoInputProps {
   lessonIndex: number;
   videoUrl?: string | null;
-  onVideoChange: (lessonIndex: number, fileId: string) => void;
+  onVideoChange: (lessonIndex: number, fileId: string, duration?: number) => void;
   onClearVideo: (lessonIndex: number) => void;
 }
 
@@ -40,6 +42,29 @@ export const extractGoogleDriveId = (url: string): string | null => {
   return null;
 };
 
+// Fetch video duration from backend
+async function fetchVideoDuration(fileId: string): Promise<number | null> {
+  try {
+    const { data, error } = await supabase.functions.invoke('get-video-duration', {
+      body: { fileId }
+    });
+    
+    if (error) {
+      console.error('Error fetching video duration:', error);
+      return null;
+    }
+    
+    if (data?.duration) {
+      return data.duration;
+    }
+    
+    return null;
+  } catch (err) {
+    console.error('Failed to fetch video duration:', err);
+    return null;
+  }
+}
+
 export const GoogleDriveVideoInput: React.FC<GoogleDriveVideoInputProps> = ({
   lessonIndex,
   videoUrl,
@@ -48,8 +73,9 @@ export const GoogleDriveVideoInput: React.FC<GoogleDriveVideoInputProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState(videoUrl || '');
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
     setError(null);
@@ -60,7 +86,21 @@ export const GoogleDriveVideoInput: React.FC<GoogleDriveVideoInputProps> = ({
 
     const fileId = extractGoogleDriveId(value);
     if (fileId) {
-      onVideoChange(lessonIndex, fileId);
+      setIsLoading(true);
+      
+      // Fetch duration from backend
+      const duration = await fetchVideoDuration(fileId);
+      
+      if (duration !== null) {
+        onVideoChange(lessonIndex, fileId, duration);
+        toast.success(`Video duration: ${Math.floor(duration / 60)}:${(duration % 60).toString().padStart(2, '0')}`);
+      } else {
+        // Still set the video, but without duration
+        onVideoChange(lessonIndex, fileId);
+        toast.warning('Could not fetch video duration. Please ensure the video is shared with the service account.');
+      }
+      
+      setIsLoading(false);
       setError(null);
     } else if (value.length > 0) {
       setError('Invalid Google Drive URL or file ID');
@@ -81,7 +121,7 @@ export const GoogleDriveVideoInput: React.FC<GoogleDriveVideoInputProps> = ({
       
       <Alert>
         <AlertDescription className="text-xs">
-          Paste a Google Drive video link or file ID. Make sure the file is shared with "Anyone with the link".
+          Paste a Google Drive video link or file ID. Make sure the file is shared with "Anyone with the link" as Viewer.
         </AlertDescription>
       </Alert>
 
@@ -125,10 +165,21 @@ export const GoogleDriveVideoInput: React.FC<GoogleDriveVideoInputProps> = ({
       ) : (
         <div className="space-y-2">
           <div className="flex flex-col items-center gap-2 p-4 border-2 border-dashed border-muted-foreground/25 rounded-md">
-            <HardDrive className="h-6 w-6 text-muted-foreground" />
-            <p className="text-sm text-muted-foreground text-center">
-              No Google Drive video linked
-            </p>
+            {isLoading ? (
+              <>
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                <p className="text-sm text-muted-foreground text-center">
+                  Fetching video duration...
+                </p>
+              </>
+            ) : (
+              <>
+                <HardDrive className="h-6 w-6 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground text-center">
+                  No Google Drive video linked
+                </p>
+              </>
+            )}
           </div>
           <Input
             type="text"
@@ -136,6 +187,7 @@ export const GoogleDriveVideoInput: React.FC<GoogleDriveVideoInputProps> = ({
             value={inputValue}
             onChange={handleInputChange}
             className="text-sm"
+            disabled={isLoading}
           />
           {error && (
             <p className="text-xs text-destructive">{error}</p>

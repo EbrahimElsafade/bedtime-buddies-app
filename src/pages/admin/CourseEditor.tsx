@@ -1459,7 +1459,7 @@ const CourseEditor = () => {
                                   </div>
                                 </div>
                                 <p className="text-xs text-muted-foreground">
-                                  Enter the video duration manually
+                                  Duration is auto-fetched from Google Drive. Manual override if needed.
                                 </p>
                               </div>
                             </div>
@@ -1583,16 +1583,20 @@ const CourseEditor = () => {
                                 <GoogleDriveVideoInput
                                   lessonIndex={lessonIndex}
                                   videoUrl={lesson.videoUrl}
-                                  onVideoChange={(idx, fileId) => {
+                                  onVideoChange={(idx, fileId, duration) => {
                                     const updatedLessons = [...courseLessons]
                                     updatedLessons[idx].videoUrl = fileId
                                     updatedLessons[idx].videoPath = '' // Clear old HLS path
+                                    if (duration !== undefined) {
+                                      updatedLessons[idx].duration = duration
+                                    }
                                     setCourseLessons(updatedLessons)
                                   }}
                                   onClearVideo={(idx) => {
                                     const updatedLessons = [...courseLessons]
                                     updatedLessons[idx].videoUrl = ''
                                     updatedLessons[idx].videoPath = ''
+                                    updatedLessons[idx].duration = 0
                                     setCourseLessons(updatedLessons)
                                   }}
                                 />
