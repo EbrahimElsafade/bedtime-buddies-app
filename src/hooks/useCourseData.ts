@@ -61,8 +61,8 @@ export const useCourseData = (courseId: string | undefined) => {
         }) || []
 
       const course = courseData as CourseRow;
-      // Calculate total duration from lessons if not set in DB
-      const totalDuration = courseData.total_duration || videos.reduce((sum, v) => sum + v.duration, 0);
+      // Use duration from database (calculated by backend trigger)
+      const totalDuration = courseData.total_duration || 0;
       
       return {
         id: course.id,

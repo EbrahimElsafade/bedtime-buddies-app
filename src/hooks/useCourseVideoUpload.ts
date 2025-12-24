@@ -11,29 +11,10 @@ interface UploadState {
 
 interface VideoUploadResult {
   hlsPath: string;
-  duration: number;
 }
 
 export const useCourseVideoUpload = () => {
   const [uploadStates, setUploadStates] = useState<Record<number, UploadState>>({});
-
-  const getVideoDuration = (file: File): Promise<number> => {
-    return new Promise((resolve, reject) => {
-      const video = document.createElement('video');
-      video.preload = 'metadata';
-      
-      video.onloadedmetadata = () => {
-        window.URL.revokeObjectURL(video.src);
-        resolve(Math.floor(video.duration));
-      };
-      
-      video.onerror = () => {
-        reject(new Error('Failed to load video'));
-      };
-      
-      video.src = URL.createObjectURL(file);
-    });
-  };
 
   const uploadAndTranscodeVideo = async (
     file: File,
@@ -50,14 +31,6 @@ export const useCourseVideoUpload = () => {
       const maxSize = 500 * 1024 * 1024; // 500MB
       if (file.size > maxSize) {
         throw new Error(`File too large. Maximum size is 500MB. Your file is ${(file.size / (1024 * 1024)).toFixed(1)}MB`);
-      }
-
-      // Get video duration before upload
-      let duration = 0;
-      try {
-        duration = await getVideoDuration(file);
-      } catch (err) {
-        logger.warn('Could not get video duration:', err);
       }
 
       setUploadStates(prev => ({
@@ -111,7 +84,6 @@ export const useCourseVideoUpload = () => {
 
       return {
         hlsPath: data.hlsPath,
-        duration,
       };
 
     } catch (error) {

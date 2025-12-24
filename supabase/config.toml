@@ -5,3 +5,9 @@ verify_jwt = true
 
 [functions.send-email]
 verify_jwt = false
+
+[functions.admin-users]
+verify_jwt = true
+
+[functions.get-video-duration]
+verify_jwt = true
