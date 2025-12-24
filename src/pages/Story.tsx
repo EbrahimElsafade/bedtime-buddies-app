@@ -79,7 +79,7 @@ const Story = () => {
 
   const toggleFavorite = () => {
     if (!id) return
-    
+
     if (isFavorite(id)) {
       removeFavorite(id)
     } else {
@@ -91,14 +91,14 @@ const Story = () => {
   const canAccessStory =
     story.is_free || (isAuthenticated && profile?.is_premium)
 
-  const handleLanguageChange = (newLanguage) => {
+  const handleLanguageChange = newLanguage => {
     setIsLoading(true)
     setLoadingMessage(t('loading.languageChange', { ns: 'common' }))
     setCurrentLanguage(newLanguage)
   }
 
   return (
-    <div className="px-4 py-8 bg-gradient-to-b min-h-[82.7svh] from-primary/20 to-primary/10">
+    <div className="min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-8">
       <Helmet>
         <title>{getStoryTitle()} - Dolphoon</title>
         <meta name="description" content={getStoryDescription()} />
@@ -109,7 +109,7 @@ const Story = () => {
           <meta property="og:image" content={story.cover_image} />
         )}
       </Helmet>
-      
+
       <div className="container mx-auto max-w-4xl">
         <StoryHeader
           onBackClick={() => navigate('/stories')}
@@ -119,17 +119,17 @@ const Story = () => {
           storyDescription={getStoryDescription()}
         />
 
-        <LanguageSelector
-          languages={story.languages}
-          currentLanguage={currentLanguage}
-          onLanguageChange={handleLanguageChange}
-        />
-
         <StoryInfo
           story={story}
           currentLanguageKey={currentLanguageKey}
           currentSectionDir={currentStoryDir}
           currentLanguage={currentLanguage}
+        />
+
+        <LanguageSelector
+          languages={story.languages}
+          currentLanguage={currentLanguage}
+          onLanguageChange={handleLanguageChange}
         />
 
         {canAccessStory ? (

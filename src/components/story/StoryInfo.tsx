@@ -28,40 +28,27 @@ export const StoryInfo = ({
     )
   }
 
-  // Map story language codes to i18n language codes for translations
-  const getTranslationLanguage = (storyLang: string): string => {
-    const langMap: Record<string, string> = {
-      en: 'en',
-      'ar-eg': 'ar',
-      'ar-fos7a': 'ar',
-      fr: 'fr',
-    }
-    return langMap[storyLang] || 'en'
-  }
-
-  const translationLang = getTranslationLanguage(currentLanguage)
-
   return (
     <div className="mb-4" dir={currentSectionDir}>
-      <div className="mb-2 flex flex-col items-center justify-between gap-4 sm:flex-row">
-        <h1 className="font-bubbly text-3xl md:text-4xl">
+      <div className="mb-2 grid gap-4 text-start">
+        <h1 className="text-3xl md:text-4xl">
           {getStoryText('title', 'Untitled Story')}
         </h1>
 
         <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
           <Badge variant="secondary">
-            {story.duration} {t('duration', { lng: translationLang })}
+            {story.duration} {t('duration', { lng: currentLanguage })}
           </Badge>
           <Badge variant="secondary">
-            {t(`category.${story.category}`, { lng: translationLang })}
+            {t(`category.${story.category}`, { lng: currentLanguage })}
           </Badge>
           {story.is_free ? (
             <Badge className="bg-green-600 text-secondary">
-              {t('type.free', { lng: translationLang })}
+              {t('type.free', { lng: currentLanguage })}
             </Badge>
           ) : (
             <Badge className="bg-accent text-secondary">
-              {t('type.premium', { lng: translationLang })}
+              {t('type.premium', { lng: currentLanguage })}
             </Badge>
           )}
         </div>

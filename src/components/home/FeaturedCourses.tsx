@@ -24,7 +24,6 @@ const FeaturedCourses = () => {
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
-
   if (isLoading || !featuredCourses.length) return null
 
   return (

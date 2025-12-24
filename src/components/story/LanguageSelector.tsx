@@ -11,7 +11,7 @@ export const LanguageSelector = ({ languages, currentLanguage, onLanguageChange 
   if (languages.length <= 1) return null;
 
   return (
-    <div className="mb-6">
+    <div className="mb-4">
       <Tabs value={currentLanguage} onValueChange={onLanguageChange}>
         <TabsList>
           {languages.includes('en') && (
