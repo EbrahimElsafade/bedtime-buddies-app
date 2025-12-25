@@ -141,7 +141,7 @@ export const FinishedContentTab = ({
           <div className="mb-4">
             <div className="mb-2 flex justify-between text-sm">
               <span>
-                {t('nextMilestone')}: {getNextMilestone().label}
+                {t('nextMilestone')}: {t(`milestone.${getNextMilestone().label}`)}
               </span>
               <span>
                 {getNextMilestone().points} {t('points')}
