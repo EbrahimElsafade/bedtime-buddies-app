@@ -116,7 +116,7 @@ export const FinishedContentTab = ({
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" dir='auto'>
       {/* Progress & Milestones Header */}
       <Card className="overflow-hidden border-primary/30 bg-gradient-to-r from-primary/10 to-secondary/50">
         <CardHeader>
