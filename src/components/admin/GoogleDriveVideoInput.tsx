@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { HardDrive, X, ExternalLink, CheckCircle, Loader2 } from 'lucide-react';
+import { HardDrive, X, ExternalLink, CheckCircle, Loader2, AlertCircle, Clock } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 interface GoogleDriveVideoInputProps {
   lessonIndex: number;
   videoUrl?: string | null;
+  currentDuration?: number;
   onVideoChange: (lessonIndex: number, fileId: string, duration?: number) => void;
   onClearVideo: (lessonIndex: number) => void;
 }
@@ -68,17 +69,20 @@ async function fetchVideoDuration(fileId: string): Promise<number | null> {
 export const GoogleDriveVideoInput: React.FC<GoogleDriveVideoInputProps> = ({
   lessonIndex,
   videoUrl,
+  currentDuration = 0,
   onVideoChange,
   onClearVideo,
 }) => {
   const [inputValue, setInputValue] = useState(videoUrl || '');
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [fetchFailed, setFetchFailed] = useState(false);
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInputValue(value);
     setError(null);
+    setFetchFailed(false);
 
     if (!value.trim()) {
       return;
@@ -94,10 +98,12 @@ export const GoogleDriveVideoInput: React.FC<GoogleDriveVideoInputProps> = ({
       if (duration !== null) {
         onVideoChange(lessonIndex, fileId, duration);
         toast.success(`Video duration: ${Math.floor(duration / 60)}:${(duration % 60).toString().padStart(2, '0')}`);
+        setFetchFailed(false);
       } else {
-        // Still set the video, but without duration
+        // Still set the video, but mark that duration fetch failed
         onVideoChange(lessonIndex, fileId);
-        toast.warning('Could not fetch video duration. Please ensure the video is shared with the service account.');
+        setFetchFailed(true);
+        toast.warning('Could not auto-fetch duration. Please enter it manually above.');
       }
       
       setIsLoading(false);
@@ -110,10 +116,17 @@ export const GoogleDriveVideoInput: React.FC<GoogleDriveVideoInputProps> = ({
   const handleClear = () => {
     setInputValue('');
     setError(null);
+    setFetchFailed(false);
     onClearVideo(lessonIndex);
   };
 
   const currentFileId = videoUrl ? extractGoogleDriveId(videoUrl) : null;
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   return (
     <div className="space-y-2">
@@ -128,8 +141,8 @@ export const GoogleDriveVideoInput: React.FC<GoogleDriveVideoInputProps> = ({
       {currentFileId ? (
         <div className="space-y-3">
           <div className="flex items-center gap-2 p-3 border rounded-md bg-muted/50">
-            <CheckCircle className="h-4 w-4 text-green-600" />
-            <HardDrive className="h-4 w-4 text-blue-600" />
+            <CheckCircle className="h-4 w-4 text-green-600 shrink-0" />
+            <HardDrive className="h-4 w-4 text-blue-600 shrink-0" />
             <span className="text-sm flex-1 truncate font-mono">
               {currentFileId}
             </span>
@@ -151,6 +164,31 @@ export const GoogleDriveVideoInput: React.FC<GoogleDriveVideoInputProps> = ({
               <X className="h-3 w-3" />
             </Button>
           </div>
+          
+          {/* Duration status */}
+          <div className="flex items-center gap-2 text-sm">
+            <Clock className="h-4 w-4 text-muted-foreground" />
+            {currentDuration > 0 ? (
+              <span className="text-muted-foreground">
+                Duration: <span className="font-medium text-foreground">{formatDuration(currentDuration)}</span>
+              </span>
+            ) : (
+              <span className="text-amber-600 flex items-center gap-1">
+                <AlertCircle className="h-3 w-3" />
+                No duration set. Please enter it manually in the fields above.
+              </span>
+            )}
+          </div>
+
+          {/* Show warning if fetch failed */}
+          {fetchFailed && currentDuration === 0 && (
+            <Alert variant="destructive" className="py-2">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription className="text-xs ml-2">
+                Could not auto-fetch duration from Google Drive. Please enter it manually using the duration fields above.
+              </AlertDescription>
+            </Alert>
+          )}
           
           {/* Preview iframe */}
           <div className="relative aspect-video w-full max-w-[300px] overflow-hidden rounded-md border bg-muted">
