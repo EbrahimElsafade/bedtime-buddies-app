@@ -1583,6 +1583,7 @@ const CourseEditor = () => {
                                 <GoogleDriveVideoInput
                                   lessonIndex={lessonIndex}
                                   videoUrl={lesson.videoUrl}
+                                  currentDuration={lesson.duration}
                                   onVideoChange={(idx, fileId, duration) => {
                                     const updatedLessons = [...courseLessons]
                                     updatedLessons[idx].videoUrl = fileId
