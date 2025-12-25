@@ -11,7 +11,11 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { CheckCircle, Trophy, Star, Award, Medal, Crown } from 'lucide-react'
 import { getImageUrl } from '@/utils/imageUtils'
-import { FinishedStory, FinishedCourse, GamificationStats } from '@/hooks/useGamification'
+import {
+  FinishedStory,
+  FinishedCourse,
+  GamificationStats,
+} from '@/hooks/useGamification'
 import { cn } from '@/lib/utils'
 
 interface FinishedContentTabProps {
@@ -24,11 +28,35 @@ interface FinishedContentTabProps {
 }
 
 const MILESTONES = [
-  { id: 1, points: 5, icon: Star, label: 'Star Explorer', color: 'text-yellow-500' },
-  { id: 2, points: 10, icon: Award, label: 'Rising Star', color: 'text-blue-500' },
-  { id: 3, points: 25, icon: Medal, label: 'Champion', color: 'text-purple-500' },
-  { id: 4, points: 50, icon: Trophy, label: 'Master', color: 'text-orange-500' },
-  { id: 5, points: 100, icon: Crown, label: 'Legend', color: 'text-primary' },
+  {
+    id: 1,
+    points: 5,
+    icon: Star,
+    label: 'starExplorer',
+    color: 'text-yellow-500',
+  },
+  {
+    id: 2,
+    points: 10,
+    icon: Award,
+    label: 'risingStar',
+    color: 'text-blue-500',
+  },
+  {
+    id: 3,
+    points: 25,
+    icon: Medal,
+    label: 'champion',
+    color: 'text-purple-500',
+  },
+  {
+    id: 4,
+    points: 50,
+    icon: Trophy,
+    label: 'master',
+    color: 'text-orange-500',
+  },
+  { id: 5, points: 100, icon: Crown, label: 'legend', color: 'text-primary' },
 ]
 
 export const FinishedContentTab = ({
@@ -59,14 +87,17 @@ export const FinishedContentTab = ({
 
   const getProgressToNextMilestone = () => {
     const nextMilestone = getNextMilestone()
-    const prevMilestone = MILESTONES.find(m => m.points === nextMilestone.points)
+    const prevMilestone = MILESTONES.find(
+      m => m.points === nextMilestone.points,
+    )
     const prevMilestoneIndex = MILESTONES.indexOf(prevMilestone!)
-    const previousPoints = prevMilestoneIndex > 0 ? MILESTONES[prevMilestoneIndex - 1].points : 0
-    
+    const previousPoints =
+      prevMilestoneIndex > 0 ? MILESTONES[prevMilestoneIndex - 1].points : 0
+
     if (stats.totalPoints >= MILESTONES[MILESTONES.length - 1].points) {
       return 100
     }
-    
+
     const progressRange = nextMilestone.points - previousPoints
     const currentProgress = stats.totalPoints - previousPoints
     return Math.min(100, Math.max(0, (currentProgress / progressRange) * 100))
@@ -76,7 +107,9 @@ export const FinishedContentTab = ({
     return (
       <Card>
         <CardContent className="flex items-center justify-center py-12">
-          <div className="animate-pulse text-muted-foreground">{t('loading')}</div>
+          <div className="animate-pulse text-muted-foreground">
+            {t('loading')}
+          </div>
         </CardContent>
       </Card>
     )
@@ -96,33 +129,41 @@ export const FinishedContentTab = ({
         <CardContent>
           {/* Points Display */}
           <div className="mb-6 text-center">
-            <div className="text-4xl font-bold text-primary">{stats.totalPoints}</div>
-            <div className="text-sm text-muted-foreground">{t('totalPoints')}</div>
+            <div className="text-4xl font-bold text-primary">
+              {stats.totalPoints}
+            </div>
+            <div className="text-sm text-muted-foreground">
+              {t('totalPoints')}
+            </div>
           </div>
 
           {/* Progress Bar */}
           <div className="mb-4">
             <div className="mb-2 flex justify-between text-sm">
-              <span>{t('nextMilestone')}: {getNextMilestone().label}</span>
-              <span>{getNextMilestone().points} {t('points')}</span>
+              <span>
+                {t('nextMilestone')}: {getNextMilestone().label}
+              </span>
+              <span>
+                {getNextMilestone().points} {t('points')}
+              </span>
             </div>
             <Progress value={getProgressToNextMilestone()} className="h-3" />
           </div>
 
           {/* Milestone Badges */}
           <div className="flex flex-wrap justify-center gap-4 pt-4">
-            {MILESTONES.map((milestone) => {
+            {MILESTONES.map(milestone => {
               const Icon = milestone.icon
               const isUnlocked = stats.unlockedMilestones.includes(milestone.id)
-              
+
               return (
                 <div
                   key={milestone.id}
                   className={cn(
                     'flex flex-col items-center gap-1 rounded-lg p-3 transition-all',
                     isUnlocked
-                      ? 'bg-primary/20 scale-105'
-                      : 'bg-muted/50 opacity-50 grayscale'
+                      ? 'scale-105 bg-primary/20'
+                      : 'bg-muted/50 opacity-50 grayscale',
                   )}
                 >
                   <div
@@ -130,13 +171,17 @@ export const FinishedContentTab = ({
                       'flex h-12 w-12 items-center justify-center rounded-full border-2',
                       isUnlocked
                         ? `border-primary ${milestone.color}`
-                        : 'border-muted-foreground/30 text-muted-foreground'
+                        : 'border-muted-foreground/30 text-muted-foreground',
                     )}
                   >
                     <Icon className="h-6 w-6" />
                   </div>
-                  <span className="text-xs font-medium">{milestone.label}</span>
-                  <span className="text-xs text-muted-foreground">{milestone.points} pts</span>
+                  <span className="text-xs font-medium">
+                    {t(`milestone.${milestone.label}`)}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {milestone.points} pts
+                  </span>
                 </div>
               )
             })}
@@ -158,15 +203,19 @@ export const FinishedContentTab = ({
         <CardContent>
           {finishedStories.length === 0 ? (
             <div className="py-8 text-center">
-              <p className="mb-4 text-muted-foreground">{t('noFinishedStoriesYet')}</p>
-              <Button onClick={() => navigate('/stories')}>{t('browseStories')}</Button>
+              <p className="mb-4 text-muted-foreground">
+                {t('noFinishedStoriesYet')}
+              </p>
+              <Button onClick={() => navigate('/stories')}>
+                {t('browseStories')}
+              </Button>
             </div>
           ) : (
             <div
               className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
               dir={language === 'ar' ? 'rtl' : 'ltr'}
             >
-              {finishedStories.map((item) => {
+              {finishedStories.map(item => {
                 if (!item.story) return null
                 const title = getStoryTitle(item.story)
                 const imageUrl = getImageUrl(item.story.cover_image)
@@ -219,15 +268,19 @@ export const FinishedContentTab = ({
         <CardContent>
           {finishedCourses.length === 0 ? (
             <div className="py-8 text-center">
-              <p className="mb-4 text-muted-foreground">{t('noFinishedCoursesYet')}</p>
-              <Button onClick={() => navigate('/courses')}>{t('browseCourses')}</Button>
+              <p className="mb-4 text-muted-foreground">
+                {t('noFinishedCoursesYet')}
+              </p>
+              <Button onClick={() => navigate('/courses')}>
+                {t('browseCourses')}
+              </Button>
             </div>
           ) : (
             <div
               className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
               dir={language === 'ar' ? 'rtl' : 'ltr'}
             >
-              {finishedCourses.map((item) => {
+              {finishedCourses.map(item => {
                 if (!item.course) return null
                 const title = getCourseTitle(item.course)
                 const imageUrl = getImageUrl(item.course.cover_image)

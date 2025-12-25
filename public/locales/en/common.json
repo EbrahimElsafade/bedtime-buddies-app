@@ -144,5 +144,12 @@
       "step3": "Tap 'Add' to install",
       "showInstructions": "Show How"
     }
+  },
+  "milestone": {
+    "starExplorer": "Star Explorer",
+    "risingStar": "Rising Star",
+    "champion": "Champion",
+    "master": "Master",
+    "legend": "Legend"
   }
 }

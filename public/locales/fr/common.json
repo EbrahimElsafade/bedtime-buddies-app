@@ -137,5 +137,12 @@
       "step3": "Appuyez sur 'Ajouter' pour installer",
       "showInstructions": "Afficher Comment Installer"
     }
+  },
+  "milestone": {
+    "starExplorer": "Explorateur des étoiles",
+    "risingStar": "Étoile montante",
+    "champion": "Champion",
+    "master": "Maître",
+    "legend": "Légende"
   }
 }

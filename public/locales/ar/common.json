@@ -137,5 +137,12 @@
       "step3": "اضغط على 'إضافة' للتثبيت",
       "showInstructions": "عرض كيفية التثبيت"
     }
+  },
+  "milestone": {
+    "starExplorer": "مستكشف النجوم",
+    "risingStar": "نجم صاعد",
+    "champion": "بطل",
+    "master": "خبير",
+    "legend": "أسطورة"
   }
 }
