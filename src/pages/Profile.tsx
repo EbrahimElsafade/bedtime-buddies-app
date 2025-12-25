@@ -154,17 +154,17 @@ const Profile = () => {
 
         <Tabs value={currentTab} onValueChange={handleTabChange} className="w-full">
           <TabsList className="mb-4 w-full justify-start gap-2 overflow-x-auto p-1 md:mb-6 lg:mb-8">
-            <TabsTrigger value="profile">{t('common:profile')}</TabsTrigger>
-            <TabsTrigger value="finished-content">
+            <TabsTrigger className='min-w-fit' value="profile">{t('common:profile')}</TabsTrigger>
+            <TabsTrigger className='min-w-fit' value="finished-content">
               {t('common:finishedContent')}
             </TabsTrigger>
-            <TabsTrigger value="story-favorites">
+            <TabsTrigger className='min-w-fit' value="story-favorites">
               {t('common:storyFavorites')}
             </TabsTrigger>
-            <TabsTrigger value="course-favorites">
+            <TabsTrigger className='min-w-fit' value="course-favorites">
               {t('common:courseFavorites')}
             </TabsTrigger>
-            <TabsTrigger value="subscription">
+            <TabsTrigger className='min-w-fit' value="subscription">
               {t('common:subscription')}
             </TabsTrigger>
           </TabsList>

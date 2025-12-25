@@ -116,7 +116,7 @@ export const FinishedContentTab = ({
   }
 
   return (
-    <div className="space-y-6" dir='auto'>
+    <div className="space-y-6" dir="auto">
       {/* Progress & Milestones Header */}
       <Card className="overflow-hidden border-primary/30 bg-gradient-to-r from-primary/10 to-secondary/50">
         <CardHeader>
@@ -141,7 +141,8 @@ export const FinishedContentTab = ({
           <div className="mb-4">
             <div className="mb-2 flex justify-between text-sm">
               <span>
-                {t('nextMilestone')}: {t(`milestone.${getNextMilestone().label}`)}
+                {t('nextMilestone')}:{' '}
+                {t(`milestone.${getNextMilestone().label}`)}
               </span>
               <span>
                 {getNextMilestone().points} {t('points')}
@@ -160,10 +161,10 @@ export const FinishedContentTab = ({
                 <div
                   key={milestone.id}
                   className={cn(
-                    'flex flex-col items-center gap-1 rounded-lg p-3 transition-all',
+                    'flex flex-col items-center gap-1 rounded-lg p-3 transition-all min-w-28',
                     isUnlocked
                       ? 'scale-105 bg-primary/20'
-                      : 'bg-muted/50 opacity-50 grayscale',
+                      : 'bg-muted/50 opacity-50 grayscale hidden sm:flex',
                   )}
                 >
                   <div

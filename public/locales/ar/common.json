@@ -42,7 +42,6 @@
   "passwordTooShort": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
   "passwordsDoNotMatch": "كلمات المرور غير متطابقة",
   "passwordChanged": "تم تغيير كلمة المرور بنجاح",
-  "personalInformation": "المعلومات الشخصية",
   "logout": "تسجيل الخروج",
   "providers": {
     "google": "جوجل",
@@ -139,10 +138,10 @@
     }
   },
   "milestone": {
-    "starExplorer": "مستكشف النجوم",
-    "risingStar": "نجم صاعد",
-    "champion": "بطل",
-    "master": "خبير",
-    "legend": "أسطورة"
+    "starExplorer": "شطور",
+    "risingStar": "عالمي",
+    "champion": "دحيح",
+    "master": "الاول مقرر",
+    "legend": "رئيس اتحاد الطلاب"
   }
 }
