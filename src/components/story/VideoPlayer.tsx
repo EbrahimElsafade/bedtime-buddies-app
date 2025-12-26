@@ -59,13 +59,6 @@ const VideoPlayer = ({
       title={title}
       webkit-playsinline="true"
       x5-playsinline="true"
-      onClick={() => {
-        if (videoRef.current) {
-          videoRef.current
-            .play()
-            .catch(err => logger.warn('Video play failed:', err))
-        }
-      }}
     >
       <source src={getVideoUrl(videoPath)} type="video/mp4" />
       Your browser does not support the video tag.
