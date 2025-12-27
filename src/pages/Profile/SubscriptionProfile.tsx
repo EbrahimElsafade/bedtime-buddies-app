@@ -41,7 +41,7 @@ export const SubscriptionProfile = ({ isPremium }: SubscriptionProfileProps) => 
   }
 
   const handleWhatsappSubscribe = () => {
-    const whatsappNumber = '00000000000'
+    const whatsappNumber = '+201036443209'
     const message = encodeURIComponent(
       'Hi, I want to subscribe to Dolphoon premium',
     )
@@ -105,13 +105,13 @@ export const SubscriptionProfile = ({ isPremium }: SubscriptionProfileProps) => 
           </CardContent>
 
           <CardFooter className="gap-4">
-            <Button
+            {/* <Button
               variant="accent"
               className="w-full"
               onClick={handleSubscribe}
             >
               {t('subscription:subscribeNow')}
-            </Button>
+            </Button> */}
 
             <Button
               className="w-full bg-green-800"
