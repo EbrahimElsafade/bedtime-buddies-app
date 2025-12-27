@@ -34,6 +34,7 @@ export const StoryContent = ({
   const [audioCurrentTime, setAudioCurrentTime] = useState(0)
   const [audioDuration, setAudioDuration] = useState(0)
   const videoRef = useRef<HTMLVideoElement | null>(null)
+  const pendingVideoPlay = useRef(false)
 
   // Preload next section's media in the background
   usePreloadNextSection(story, currentSectionIndex)
@@ -111,29 +112,43 @@ export const StoryContent = ({
     }
   }
 
-  // Update video playback state when audio playing state changes
-  useEffect(() => {
+  // Handle playing state change - start/stop video in sync with audio
+  const handlePlayingChange = (playing: boolean) => {
+    setIsAudioPlaying(playing)
+    
+    // Immediately try to play/pause video when audio state changes
     if (videoRef.current) {
-      if (isAudioPlaying) {
-        // Start playing video from current audio position
+      if (playing) {
+        pendingVideoPlay.current = true
         const playPromise = videoRef.current.play()
         if (playPromise !== undefined) {
-          playPromise.catch(error => {
-            logger.warn('Video play failed:', error)
-            // Try again with muted video on mobile
-            if (videoRef.current) {
-              videoRef.current.muted = true
-              videoRef.current
-                .play()
-                .catch(e => logger.error('Muted video play failed:', e))
-            }
-          })
+          playPromise
+            .then(() => {
+              pendingVideoPlay.current = false
+            })
+            .catch(error => {
+              logger.warn('Video play failed:', error)
+              // Try again with muted video on mobile
+              if (videoRef.current) {
+                videoRef.current.muted = true
+                videoRef.current
+                  .play()
+                  .then(() => {
+                    pendingVideoPlay.current = false
+                  })
+                  .catch(e => {
+                    logger.error('Muted video play failed:', e)
+                    pendingVideoPlay.current = false
+                  })
+              }
+            })
         }
       } else {
+        pendingVideoPlay.current = false
         videoRef.current.pause()
       }
     }
-  }, [isAudioPlaying])
+  }
 
   return (
     <Card
@@ -177,7 +192,7 @@ export const StoryContent = ({
               currentSectionIndex={currentSectionIndex}
               currentSectionDir={storyDirection}
               onSectionChange={onSectionChange}
-              onPlayingChange={setIsAudioPlaying}
+              onPlayingChange={handlePlayingChange}
               onAudioTimeUpdate={handleAudioTimeUpdate}
             />
           </div>
