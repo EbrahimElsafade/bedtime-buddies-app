@@ -292,13 +292,15 @@ const Courses = () => {
                             {course.lessons} {t('misc:courses.lessons')}
                           </span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Clock className="mr-1 h-4 w-4" />
-                          <span>
-                            {Math.floor(course.duration / 60)}{' '}
-                            {t('misc:duration')}
-                          </span>
-                        </div>
+                        {course.duration > 0 && (
+                          <div className="flex items-center gap-2">
+                            <Clock className="mr-1 h-4 w-4" />
+                            <span>
+                              {Math.floor(course.duration / 60)}{' '}
+                              {t('misc:duration')}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     </CardContent>
                   </Card>
