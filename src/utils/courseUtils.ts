@@ -57,3 +57,19 @@ export const getLessonText = (
   const les = lesson as Record<string, unknown>;
   return les[langKey] as string || les[field] as string || '';
 };
+
+/**
+ * Format course/lesson duration in minutes.
+ * Returns null if duration is 0 or falsy (to hide it from UI).
+ */
+export const formatDuration = (duration: number | null | undefined): string | null => {
+  if (!duration || duration === 0) return null;
+  return `${Math.round(duration)} min`;
+};
+
+/**
+ * Check if a duration value should be displayed.
+ */
+export const shouldShowDuration = (duration: number | null | undefined): boolean => {
+  return !!duration && duration > 0;
+};
