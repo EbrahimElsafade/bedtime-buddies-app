@@ -145,14 +145,17 @@ export const AudioControls = ({
     if (!audio.paused) {
       stopAudio()
       audio.pause()
+      onPlayingChange?.(false)
       return
     }
 
     // Start normal playback (no auto-advance)
     setIsAutoplay(false)
     setIsPlaying(true)
+    onPlayingChange?.(true)
     void audio.play().catch(() => {
       setIsPlaying(false)
+      onPlayingChange?.(false)
     })
   }
 
@@ -164,15 +167,18 @@ export const AudioControls = ({
     if (!audio.paused) {
       stopAudio()
       audio.pause()
+      onPlayingChange?.(false)
       return
     }
 
     // Start autoplay (advance on end)
     setIsPlaying(true)
     setIsAutoplay(true)
+    onPlayingChange?.(true)
     void audio.play().catch(() => {
       setIsPlaying(false)
       setIsAutoplay(false)
+      onPlayingChange?.(false)
     })
   }
 
