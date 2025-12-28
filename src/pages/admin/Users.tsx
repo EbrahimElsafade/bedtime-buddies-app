@@ -433,9 +433,9 @@ const Users = () => {
   return (
     <div>
       <header className="mb-8">
-        <h1 className="text-3xl font-bold">Users Management</h1>
+        <h1 className="text-3xl font-bold">{t('users.title')}</h1>
         <p className="text-muted-foreground">
-          View and manage user accounts
+          {t('users.description')}
         </p>
       </header>
       
@@ -443,38 +443,38 @@ const Users = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-xl">All Users</CardTitle>
+              <CardTitle className="text-xl">{t('users.allUsers')}</CardTitle>
               <CardDescription>
-                Total: {users.length} users | Premium: {users.filter(u => u.is_premium).length} users
+                {t('users.totalUsers')}: {users.length} | {t('users.premiumUsers')}: {users.filter(u => u.is_premium).length}
               </CardDescription>
             </div>
             <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
               <DialogTrigger asChild>
                 <Button>
                   <UserPlus className="mr-2 h-4 w-4" />
-                  Create User
+                  {t('users.createUser')}
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                  <DialogTitle>Create New User</DialogTitle>
+                  <DialogTitle>{t('users.createNewUser')}</DialogTitle>
                   <DialogDescription>
-                    Create a new user account with the specified details.
+                    {t('users.createNewUserDesc')}
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4 py-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email *</Label>
+                    <Label htmlFor="email">{t('users.email')} *</Label>
                     <Input
                       id="email"
                       type="email"
-                      placeholder="user@example.com"
+                      placeholder={t('users.emailPlaceholder')}
                       value={newUserEmail}
                       onChange={(e) => setNewUserEmail(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="password">Password *</Label>
+                    <Label htmlFor="password">{t('users.password')} *</Label>
                     <Input
                       id="password"
                       type="password"
@@ -484,25 +484,25 @@ const Users = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="parentName">Parent Name *</Label>
+                    <Label htmlFor="parentName">{t('users.parentName')} *</Label>
                     <Input
                       id="parentName"
-                      placeholder="Parent name"
+                      placeholder={t('users.parentNamePlaceholder')}
                       value={newUserParentName}
                       onChange={(e) => setNewUserParentName(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="childName">Child Name</Label>
+                    <Label htmlFor="childName">{t('users.childName')}</Label>
                     <Input
                       id="childName"
-                      placeholder="Child name (optional)"
+                      placeholder={t('users.childNamePlaceholder')}
                       value={newUserChildName}
                       onChange={(e) => setNewUserChildName(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="language">Preferred Language</Label>
+                    <Label htmlFor="language">{t('users.preferredLanguage')}</Label>
                     <Select value={newUserLanguage} onValueChange={setNewUserLanguage}>
                       <SelectTrigger>
                         <SelectValue />
@@ -516,31 +516,31 @@ const Users = () => {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="role">Role</Label>
+                    <Label htmlFor="role">{t('users.role')}</Label>
                     <Select value={newUserRole} onValueChange={(v) => setNewUserRole(v as typeof newUserRole)}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="user">User</SelectItem>
-                        <SelectItem value="editor">Editor</SelectItem>
-                        <SelectItem value="admin">Admin</SelectItem>
+                        <SelectItem value="user">{t('users.roleUser')}</SelectItem>
+                        <SelectItem value="editor">{t('users.roleEditor')}</SelectItem>
+                        <SelectItem value="admin">{t('users.roleAdmin')}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                 </div>
                 <DialogFooter>
                   <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
-                    Cancel
+                    {t('forms.cancel')}
                   </Button>
                   <Button onClick={handleCreateUser} disabled={isCreating}>
                     {isCreating ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Creating...
+                        {t('forms.creating')}
                       </>
                     ) : (
-                      "Create User"
+                      t('users.createUser')
                     )}
                   </Button>
                 </DialogFooter>
@@ -551,7 +551,7 @@ const Users = () => {
             <div className="relative flex-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search users..."
+                placeholder={t('users.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-8"
@@ -573,46 +573,46 @@ const Users = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead onClick={() => toggleSort("parent_name")} className="cursor-pointer">
-                    Parent Name
+                    {t('users.parentName')}
                     {sortField === "parent_name" && (
                       <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                     )}
                   </TableHead>
-                  <TableHead>Child Name</TableHead>
+                  <TableHead>{t('users.childName')}</TableHead>
                   <TableHead onClick={() => toggleSort("is_premium")} className="cursor-pointer">
-                    Status
+                    {t('users.status')}
                     {sortField === "is_premium" && (
                       <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                     )}
                   </TableHead>
-                  <TableHead>Subscription Period</TableHead>
-                  <TableHead>Preferred Language</TableHead>
+                  <TableHead>{t('users.subscriptionPeriod')}</TableHead>
+                  <TableHead>{t('users.preferredLanguage')}</TableHead>
                   <TableHead onClick={() => toggleSort("role")} className="cursor-pointer">
-                    Role
+                    {t('users.role')}
                     {sortField === "role" && (
                       <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                     )}
                   </TableHead>
                   <TableHead onClick={() => toggleSort("created_at")} className="cursor-pointer">
-                    Registered
+                    {t('users.registered')}
                     {sortField === "created_at" && (
                       <ArrowUpDown className="ml-2 h-4 w-4 inline" />
                     )}
                   </TableHead>
-                  <TableHead className="w-[80px]">Actions</TableHead>
+                  <TableHead className="w-[80px]">{t('users.actions')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
                     <TableCell colSpan={8} className="text-center py-8">
-                      Loading users...
+                      {t('forms.loading')}
                     </TableCell>
                   </TableRow>
                 ) : filteredUsers.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8} className="text-center py-8">
-                      No users found
+                      {t('users.noUsersFound')}
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -623,22 +623,22 @@ const Users = () => {
                       <TableCell>
                         {user.is_premium ? (
                           <Badge variant="default" className="bg-moon-DEFAULT hover:bg-moon-dark">
-                            Premium
+                            {t('users.premium')}
                           </Badge>
                         ) : (
-                          <Badge variant="outline">Free</Badge>
+                          <Badge variant="outline">{t('users.free')}</Badge>
                         )}
                       </TableCell>
                       <TableCell>
                         {user.is_premium ? (
                           <div className="text-xs space-y-0.5">
                             <div className="text-muted-foreground">
-                              Start: {user.subscription_start 
+                              {t('users.start')}: {user.subscription_start 
                                 ? new Date(user.subscription_start).toLocaleDateString() 
                                 : "-"}
                             </div>
                             <div className="text-muted-foreground">
-                              End: {user.subscription_end 
+                              {t('users.end')}: {user.subscription_end 
                                 ? new Date(user.subscription_end).toLocaleDateString() 
                                 : "∞"}
                             </div>
@@ -651,14 +651,14 @@ const Users = () => {
                       <TableCell>
                         {user.roles?.some(r => r.role === "admin") ? (
                           <Badge variant="default" className="bg-red-600 hover:bg-red-700">
-                            Admin
+                            {t('users.roleAdmin')}
                           </Badge>
                         ) : user.roles?.some(r => r.role === "editor") ? (
                           <Badge variant="default" className="bg-blue-600 hover:bg-blue-700">
-                            Editor
+                            {t('users.roleEditor')}
                           </Badge>
                         ) : (
-                          <Badge variant="outline">User</Badge>
+                          <Badge variant="outline">{t('users.roleUser')}</Badge>
                         )}
                       </TableCell>
                       <TableCell>
@@ -677,36 +677,36 @@ const Users = () => {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem onClick={() => openEditDialog(user)}>
-                              <Pencil className="mr-2 h-4 w-4" /> Edit User
+                              <Pencil className="mr-2 h-4 w-4" /> {t('users.editUser')}
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => openPasswordDialog(user)}>
-                              <Key className="mr-2 h-4 w-4" /> Change Password
+                              <Key className="mr-2 h-4 w-4" /> {t('users.changePassword')}
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem 
                               onClick={() => changeUserRole(user, 'user')}
                               disabled={getUserRole(user) === 'user'}
                             >
-                              <User className="mr-2 h-4 w-4" /> Set as User
+                              <User className="mr-2 h-4 w-4" /> {t('users.setAsUser')}
                             </DropdownMenuItem>
                             <DropdownMenuItem 
                               onClick={() => changeUserRole(user, 'editor')}
                               disabled={getUserRole(user) === 'editor'}
                             >
-                              <ShieldCheck className="mr-2 h-4 w-4" /> Set as Editor
+                              <ShieldCheck className="mr-2 h-4 w-4" /> {t('users.setAsEditor')}
                             </DropdownMenuItem>
                             <DropdownMenuItem 
                               onClick={() => changeUserRole(user, 'admin')}
                               disabled={getUserRole(user) === 'admin'}
                             >
-                              <ShieldCheck className="mr-2 h-4 w-4" /> Set as Admin
+                              <ShieldCheck className="mr-2 h-4 w-4" /> {t('users.setAsAdmin')}
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem 
                               onClick={() => openDeleteDialog(user)}
                               className="text-destructive focus:text-destructive"
                             >
-                              <Trash2 className="mr-2 h-4 w-4" /> Delete User
+                              <Trash2 className="mr-2 h-4 w-4" /> {t('users.deleteUser')}
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -727,32 +727,32 @@ const Users = () => {
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit User</DialogTitle>
+            <DialogTitle>{t('users.editUser')}</DialogTitle>
             <DialogDescription>
-              Update user profile information.
+              {t('users.editUserDesc')}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="editParentName">Parent Name *</Label>
+              <Label htmlFor="editParentName">{t('users.parentName')} *</Label>
               <Input
                 id="editParentName"
-                placeholder="Parent name"
+                placeholder={t('users.parentNamePlaceholder')}
                 value={editParentName}
                 onChange={(e) => setEditParentName(e.target.value)}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="editChildName">Child Name</Label>
+              <Label htmlFor="editChildName">{t('users.childName')}</Label>
               <Input
                 id="editChildName"
-                placeholder="Child name (optional)"
+                placeholder={t('users.childNamePlaceholder')}
                 value={editChildName}
                 onChange={(e) => setEditChildName(e.target.value)}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="editLanguage">Preferred Language</Label>
+              <Label htmlFor="editLanguage">{t('users.preferredLanguage')}</Label>
               <Select value={editLanguage} onValueChange={setEditLanguage}>
                 <SelectTrigger>
                   <SelectValue />
@@ -769,10 +769,10 @@ const Users = () => {
               <div className="space-y-0.5">
                 <Label htmlFor="editPremium" className="flex items-center gap-2">
                   <Crown className="h-4 w-4 text-yellow-500" />
-                  Premium Status
+                  {t('users.premiumStatus')}
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  Grant premium access to this user
+                  {t('users.premiumStatusDesc')}
                 </p>
               </div>
               <Switch
@@ -784,21 +784,21 @@ const Users = () => {
             {editIsPremium && (
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="editSubscriptionTier">Subscription Tier</Label>
+                  <Label htmlFor="editSubscriptionTier">{t('users.subscriptionTier')}</Label>
                   <Select value={editSubscriptionTier} onValueChange={setEditSubscriptionTier}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select tier" />
+                      <SelectValue placeholder={t('users.selectTier')} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="premium">Premium</SelectItem>
-                      <SelectItem value="family">Family</SelectItem>
-                      <SelectItem value="lifetime">Lifetime</SelectItem>
+                      <SelectItem value="premium">{t('users.tierPremium')}</SelectItem>
+                      <SelectItem value="family">{t('users.tierFamily')}</SelectItem>
+                      <SelectItem value="lifetime">{t('users.tierLifetime')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="editSubscriptionStart">Start Date</Label>
+                    <Label htmlFor="editSubscriptionStart">{t('users.startDate')}</Label>
                     <Input
                       id="editSubscriptionStart"
                       type="date"
@@ -807,14 +807,14 @@ const Users = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="editSubscriptionEnd">End Date</Label>
+                    <Label htmlFor="editSubscriptionEnd">{t('users.endDate')}</Label>
                     <Input
                       id="editSubscriptionEnd"
                       type="date"
                       value={editSubscriptionEnd}
                       onChange={(e) => setEditSubscriptionEnd(e.target.value)}
                     />
-                    <p className="text-xs text-muted-foreground">Leave empty for unlimited</p>
+                    <p className="text-xs text-muted-foreground">{t('users.leaveEmptyForUnlimited')}</p>
                   </div>
                 </div>
               </div>
@@ -822,16 +822,16 @@ const Users = () => {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
-              Cancel
+              {t('forms.cancel')}
             </Button>
             <Button onClick={handleEditUser} disabled={isEditing}>
               {isEditing ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Saving...
+                  {t('forms.saving')}
                 </>
               ) : (
-                "Save Changes"
+                t('forms.saveChanges')
               )}
             </Button>
           </DialogFooter>
@@ -839,20 +839,27 @@ const Users = () => {
       </Dialog>
 
       {/* Change Password Dialog */}
-      <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
+      <Dialog open={isPasswordDialogOpen} onOpenChange={(open) => {
+        setIsPasswordDialogOpen(open);
+        if (!open) {
+          setPasswordUser(null);
+          setNewPassword("");
+          setConfirmPassword("");
+        }
+      }}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Key className="h-5 w-5" />
-              Change Password
+              {t('users.changePassword')}
             </DialogTitle>
             <DialogDescription>
-              Set a new password for <strong>{passwordUser?.parent_name}</strong>.
+              {t('users.changePasswordFor')} <strong>{passwordUser?.parent_name}</strong>.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="newPassword">New Password *</Label>
+              <Label htmlFor="newPassword">{t('users.newPassword')} *</Label>
               <Input
                 id="newPassword"
                 type="password"
@@ -862,7 +869,7 @@ const Users = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password *</Label>
+              <Label htmlFor="confirmPassword">{t('users.confirmPassword')} *</Label>
               <Input
                 id="confirmPassword"
                 type="password"
@@ -874,16 +881,16 @@ const Users = () => {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsPasswordDialogOpen(false)}>
-              Cancel
+              {t('forms.cancel')}
             </Button>
             <Button onClick={handleChangePassword} disabled={isChangingPassword}>
               {isChangingPassword ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Changing...
+                  {t('forms.changing')}
                 </>
               ) : (
-                "Change Password"
+                t('users.changePassword')
               )}
             </Button>
           </DialogFooter>
@@ -891,21 +898,24 @@ const Users = () => {
       </Dialog>
 
       {/* Delete User Dialog */}
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={(open) => {
+        setIsDeleteDialogOpen(open);
+        if (!open) {
+          setDeletingUser(null);
+        }
+      }}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-destructive" />
-              Delete User
+              {t('users.deleteUser')}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete <strong>{deletingUser?.parent_name}</strong>? 
-              This action cannot be undone. All user data including their profile, favorites, 
-              and progress will be permanently deleted.
+              {t('users.deleteUserConfirm', { name: deletingUser?.parent_name })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={isDeleting}>{t('forms.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteUser}
               disabled={isDeleting}
@@ -914,10 +924,10 @@ const Users = () => {
               {isDeleting ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Deleting...
+                  {t('forms.deleting')}
                 </>
               ) : (
-                "Delete User"
+                t('users.deleteUser')
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
