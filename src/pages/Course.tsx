@@ -214,12 +214,14 @@ const Course = () => {
                   </span>
                 </Badge>
 
-                <Badge className="flex items-center gap-2 px-4 py-2 shadow-md hover:bg-primary">
-                  <Clock className="size-4" />
-                  <span>
-                    {Math.floor(course.duration / 60)} {t('duration')}
-                  </span>
-                </Badge>
+                {course.duration > 0 && (
+                  <Badge className="flex items-center gap-2 px-4 py-2 shadow-md hover:bg-primary">
+                    <Clock className="size-4" />
+                    <span>
+                      {Math.floor(course.duration / 60)} {t('duration')}
+                    </span>
+                  </Badge>
+                )}
                 <Badge className="flex items-center gap-2 px-4 py-2 shadow-md hover:bg-primary">
                   <BookOpen className="size-4" />
                   <span>
