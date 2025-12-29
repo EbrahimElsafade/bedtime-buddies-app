@@ -126,13 +126,13 @@ export const SubscriptionTab = ({ isPremium, t }: SubscriptionTabProps) => {
         </CardContent>
 
         <CardFooter className="gap-4">
-          <Button
+          {/* <Button
             variant="accent"
             className="w-full"
             onClick={handleSubscribe}
           >
             {tSub('subscribeNow')}
-          </Button>
+          </Button> */}
 
           <Button
             className="w-full bg-green-800 hover:bg-green-700"
