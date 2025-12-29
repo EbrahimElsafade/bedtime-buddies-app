@@ -119,7 +119,7 @@ const FeaturedStories = () => {
             return (
               <Link key={story.id} to={`/stories/${story.id}`}>
                 <Card className="story-card flex h-80 w-full cursor-pointer flex-col overflow-hidden border-primary/20 bg-secondary/70 pb-4 backdrop-blur-sm transition-shadow hover:shadow-lg md:h-96 lg:h-[25rem]">
-                  <div className="relative h-40 overflow-hidden md:h-48">
+                  <div className="relative h-56 overflow-hidden">
                     {imageUrl ? (
                       <img
                         src={imageUrl}
