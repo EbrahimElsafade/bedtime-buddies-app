@@ -10,13 +10,13 @@ const Hero = () => {
   return (
     <section className="relative overflow-hidden px-4 py-8 md:py-12">
       <div className="container relative z-10 mx-auto">
-        <div className="mx-auto grid max-w-4xl gap-8 text-center md:gap-12">
+        <div className="mx-auto grid max-w-6xl gap-8 text-center md:gap-12">
           {/* Dolphoon mascot */}
           <div className="flex justify-center">
             <DolphoonMascot size="xl" expression="cheering" animate={false} />
           </div>
 
-          <h1 className="animate-slide-up font-bubbly text-2xl leading-tight text-secondary drop-shadow-lg sm:text-3xl md:text-4xl lg:text-6xl">
+          <h1 className="animate-slide-up font-bubbly text-2xl leading-tight text-secondary drop-shadow-lg sm:text-3xl md:text-4xl lg:text-7xl">
             <span className="text-accent">{t('name')}</span> {t('title')}
           </h1>
 
