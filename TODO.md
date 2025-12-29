@@ -1,0 +1,3 @@
+-TODO:
+- [ ] pagination (for the admin with pages, for the user scroll) 
+- [ ] memoization (functions, values and components)
