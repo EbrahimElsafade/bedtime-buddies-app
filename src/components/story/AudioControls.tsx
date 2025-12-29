@@ -71,41 +71,30 @@ export const AudioControls = ({
     onAudioTimeUpdate?.(currentTime, duration)
   }, [currentTime, duration, onAudioTimeUpdate])
 
+  // Helper function to update duration from audio element
+  const updateDuration = () => {
+    if (audioRef.current && Number.isFinite(audioRef.current.duration) && audioRef.current.duration > 0) {
+      setDuration(audioRef.current.duration)
+    }
+  }
+
   useEffect(() => {
     const audio = audioRef.current
     if (!audio) return
 
     // Reset duration when audio source changes
     setDuration(0)
-    // Ensure browser attempts to load metadata for new source
-    try {
-      audio.load()
-    } catch (e) {
-      /* ignore */
-    }
-
-    const handleCanPlay = () => {
-      if (Number.isFinite(audio.duration) && audio.duration > 0) {
-        setDuration(audio.duration)
-      }
-    }
 
     const handleTimeUpdate = () => {
       setCurrentTime(audio.currentTime)
-      // Double-check duration is set
-      if (
-        Number.isFinite(audio.duration) &&
-        audio.duration > 0 &&
-        duration === 0
-      ) {
-        setDuration(audio.duration)
+      // Ensure duration is set if not already
+      if (duration === 0) {
+        updateDuration()
       }
     }
 
     const handleLoadedMetadata = () => {
-      if (Number.isFinite(audio.duration) && audio.duration > 0) {
-        setDuration(audio.duration)
-      }
+      updateDuration()
     }
 
     const handleEnded = () => {
@@ -131,16 +120,14 @@ export const AudioControls = ({
 
     audio.addEventListener('timeupdate', handleTimeUpdate)
     audio.addEventListener('loadedmetadata', handleLoadedMetadata)
-    audio.addEventListener('canplay', handleCanPlay)
     audio.addEventListener('ended', handleEnded)
 
     return () => {
       audio.removeEventListener('timeupdate', handleTimeUpdate)
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata)
-      audio.removeEventListener('canplay', handleCanPlay)
       audio.removeEventListener('ended', handleEnded)
     }
-  }, [isAutoplay, onSectionChange, currentSectionIndex, story.sections.length])
+  }, [isAutoplay, onSectionChange, currentSectionIndex, story.sections.length, duration])
 
   // Reset time when section changes
   useEffect(() => {
