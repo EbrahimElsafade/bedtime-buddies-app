@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { logger } from "@/utils/logger";
 import { useLoading } from "@/contexts/LoadingContext";
+import { useTranslation } from "react-i18next";
 import {
   Card,
   CardContent,
@@ -53,6 +54,7 @@ interface CourseOption {
 }
 
 const Appearance = () => {
+  const { t } = useTranslation('admin');
   const queryClient = useQueryClient();
   const { setIsLoading, setLoadingMessage } = useLoading();
   
@@ -137,12 +139,12 @@ const Appearance = () => {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success("Settings updated successfully!");
+      toast.success(t('appearance.settingsUpdated'));
       queryClient.invalidateQueries({ queryKey: ["appearance-settings"] });
     },
     onError: (error: Error) => {
       logger.error("Error updating settings:", error);
-      toast.error("Failed to update settings");
+      toast.error(t('appearance.settingsUpdateError'));
     }
   });
 
@@ -167,25 +169,25 @@ const Appearance = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold mb-2">Appearance Settings</h1>
+        <h1 className="text-3xl font-bold mb-2">{t('appearance.title')}</h1>
         <p className="text-muted-foreground">
-          Configure how your homepage appears to visitors
+          {t('appearance.description')}
         </p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Homepage Sections</CardTitle>
+          <CardTitle>{t('appearance.homepageSections')}</CardTitle>
           <CardDescription>
-            Control which sections are displayed on your homepage
+            {t('appearance.homepageSectionsDesc')}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="free-story-enabled">Free Story Section</Label>
+              <Label htmlFor="free-story-enabled">{t('appearance.freeStorySection')}</Label>
               <p className="text-sm text-muted-foreground">
-                Show a featured free story on the homepage
+                {t('appearance.freeStorySectionDesc')}
               </p>
             </div>
             <Switch
@@ -342,7 +344,7 @@ const Appearance = () => {
           {updateSettingsMutation.isPending && (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           )}
-          Save Changes
+          {t('appearance.saveChanges')}
         </Button>
       </div>
     </div>
