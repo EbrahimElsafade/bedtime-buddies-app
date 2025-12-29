@@ -6,7 +6,18 @@
     "totalUsers": "إجمالي المستخدمين",
     "totalStories": "إجمالي القصص",
     "totalCourses": "إجمالي الدورات",
-    "recentActivity": "النشاط الأخير"
+    "recentActivity": "النشاط الأخير",
+    "premiumUsers": "{{count}} مستخدم مميز",
+    "publishedCount": "{{count}} منشور",
+    "activityLogTitle": "سجل النشاط سيظهر هنا",
+    "activityLogDesc": "سيتم تتبع وعرض الإجراءات الأخيرة في هذا القسم",
+    "systemOverview": "نظرة عامة على النظام",
+    "systemOverviewDesc": "حالة النظام الحالية والمعلومات",
+    "userDistribution": "توزيع المستخدمين",
+    "userDistributionValue": "{{premium}} مميز / {{free}} مجاني",
+    "contentStatus": "حالة المحتوى",
+    "contentStatusValue": "{{published}} منشور / {{draft}} مسودة",
+    "latestActions": "أحدث الإجراءات المنفذة في لوحة الإدارة"
   },
   "navigation": {
     "dashboard": "لوحة التحكم",
@@ -150,27 +161,6 @@
     "published": "منشور",
     "draft": "مسودة"
   },
-  "settings": {
-    "title": "إعدادات الإدارة",
-    "general": "الإعدادات العامة",
-    "siteTitle": "عنوان الموقع",
-    "siteDescription": "وصف الموقع",
-    "contactEmail": "بريد التواصل",
-    "maintenance": "وضع الصيانة",
-    "maintenanceMessage": "رسالة الصيانة",
-    "features": "إعدادات الميزات",
-    "enableRegistration": "تفعيل التسجيل",
-    "enableComments": "تفعيل التعليقات",
-    "enableRatings": "تفعيل التقييمات",
-    "security": "إعدادات الأمان",
-    "requireEmailVerification": "تطلب تحقق البريد الإلكتروني",
-    "sessionTimeout": "انتهاء الجلسة (دقائق)",
-    "maxLoginAttempts": "محاولات الدخول القصوى",
-    "backup": "النسخ الاحتياطي والتصدير",
-    "exportData": "تصدير البيانات",
-    "importData": "استيراد البيانات",
-    "backupDatabase": "نسخ احتياطي لقاعدة البيانات"
-  },
   "storyOptions": {
     "title": "خيارات القصص",
     "description": "إدارة الفئات واللغات المتاحة للقصص",
@@ -187,7 +177,142 @@
     "languageAdded": "تمت إضافة اللغة",
     "languageAddedDesc": "تمت إضافة اللغة '{{language}}' بنجاح",
     "languageRemoved": "تم حذف اللغة",
-    "languageRemovedDesc": "تم حذف اللغة '{{language}}' بنجاح"
+    "languageRemovedDesc": "تم حذف اللغة '{{language}}' بنجاح",
+    "categoryUpdated": "تم تحديث الفئة",
+    "categoryUpdatedDesc": "تم تحديث الفئة '{{category}}' بنجاح",
+    "languageUpdated": "تم تحديث اللغة",
+    "languageUpdatedDesc": "تم تحديث اللغة '{{language}}' بنجاح",
+    "loading": "جاري التحميل...",
+    "deleteCategory": "حذف الفئة",
+    "deleteCategoryConfirm": "هل أنت متأكد من حذف هذه الفئة؟ لا يمكن التراجع عن هذا الإجراء.",
+    "deleteLanguage": "حذف اللغة",
+    "deleteLanguageConfirm": "هل أنت متأكد من حذف هذه اللغة؟ لا يمكن التراجع عن هذا الإجراء.",
+    "languageCodePlaceholder": "رمز اللغة (مثل: en, ar, fr)",
+    "languageNamePlaceholder": "اسم اللغة (مثل: English)"
+  },
+  "courseOptions": {
+    "title": "خيارات الدورات",
+    "description": "إدارة فئات الدورات والإعدادات للمحتوى التعليمي",
+    "categories": "فئات الدورات",
+    "categoriesDesc": "إدارة الفئات التي تنظم دوراتك التعليمية",
+    "categoryNameEn": "اسم الفئة (الإنجليزية)",
+    "categoryNameAr": "اسم الفئة (العربية)",
+    "categoryNameFr": "اسم الفئة (الفرنسية)",
+    "categoryAdded": "تمت إضافة الفئة",
+    "categoryAddedDesc": "تمت إضافة الفئة '{{category}}' بنجاح",
+    "categoryRemoved": "تم حذف الفئة",
+    "categoryRemovedDesc": "تم حذف الفئة '{{category}}' بنجاح",
+    "categoryUpdated": "تم تحديث الفئة",
+    "categoryUpdatedDesc": "تم تحديث الفئة '{{category}}' بنجاح",
+    "loading": "جاري تحميل الفئات...",
+    "deleteCategory": "حذف الفئة",
+    "deleteCategoryConfirm": "هل أنت متأكد من حذف هذه الفئة؟ لا يمكن التراجع عن هذا الإجراء."
+  },
+  "appearance": {
+    "title": "إعدادات المظهر",
+    "description": "تخصيص كيفية ظهور صفحتك الرئيسية للزوار",
+    "homepageSections": "أقسام الصفحة الرئيسية",
+    "homepageSectionsDesc": "التحكم في الأقسام المعروضة على صفحتك الرئيسية",
+    "freeStorySection": "قسم القصة المجانية",
+    "freeStorySectionDesc": "عرض قصة مجانية مميزة على الصفحة الرئيسية",
+    "selectFreeStory": "اختر القصة المجانية",
+    "chooseFreeStory": "اختر قصة مجانية لعرضها",
+    "loadingStories": "جاري تحميل القصص...",
+    "noPublishedStories": "لا توجد قصص منشورة متاحة",
+    "storiesSection": "قسم القصص",
+    "storiesSectionDesc": "عرض قسم تصفح القصص الرئيسي",
+    "topRatedSection": "قسم الأعلى تقييماً",
+    "topRatedSectionDesc": "عرض القصص الشائعة والأعلى تقييماً",
+    "coursesSection": "قسم الدورات",
+    "coursesSectionDesc": "عرض الدورات والمواد التعليمية المتاحة",
+    "selectFeaturedCourses": "اختر الدورات المميزة",
+    "selectFeaturedCoursesDesc": "اختر الدورات لعرضها على الصفحة الرئيسية. اتركها فارغة لعرض أحدث الدورات.",
+    "loadingCourses": "جاري تحميل الدورات...",
+    "noPublishedCourses": "لا توجد دورات منشورة متاحة",
+    "coursesSelected": "{{count}} دورة مختارة",
+    "specialStorySection": "قسم القصة المميزة",
+    "specialStorySectionDesc": "عرض قصة مميزة خاصة",
+    "saveChanges": "حفظ التغييرات",
+    "settingsUpdated": "تم تحديث الإعدادات بنجاح!",
+    "settingsUpdateError": "فشل في تحديث الإعدادات"
+  },
+  "games": {
+    "title": "إدارة الألعاب",
+    "description": "إدارة توفر الألعاب وحالة المميز",
+    "free_access": "وصول مجاني",
+    "active": "نشط"
+  },
+  "common": {
+    "verifying_access": "جاري التحقق من صلاحية المدير...",
+    "loading": "جاري التحميل...",
+    "error_loading": "حدث خطأ أثناء التحميل",
+    "updated_successfully": "تم التحديث بنجاح",
+    "error_saving": "حدث خطأ أثناء الحفظ"
+  },
+  "settings": {
+    "title": "إعدادات الإدارة",
+    "description": "تكوين الإعدادات على مستوى النظام والتفضيلات",
+    "general": "الإعدادات العامة",
+    "tabs": {
+      "appearance": "المظهر",
+      "notifications": "الإشعارات",
+      "advanced": "متقدم"
+    },
+    "features": {
+      "stories": {
+        "label": "تفعيل ميزة القصص",
+        "description": "السماح للمستخدمين بالوصول إلى قسم القصص"
+      },
+      "courses": {
+        "label": "تفعيل ميزة الدورات",
+        "description": "السماح للمستخدمين بالوصول إلى قسم الدورات التعليمية"
+      },
+      "games": {
+        "label": "تفعيل ميزة الألعاب",
+        "description": "السماح للمستخدمين بالوصول إلى قسم الألعاب (قريباً)"
+      }
+    },
+    "appearance": {
+      "title": "إعدادات المظهر",
+      "description": "تخصيص شكل ومظهر التطبيق",
+      "coming_soon": "إعدادات المظهر قريباً"
+    },
+    "notifications": {
+      "title": "إعدادات الإشعارات",
+      "description": "تكوين إشعارات البريد الإلكتروني والنظام",
+      "email": {
+        "label": "إشعارات البريد الإلكتروني",
+        "description": "إرسال إشعارات بريد إلكتروني للأحداث المهمة"
+      }
+    },
+    "advanced": {
+      "title": "إعدادات متقدمة",
+      "description": "تكوين إعدادات النظام المتقدمة",
+      "auto_publish": {
+        "label": "نشر تلقائي للمحتوى",
+        "description": "نشر المحتوى تلقائياً بعد الإنشاء (غير موصى به)"
+      }
+    },
+    "siteTitle": "عنوان الموقع",
+    "siteDescription": "وصف الموقع",
+    "default_language": "اللغة الافتراضية",
+    "languages": {
+      "english": "English"
+    },
+    "contactEmail": "بريد التواصل",
+    "maintenance": "وضع الصيانة",
+    "maintenanceMessage": "رسالة الصيانة",
+    "enableRegistration": "تفعيل التسجيل",
+    "enableComments": "تفعيل التعليقات",
+    "enableRatings": "تفعيل التقييمات",
+    "security": "إعدادات الأمان",
+    "requireEmailVerification": "تطلب تحقق البريد الإلكتروني",
+    "sessionTimeout": "انتهاء الجلسة (دقائق)",
+    "maxLoginAttempts": "محاولات الدخول القصوى",
+    "backup": "النسخ الاحتياطي والتصدير",
+    "exportData": "تصدير البيانات",
+    "importData": "استيراد البيانات",
+    "backupDatabase": "نسخ احتياطي لقاعدة البيانات"
   },
   "forms": {
     "required": "هذا الحقل مطلوب",
@@ -201,6 +326,7 @@
     "changing": "جاري التغيير...",
     "deleting": "جاري الحذف...",
     "cancel": "إلغاء",
+    "delete": "حذف",
     "saveChanges": "حفظ التغييرات",
     "error": "حدث خطأ",
     "deleteConfirm": "هل أنت متأكد من حذف هذا العنصر؟",

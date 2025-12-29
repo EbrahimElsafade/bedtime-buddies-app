@@ -92,8 +92,8 @@ const CourseOptions = () => {
       setNewCategoryAr('')
       setNewCategoryFr('')
       toast({
-        title: 'Category Added',
-        description: `Category '${data.name}' has been added successfully`,
+        title: t('courseOptions.categoryAdded'),
+        description: t('courseOptions.categoryAddedDesc', { category: data.name }),
       })
     },
   })
@@ -123,8 +123,8 @@ const CourseOptions = () => {
       setEditingCategoryNameAr('')
       setEditingCategoryNameFr('')
       toast({
-        title: 'Category Updated',
-        description: `Category '${data.name}' has been updated successfully`,
+        title: t('courseOptions.categoryUpdated'),
+        description: t('courseOptions.categoryUpdatedDesc', { category: data.name }),
       })
     },
   })
@@ -143,8 +143,8 @@ const CourseOptions = () => {
       const category = categories.find(cat => cat.id === id)
       queryClient.invalidateQueries({ queryKey: ['course-categories'] })
       toast({
-        title: 'Category Removed',
-        description: `Category '${category?.name}' has been removed successfully`,
+        title: t('courseOptions.categoryRemoved'),
+        description: t('courseOptions.categoryRemovedDesc', { category: category?.name }),
       })
     },
   })
@@ -200,9 +200,9 @@ const CourseOptions = () => {
   return (
     <div className="container mx-auto space-y-8 p-6">
       <div>
-        <h1 className="text-3xl font-bold">Course Options</h1>
+        <h1 className="text-3xl font-bold">{t('courseOptions.title')}</h1>
         <p className="mt-2 text-muted-foreground">
-          Manage course categories and settings for your educational content.
+          {t('courseOptions.description')}
         </p>
       </div>
 
@@ -211,17 +211,17 @@ const CourseOptions = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center">
-              Course Categories
+              {t('courseOptions.categories')}
             </CardTitle>
             <CardDescription>
-              Manage categories that organize your educational courses.
+              {t('courseOptions.categoriesDesc')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-3">
               <div className="flex gap-2">
                 <Input
-                  placeholder="Category name (English)"
+                  placeholder={t('courseOptions.categoryNameEn')}
                   value={newCategory}
                   onChange={e => setNewCategory(e.target.value)}
                   onKeyPress={e => e.key === 'Enter' && addCategory()}
@@ -237,12 +237,12 @@ const CourseOptions = () => {
               {newCategory.trim() && (
                 <div className="grid grid-cols-2 gap-2">
                   <Input
-                    placeholder="Category name (Arabic)"
+                    placeholder={t('courseOptions.categoryNameAr')}
                     value={newCategoryAr}
                     onChange={e => setNewCategoryAr(e.target.value)}
                   />
                   <Input
-                    placeholder="Category name (French)"
+                    placeholder={t('courseOptions.categoryNameFr')}
                     value={newCategoryFr}
                     onChange={e => setNewCategoryFr(e.target.value)}
                   />
@@ -251,7 +251,7 @@ const CourseOptions = () => {
             </div>
 
             {categoriesLoading ? (
-              <div className="py-4 text-center">Loading categories...</div>
+              <div className="py-4 text-center">{t('courseOptions.loading')}</div>
             ) : (
               <div className="flex flex-wrap gap-2">
                 {categories.map(category => (
@@ -357,20 +357,19 @@ const CourseOptions = () => {
           <AlertDialogHeader>
             <div className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-destructive" />
-              <AlertDialogTitle>Delete Category</AlertDialogTitle>
+              <AlertDialogTitle>{t('courseOptions.deleteCategory')}</AlertDialogTitle>
             </div>
             <AlertDialogDescription>
-              Are you sure you want to delete this category? This action cannot be
-              undone.
+              {t('courseOptions.deleteCategoryConfirm')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('forms.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDeleteCategory}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              {t('forms.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
