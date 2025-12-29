@@ -24,7 +24,7 @@ export const SubscriptionTab = ({ isPremium, t }: SubscriptionTabProps) => {
   const { t: tSub } = useTranslation('subscription')
 
   const getPlanPrice = () => {
-    return 100
+    return 499
   }
 
   const handleSubscribe = () => {

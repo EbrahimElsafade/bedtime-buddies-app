@@ -26,7 +26,7 @@ export const SubscriptionProfile = ({ isPremium }: SubscriptionProfileProps) => 
   const [isGift, setIsGift] = useState(false)
 
   const getPlanPrice = () => {
-    return 500
+    return 499
   }
 
   const handleSubscribe = () => {
