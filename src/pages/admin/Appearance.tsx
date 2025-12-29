@@ -36,12 +36,20 @@ interface HomePageSettings {
   topRated: boolean;
   courses: boolean;
   specialStory: boolean;
+  featuredCourses: string[];
 }
 
 interface StoryOption {
   id: string;
   title: Record<string, string>;
   cover_image: string | null;
+}
+
+interface CourseOption {
+  id: string;
+  title_en: string;
+  title_ar: string | null;
+  title_fr: string | null;
 }
 
 const Appearance = () => {
@@ -78,6 +86,21 @@ const Appearance = () => {
     }
   });
 
+  // Fetch courses for featured courses selection
+  const { data: courses, isLoading: coursesLoading } = useQuery({
+    queryKey: ["courses-list"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("courses")
+        .select("id, title_en, title_ar, title_fr")
+        .eq("is_published", true)
+        .order("created_at", { ascending: false });
+      
+      if (error) throw error;
+      return data as CourseOption[];
+    }
+  });
+
   // Local state for settings
   const [settings, setSettings] = useState<HomePageSettings>({
     freeStory: "",
@@ -86,6 +109,7 @@ const Appearance = () => {
     topRated: true,
     courses: true,
     specialStory: true,
+    featuredCourses: [],
   });
 
   useEffect(() => {
@@ -246,6 +270,53 @@ const Appearance = () => {
               onCheckedChange={(checked) => updateSetting('courses', checked)}
             />
           </div>
+
+          {settings.courses && (
+            <div className="space-y-2 pl-6 border-l-2 border-muted">
+              <Label>Select Featured Courses</Label>
+              <p className="text-sm text-muted-foreground mb-2">
+                Choose which courses to display on the homepage. Leave empty to show the latest courses.
+              </p>
+              <div className="space-y-2 max-h-60 overflow-y-auto">
+                {coursesLoading ? (
+                  <div className="px-2 py-1 text-sm text-muted-foreground">
+                    Loading courses...
+                  </div>
+                ) : courses && courses.length > 0 ? (
+                  courses.map((course) => (
+                    <div key={course.id} className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id={`course-${course.id}`}
+                        checked={settings.featuredCourses?.includes(course.id) || false}
+                        onChange={(e) => {
+                          const currentCourses = settings.featuredCourses || [];
+                          if (e.target.checked) {
+                            updateSetting('featuredCourses', [...currentCourses, course.id]);
+                          } else {
+                            updateSetting('featuredCourses', currentCourses.filter(id => id !== course.id));
+                          }
+                        }}
+                        className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                      />
+                      <Label htmlFor={`course-${course.id}`} className="text-sm font-normal cursor-pointer">
+                        {course.title_en || course.title_ar || course.title_fr || 'Untitled'}
+                      </Label>
+                    </div>
+                  ))
+                ) : (
+                  <div className="px-2 py-1 text-sm text-muted-foreground">
+                    No published courses available
+                  </div>
+                )}
+              </div>
+              {settings.featuredCourses && settings.featuredCourses.length > 0 && (
+                <p className="text-xs text-muted-foreground mt-2">
+                  {settings.featuredCourses.length} course(s) selected
+                </p>
+              )}
+            </div>
+          )}
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
