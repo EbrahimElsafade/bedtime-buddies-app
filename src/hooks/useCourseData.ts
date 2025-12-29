@@ -173,12 +173,47 @@ export const useFeaturedCourses = () => {
   return useQuery({
     queryKey: ['featured-courses'],
     queryFn: async (): Promise<Course[]> => {
-      const { data: coursesData, error: coursesError } = await supabase
-        .from('courses')
-        .select('*')
-        .eq('is_published', true)
-        .limit(6)
-        .order('created_at', { ascending: false })
+      // First, fetch the appearance settings to get selected featured courses
+      const { data: settingsData } = await supabase
+        .from('appearance_settings')
+        .select('setting_value')
+        .eq('setting_key', 'home_page')
+        .maybeSingle();
+
+      const featuredCourseIds = (settingsData?.setting_value as { featuredCourses?: string[] })?.featuredCourses || [];
+
+      let coursesData: CourseRow[] | null = null;
+      let coursesError: Error | null = null;
+
+      if (featuredCourseIds.length > 0) {
+        // Fetch only the selected courses
+        const { data, error } = await supabase
+          .from('courses')
+          .select('*')
+          .eq('is_published', true)
+          .in('id', featuredCourseIds);
+
+        coursesData = data;
+        coursesError = error;
+
+        // Sort by the order in featuredCourseIds
+        if (coursesData) {
+          coursesData.sort((a, b) => {
+            return featuredCourseIds.indexOf(a.id) - featuredCourseIds.indexOf(b.id);
+          });
+        }
+      } else {
+        // Fallback to latest courses if none selected
+        const { data, error } = await supabase
+          .from('courses')
+          .select('*')
+          .eq('is_published', true)
+          .limit(6)
+          .order('created_at', { ascending: false });
+
+        coursesData = data;
+        coursesError = error;
+      }
 
       if (coursesError) {
         logger.error('Error fetching featured courses:', coursesError)
