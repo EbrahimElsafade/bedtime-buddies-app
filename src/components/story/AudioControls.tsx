@@ -18,6 +18,31 @@ interface AudioControlsProps {
   onAudioTimeUpdate?: (currentTime: number, duration: number) => void
 }
 
+// SVG Icons
+const PauseIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 -960 960 960"
+    height="24px"
+    width="24px"
+    className="fill-secondary"
+  >
+    <path d="M360-320h80v-320h-80v320Zm160 0h80v-320h-80v320ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80h640v-480H160v480Zm0 0v-480 480Z" />
+  </svg>
+)
+
+const PlayIcon = () => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 -960 960 960"
+    height="24px"
+    width="24px"
+    className="fill-secondary"
+  >
+    <path d="m380-300 280-180-280-180v360ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
+  </svg>
+)
+
 export const AudioControls = ({
   story,
   currentSection,
@@ -68,7 +93,11 @@ export const AudioControls = ({
     const handleTimeUpdate = () => {
       setCurrentTime(audio.currentTime)
       // Double-check duration is set
-      if (Number.isFinite(audio.duration) && audio.duration > 0 && duration === 0) {
+      if (
+        Number.isFinite(audio.duration) &&
+        audio.duration > 0 &&
+        duration === 0
+      ) {
         setDuration(audio.duration)
       }
     }
@@ -111,12 +140,7 @@ export const AudioControls = ({
       audio.removeEventListener('canplay', handleCanPlay)
       audio.removeEventListener('ended', handleEnded)
     }
-  }, [
-    isAutoplay,
-    onSectionChange,
-    currentSectionIndex,
-    story.sections.length,
-  ])
+  }, [isAutoplay, onSectionChange, currentSectionIndex, story.sections.length])
 
   // Reset time when section changes
   useEffect(() => {
@@ -136,30 +160,7 @@ export const AudioControls = ({
 
     return null
   }
-
-  const toggleIsPlay = () => {
-    const audio = audioRef.current
-    if (!audio) return
-
-    // If currently playing, stop playback (toggle off)
-    if (!audio.paused) {
-      stopAudio()
-      audio.pause()
-      onPlayingChange?.(false)
-      return
-    }
-
-    // Start normal playback (no auto-advance)
-    setIsAutoplay(false)
-    setIsPlaying(true)
-    onPlayingChange?.(true)
-    void audio.play().catch(() => {
-      setIsPlaying(false)
-      onPlayingChange?.(false)
-    })
-  }
-
-  const toggleAutoplay = () => {
+  const toggleAutoplay = async () => {
     const audio = audioRef.current
     if (!audio) return
 
@@ -175,11 +176,40 @@ export const AudioControls = ({
     setIsPlaying(true)
     setIsAutoplay(true)
     onPlayingChange?.(true)
-    void audio.play().catch(() => {
+
+    try {
+      // Wait for audio to actually start playing before proceeding
+      await audio.play()
+    } catch (error) {
       setIsPlaying(false)
       setIsAutoplay(false)
       onPlayingChange?.(false)
-    })
+    }
+  }
+
+  const toggleIsPlay = async () => {
+    const audio = audioRef.current
+    if (!audio) return
+
+    // If currently playing, stop playback (toggle off)
+    if (!audio.paused) {
+      stopAudio()
+      audio.pause()
+      onPlayingChange?.(false)
+      return
+    }
+
+    // Start normal playback (no auto-advance)
+    setIsAutoplay(false)
+    setIsPlaying(true)
+    onPlayingChange?.(true)
+
+    try {
+      await audio.play()
+    } catch (error) {
+      setIsPlaying(false)
+      onPlayingChange?.(false)
+    }
   }
 
   const stopAudio = () => {
@@ -237,27 +267,7 @@ export const AudioControls = ({
               isPlaying && isAutoplay ? 'bg-accent' : 'text-secondary'
             }`}
           >
-            {isPlaying ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 -960 960 960"
-                height="24px"
-                width="24px"
-                className="fill-secondary"
-              >
-                <path d="M360-320h80v-320h-80v320Zm160 0h80v-320h-80v320ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80h640v-480H160v480Zm0 0v-480 480Z" />
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 -960 960 960"
-                height="24px"
-                width="24px"
-                className="fill-secondary"
-              >
-                <path d="m380-300 280-180-280-180v360ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560H200v560Zm0-560v560-560Z" />
-              </svg>
-            )}
+            {isPlaying ? <PauseIcon /> : <PlayIcon />}
 
             {isPlaying ? t('story:stopVideo') : t('story:playVideo')}
           </Button>
