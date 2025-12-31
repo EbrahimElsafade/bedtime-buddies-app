@@ -40,10 +40,63 @@ serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
     const githubToken = Deno.env.get('GITHUB_TOKEN');
     
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    // Create admin client for database operations
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
     
+    // 1. Verify authentication
+    const authHeader = req.headers.get('authorization');
+    if (!authHeader) {
+      console.error('No authorization header provided');
+      return new Response(
+        JSON.stringify({ error: 'Authentication required', success: false }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Create client with user's token to verify identity
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { Authorization: authHeader } }
+    });
+
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+    
+    if (userError || !user) {
+      console.error('Invalid user credentials:', userError?.message);
+      return new Response(
+        JSON.stringify({ error: 'Invalid credentials', success: false }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // 2. Check if user has editor or admin role
+    const { data: hasPermission, error: roleError } = await supabaseAdmin.rpc('has_any_role', {
+      _user_id: user.id,
+      _roles: ['editor', 'admin']
+    });
+
+    if (roleError) {
+      console.error('Error checking user role:', roleError.message);
+      return new Response(
+        JSON.stringify({ error: 'Authorization check failed', success: false }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (!hasPermission) {
+      console.warn(`User ${user.id} attempted to transcode video without editor/admin role`);
+      return new Response(
+        JSON.stringify({ 
+          error: 'Insufficient permissions. Only editors and admins can transcode videos.', 
+          success: false 
+        }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // 3. Parse and validate request body
     const { videoPath, courseId, lessonOrder }: TranscodeRequest = await req.json();
     
     if (!videoPath || !courseId) {
@@ -53,13 +106,28 @@ serve(async (req) => {
       );
     }
 
-    console.log('Triggering GitHub Actions for video conversion:');
+    // 4. Validate that courseId exists
+    const { data: course, error: courseError } = await supabaseAdmin
+      .from('courses')
+      .select('id')
+      .eq('id', courseId)
+      .single();
+    
+    if (courseError || !course) {
+      console.error('Invalid course ID:', courseId, courseError?.message);
+      return new Response(
+        JSON.stringify({ error: 'Invalid course ID', success: false }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log(`User ${user.id} triggering GitHub Actions for video conversion:`);
     console.log(`  Course ID: ${courseId}`);
     console.log(`  Lesson Order: ${lessonOrder}`);
     console.log(`  Video Path: ${videoPath}`);
 
     // Update lesson status to "processing"
-    const { error: updateError } = await supabase
+    const { error: updateError } = await supabaseAdmin
       .from('course_lessons')
       .update({ video_path: videoPath })
       .eq('course_id', courseId)
