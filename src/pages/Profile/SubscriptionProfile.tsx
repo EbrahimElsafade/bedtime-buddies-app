@@ -41,7 +41,7 @@ export const SubscriptionProfile = ({ isPremium }: SubscriptionProfileProps) => 
   }
 
   const handleWhatsappSubscribe = () => {
-    const whatsappNumber = '+201036443209'
+    const whatsappNumber = '+201004494049'
     const message = encodeURIComponent(
       'Hi, I want to subscribe to Dolphoon premium',
     )
