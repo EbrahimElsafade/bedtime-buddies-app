@@ -1,10 +1,25 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.8";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+// Allowed origins for CORS
+const allowedOrigins = [
+  'https://dolphoon.com',
+  'https://www.dolphoon.com',
+  'https://brxbtgzaumryxflkykpp.supabase.co',
+  'http://localhost:5173',
+  'http://localhost:8080',
+];
+
+const getCorsHeaders = (origin: string | null) => {
+  const allowedOrigin = origin && allowedOrigins.includes(origin) 
+    ? origin 
+    : allowedOrigins[0];
+  
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Credentials": "true",
+  };
 };
 
 interface CreateUserRequest {
@@ -43,6 +58,9 @@ interface DeleteUserRequest {
 type AdminUserRequest = CreateUserRequest | UpdateUserRequest | DeleteUserRequest | ChangePasswordRequest;
 
 const handler = async (req: Request): Promise<Response> => {
+  const origin = req.headers.get("origin");
+  const corsHeaders = getCorsHeaders(origin);
+
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -64,7 +82,7 @@ const handler = async (req: Request): Promise<Response> => {
     const authHeader = req.headers.get("authorization");
     if (!authHeader) {
       return new Response(
-        JSON.stringify({ error: "No authorization header" }),
+        JSON.stringify({ error: "Authentication required" }),
         { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
@@ -84,7 +102,7 @@ const handler = async (req: Request): Promise<Response> => {
     
     if (userError || !user) {
       return new Response(
-        JSON.stringify({ error: "Unauthorized" }),
+        JSON.stringify({ error: "Invalid credentials" }),
         { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
@@ -97,7 +115,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (roleError || !isAdmin) {
       return new Response(
-        JSON.stringify({ error: "Admin access required" }),
+        JSON.stringify({ error: "Insufficient permissions" }),
         { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
@@ -122,7 +140,7 @@ const handler = async (req: Request): Promise<Response> => {
       if (createError) {
         console.error("Create user error:", createError);
         return new Response(
-          JSON.stringify({ error: createError.message }),
+          JSON.stringify({ error: "Failed to create user. Please check the provided information." }),
           { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
       }
@@ -161,7 +179,7 @@ const handler = async (req: Request): Promise<Response> => {
       if (updateError) {
         console.error("Update user error:", updateError);
         return new Response(
-          JSON.stringify({ error: updateError.message }),
+          JSON.stringify({ error: "Failed to update user profile." }),
           { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
       }
@@ -190,7 +208,7 @@ const handler = async (req: Request): Promise<Response> => {
       if (passwordError) {
         console.error("Change password error:", passwordError);
         return new Response(
-          JSON.stringify({ error: passwordError.message }),
+          JSON.stringify({ error: "Failed to update password." }),
           { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
       }
@@ -218,7 +236,7 @@ const handler = async (req: Request): Promise<Response> => {
       if (deleteError) {
         console.error("Delete user error:", deleteError);
         return new Response(
-          JSON.stringify({ error: deleteError.message }),
+          JSON.stringify({ error: "Failed to delete user." }),
           { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
       }
@@ -230,14 +248,14 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     return new Response(
-      JSON.stringify({ error: "Invalid action" }),
+      JSON.stringify({ error: "Invalid request" }),
       { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   } catch (error) {
     console.error("Admin users error:", error);
     return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
-      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      JSON.stringify({ error: "An unexpected error occurred. Please try again." }),
+      { status: 500, headers: { "Content-Type": "application/json", ...getCorsHeaders(req.headers.get("origin")) } }
     );
   }
 };
