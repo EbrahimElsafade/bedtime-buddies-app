@@ -1,9 +1,25 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+// Allowed origins for CORS
+const allowedOrigins = [
+  'https://dolphoon.com',
+  'https://www.dolphoon.com',
+  'https://brxbtgzaumryxflkykpp.supabase.co',
+  'http://localhost:5173',
+  'http://localhost:8080',
+];
+
+const getCorsHeaders = (origin: string | null) => {
+  const allowedOrigin = origin && allowedOrigins.includes(origin) 
+    ? origin 
+    : allowedOrigins[0];
+  
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Access-Control-Allow-Credentials': 'true',
+  };
 };
 
 interface TranscodeRequest {
@@ -13,6 +29,9 @@ interface TranscodeRequest {
 }
 
 serve(async (req) => {
+  const origin = req.headers.get("origin");
+  const corsHeaders = getCorsHeaders(origin);
+
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -29,7 +48,7 @@ serve(async (req) => {
     
     if (!videoPath || !courseId) {
       return new Response(
-        JSON.stringify({ error: 'Missing required fields: videoPath, courseId' }),
+        JSON.stringify({ error: 'Missing required fields', success: false }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -55,7 +74,7 @@ serve(async (req) => {
       console.error('GITHUB_TOKEN not configured');
       return new Response(
         JSON.stringify({ 
-          error: 'GitHub token not configured',
+          error: 'Service configuration error. Please contact support.',
           success: false 
         }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -89,8 +108,7 @@ serve(async (req) => {
       console.error('GitHub API error:', githubResponse.status, errorText);
       return new Response(
         JSON.stringify({ 
-          error: `GitHub API error: ${githubResponse.status}`,
-          details: errorText,
+          error: 'Video processing service unavailable. Please try again later.',
           success: false 
         }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -102,7 +120,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         success: true,
-        hlsPath: videoPath, // Return original path for now, will be updated by GitHub Actions
+        hlsPath: videoPath,
         message: 'Video conversion started. The HLS version will be available shortly.',
       }),
       { 
@@ -113,10 +131,12 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Transcode error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Internal server error';
     return new Response(
-      JSON.stringify({ error: errorMessage, success: false }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ 
+        error: 'An unexpected error occurred. Please try again later.', 
+        success: false 
+      }),
+      { status: 500, headers: { ...getCorsHeaders(req.headers.get("origin")), 'Content-Type': 'application/json' } }
     );
   }
 });
