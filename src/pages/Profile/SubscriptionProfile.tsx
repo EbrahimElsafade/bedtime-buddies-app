@@ -41,11 +41,11 @@ export const SubscriptionProfile = ({ isPremium }: SubscriptionProfileProps) => 
   }
 
   const handleWhatsappSubscribe = () => {
-    const whatsappNumber = '+201036443209'
+    const whatsappNumber = '201036443209' // Without + for wa.me links
     const message = encodeURIComponent(
       'Hi, I want to subscribe to Dolphoon premium',
     )
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${message}`
     window.open(whatsappUrl, '_blank')
   }
 
