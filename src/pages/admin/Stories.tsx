@@ -5,6 +5,8 @@ import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
 import { logger } from '@/utils/logger'
 import { getMultilingualText } from '@/utils/multilingualUtils'
+import { usePagination } from '@/hooks/usePagination'
+import { AdminPagination } from '@/components/admin/AdminPagination'
 import {
   Table,
   TableBody,
@@ -159,6 +161,18 @@ const Stories = () => {
 
       return 0
     })
+
+  // Pagination
+  const {
+    currentPage,
+    totalPages,
+    pageSize,
+    paginatedItems,
+    goToPage,
+    setPageSize,
+    startIndex,
+    endIndex,
+  } = usePagination(filteredStories, { pageSize: 10 })
 
   const handleDeleteClick = (id: string) => {
     setStoryToDelete(id)
@@ -331,14 +345,14 @@ const Stories = () => {
                       Loading stories...
                     </TableCell>
                   </TableRow>
-                ) : filteredStories.length === 0 ? (
+                ) : paginatedItems.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="py-8 text-center">
                       No stories found
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredStories.map(story => (
+                  paginatedItems.map(story => (
                     <TableRow key={story.id}>
                       <TableCell className="font-medium">
                         {getMultilingualText(story.title, i18n.language, 'en')}
@@ -415,10 +429,17 @@ const Stories = () => {
             </Table>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between">
-          <p className="text-sm text-muted-foreground">
-            Showing {filteredStories.length} of {stories.length} stories
-          </p>
+        <CardFooter>
+          <AdminPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            pageSize={pageSize}
+            totalItems={filteredStories.length}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            onPageChange={goToPage}
+            onPageSizeChange={setPageSize}
+          />
         </CardFooter>
       </Card>
 

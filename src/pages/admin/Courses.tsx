@@ -4,6 +4,8 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
 import { logger } from '@/utils/logger'
+import { usePagination } from '@/hooks/usePagination'
+import { AdminPagination } from '@/components/admin/AdminPagination'
 import {
   Table,
   TableBody,
@@ -161,6 +163,18 @@ const Courses = () => {
 
       return 0
     })
+
+  // Pagination
+  const {
+    currentPage,
+    totalPages,
+    pageSize,
+    paginatedItems,
+    goToPage,
+    setPageSize,
+    startIndex,
+    endIndex,
+  } = usePagination(filteredCourses, { pageSize: 10 })
 
   const handleDeleteClick = (id: string) => {
     setCourseToDelete(id)
@@ -335,14 +349,14 @@ const Courses = () => {
                       Loading courses...
                     </TableCell>
                   </TableRow>
-                ) : filteredCourses.length === 0 ? (
+                ) : paginatedItems.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={6} className="py-8 text-center">
                       No courses found
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredCourses.map(course => (
+                  paginatedItems.map(course => (
                     <TableRow key={course.id}>
                       <TableCell className="font-medium">
                         {getLocalized(course, 'title', lang)}
@@ -434,10 +448,17 @@ const Courses = () => {
             </Table>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between">
-          <p className="text-sm text-muted-foreground">
-            Showing {filteredCourses.length} of {courses.length} courses
-          </p>
+        <CardFooter>
+          <AdminPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            pageSize={pageSize}
+            totalItems={filteredCourses.length}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            onPageChange={goToPage}
+            onPageSizeChange={setPageSize}
+          />
         </CardFooter>
       </Card>
 

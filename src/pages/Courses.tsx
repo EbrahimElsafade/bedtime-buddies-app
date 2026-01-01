@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { Search, BookOpen, Clock, User } from 'lucide-react'
@@ -6,6 +6,8 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useUserRole } from '@/hooks/useUserRole'
 import { Input } from '@/components/ui/input'
 import { useLoading } from '@/contexts/LoadingContext'
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
+import { LoadMoreIndicator } from '@/components/LoadMoreIndicator'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -79,6 +81,15 @@ const Courses = () => {
       return categoryMatch && searchMatch
     })
   }, [courses, activeCategory, lang, searchQuery])
+
+  // Infinite scroll
+  const {
+    visibleItems,
+    hasMore,
+    isLoadingMore,
+    loadedCount,
+    totalCount,
+  } = useInfiniteScroll(filteredCourses, { pageSize: 12 })
 
   const ageCounts = useMemo(() => {
     const counts: Record<string, number> = {}
@@ -164,22 +175,54 @@ const Courses = () => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {filteredCourses.map(course => {
-              const category = categories.find(
-                cat =>
-                  cat.id === course.category || cat.name === course.category,
-              )
+          <>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {visibleItems.map(course => {
+                const category = categories.find(
+                  cat =>
+                    cat.id === course.category || cat.name === course.category,
+                )
 
-              // Show login overlay for non-authenticated users (use homepage card style)
-              if (!isAuthenticated) {
+                if (!isAuthenticated) {
+                  return (
+                    <div
+                      key={course.id}
+                      onClick={() => navigate('/login')}
+                      className="cursor-pointer"
+                    >
+                      <Card className="story-card relative z-10 h-[500px] overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm">
+                        <div className="relative aspect-[3/2]">
+                          <img
+                            src={getImageUrl(course.coverImagePath)}
+                            alt={getLocalized(course, 'title', lang)}
+                            className="h-full w-full overflow-hidden object-cover"
+                            onError={e => {
+                              e.currentTarget.src =
+                                'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
+                            }}
+                          />
+                        </div>
+                        <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
+                          <h3 className="mb-2 line-clamp-1 font-bubbly text-lg text-primary-foreground">
+                            {getLocalized(course, 'title', lang)}
+                          </h3>
+                          <p className="mb-4 text-sm text-muted-foreground">
+                            {t('courses.loginToView')}
+                          </p>
+                          <Button className="w-full">{t('common:login')}</Button>
+                        </div>
+                      </Card>
+                    </div>
+                  )
+                }
+
                 return (
-                  <div
+                  <Link
                     key={course.id}
-                    onClick={() => navigate('/login')}
-                    className="cursor-pointer"
+                    to={`/courses/${course.id}`}
+                    className="block"
                   >
-                    <Card className="story-card relative z-10 h-[500px] overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm">
+                    <Card className="story-card relative z-10 grid cursor-pointer gap-4 overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-transform hover:scale-105">
                       <div className="relative aspect-[3/2]">
                         <img
                           src={getImageUrl(course.coverImagePath)}
@@ -190,117 +233,100 @@ const Courses = () => {
                               'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
                           }}
                         />
-                      </div>
-                      <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
-                        <h3 className="mb-2 line-clamp-1 font-bubbly text-lg text-primary-foreground">
-                          {getLocalized(course, 'title', lang)}
-                        </h3>
-                        <p className="mb-4 text-sm text-muted-foreground">
-                          {t('courses.loginToView')}
-                        </p>
-                        <Button className="w-full">{t('common:login')}</Button>
-                      </div>
-                    </Card>
-                  </div>
-                )
-              }
-
-              return (
-                <Link
-                  key={course.id}
-                  to={`/courses/${course.id}`}
-                  className="block"
-                >
-                  <Card className="story-card relative z-10 grid cursor-pointer gap-4 overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-transform hover:scale-105">
-                    <div className="relative aspect-[3/2]">
-                      <img
-                        src={getImageUrl(course.coverImagePath)}
-                        alt={getLocalized(course, 'title', lang)}
-                        className="h-full w-full overflow-hidden object-cover"
-                        onError={e => {
-                          e.currentTarget.src =
-                            'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
-                        }}
-                      />
-                      <div className="absolute right-2 top-2 rounded-full bg-secondary/80 px-2 text-xs text-primary-foreground shadow-md">
-                        {course.minAge}-{course.maxAge}{' '}
-                        {t('misc:courses.years')}
-                      </div>
-                      {course.is_free && (
-                        <Badge className="absolute left-2 top-2 bg-green-500 hover:bg-green-600">
-                          {t('courses:free.tag')}
-                        </Badge>
-                      )}
-                      {!course.is_free && (
-                        <Badge className="absolute left-2 top-2 bg-gradient-to-r from-purple-500 to-pink-500">
-                          {t('premium:tag')}
-                        </Badge>
-                      )}
-                    </div>
-
-                    <CardHeader className="grid gap-4 py-0">
-                      <CardTitle className="text-xl text-primary-foreground">
-                        {getLocalized(course, 'title', lang)}
-                      </CardTitle>
-
-                      <CardDescription className="line-clamp-2 text-primary-foreground">
-                        {getLocalized(course, 'description', lang)}
-                      </CardDescription>
-                    </CardHeader>
-
-                    <CardContent className="grid gap-4">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        {course.instructor && (
-                          <div className="flex items-center gap-2">
-                            <Avatar className="h-6 w-6">
-                              <AvatarImage
-                                src={
-                                  course.instructor.avatar
-                                    ? getImageUrl(course.instructor.avatar)
-                                    : undefined
-                                }
-                                alt={getLocalized(
-                                  course.instructor,
-                                  'name',
-                                  lang,
-                                )}
-                              />
-                              <AvatarFallback className="bg-primary/20 text-xs text-primary-foreground">
-                                <User className="h-3 w-3" />
-                              </AvatarFallback>
-                            </Avatar>
-                            <span className="text-sm text-primary-foreground">
-                              {getLocalized(course.instructor, 'name', lang)}
-                            </span>
-                          </div>
-                        )}
-
-                        <Badge
-                          variant="secondary"
-                          className="bg-primary/30 text-primary-foreground"
-                        >
-                          {getCategoryText(category, 'name', lang) ||
-                            course.category ||
-                            'General'}
-                        </Badge>
-                      </div>
-
-                      <div className="flex items-center justify-between text-sm text-primary-foreground">
-                        <div className="flex items-center gap-2">
-                          <BookOpen className="mr-1 h-4 w-4" />
-                          <span>
-                            {course.lessons} {t('misc:courses.lessons')}
-                          </span>
+                        <div className="absolute right-2 top-2 rounded-full bg-secondary/80 px-2 text-xs text-primary-foreground shadow-md">
+                          {course.minAge}-{course.maxAge}{' '}
+                          {t('misc:courses.years')}
                         </div>
-                        {course.duration > 0 && (
+                        {course.is_free && (
+                          <Badge className="absolute left-2 top-2 bg-green-500 hover:bg-green-600">
+                            {t('courses:free.tag')}
+                          </Badge>
+                        )}
+                        {!course.is_free && (
+                          <Badge className="absolute left-2 top-2 bg-gradient-to-r from-purple-500 to-pink-500">
+                            {t('premium:tag')}
+                          </Badge>
+                        )}
+                      </div>
+
+                      <CardHeader className="grid gap-4 py-0">
+                        <CardTitle className="text-xl text-primary-foreground">
+                          {getLocalized(course, 'title', lang)}
+                        </CardTitle>
+
+                        <CardDescription className="line-clamp-2 text-primary-foreground">
+                          {getLocalized(course, 'description', lang)}
+                        </CardDescription>
+                      </CardHeader>
+
+                      <CardContent className="grid gap-4">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          {course.instructor && (
+                            <div className="flex items-center gap-2">
+                              <Avatar className="h-6 w-6">
+                                <AvatarImage
+                                  src={
+                                    course.instructor.avatar
+                                      ? getImageUrl(course.instructor.avatar)
+                                      : undefined
+                                  }
+                                  alt={getLocalized(
+                                    course.instructor,
+                                    'name',
+                                    lang,
+                                  )}
+                                />
+                                <AvatarFallback className="bg-primary/20 text-xs text-primary-foreground">
+                                  <User className="h-3 w-3" />
+                                </AvatarFallback>
+                              </Avatar>
+                              <span className="text-sm text-primary-foreground">
+                                {getLocalized(course.instructor, 'name', lang)}
+                              </span>
+                            </div>
+                          )}
+
+                          <Badge
+                            variant="secondary"
+                            className="bg-primary/30 text-primary-foreground"
+                          >
+                            {getCategoryText(category, 'name', lang) ||
+                              course.category ||
+                              'General'}
+                          </Badge>
+                        </div>
+
+                        <div className="flex items-center justify-between text-sm text-primary-foreground">
                           <div className="flex items-center gap-2">
-                            <Clock className="mr-1 h-4 w-4" />
+                            <BookOpen className="mr-1 h-4 w-4" />
                             <span>
-                              {Math.floor(course.duration / 60)}{' '}
-                              {t('misc:duration')}
+                              {course.lessons} {t('misc:courses.lessons')}
                             </span>
                           </div>
-                        )}
+                          {course.duration > 0 && (
+                            <div className="flex items-center gap-2">
+                              <Clock className="mr-1 h-4 w-4" />
+                              <span>
+                                {Math.floor(course.duration / 60)}{' '}
+                                {t('misc:duration')}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                )
+              })}
+            </div>
+            <LoadMoreIndicator
+              isLoading={isLoadingMore}
+              hasMore={hasMore}
+              loadedCount={loadedCount}
+              totalCount={totalCount}
+            />
+          </>
+        )}
                       </div>
                     </CardContent>
                   </Card>
