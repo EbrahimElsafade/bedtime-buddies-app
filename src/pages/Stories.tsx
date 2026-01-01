@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { useSearchParams } from 'react-router-dom'
 import { supabase } from '@/integrations/supabase/client'
 import { logger } from '@/utils/logger'
 import { useLoading } from '@/contexts/LoadingContext'
+import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
+import { LoadMoreIndicator } from '@/components/LoadMoreIndicator'
 import {
   Card,
   CardHeader,
@@ -105,6 +107,15 @@ const Stories = () => {
     return matchesSearch && matchesCategory
   })
 
+  // Infinite scroll
+  const {
+    visibleItems,
+    hasMore,
+    isLoadingMore,
+    loadedCount,
+    totalCount,
+  } = useInfiniteScroll(filteredStories, { pageSize: 12 })
+
   // Update global loading state
   useEffect(() => {
     setIsLoading(isLoading)
@@ -155,89 +166,97 @@ const Stories = () => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
-            {filteredStories.map(story => {
-              const imageUrl = getImageUrl(story.cover_image)
-              const storyTitle = getMultilingualText(
-                story.title,
-                i18n.language,
-                'en',
-              )
-              const storyDescription = getMultilingualText(
-                story.description,
-                i18n.language,
-                'en',
-              )
+          <>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
+              {visibleItems.map(story => {
+                const imageUrl = getImageUrl(story.cover_image)
+                const storyTitle = getMultilingualText(
+                  story.title,
+                  i18n.language,
+                  'en',
+                )
+                const storyDescription = getMultilingualText(
+                  story.description,
+                  i18n.language,
+                  'en',
+                )
 
-              return (
-                <Link key={story.id} to={`/stories/${story.id}`}>
-                  <Card className="story-card flex h-80 lg:min-w-80 mx-auto lg:max-w-96 cursor-pointer flex-col overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-shadow hover:shadow-lg md:h-96">
-                    <div className="relative h-56">
-                      {imageUrl ? (
-                        <img
-                          src={imageUrl}
-                          alt={storyTitle}
-                          className="aspect-[3/2] h-56 w-full object-fill"
-                          onError={e => {
-                            logger.debug(
-                              'Story image failed to load:',
-                              story.cover_image,
-                            )
-                            e.currentTarget.style.display = 'none'
-                          }}
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-gray-200">
-                          <span className="text-sm text-gray-500">
-                            No Image
-                          </span>
-                        </div>
-                      )}
-                      {story.is_free ? (
-                        <div className="absolute right-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-secondary shadow-lg">
-                          {t('free.tag', { ns: 'misc' })}
-                        </div>
-                      ) : (
-                        <div className="absolute right-2 top-2 rounded-full border-2 border-white bg-yellow-500 px-3 py-1.5 text-xs font-bold text-black shadow-lg">
-                          {t('premium.tag', { ns: 'misc' })}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-1 flex-col p-3 md:p-4">
-                      <CardHeader className="flex-1 p-0 pb-2">
-                        <div className="mb-2 flex items-start justify-between">
-                          <CardTitle className="line-clamp-1 flex-1 text-sm text-primary-foreground md:text-base lg:text-lg">
-                            {storyTitle}
-                          </CardTitle>
-                          <div className="ml-2 flex flex-shrink-0 items-center gap-2">
-                            <Badge
-                              variant="secondary"
-                              className="bg-primary/30 text-xs text-primary-foreground"
-                            >
-                              {t(`category.${story.category}`, {
-                                defaultValue:
-                                  story.category.charAt(0).toUpperCase() +
-                                  story.category.slice(1),
-                              })}
-                            </Badge>
-                            <div className="flex items-center text-xs text-primary-foreground">
-                              <Clock className="mx-1 h-3 w-3" />
-                              <span>
-                                {t('duration', { duration: story.duration })}
-                              </span>
+                return (
+                  <Link key={story.id} to={`/stories/${story.id}`}>
+                    <Card className="story-card flex h-80 lg:min-w-80 mx-auto lg:max-w-96 cursor-pointer flex-col overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-shadow hover:shadow-lg md:h-96">
+                      <div className="relative h-56">
+                        {imageUrl ? (
+                          <img
+                            src={imageUrl}
+                            alt={storyTitle}
+                            className="aspect-[3/2] h-56 w-full object-fill"
+                            onError={e => {
+                              logger.debug(
+                                'Story image failed to load:',
+                                story.cover_image,
+                              )
+                              e.currentTarget.style.display = 'none'
+                            }}
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center bg-gray-200">
+                            <span className="text-sm text-gray-500">
+                              No Image
+                            </span>
+                          </div>
+                        )}
+                        {story.is_free ? (
+                          <div className="absolute right-2 top-2 rounded-full border-2 border-white bg-green-600 px-3 py-1.5 text-xs font-bold text-secondary shadow-lg">
+                            {t('free.tag', { ns: 'misc' })}
+                          </div>
+                        ) : (
+                          <div className="absolute right-2 top-2 rounded-full border-2 border-white bg-yellow-500 px-3 py-1.5 text-xs font-bold text-black shadow-lg">
+                            {t('premium.tag', { ns: 'misc' })}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex flex-1 flex-col p-3 md:p-4">
+                        <CardHeader className="flex-1 p-0 pb-2">
+                          <div className="mb-2 flex items-start justify-between">
+                            <CardTitle className="line-clamp-1 flex-1 text-sm text-primary-foreground md:text-base lg:text-lg">
+                              {storyTitle}
+                            </CardTitle>
+                            <div className="ml-2 flex flex-shrink-0 items-center gap-2">
+                              <Badge
+                                variant="secondary"
+                                className="bg-primary/30 text-xs text-primary-foreground"
+                              >
+                                {t(`category.${story.category}`, {
+                                  defaultValue:
+                                    story.category.charAt(0).toUpperCase() +
+                                    story.category.slice(1),
+                                })}
+                              </Badge>
+                              <div className="flex items-center text-xs text-primary-foreground">
+                                <Clock className="mx-1 h-3 w-3" />
+                                <span>
+                                  {t('duration', { duration: story.duration })}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <CardDescription className="line-clamp-2 text-xs leading-relaxed text-primary-foreground md:text-sm">
-                          {storyDescription}
-                        </CardDescription>
-                      </CardHeader>
-                    </div>
-                  </Card>
-                </Link>
-              )
-            })}
-          </div>
+                          <CardDescription className="line-clamp-2 text-xs leading-relaxed text-primary-foreground md:text-sm">
+                            {storyDescription}
+                          </CardDescription>
+                        </CardHeader>
+                      </div>
+                    </Card>
+                  </Link>
+                )
+              })}
+            </div>
+            <LoadMoreIndicator
+              isLoading={isLoadingMore}
+              hasMore={hasMore}
+              loadedCount={loadedCount}
+              totalCount={totalCount}
+            />
+          </>
         )}
       </div>
     </div>

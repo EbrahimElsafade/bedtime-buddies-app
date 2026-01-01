@@ -4,10 +4,11 @@ import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/utils/logger";
 import { toast } from "sonner";
+import { usePagination } from "@/hooks/usePagination";
+import { AdminPagination } from "@/components/admin/AdminPagination";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -17,6 +18,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -198,6 +200,18 @@ const Users = () => {
       
       return 0;
     });
+
+  // Pagination
+  const {
+    currentPage,
+    totalPages,
+    pageSize,
+    paginatedItems,
+    goToPage,
+    setPageSize,
+    startIndex,
+    endIndex,
+  } = usePagination(filteredUsers, { pageSize: 10 });
 
   const changeUserRole = async (user: UserWithRole, newRole: 'user' | 'editor' | 'admin') => {
     try {
@@ -609,14 +623,14 @@ const Users = () => {
                       {t('forms.loading')}
                     </TableCell>
                   </TableRow>
-                ) : filteredUsers.length === 0 ? (
+                ) : paginatedItems.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8} className="text-center py-8">
                       {t('users.noUsersFound')}
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredUsers.map((user) => (
+                  paginatedItems.map((user) => (
                     <TableRow key={user.id}>
                       <TableCell className="font-medium">{user.parent_name}</TableCell>
                       <TableCell>{user.child_name || "-"}</TableCell>
@@ -715,12 +729,21 @@ const Users = () => {
                   ))
                 )}
               </TableBody>
-              <TableCaption>
-                {t('users.showing_users', { showing: filteredUsers.length, total: users.length })}
-              </TableCaption>
             </Table>
           </div>
         </CardContent>
+        <CardFooter>
+          <AdminPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            pageSize={pageSize}
+            totalItems={filteredUsers.length}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            onPageChange={goToPage}
+            onPageSizeChange={setPageSize}
+          />
+        </CardFooter>
       </Card>
 
       {/* Edit User Dialog */}
