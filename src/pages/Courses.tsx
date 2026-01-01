@@ -327,14 +327,6 @@ const Courses = () => {
             />
           </>
         )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              )
-            })}
-          </div>
-        )}
       </div>
     </div>
   )
