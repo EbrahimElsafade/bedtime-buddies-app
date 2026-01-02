@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/card'
 import { Check, Crown, Sparkles } from 'lucide-react'
 import { Badge } from '../ui/badge'
+import { WhatsappSubscribeButton } from '@/components/WhatsappSubscribeButton'
 
 const SubscribeBanner = () => {
   const { t } = useTranslation(['misc', 'subscription'])
@@ -75,11 +76,8 @@ const SubscribeBanner = () => {
                     </li>
                   ))}
               </ul>
-              <Link to="/profile?tab=subscription" className="block">
-                <Button size="lg" className="w-full" variant="default">
-                  {t('subscription:subscribeNow')}
-                </Button>
-              </Link>
+
+              <WhatsappSubscribeButton />
             </CardContent>
           </Card>
         </div>
