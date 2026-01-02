@@ -106,7 +106,7 @@ export const ProfileInfo = ({
   }
 
   const handleChangePassword = async () => {
-    if (newPassword.length < 6) {
+    if (newPassword.length < 8) {
       toast.error(t('passwordTooShort'))
       return
     }

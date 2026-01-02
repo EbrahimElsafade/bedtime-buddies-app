@@ -36,7 +36,7 @@ const ResetPassword = () => {
     e.preventDefault();
     setError("");
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       setError(t('auth:messages.passwordTooShort'));
       return;
     }
@@ -111,7 +111,7 @@ const ResetPassword = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     autoComplete="new-password"
                     required
-                    minLength={6}
+                    minLength={8}
                   />
                 </div>
                 <div className="space-y-2">
@@ -124,7 +124,7 @@ const ResetPassword = () => {
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     autoComplete="new-password"
                     required
-                    minLength={6}
+                    minLength={8}
                   />
                 </div>
                 
