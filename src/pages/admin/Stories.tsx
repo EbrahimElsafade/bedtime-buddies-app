@@ -1,27 +1,19 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { ColumnDef } from '@tanstack/react-table'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
 import { logger } from '@/utils/logger'
 import { getMultilingualText } from '@/utils/multilingualUtils'
-import { usePagination } from '@/hooks/usePagination'
-import { AdminPagination } from '@/components/admin/AdminPagination'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import { DataTable } from '@/components/admin/DataTable'
+import { DataTableColumnHeader } from '@/components/admin/DataTableColumnHeader'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import {
@@ -45,7 +37,6 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import {
-  ArrowUpDown,
   MoreHorizontal,
   Search,
   PlusCircle,
@@ -75,8 +66,6 @@ const Stories = () => {
   const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
   const [filter, setFilter] = useState<'all' | 'published' | 'draft'>('all')
-  const [sortField, setSortField] = useState<keyof Story>('created_at')
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
   const [storyToDelete, setStoryToDelete] = useState<string | null>(null)
 
   const { i18n } = useTranslation()
@@ -99,17 +88,8 @@ const Stories = () => {
     queryFn: fetchStories,
   })
 
-  const toggleSort = (field: keyof Story) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
-    } else {
-      setSortField(field)
-      setSortDirection('asc')
-    }
-  }
-
-  const filteredStories = stories
-    .filter(story => {
+  const filteredStories = useMemo(() => {
+    return stories.filter(story => {
       const storyTitle = getMultilingualText(story.title, 'en', 'en')
       const matchesSearch = storyTitle
         .toLowerCase()
@@ -121,58 +101,7 @@ const Stories = () => {
 
       return matchesSearch
     })
-    .sort((a, b) => {
-      const aValue = a[sortField]
-      const bValue = b[sortField]
-
-      if (aValue === null) return sortDirection === 'asc' ? -1 : 1
-      if (bValue === null) return sortDirection === 'asc' ? 1 : -1
-
-      // Handle multilingual title sorting
-      if (sortField === 'title') {
-        const aTitle = getMultilingualText(a.title, 'en', 'en')
-        const bTitle = getMultilingualText(b.title, 'en', 'en')
-        return sortDirection === 'asc'
-          ? aTitle.localeCompare(bTitle)
-          : bTitle.localeCompare(aTitle)
-      }
-
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return sortDirection === 'asc'
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue)
-      }
-
-      if (typeof aValue === 'boolean' && typeof bValue === 'boolean') {
-        return sortDirection === 'asc'
-          ? Number(aValue) - Number(bValue)
-          : Number(bValue) - Number(aValue)
-      }
-
-      if (typeof aValue === 'number' && typeof bValue === 'number') {
-        return sortDirection === 'asc' ? aValue - bValue : bValue - aValue
-      }
-
-      if (Array.isArray(aValue) && Array.isArray(bValue)) {
-        return sortDirection === 'asc'
-          ? aValue.length - bValue.length
-          : bValue.length - aValue.length
-      }
-
-      return 0
-    })
-
-  // Pagination
-  const {
-    currentPage,
-    totalPages,
-    pageSize,
-    paginatedItems,
-    goToPage,
-    setPageSize,
-    startIndex,
-    endIndex,
-  } = usePagination(filteredStories, { pageSize: 10 })
+  }, [stories, searchTerm, filter])
 
   const handleDeleteClick = (id: string) => {
     setStoryToDelete(id)
@@ -217,6 +146,126 @@ const Stories = () => {
       toast.error('Failed to update story status')
     }
   }
+
+  const columns: ColumnDef<Story>[] = useMemo(
+    () => [
+      {
+        accessorKey: 'title',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Title" />
+        ),
+        cell: ({ row }) => (
+          <span className="font-medium">
+            {getMultilingualText(row.original.title, i18n.language, 'en')}
+          </span>
+        ),
+        sortingFn: (rowA, rowB) => {
+          const aTitle = getMultilingualText(rowA.original.title, 'en', 'en')
+          const bTitle = getMultilingualText(rowB.original.title, 'en', 'en')
+          return aTitle.localeCompare(bTitle)
+        },
+      },
+      {
+        accessorKey: 'category',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Category" />
+        ),
+        cell: ({ row }) =>
+          row.original.category.charAt(0).toUpperCase() +
+          row.original.category.slice(1),
+      },
+      {
+        accessorKey: 'is_free',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Type" />
+        ),
+        cell: ({ row }) =>
+          row.original.is_free ? (
+            <Badge>Free</Badge>
+          ) : (
+            <Badge variant="accent">Premium</Badge>
+          ),
+      },
+      {
+        accessorKey: 'languages',
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title="Languages"
+            className="hidden md:table-cell"
+          />
+        ),
+        cell: ({ row }) => (
+          <div className="hidden md:block">
+            {row.original.languages.map(lang => (
+              <Badge key={lang} variant="outline" className="mr-1">
+                {lang}
+              </Badge>
+            ))}
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'is_published',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Status" />
+        ),
+        cell: ({ row }) =>
+          row.original.is_published ? (
+            <Badge variant="success">Published</Badge>
+          ) : (
+            <Badge variant="outline">Draft</Badge>
+          ),
+      },
+      {
+        id: 'actions',
+        header: () => <span className="sr-only">Actions</span>,
+        cell: ({ row }) => {
+          const story = row.original
+          return (
+            <div className="text-right">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="h-8 w-8 p-0"
+                    aria-label="Open menu"
+                  >
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuItem asChild>
+                    <Link to={`/stories/${story.id}`}>
+                      <Eye className="mr-2 h-4 w-4" /> View
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to={`/admin/stories/edit/${story.id}`}>
+                      <Edit className="mr-2 h-4 w-4" /> Edit
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => togglePublishStatus(story)}>
+                    {story.is_published ? 'Unpublish' : 'Publish'} Story
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="text-red-600"
+                    onClick={() => handleDeleteClick(story.id)}
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" /> Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )
+        },
+      },
+    ],
+    [i18n.language],
+  )
 
   return (
     <div>
@@ -284,163 +333,14 @@ const Stories = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="overflow-hidden rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead
-                    onClick={() => toggleSort('title')}
-                    className="cursor-pointer"
-                  >
-                    Title
-                    {sortField === 'title' && (
-                      <ArrowUpDown className="ml-2 inline h-4 w-4" />
-                    )}
-                  </TableHead>
-                  <TableHead
-                    onClick={() => toggleSort('category')}
-                    className="cursor-pointer"
-                  >
-                    Category
-                    {sortField === 'category' && (
-                      <ArrowUpDown className="ml-2 inline h-4 w-4" />
-                    )}
-                  </TableHead>
-                  <TableHead
-                    onClick={() => toggleSort('is_free')}
-                    className="cursor-pointer"
-                  >
-                    Type
-                    {sortField === 'is_free' && (
-                      <ArrowUpDown className="ml-2 inline h-4 w-4" />
-                    )}
-                  </TableHead>
-                  <TableHead
-                    onClick={() => toggleSort('languages')}
-                    className="hidden cursor-pointer md:table-cell"
-                  >
-                    Languages
-                    {sortField === 'languages' && (
-                      <ArrowUpDown className="ml-2 inline h-4 w-4" />
-                    )}
-                  </TableHead>
-                  <TableHead
-                    onClick={() => toggleSort('is_published')}
-                    className="cursor-pointer"
-                  >
-                    Status
-                    {sortField === 'is_published' && (
-                      <ArrowUpDown className="ml-2 inline h-4 w-4" />
-                    )}
-                  </TableHead>
-                  <TableHead className="w-[100px] text-right">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="py-8 text-center">
-                      Loading stories...
-                    </TableCell>
-                  </TableRow>
-                ) : paginatedItems.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="py-8 text-center">
-                      No stories found
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  paginatedItems.map(story => (
-                    <TableRow key={story.id}>
-                      <TableCell className="font-medium">
-                        {getMultilingualText(story.title, i18n.language, 'en')}
-                      </TableCell>
-                      <TableCell>
-                        {story.category.charAt(0).toUpperCase() +
-                          story.category.slice(1)}
-                      </TableCell>
-                      <TableCell>
-                        {story.is_free ? (
-                          <Badge>Free</Badge>
-                        ) : (
-                          <Badge variant="accent">Premium</Badge>
-                        )}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {story.languages.map(lang => (
-                          <Badge key={lang} variant="outline" className="mr-1">
-                            {lang}
-                          </Badge>
-                        ))}
-                      </TableCell>
-                      <TableCell>
-                        {story.is_published ? (
-                          <Badge variant="success">Published</Badge>
-                        ) : (
-                          <Badge variant="outline">Draft</Badge>
-                        )}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              className="h-8 w-8 p-0"
-                              aria-label="Open menu"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem asChild>
-                              <Link to={`/stories/${story.id}`}>
-                                <Eye className="mr-2 h-4 w-4" /> View
-                              </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                              <Link to={`/admin/stories/edit/${story.id}`}>
-                                <Edit className="mr-2 h-4 w-4" /> Edit
-                              </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              onClick={() => togglePublishStatus(story)}
-                            >
-                              {story.is_published ? 'Unpublish' : 'Publish'}{' '}
-                              Story
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              className="text-red-600"
-                              onClick={() => handleDeleteClick(story.id)}
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" /> Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <AdminPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            pageSize={pageSize}
-            totalItems={filteredStories.length}
-            startIndex={startIndex}
-            endIndex={endIndex}
-            onPageChange={goToPage}
-            onPageSizeChange={setPageSize}
+          <DataTable
+            columns={columns}
+            data={filteredStories}
+            isLoading={isLoading}
+            emptyMessage="No stories found"
+            loadingMessage="Loading stories..."
           />
-        </CardFooter>
+        </CardContent>
       </Card>
 
       <AlertDialog

@@ -1,24 +1,16 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import { ColumnDef } from "@tanstack/react-table";
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/utils/logger";
 import { toast } from "sonner";
-import { usePagination } from "@/hooks/usePagination";
-import { AdminPagination } from "@/components/admin/AdminPagination";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { DataTable } from "@/components/admin/DataTable";
+import { DataTableColumnHeader } from "@/components/admin/DataTableColumnHeader";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -60,7 +52,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  ArrowUpDown,
   MoreHorizontal,
   Search,
   User,
@@ -92,8 +83,6 @@ type UserWithRole = {
 const Users = () => {
   const { t } = useTranslation('admin');
   const [searchTerm, setSearchTerm] = useState("");
-  const [sortField, setSortField] = useState<string>("created_at");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   
   // Create user dialog state
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -163,55 +152,14 @@ const Users = () => {
     queryFn: fetchUsers,
   });
 
-  const toggleSort = (field: string) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-    } else {
-      setSortField(field);
-      setSortDirection("asc");
-    }
-  };
-
-  const filteredUsers = users
-    .filter(
+  const filteredUsers = useMemo(() => {
+    return users.filter(
       (user) =>
         user.parent_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (user.child_name &&
           user.child_name.toLowerCase().includes(searchTerm.toLowerCase()))
-    )
-    .sort((a, b) => {
-      const aValue = a[sortField as keyof UserWithRole];
-      const bValue = b[sortField as keyof UserWithRole];
-      
-      if (aValue === null) return sortDirection === "asc" ? -1 : 1;
-      if (bValue === null) return sortDirection === "asc" ? 1 : -1;
-      
-      if (typeof aValue === "string" && typeof bValue === "string") {
-        return sortDirection === "asc"
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue);
-      }
-      
-      if (typeof aValue === "boolean" && typeof bValue === "boolean") {
-        return sortDirection === "asc"
-          ? Number(aValue) - Number(bValue)
-          : Number(bValue) - Number(aValue);
-      }
-      
-      return 0;
-    });
-
-  // Pagination
-  const {
-    currentPage,
-    totalPages,
-    pageSize,
-    paginatedItems,
-    goToPage,
-    setPageSize,
-    startIndex,
-    endIndex,
-  } = usePagination(filteredUsers, { pageSize: 10 });
+    );
+  }, [users, searchTerm]);
 
   const changeUserRole = async (user: UserWithRole, newRole: 'user' | 'editor' | 'admin') => {
     try {
@@ -256,8 +204,6 @@ const Users = () => {
     setIsCreating(true);
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
-      
       const response = await supabase.functions.invoke("admin-users", {
         body: {
           action: "create",
@@ -444,6 +390,161 @@ const Users = () => {
     }
   };
 
+  const columns: ColumnDef<UserWithRole>[] = useMemo(
+    () => [
+      {
+        accessorKey: "parent_name",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t('users.parentName')} />
+        ),
+        cell: ({ row }) => (
+          <span className="font-medium">{row.original.parent_name}</span>
+        ),
+      },
+      {
+        accessorKey: "child_name",
+        header: t('users.childName'),
+        cell: ({ row }) => row.original.child_name || "-",
+      },
+      {
+        accessorKey: "is_premium",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t('users.status')} />
+        ),
+        cell: ({ row }) =>
+          row.original.is_premium ? (
+            <Badge variant="default" className="bg-moon-DEFAULT hover:bg-moon-dark">
+              {t('users.premium')}
+            </Badge>
+          ) : (
+            <Badge variant="outline">{t('users.free')}</Badge>
+          ),
+      },
+      {
+        accessorKey: "subscription_period",
+        header: t('users.subscriptionPeriod'),
+        cell: ({ row }) => {
+          const user = row.original;
+          if (!user.is_premium) {
+            return <span className="text-muted-foreground text-xs">-</span>;
+          }
+          return (
+            <div className="text-xs space-y-0.5">
+              <div className="text-muted-foreground">
+                {t('users.start')}: {user.subscription_start 
+                  ? new Date(user.subscription_start).toLocaleDateString() 
+                  : "-"}
+              </div>
+              <div className="text-muted-foreground">
+                {t('users.end')}: {user.subscription_end 
+                  ? new Date(user.subscription_end).toLocaleDateString() 
+                  : "∞"}
+              </div>
+            </div>
+          );
+        },
+        enableSorting: false,
+      },
+      {
+        accessorKey: "preferred_language",
+        header: t('users.preferredLanguage'),
+        cell: ({ row }) => row.original.preferred_language,
+      },
+      {
+        accessorKey: "role",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t('users.role')} />
+        ),
+        cell: ({ row }) => {
+          const user = row.original;
+          if (user.roles?.some(r => r.role === "admin")) {
+            return (
+              <Badge variant="default" className="bg-red-600 hover:bg-red-700">
+                {t('users.roleAdmin')}
+              </Badge>
+            );
+          }
+          if (user.roles?.some(r => r.role === "editor")) {
+            return (
+              <Badge variant="default" className="bg-blue-600 hover:bg-blue-700">
+                {t('users.roleEditor')}
+              </Badge>
+            );
+          }
+          return <Badge variant="outline">{t('users.roleUser')}</Badge>;
+        },
+        sortingFn: (rowA, rowB) => {
+          const roleOrder = { admin: 0, editor: 1, user: 2 };
+          const aRole = getUserRole(rowA.original);
+          const bRole = getUserRole(rowB.original);
+          return roleOrder[aRole] - roleOrder[bRole];
+        },
+      },
+      {
+        accessorKey: "created_at",
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title={t('users.registered')} />
+        ),
+        cell: ({ row }) => new Date(row.original.created_at).toLocaleDateString(),
+      },
+      {
+        id: "actions",
+        header: () => <span className="sr-only">{t('users.actions')}</span>,
+        cell: ({ row }) => {
+          const user = row.original;
+          return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="h-8 w-8 p-0"
+                  aria-label="Open menu"
+                >
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => openEditDialog(user)}>
+                  <Pencil className="mr-2 h-4 w-4" /> {t('users.editUser')}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => openPasswordDialog(user)}>
+                  <Key className="mr-2 h-4 w-4" /> {t('users.changePassword')}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={() => changeUserRole(user, 'user')}
+                  disabled={getUserRole(user) === 'user'}
+                >
+                  <User className="mr-2 h-4 w-4" /> {t('users.setAsUser')}
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => changeUserRole(user, 'editor')}
+                  disabled={getUserRole(user) === 'editor'}
+                >
+                  <ShieldCheck className="mr-2 h-4 w-4" /> {t('users.setAsEditor')}
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={() => changeUserRole(user, 'admin')}
+                  disabled={getUserRole(user) === 'admin'}
+                >
+                  <ShieldCheck className="mr-2 h-4 w-4" /> {t('users.setAsAdmin')}
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem 
+                  onClick={() => openDeleteDialog(user)}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="mr-2 h-4 w-4" /> {t('users.deleteUser')}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          );
+        },
+      },
+    ],
+    [t]
+  );
+
   return (
     <div>
       <header className="mb-8">
@@ -582,168 +683,14 @@ const Users = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead onClick={() => toggleSort("parent_name")} className="cursor-pointer">
-                    {t('users.parentName')}
-                    {sortField === "parent_name" && (
-                      <ArrowUpDown className="ml-2 h-4 w-4 inline" />
-                    )}
-                  </TableHead>
-                  <TableHead>{t('users.childName')}</TableHead>
-                  <TableHead onClick={() => toggleSort("is_premium")} className="cursor-pointer">
-                    {t('users.status')}
-                    {sortField === "is_premium" && (
-                      <ArrowUpDown className="ml-2 h-4 w-4 inline" />
-                    )}
-                  </TableHead>
-                  <TableHead>{t('users.subscriptionPeriod')}</TableHead>
-                  <TableHead>{t('users.preferredLanguage')}</TableHead>
-                  <TableHead onClick={() => toggleSort("role")} className="cursor-pointer">
-                    {t('users.role')}
-                    {sortField === "role" && (
-                      <ArrowUpDown className="ml-2 h-4 w-4 inline" />
-                    )}
-                  </TableHead>
-                  <TableHead onClick={() => toggleSort("created_at")} className="cursor-pointer">
-                    {t('users.registered')}
-                    {sortField === "created_at" && (
-                      <ArrowUpDown className="ml-2 h-4 w-4 inline" />
-                    )}
-                  </TableHead>
-                  <TableHead className="w-[80px]">{t('users.actions')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8">
-                      {t('forms.loading')}
-                    </TableCell>
-                  </TableRow>
-                ) : paginatedItems.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8">
-                      {t('users.noUsersFound')}
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  paginatedItems.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell className="font-medium">{user.parent_name}</TableCell>
-                      <TableCell>{user.child_name || "-"}</TableCell>
-                      <TableCell>
-                        {user.is_premium ? (
-                          <Badge variant="default" className="bg-moon-DEFAULT hover:bg-moon-dark">
-                            {t('users.premium')}
-                          </Badge>
-                        ) : (
-                          <Badge variant="outline">{t('users.free')}</Badge>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {user.is_premium ? (
-                          <div className="text-xs space-y-0.5">
-                            <div className="text-muted-foreground">
-                              {t('users.start')}: {user.subscription_start 
-                                ? new Date(user.subscription_start).toLocaleDateString() 
-                                : "-"}
-                            </div>
-                            <div className="text-muted-foreground">
-                              {t('users.end')}: {user.subscription_end 
-                                ? new Date(user.subscription_end).toLocaleDateString() 
-                                : "∞"}
-                            </div>
-                          </div>
-                        ) : (
-                          <span className="text-muted-foreground text-xs">-</span>
-                        )}
-                      </TableCell>
-                      <TableCell>{user.preferred_language}</TableCell>
-                      <TableCell>
-                        {user.roles?.some(r => r.role === "admin") ? (
-                          <Badge variant="default" className="bg-red-600 hover:bg-red-700">
-                            {t('users.roleAdmin')}
-                          </Badge>
-                        ) : user.roles?.some(r => r.role === "editor") ? (
-                          <Badge variant="default" className="bg-blue-600 hover:bg-blue-700">
-                            {t('users.roleEditor')}
-                          </Badge>
-                        ) : (
-                          <Badge variant="outline">{t('users.roleUser')}</Badge>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        {new Date(user.created_at).toLocaleDateString()}
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              className="h-8 w-8 p-0"
-                              aria-label="Open menu"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => openEditDialog(user)}>
-                              <Pencil className="mr-2 h-4 w-4" /> {t('users.editUser')}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => openPasswordDialog(user)}>
-                              <Key className="mr-2 h-4 w-4" /> {t('users.changePassword')}
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem 
-                              onClick={() => changeUserRole(user, 'user')}
-                              disabled={getUserRole(user) === 'user'}
-                            >
-                              <User className="mr-2 h-4 w-4" /> {t('users.setAsUser')}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem 
-                              onClick={() => changeUserRole(user, 'editor')}
-                              disabled={getUserRole(user) === 'editor'}
-                            >
-                              <ShieldCheck className="mr-2 h-4 w-4" /> {t('users.setAsEditor')}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem 
-                              onClick={() => changeUserRole(user, 'admin')}
-                              disabled={getUserRole(user) === 'admin'}
-                            >
-                              <ShieldCheck className="mr-2 h-4 w-4" /> {t('users.setAsAdmin')}
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem 
-                              onClick={() => openDeleteDialog(user)}
-                              className="text-destructive focus:text-destructive"
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" /> {t('users.deleteUser')}
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <AdminPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            pageSize={pageSize}
-            totalItems={filteredUsers.length}
-            startIndex={startIndex}
-            endIndex={endIndex}
-            onPageChange={goToPage}
-            onPageSizeChange={setPageSize}
+          <DataTable
+            columns={columns}
+            data={filteredUsers}
+            isLoading={isLoading}
+            emptyMessage={t('users.noUsersFound')}
+            loadingMessage={t('forms.loading')}
           />
-        </CardFooter>
+        </CardContent>
       </Card>
 
       {/* Edit User Dialog */}
@@ -910,7 +857,7 @@ const Users = () => {
               {isChangingPassword ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  {t('forms.changing')}
+                  {t('forms.saving')}
                 </>
               ) : (
                 t('users.changePassword')
@@ -921,28 +868,24 @@ const Users = () => {
       </Dialog>
 
       {/* Delete User Dialog */}
-      <AlertDialog open={isDeleteDialogOpen} onOpenChange={(open) => {
-        setIsDeleteDialogOpen(open);
-        if (!open) {
-          setDeletingUser(null);
-        }
-      }}>
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
+            <div className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-destructive" />
-              {t('users.deleteUser')}
-            </AlertDialogTitle>
+              <AlertDialogTitle>{t('users.deleteUser')}</AlertDialogTitle>
+            </div>
             <AlertDialogDescription>
-              {t('users.deleteUserConfirm', { name: deletingUser?.parent_name })}
+              {t('users.deleteUserConfirm')} <strong>{deletingUser?.parent_name}</strong>?
+              {t('users.deleteUserWarning')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isDeleting}>{t('forms.cancel')}</AlertDialogCancel>
+            <AlertDialogCancel>{t('forms.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteUser}
-              disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={isDeleting}
             >
               {isDeleting ? (
                 <>

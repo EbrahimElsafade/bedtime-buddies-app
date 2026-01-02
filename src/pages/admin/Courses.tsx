@@ -1,26 +1,19 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { ColumnDef } from '@tanstack/react-table'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from 'sonner'
 import { logger } from '@/utils/logger'
-import { usePagination } from '@/hooks/usePagination'
-import { AdminPagination } from '@/components/admin/AdminPagination'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
+import { getLocalized } from '@/utils/getLocalized'
+import { DataTable } from '@/components/admin/DataTable'
+import { DataTableColumnHeader } from '@/components/admin/DataTableColumnHeader'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import {
@@ -44,7 +37,6 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import {
-  ArrowUpDown,
   MoreHorizontal,
   Search,
   PlusCircle,
@@ -54,7 +46,6 @@ import {
   Eye,
   AlertTriangle,
 } from 'lucide-react'
-import { getLocalized } from '@/utils/getLocalized'
 
 type Course = {
   id: string
@@ -91,8 +82,6 @@ const Courses = () => {
   const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
   const [filter, setFilter] = useState<'all' | 'published' | 'draft'>('all')
-  const [sortField, setSortField] = useState<keyof Course>('created_at')
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc')
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const [courseToDelete, setCourseToDelete] = useState<string | null>(null)
 
@@ -115,17 +104,8 @@ const Courses = () => {
     queryFn: fetchCourses,
   })
 
-  const toggleSort = (field: keyof Course) => {
-    if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc')
-    } else {
-      setSortField(field)
-      setSortDirection('asc')
-    }
-  }
-
-  const filteredCourses = courses
-    .filter(course => {
+  const filteredCourses = useMemo(() => {
+    return courses.filter(course => {
       const matchesSearch = getLocalized(course, 'title', lang)
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
@@ -136,45 +116,7 @@ const Courses = () => {
 
       return matchesSearch
     })
-    .sort((a, b) => {
-      const aValue = a[sortField]
-      const bValue = b[sortField]
-
-      if (aValue === null) return sortDirection === 'asc' ? -1 : 1
-      if (bValue === null) return sortDirection === 'asc' ? 1 : -1
-
-      if (typeof aValue === 'string' && typeof bValue === 'string') {
-        return sortDirection === 'asc'
-          ? aValue.localeCompare(bValue)
-          : bValue.localeCompare(aValue)
-      }
-
-      if (typeof aValue === 'boolean' && typeof bValue === 'boolean') {
-        return sortDirection === 'asc'
-          ? Number(aValue) - Number(bValue)
-          : Number(bValue) - Number(aValue)
-      }
-
-      if (Array.isArray(aValue) && Array.isArray(bValue)) {
-        return sortDirection === 'asc'
-          ? aValue.length - bValue.length
-          : bValue.length - aValue.length
-      }
-
-      return 0
-    })
-
-  // Pagination
-  const {
-    currentPage,
-    totalPages,
-    pageSize,
-    paginatedItems,
-    goToPage,
-    setPageSize,
-    startIndex,
-    endIndex,
-  } = usePagination(filteredCourses, { pageSize: 10 })
+  }, [courses, searchTerm, filter, lang])
 
   const handleDeleteClick = (id: string) => {
     setCourseToDelete(id)
@@ -219,6 +161,141 @@ const Courses = () => {
       toast.error('Failed to update course status')
     }
   }
+
+  const columns: ColumnDef<Course>[] = useMemo(
+    () => [
+      {
+        accessorKey: 'title',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Title" />
+        ),
+        cell: ({ row }) => (
+          <span className="font-medium">
+            {getLocalized(row.original, 'title', lang)}
+          </span>
+        ),
+        sortingFn: (rowA, rowB) => {
+          const aTitle = getLocalized(rowA.original, 'title', lang)
+          const bTitle = getLocalized(rowB.original, 'title', lang)
+          return aTitle.localeCompare(bTitle)
+        },
+      },
+      {
+        accessorKey: 'category',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Category" />
+        ),
+        cell: ({ row }) =>
+          row.original.category.charAt(0).toUpperCase() +
+          row.original.category.slice(1),
+      },
+      {
+        accessorKey: 'is_free',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Type" />
+        ),
+        cell: ({ row }) =>
+          row.original.is_free ? (
+            <Badge
+              variant="default"
+              className="bg-primary-foreground hover:bg-primary"
+            >
+              Free
+            </Badge>
+          ) : (
+            <Badge
+              variant="default"
+              className="bg-moon-DEFAULT hover:bg-moon-dark"
+            >
+              Premium
+            </Badge>
+          ),
+      },
+      {
+        accessorKey: 'languages',
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title="Languages"
+            className="hidden md:table-cell"
+          />
+        ),
+        cell: ({ row }) => (
+          <div className="hidden md:block">
+            {row.original.languages.map(lang => (
+              <Badge key={lang} variant="outline" className="mr-1">
+                {lang}
+              </Badge>
+            ))}
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'is_published',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Status" />
+        ),
+        cell: ({ row }) =>
+          row.original.is_published ? (
+            <Badge
+              variant="default"
+              className="bg-green-600 hover:bg-green-700"
+            >
+              Published
+            </Badge>
+          ) : (
+            <Badge variant="outline">Draft</Badge>
+          ),
+      },
+      {
+        id: 'actions',
+        header: () => <span className="sr-only">Actions</span>,
+        cell: ({ row }) => {
+          const course = row.original
+          return (
+            <div className="text-right">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="h-8 w-8 p-0"
+                    aria-label="Open menu"
+                  >
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuItem asChild>
+                    <Link to={`/courses/${course.id}`}>
+                      <Eye className="mr-2 h-4 w-4" /> View
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to={`/admin/courses/edit/${course.id}`}>
+                      <Edit className="mr-2 h-4 w-4" /> Edit
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => togglePublishStatus(course)}>
+                    {course.is_published ? 'Unpublish' : 'Publish'} Course
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="text-red-600"
+                    onClick={() => handleDeleteClick(course.id)}
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" /> Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )
+        },
+      },
+    ],
+    [lang],
+  )
 
   return (
     <div>
@@ -288,178 +365,14 @@ const Courses = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="overflow-hidden rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead
-                    onClick={() => toggleSort('title')}
-                    className="cursor-pointer"
-                  >
-                    Title
-                    {sortField === 'title' && (
-                      <ArrowUpDown className="ml-2 inline h-4 w-4" />
-                    )}
-                  </TableHead>
-                  <TableHead
-                    onClick={() => toggleSort('category')}
-                    className="cursor-pointer"
-                  >
-                    Category
-                    {sortField === 'category' && (
-                      <ArrowUpDown className="ml-2 inline h-4 w-4" />
-                    )}
-                  </TableHead>
-                  <TableHead
-                    onClick={() => toggleSort('is_free')}
-                    className="cursor-pointer"
-                  >
-                    Type
-                    {sortField === 'is_free' && (
-                      <ArrowUpDown className="ml-2 inline h-4 w-4" />
-                    )}
-                  </TableHead>
-                  <TableHead
-                    onClick={() => toggleSort('languages')}
-                    className="hidden cursor-pointer md:table-cell"
-                  >
-                    Languages
-                    {sortField === 'languages' && (
-                      <ArrowUpDown className="ml-2 inline h-4 w-4" />
-                    )}
-                  </TableHead>
-                  <TableHead
-                    onClick={() => toggleSort('is_published')}
-                    className="cursor-pointer"
-                  >
-                    Status
-                    {sortField === 'is_published' && (
-                      <ArrowUpDown className="ml-2 inline h-4 w-4" />
-                    )}
-                  </TableHead>
-                  <TableHead className="w-[100px] text-right">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isLoading ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="py-8 text-center">
-                      Loading courses...
-                    </TableCell>
-                  </TableRow>
-                ) : paginatedItems.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={6} className="py-8 text-center">
-                      No courses found
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  paginatedItems.map(course => (
-                    <TableRow key={course.id}>
-                      <TableCell className="font-medium">
-                        {getLocalized(course, 'title', lang)}
-                      </TableCell>
-                      <TableCell>
-                        {course.category.charAt(0).toUpperCase() +
-                          course.category.slice(1)}
-                      </TableCell>
-                      <TableCell>
-                        {course.is_free ? (
-                          <Badge
-                            variant="default"
-                            className="bg-primary-foreground hover:bg-primary"
-                          >
-                            Free
-                          </Badge>
-                        ) : (
-                          <Badge
-                            variant="default"
-                            className="bg-moon-DEFAULT hover:bg-moon-dark"
-                          >
-                            Premium
-                          </Badge>
-                        )}
-                      </TableCell>
-                      <TableCell className="hidden md:table-cell">
-                        {course.languages.map(lang => (
-                          <Badge key={lang} variant="outline" className="mr-1">
-                            {lang}
-                          </Badge>
-                        ))}
-                      </TableCell>
-                      <TableCell>
-                        {course.is_published ? (
-                          <Badge
-                            variant="default"
-                            className="bg-green-600 hover:bg-green-700"
-                          >
-                            Published
-                          </Badge>
-                        ) : (
-                          <Badge variant="outline">Draft</Badge>
-                        )}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              className="h-8 w-8 p-0"
-                              aria-label="Open menu"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem asChild>
-                              <Link to={`/courses/${course.id}`}>
-                                <Eye className="mr-2 h-4 w-4" /> View
-                              </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                              <Link to={`/admin/courses/edit/${course.id}`}>
-                                <Edit className="mr-2 h-4 w-4" /> Edit
-                              </Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              onClick={() => togglePublishStatus(course)}
-                            >
-                              {course.is_published ? 'Unpublish' : 'Publish'}{' '}
-                              Course
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              className="text-red-600"
-                              onClick={() => handleDeleteClick(course.id)}
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" /> Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <AdminPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            pageSize={pageSize}
-            totalItems={filteredCourses.length}
-            startIndex={startIndex}
-            endIndex={endIndex}
-            onPageChange={goToPage}
-            onPageSizeChange={setPageSize}
+          <DataTable
+            columns={columns}
+            data={filteredCourses}
+            isLoading={isLoading}
+            emptyMessage="No courses found"
+            loadingMessage="Loading courses..."
           />
-        </CardFooter>
+        </CardContent>
       </Card>
 
       <AlertDialog
