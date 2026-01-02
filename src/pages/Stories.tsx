@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Helmet } from 'react-helmet-async'
 import { useSearchParams } from 'react-router-dom'
@@ -33,7 +33,7 @@ const Stories = () => {
   const { language } = useLanguage()
   const { setIsLoading, setLoadingMessage } = useLoading()
 
-  const handleSearchChange = (value: string) => {
+  const handleSearchChange = useCallback((value: string) => {
     const newParams = new URLSearchParams(searchParams)
     if (value) {
       newParams.set('search', value)
@@ -41,9 +41,9 @@ const Stories = () => {
       newParams.delete('search')
     }
     setSearchParams(newParams)
-  }
+  }, [searchParams, setSearchParams])
 
-  const handleCategoryChange = (value: string) => {
+  const handleCategoryChange = useCallback((value: string) => {
     const newParams = new URLSearchParams(searchParams)
     if (value && value !== 'all') {
       newParams.set('category', value)
@@ -51,7 +51,7 @@ const Stories = () => {
       newParams.delete('category')
     }
     setSearchParams(newParams)
-  }
+  }, [searchParams, setSearchParams])
 
   const { data: stories = [], isLoading } = useQuery({
     queryKey: ['stories', language],
@@ -88,24 +88,26 @@ const Stories = () => {
     },
   })
 
-  const filteredStories = stories.filter(story => {
-    const storyTitle = getMultilingualText(story.title, i18n.language, 'en')
-    const storyDescription = getMultilingualText(
-      story.description,
-      i18n.language,
-      'en',
-    )
+  const filteredStories = useMemo(() => {
+    return stories.filter(story => {
+      const storyTitle = getMultilingualText(story.title, i18n.language, 'en')
+      const storyDescription = getMultilingualText(
+        story.description,
+        i18n.language,
+        'en',
+      )
 
-    const matchesSearch =
-      searchTerm === '' ||
-      storyTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      storyDescription.toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesSearch =
+        searchTerm === '' ||
+        storyTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        storyDescription.toLowerCase().includes(searchTerm.toLowerCase())
 
-    const matchesCategory =
-      selectedCategory === 'all' || story.category === selectedCategory
+      const matchesCategory =
+        selectedCategory === 'all' || story.category === selectedCategory
 
-    return matchesSearch && matchesCategory
-  })
+      return matchesSearch && matchesCategory
+    })
+  }, [stories, searchTerm, selectedCategory, i18n.language])
 
   // Infinite scroll
   const {
