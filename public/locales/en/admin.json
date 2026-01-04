@@ -17,7 +17,8 @@
     "games": "Games",
     "appearance": "Appearance",
     "settings": "Settings",
-    "logout": "Logout"
+    "logout": "Logout",
+    "specialistRequests": "Specialist Requests"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -296,5 +297,24 @@
     "error": "An error occurred",
     "deleteConfirm": "Are you sure you want to delete this item?",
     "deleteWarning": "This action cannot be undone."
+  },
+  "specialistRequests": {
+    "title": "Specialist Requests",
+    "description": "View and manage contact requests from users",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "message": "Message",
+    "status": "Status",
+    "date": "Date",
+    "pending": "Pending",
+    "reviewed": "Reviewed",
+    "completed": "Completed",
+    "rejected": "Rejected",
+    "requestDetails": "Request Details",
+    "statusUpdated": "Status Updated",
+    "statusUpdatedDesc": "The request status has been updated successfully",
+    "updateError": "Failed to update the request status",
+    "deleteConfirm": "Are you sure you want to delete this request?"
   }
 }
