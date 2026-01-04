@@ -34,9 +34,8 @@ const contactFormSchema = z.object({
     .max(255, 'Email is too long'),
   phone: z
     .string()
-    .max(20, 'Phone number is too long')
-    .optional()
-    .or(z.literal('')),
+    .min(1, 'Phone number is required')
+    .max(20, 'Phone number is too long'),
   message: z
     .string()
     .min(1, 'Message is required')
@@ -71,24 +70,39 @@ export const ContactFormModal = ({
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true)
     try {
+      // Save to database
+      const { error: dbError } = await supabase
+        .from('specialist_requests')
+        .insert({
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          message: data.message,
+        })
+
+      if (dbError) {
+        throw new Error(dbError.message)
+      }
+
+      // Also send email notification
       const { data: response, error } = await supabase.functions.invoke(
         'send-email',
         {
           body: {
             name: data.name,
             email: data.email,
-            phone: data.phone || undefined,
+            phone: data.phone,
             message: data.message,
           },
         },
       )
 
       if (error) {
-        throw new Error(error.message)
+        logger.warn('Email notification failed but request was saved:', error)
       }
 
-      if (!response?.success) {
-        throw new Error(response?.error || 'Failed to send message')
+      if (response && !response.success) {
+        logger.warn('Email notification failed but request was saved:', response.error)
       }
 
       toast({

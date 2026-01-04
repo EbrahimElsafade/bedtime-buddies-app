@@ -29,7 +29,7 @@ const getCorsHeaders = (origin: string | null) => {
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required").max(100, "Name too long").trim(),
   email: z.string().email("Invalid email format").max(255, "Email too long").trim(),
-  phone: z.string().max(20, "Phone number too long").optional(),
+  phone: z.string().min(1, "Phone is required").max(20, "Phone number too long").trim(),
   message: z.string().min(1, "Message is required").max(1000, "Message too long").trim(),
 });
 

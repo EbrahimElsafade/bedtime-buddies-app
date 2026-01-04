@@ -9,6 +9,7 @@ import {
   LogOut,
   Palette,
   Gamepad2,
+  MessageSquare,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -148,6 +149,18 @@ const AdminLayout = () => {
                   <NavLink to="/admin/games-management" className="flex items-center">
                     <Gamepad2 className="mr-3 h-5 w-5 rtl:ml-3" />
                     <span>{t('nav.games')}</span>
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={isActive('/admin/specialist-requests')}
+                  tooltip={t('navigation.specialistRequests')}
+                >
+                  <NavLink to="/admin/specialist-requests" className="flex items-center">
+                    <MessageSquare className="mr-3 h-5 w-5 rtl:ml-3" />
+                    <span>{t('navigation.specialistRequests')}</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>

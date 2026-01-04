@@ -14,9 +14,10 @@
     "stories": "Histoires",
     "courses": "Cours",
     "games": "Jeux",
-    "appearance": "Appearance",
+    "appearance": "Apparence",
     "settings": "Paramètres",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "specialistRequests": "Demandes de Spécialistes"
   },
   "nav": {
     "dashboard": "Tableau de Bord",
@@ -205,5 +206,24 @@
     "error": "Une erreur s'est produite",
     "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cet élément ?",
     "deleteWarning": "Cette action ne peut pas être annulée."
+  },
+  "specialistRequests": {
+    "title": "Demandes de Spécialistes",
+    "description": "Voir et gérer les demandes de contact des utilisateurs",
+    "name": "Nom",
+    "email": "Email",
+    "phone": "Téléphone",
+    "message": "Message",
+    "status": "Statut",
+    "date": "Date",
+    "pending": "En attente",
+    "reviewed": "Examiné",
+    "completed": "Terminé",
+    "rejected": "Rejeté",
+    "requestDetails": "Détails de la Demande",
+    "statusUpdated": "Statut Mis à Jour",
+    "statusUpdatedDesc": "Le statut de la demande a été mis à jour avec succès",
+    "updateError": "Échec de la mise à jour du statut de la demande",
+    "deleteConfirm": "Êtes-vous sûr de vouloir supprimer cette demande ?"
   }
 }
