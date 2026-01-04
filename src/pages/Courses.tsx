@@ -83,13 +83,8 @@ const Courses = () => {
   }, [courses, activeCategory, lang, searchQuery])
 
   // Infinite scroll
-  const {
-    visibleItems,
-    hasMore,
-    isLoadingMore,
-    loadedCount,
-    totalCount,
-  } = useInfiniteScroll(filteredCourses, { pageSize: 12 })
+  const { visibleItems, hasMore, isLoadingMore, loadedCount, totalCount } =
+    useInfiniteScroll(filteredCourses, { pageSize: 12 })
 
   const ageCounts = useMemo(() => {
     const counts: Record<string, number> = {}
@@ -133,17 +128,32 @@ const Courses = () => {
             onValueChange={handleCategoryChange}
             value={activeCategory}
           >
+            {/* className="!bg-primary/20 data-[state=active]:!bg-primary" */}
             <TabsList className="mb-4 w-full justify-start gap-2 overflow-x-auto p-1 md:mb-6 lg:mb-8">
               <TabsTrigger value="all">{t('courses.allCourses')}</TabsTrigger>
 
-              {categories.map(category => (
-                <TabsTrigger key={category.id} value={category.name}>
-                  {getCategoryText(category, 'name', lang)}
-                </TabsTrigger>
-              ))}
+              {categories.map(category => {
+                const isKnowledgeStation =
+                  category.name?.toLowerCase() === 'knowledge station'
+
+                return (
+                  <TabsTrigger
+                    key={category.id}
+                    value={category.name}
+                    className={
+                      isKnowledgeStation &&
+                      '!bg-primary/20 data-[state=active]:!bg-primary'
+                    }
+                  >
+                    {getCategoryText(category, 'name', lang)}
+                  </TabsTrigger>
+                )
+              })}
             </TabsList>
           </Tabs>
-
+          {/* {categories.map(category => (
+            <div key={category.id}>{category.name}</div>
+          ))} */}
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="relative w-full lg:max-w-md">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground rtl:left-auto rtl:right-3" />
@@ -209,7 +219,9 @@ const Courses = () => {
                           <p className="mb-4 text-sm text-muted-foreground">
                             {t('courses.loginToView')}
                           </p>
-                          <Button className="w-full">{t('common:login')}</Button>
+                          <Button className="w-full">
+                            {t('common:login')}
+                          </Button>
                         </div>
                       </Card>
                     </div>
