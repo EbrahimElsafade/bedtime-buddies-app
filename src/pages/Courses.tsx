@@ -134,7 +134,7 @@ const Courses = () => {
 
               {categories.map(category => {
                 const isKnowledgeStation =
-                  category.name?.toLowerCase() === 'knowledge station'
+                  category.name.toLowerCase() === 'knowledge station'
 
                 return (
                   <TabsTrigger
