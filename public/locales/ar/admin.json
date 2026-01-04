@@ -27,7 +27,8 @@
     "games": "الألعاب",
     "appearance": "المظهر",
     "settings": "الإعدادات",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "specialistRequests": "طلبات المتخصصين"
   },
   "nav": {
     "dashboard": "لوحة التحكم",
@@ -331,5 +332,24 @@
     "error": "حدث خطأ",
     "deleteConfirm": "هل أنت متأكد من حذف هذا العنصر؟",
     "deleteWarning": "لا يمكن التراجع عن هذا الإجراء."
+  },
+  "specialistRequests": {
+    "title": "طلبات المتخصصين",
+    "description": "عرض وإدارة طلبات التواصل من المستخدمين",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "message": "الرسالة",
+    "status": "الحالة",
+    "date": "التاريخ",
+    "pending": "قيد الانتظار",
+    "reviewed": "تمت المراجعة",
+    "completed": "مكتمل",
+    "rejected": "مرفوض",
+    "requestDetails": "تفاصيل الطلب",
+    "statusUpdated": "تم تحديث الحالة",
+    "statusUpdatedDesc": "تم تحديث حالة الطلب بنجاح",
+    "updateError": "فشل في تحديث حالة الطلب",
+    "deleteConfirm": "هل أنت متأكد من حذف هذا الطلب؟"
   }
 }
