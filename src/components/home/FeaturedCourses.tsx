@@ -41,6 +41,8 @@ const FeaturedCourses = () => {
             const category = categories.find(
               cat => cat.id === course.category || cat.name === course.category,
             )
+            const isKnowledgeStation =
+              category?.name.toLowerCase() === 'knowledge station'
 
             // Show login overlay for non-authenticated users
             if (!isAuthenticated) {
@@ -82,7 +84,13 @@ const FeaturedCourses = () => {
                 to={`/courses/${course.id}`}
                 className="block"
               >
-                <Card className="story-card relative z-10 grid h-full cursor-pointer gap-4 overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-transform hover:scale-105">
+                <Card
+                  className={`story-card relative z-10 grid h-full cursor-pointer gap-4 overflow-hidden backdrop-blur-sm transition-transform hover:scale-105 ${
+                    isKnowledgeStation
+                      ? 'border-[#0080004f] bg-[#00ff0029]'
+                      : 'border-primary/20 bg-secondary/70'
+                  }`}
+                >
                   <div className="relative aspect-[3/2]">
                     <img
                       src={getImageUrl(course.coverImagePath)}
@@ -117,7 +125,7 @@ const FeaturedCourses = () => {
                     </CardDescription>
                   </CardHeader>
 
-                  <CardContent className="grid gap-2 !pt-0 w-full">
+                  <CardContent className="grid w-full gap-2 !pt-0">
                     <div className="mb-2 flex flex-wrap justify-between gap-2">
                       {course.instructor && (
                         <div className="flex items-center gap-2">
@@ -146,7 +154,11 @@ const FeaturedCourses = () => {
 
                       <Badge
                         variant="secondary"
-                        className="bg-primary/30 text-primary-foreground"
+                        className={
+                          isKnowledgeStation
+                            ? 'bg-[#0080004f] text-secondary'
+                            : 'bg-primary/30 text-primary-foreground'
+                        }
                       >
                         {getCategoryText(category, 'name', lang) ||
                           course.category ||
