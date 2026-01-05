@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -25,24 +25,15 @@ import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/integrations/supabase/client'
+import { WhatsappSubscribeButton } from '@/components/WhatsappSubscribeButton'
 
-const contactFormSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
-  email: z
-    .string()
-    .email('Invalid email address')
-    .max(255, 'Email is too long'),
-  phone: z
-    .string()
-    .min(1, 'Phone number is required')
-    .max(20, 'Phone number is too long'),
-  message: z
-    .string()
-    .min(1, 'Message is required')
-    .max(1000, 'Message is too long'),
-})
-
-type ContactFormData = z.infer<typeof contactFormSchema>
+// Contact form data shape
+interface ContactFormData {
+  name: string
+  email: string
+  phone: string
+  message: string
+}
 
 interface ContactFormModalProps {
   open: boolean
@@ -56,6 +47,27 @@ export const ContactFormModal = ({
   const { t } = useTranslation('courses')
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showWhatsappModal, setShowWhatsappModal] = useState(false)
+
+  // Create schema here so we can use translated messages
+  const contactFormSchema = z.object({
+    name: z
+      .string()
+      .min(1, t('contact.validation.nameRequired'))
+      .max(100, t('contact.validation.nameTooLong')),
+    email: z
+      .string()
+      .email(t('contact.validation.emailInvalid'))
+      .max(255, t('contact.validation.emailTooLong')),
+    phone: z
+      .string()
+      .min(1, t('contact.validation.phoneRequired'))
+      .max(20, t('contact.validation.phoneTooLong')),
+    message: z
+      .string()
+      .min(1, t('contact.validation.messageRequired'))
+      .max(1000, t('contact.validation.messageTooLong')),
+  })
 
   const form = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
@@ -102,7 +114,10 @@ export const ContactFormModal = ({
       }
 
       if (response && !response.success) {
-        logger.warn('Email notification failed but request was saved:', response.error)
+        logger.warn(
+          'Email notification failed but request was saved:',
+          response.error,
+        )
       }
 
       toast({
@@ -111,8 +126,10 @@ export const ContactFormModal = ({
       })
 
       form.reset()
+      // close contact modal and show whatsapp follow-up
       onOpenChange(false)
-    } catch (error: any) {
+      setShowWhatsappModal(true)
+    } catch (error: unknown) {
       logger.error('Error sending contact form:', error)
       toast({
         title: t('contact.errorTitle'),
@@ -124,106 +141,154 @@ export const ContactFormModal = ({
     }
   }
 
+  // handle closing the contact modal so we can show the whatsapp modal
+  const handleContactOpenChange = (val: boolean) => {
+    onOpenChange(val)
+    if (!val) {
+      setShowWhatsappModal(true)
+    }
+  }
+
+  // reset whatsapp modal when the contact modal is opened again
+  // so it only appears after a close
+  useEffect(() => {
+    if (open) setShowWhatsappModal(false)
+  }, [open])
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>{t('contact.title')}</DialogTitle>
-          <DialogDescription>{t('contact.description')}</DialogDescription>
-        </DialogHeader>
+    <>
+      <Dialog open={open} onOpenChange={handleContactOpenChange}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t('contact.title')}</DialogTitle>
+            <DialogDescription>{t('contact.description')}</DialogDescription>
+          </DialogHeader>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('contact.name')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder={t('contact.namePlaceholder')}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('contact.email')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder={t('contact.emailPlaceholder')}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('contact.phone')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="tel"
-                      placeholder={t('contact.phonePlaceholder')}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="message"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('contact.message')}</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder={t('contact.messagePlaceholder')}
-                      rows={4}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex justify-end gap-3 pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={isSubmitting}
-              >
-                {t('contact.cancel')}
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('contact.name')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={t('contact.namePlaceholder')}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-                {t('contact.submit')}
+              />
+
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('contact.email')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder={t('contact.emailPlaceholder')}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('contact.phone')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="tel"
+                        placeholder={t('contact.phonePlaceholder')}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="message"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('contact.message')}</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder={t('contact.messagePlaceholder')}
+                        rows={4}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex justify-end gap-3 pt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => handleContactOpenChange(false)}
+                  disabled={isSubmitting}
+                >
+                  {t('contact.cancel')}
+                </Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  {t('contact.submit')}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+
+      {/* WhatsApp follow-up modal shown after contact modal closes */}
+      <Dialog open={showWhatsappModal} onOpenChange={setShowWhatsappModal}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader className='grid gap-4'>
+            <DialogTitle>{t('contact.whatsappTitle')}</DialogTitle>
+            <DialogDescription>
+              {t('contact.whatsappDescription')}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="grid gap-4">
+            <p className="text-sm text-muted-foreground">
+              {t('contact.whatsappMessage')}
+            </p>
+
+            <div className="flex pt-2">
+              <WhatsappSubscribeButton
+                className="w-full"
+                label={t('contact.contactViaWhatsapp')}
+                message={t('contact.contactViaWhatsapp')}
+              />
+              <Button
+                variant="outline"
+                onClick={() => setShowWhatsappModal(false)}
+              >
+                {t('contact.close')}
               </Button>
             </div>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }

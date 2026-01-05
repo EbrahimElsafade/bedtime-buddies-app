@@ -44,6 +44,21 @@
     "successTitle": "Message Sent!",
     "successMessage": "We've received your message and will get back to you soon.",
     "errorTitle": "Failed to Send",
-    "errorMessage": "There was an error sending your message. Please try again."
+    "errorMessage": "There was an error sending your message. Please try again.",
+    "close": "Close",
+    "validation": {
+      "nameRequired": "Name is required",
+      "nameTooLong": "Name is too long",
+      "emailInvalid": "Invalid email address",
+      "emailTooLong": "Email is too long",
+      "phoneRequired": "Phone number is required",
+      "phoneTooLong": "Phone number is too long",
+      "messageRequired": "Message is required",
+      "messageTooLong": "Message is too long"
+    },
+    "whatsappTitle": "Stay in touch",
+    "contactViaWhatsapp": "Contact via WhatsApp",
+    "whatsappDescription": "You can also reach us on WhatsApp for a faster reply.",
+    "whatsappMessage": "Want a quicker reply? Send us a message on WhatsApp and we'll get back to you shortly."
   }
 }

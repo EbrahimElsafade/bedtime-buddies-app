@@ -143,5 +143,9 @@
     "champion": "دحيح",
     "master": "الاول مقرر",
     "legend": "رئيس اتحاد الطلاب"
+  },
+  "whatsapp": {
+    "contactViaWhatsapp": "تواصل عبر واتساب",
+    "communicateWithASpecialist": "مرحباً، أود التواصل مع أخصائي"
   }
 }

@@ -45,5 +45,21 @@
     "successMessage": "Nous avons reçu votre message et vous répondrons bientôt.",
     "errorTitle": "Échec de l'Envoi",
     "errorMessage": "Une erreur s'est produite lors de l'envoi de votre message. Veuillez réessayer."
+    ,
+    "close": "Fermer",
+    "validation": {
+      "nameRequired": "Le nom est requis",
+      "nameTooLong": "Le nom est trop long",
+      "emailInvalid": "Adresse e-mail invalide",
+      "emailTooLong": "L'email est trop long",
+      "phoneRequired": "Le numéro de téléphone est requis",
+      "phoneTooLong": "Le numéro de téléphone est trop long",
+      "messageRequired": "Le message est requis",
+      "messageTooLong": "Le message est trop long"
+    },
+    "whatsappTitle": "Restez en contact",
+    "contactViaWhatsapp": "Contactez via WhatsApp",
+    "whatsappDescription": "Vous pouvez également nous contacter sur WhatsApp pour une réponse plus rapide.",
+    "whatsappMessage": "Vous voulez une réponse plus rapide ? Envoyez-nous un message sur WhatsApp et nous vous répondrons bientôt."
   }
 }

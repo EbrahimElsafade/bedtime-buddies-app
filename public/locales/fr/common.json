@@ -144,5 +144,9 @@
     "champion": "Champion",
     "master": "Maître",
     "legend": "Légende"
+  },
+  "whatsapp": {
+    "contactViaWhatsapp": "Contacter via WhatsApp",
+    "communicateWithASpecialist": "Bonjour, je souhaite communiquer avec un spécialiste"
   }
 }

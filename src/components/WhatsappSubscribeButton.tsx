@@ -5,24 +5,28 @@ interface WhatsappSubscribeButtonProps {
   phoneNumber?: string
   message?: string
   className?: string
+  label?: string
 }
 
 export const WhatsappSubscribeButton = ({
   phoneNumber = '201036443209',
-  message = 'Hi, I want to subscribe to Dolphoon premium',
+  message,
   className,
+  label,
 }: WhatsappSubscribeButtonProps) => {
   const { t } = useTranslation('subscription')
+  const buttonLabel = label || t('subscribeViaWhatsapp')
+  const finalMessage = message || t('subscribeViaWhatsappMessage')
 
   const handleWhatsappSubscribe = () => {
-    const encodedMessage = encodeURIComponent(message)
+    const encodedMessage = encodeURIComponent(finalMessage)
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${encodedMessage}`
     window.open(whatsappUrl, '_blank')
   }
 
   return (
     <Button
-      className={`${className} w-full bg-green-800 hover:bg-green-700`}
+      className={`${className} w-full bg-green-800 px-4 hover:bg-green-700 hover:text-secondary`}
       onClick={handleWhatsappSubscribe}
     >
       <svg
@@ -77,7 +81,7 @@ export const WhatsappSubscribeButton = ({
         />
       </svg>
 
-      <span>{t('subscribeViaWhatsapp')}</span>
+      <span>{buttonLabel}</span>
     </Button>
   )
 }

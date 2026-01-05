@@ -44,5 +44,21 @@
     "successMessage": "لقد استلمنا رسالتك وسنتواصل معك قريباً.",
     "errorTitle": "فشل الإرسال",
     "errorMessage": "حدث خطأ أثناء إرسال رسالتك. يرجى المحاولة مرة أخرى."
+    ,
+    "close": "إغلاق",
+    "validation": {
+      "nameRequired": "الاسم مطلوب",
+      "nameTooLong": "الاسم طويل جدًا",
+      "emailInvalid": "البريد الإلكتروني غير صالح",
+      "emailTooLong": "البريد الإلكتروني طويل جدًا",
+      "phoneRequired": "رقم الهاتف مطلوب",
+      "phoneTooLong": "رقم الهاتف طويل جدًا",
+      "messageRequired": "الرسالة مطلوبة",
+      "messageTooLong": "الرسالة طويلة جدًا"
+    },
+    "whatsappTitle": "ابقَ على تواصل",
+    "contactViaWhatsapp": "تواصل عبر واتساب",
+    "whatsappDescription": "يمكنك أيضًا التواصل معنا عبر واتساب للرد بشكل أسرع.",
+    "whatsappMessage": "هل تريد ردًا أسرع؟ أرسل لنا رسالة على واتساب وسنعود إليك قريبًا."
   }
 }
