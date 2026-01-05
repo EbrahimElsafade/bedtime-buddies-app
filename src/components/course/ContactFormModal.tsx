@@ -33,6 +33,7 @@ interface ContactFormData {
   email: string
   phone: string
   message: string
+  website: string // Honeypot field for bot detection
 }
 
 interface ContactFormModalProps {
@@ -67,6 +68,7 @@ export const ContactFormModal = ({
       .string()
       .min(1, t('contact.validation.messageRequired'))
       .max(1000, t('contact.validation.messageTooLong')),
+    website: z.string().max(0).optional(), // Honeypot - should always be empty
   })
 
   const form = useForm<ContactFormData>({
@@ -76,6 +78,7 @@ export const ContactFormModal = ({
       email: '',
       phone: '',
       message: '',
+      website: '', // Honeypot field
     },
   })
 
@@ -105,6 +108,7 @@ export const ContactFormModal = ({
             email: data.email,
             phone: data.phone,
             message: data.message,
+            website: data.website, // Honeypot field
           },
         },
       )
@@ -236,6 +240,27 @@ export const ContactFormModal = ({
                   </FormItem>
                 )}
               />
+
+              {/* Honeypot field - hidden from users, bots will fill it */}
+              <div className="absolute left-[-9999px]" aria-hidden="true">
+                <FormField
+                  control={form.control}
+                  name="website"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Website</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          tabIndex={-1}
+                          autoComplete="off"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               <div className="flex justify-end gap-3 pt-4">
                 <Button
