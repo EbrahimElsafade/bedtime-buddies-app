@@ -80,6 +80,7 @@
     "startDate": "Date de Début",
     "endDate": "Date de Fin",
     "leaveEmptyForUnlimited": "Laisser vide pour illimité",
+    "yearlySubscriptionNote": "L'abonnement se terminera automatiquement 1 an après la date de début",
     "noUsersFound": "Aucun utilisateur trouvé",
     "showing_users": "Affichage de {{showing}} sur {{total}} utilisateurs"
   },
