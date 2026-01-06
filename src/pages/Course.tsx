@@ -17,7 +17,7 @@ import { CourseHeader } from '@/components/course/CourseHeader'
 import { ContactFormModal } from '@/components/course/ContactFormModal'
 import { useUserRole } from '@/hooks/useUserRole'
 import { getCategoryText } from '@/utils/courseUtils'
-import { WhatsappSubscribeButton } from '@/components/WhatsappSubscribeButton'
+// import { WhatsappSubscribeButton } from '@/components/WhatsappSubscribeButton'
 
 const Course = () => {
   const { id: courseId } = useParams<{ id: string }>()
@@ -296,11 +296,11 @@ const Course = () => {
                   {t('button.communicateWithASpecialist')}
                 </Button>
 
-                <WhatsappSubscribeButton
+                {/* <WhatsappSubscribeButton
                   className="!w-fit"
                   label={t('common:whatsapp.contactViaWhatsapp')}
                   message={t('common:whatsapp.communicateWithASpecialist')}
-                />
+                /> */}
               </div>
             </div>
           </div>
