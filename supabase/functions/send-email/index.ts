@@ -73,41 +73,14 @@ const getCorsHeaders = (origin: string | null) => {
   };
 };
 
-// Input validation schema with honeypot field and reCAPTCHA
+// Input validation schema with honeypot field
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required").max(100, "Name too long").trim(),
   email: z.string().email("Invalid email format").max(255, "Email too long").trim(),
   phone: z.string().min(1, "Phone is required").max(20, "Phone number too long").trim(),
   message: z.string().min(1, "Message is required").max(1000, "Message too long").trim(),
   website: z.string().max(0, "Bot detected").optional(), // Honeypot field - should be empty
-  recaptchaToken: z.string().optional(), // reCAPTCHA v3 token
 });
-
-// Verify reCAPTCHA token with Google
-const verifyRecaptcha = async (token: string): Promise<{ success: boolean; score: number }> => {
-  const secretKey = Deno.env.get("RECAPTCHA_SECRET_KEY");
-  if (!secretKey) {
-    console.warn("RECAPTCHA_SECRET_KEY not configured, skipping verification");
-    return { success: true, score: 1.0 };
-  }
-
-  try {
-    const response = await fetch("https://www.google.com/recaptcha/api/siteverify", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: `secret=${secretKey}&response=${token}`,
-    });
-
-    const data = await response.json();
-    return { 
-      success: data.success === true, 
-      score: data.score || 0 
-    };
-  } catch (error) {
-    console.error("reCAPTCHA verification error:", error);
-    return { success: false, score: 0 };
-  }
-};
 
 // HTML escape function to prevent XSS in email clients
 const escapeHtml = (str: string): string => {
@@ -163,25 +136,6 @@ const handler = async (req: Request): Promise<Response> => {
         status: 200,
         headers: { "Content-Type": "application/json", ...corsHeaders },
       });
-    }
-
-    // Verify reCAPTCHA token
-    if (rawBody.recaptchaToken) {
-      const recaptchaResult = await verifyRecaptcha(rawBody.recaptchaToken);
-      if (!recaptchaResult.success || recaptchaResult.score < 0.5) {
-        console.warn(`reCAPTCHA failed for IP: ${clientIP}, score: ${recaptchaResult.score}`);
-        return new Response(
-          JSON.stringify({ 
-            success: false, 
-            error: "Security verification failed. Please try again." 
-          }),
-          {
-            status: 403,
-            headers: { "Content-Type": "application/json", ...corsHeaders },
-          }
-        );
-      }
-      console.log(`reCAPTCHA passed for IP: ${clientIP}, score: ${recaptchaResult.score}`);
     }
 
     if (!validationResult.success) {

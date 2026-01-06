@@ -102,9 +102,7 @@ const Users = () => {
   const [editChildName, setEditChildName] = useState("");
   const [editLanguage, setEditLanguage] = useState("");
   const [editIsPremium, setEditIsPremium] = useState(false);
-  const [editSubscriptionTier, setEditSubscriptionTier] = useState<string>("");
   const [editSubscriptionStart, setEditSubscriptionStart] = useState<string>("");
-  const [editSubscriptionEnd, setEditSubscriptionEnd] = useState<string>("");
   
   // Change password dialog state
   const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
@@ -251,9 +249,7 @@ const Users = () => {
     setEditChildName(user.child_name || "");
     setEditLanguage(user.preferred_language);
     setEditIsPremium(user.is_premium);
-    setEditSubscriptionTier(user.subscription_tier || "");
     setEditSubscriptionStart(user.subscription_start ? user.subscription_start.split('T')[0] : "");
-    setEditSubscriptionEnd(user.subscription_end ? user.subscription_end.split('T')[0] : "");
     setIsEditDialogOpen(true);
   };
 
@@ -273,6 +269,15 @@ const Users = () => {
     setIsEditing(true);
 
     try {
+      // Calculate end date as 1 year from start date
+      let subscriptionEnd: string | null = null;
+      if (editIsPremium && editSubscriptionStart) {
+        const startDate = new Date(editSubscriptionStart);
+        const endDate = new Date(startDate);
+        endDate.setFullYear(endDate.getFullYear() + 1);
+        subscriptionEnd = endDate.toISOString().split('T')[0];
+      }
+
       const response = await supabase.functions.invoke("admin-users", {
         body: {
           action: "update",
@@ -281,9 +286,9 @@ const Users = () => {
           childName: editChildName || undefined,
           preferredLanguage: editLanguage,
           isPremium: editIsPremium,
-          subscriptionTier: editIsPremium ? (editSubscriptionTier || "premium") : null,
+          subscriptionTier: editIsPremium ? "yearly" : null,
           subscriptionStart: editIsPremium && editSubscriptionStart ? editSubscriptionStart : null,
-          subscriptionEnd: editIsPremium && editSubscriptionEnd ? editSubscriptionEnd : null,
+          subscriptionEnd: subscriptionEnd,
         },
       });
 
@@ -754,38 +759,16 @@ const Users = () => {
             {editIsPremium && (
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="editSubscriptionTier">{t('users.subscriptionTier')}</Label>
-                  <Select value={editSubscriptionTier} onValueChange={setEditSubscriptionTier}>
-                    <SelectTrigger>
-                      <SelectValue placeholder={t('users.selectTier')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="premium">{t('users.tierPremium')}</SelectItem>
-                      <SelectItem value="family">{t('users.tierFamily')}</SelectItem>
-                      <SelectItem value="lifetime">{t('users.tierLifetime')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="editSubscriptionStart">{t('users.startDate')}</Label>
-                    <Input
-                      id="editSubscriptionStart"
-                      type="date"
-                      value={editSubscriptionStart}
-                      onChange={(e) => setEditSubscriptionStart(e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="editSubscriptionEnd">{t('users.endDate')}</Label>
-                    <Input
-                      id="editSubscriptionEnd"
-                      type="date"
-                      value={editSubscriptionEnd}
-                      onChange={(e) => setEditSubscriptionEnd(e.target.value)}
-                    />
-                    <p className="text-xs text-muted-foreground">{t('users.leaveEmptyForUnlimited')}</p>
-                  </div>
+                  <Label htmlFor="editSubscriptionStart">{t('users.startDate')}</Label>
+                  <Input
+                    id="editSubscriptionStart"
+                    type="date"
+                    value={editSubscriptionStart}
+                    onChange={(e) => setEditSubscriptionStart(e.target.value)}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    {t('users.yearlySubscriptionNote')}
+                  </p>
                 </div>
               </div>
             )}
