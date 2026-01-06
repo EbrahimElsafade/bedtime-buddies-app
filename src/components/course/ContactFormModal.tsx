@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -26,6 +26,40 @@ import { Button } from '@/components/ui/button'
 import { useToast } from '@/hooks/use-toast'
 import { supabase } from '@/integrations/supabase/client'
 import { WhatsappSubscribeButton } from '@/components/WhatsappSubscribeButton'
+
+// reCAPTCHA v3 site key (public)
+const RECAPTCHA_SITE_KEY = '6LcExample_YOUR_SITE_KEY' // Replace with your actual site key
+
+// Load reCAPTCHA script
+const loadRecaptchaScript = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    if (typeof window !== 'undefined' && (window as any).grecaptcha) {
+      resolve()
+      return
+    }
+
+    const script = document.createElement('script')
+    script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`
+    script.async = true
+    script.defer = true
+    script.onload = () => resolve()
+    script.onerror = () => reject(new Error('Failed to load reCAPTCHA'))
+    document.head.appendChild(script)
+  })
+}
+
+// Get reCAPTCHA token
+const getRecaptchaToken = async (action: string): Promise<string> => {
+  await loadRecaptchaScript()
+  return new Promise((resolve, reject) => {
+    ;(window as any).grecaptcha.ready(() => {
+      ;(window as any).grecaptcha
+        .execute(RECAPTCHA_SITE_KEY, { action })
+        .then(resolve)
+        .catch(reject)
+    })
+  })
+}
 
 // Contact form data shape
 interface ContactFormData {
@@ -85,6 +119,15 @@ export const ContactFormModal = ({
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true)
     try {
+      // Get reCAPTCHA token
+      let recaptchaToken = ''
+      try {
+        recaptchaToken = await getRecaptchaToken('contact_form')
+      } catch (captchaError) {
+        logger.warn('reCAPTCHA token generation failed:', captchaError)
+        // Continue without token - backend will handle validation
+      }
+
       // Save to database
       const { error: dbError } = await supabase
         .from('specialist_requests')
@@ -99,7 +142,7 @@ export const ContactFormModal = ({
         throw new Error(dbError.message)
       }
 
-      // Also send email notification
+      // Also send email notification with reCAPTCHA token
       const { data: response, error } = await supabase.functions.invoke(
         'send-email',
         {
@@ -109,6 +152,7 @@ export const ContactFormModal = ({
             phone: data.phone,
             message: data.message,
             website: data.website, // Honeypot field
+            recaptchaToken, // reCAPTCHA token for verification
           },
         },
       )
