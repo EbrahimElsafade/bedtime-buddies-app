@@ -8,12 +8,18 @@ const allowedOrigins = [
   'https://brxbtgzaumryxflkykpp.supabase.co',
   'http://localhost:5173',
   'http://localhost:8080',
+  'https://lovable.dev',
 ];
 
 const getCorsHeaders = (origin: string | null) => {
-  const allowedOrigin = origin && allowedOrigins.includes(origin) 
-    ? origin 
-    : allowedOrigins[0];
+  // Allow Lovable preview domains (pattern: *.lovable.app)
+  const isLovableOrigin = origin && (
+    origin.endsWith('.lovable.app') || 
+    origin.endsWith('.lovableproject.com') ||
+    allowedOrigins.includes(origin)
+  );
+  
+  const allowedOrigin = isLovableOrigin ? origin : allowedOrigins[0];
   
   return {
     "Access-Control-Allow-Origin": allowedOrigin,
