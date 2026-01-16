@@ -30,7 +30,7 @@ const Course = () => {
   const { data: course, isLoading, error } = useCourseData(courseId)
   const { data: categories = [] } = useCourseCategories()
   const { isFavorite, addFavorite, removeFavorite } = useCourseFavorites()
-  const { isPremium } = useUserRole(user)
+  const { isPremium, isLoading: roleLoading } = useUserRole(user)
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
 
@@ -67,7 +67,17 @@ const Course = () => {
       return
     }
 
-    if (!isPremium) {
+    // Wait for role to load before checking premium status
+    if (roleLoading) {
+      toast({
+        title: t('toast.loading', { ns: 'common', defaultValue: 'Loading...' }),
+        description: t('toast.pleaseWait', { ns: 'common', defaultValue: 'Please wait...' }),
+      })
+      return
+    }
+
+    // Allow access if course is free OR user is premium
+    if (!course?.isFree && !isPremium) {
       toast({
         title: t('toast.premiumRequired'),
         description: t('toast.upgradeToPremium'),
