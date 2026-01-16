@@ -228,25 +228,91 @@ const handler = async (req: Request): Promise<Response> => {
     if (body.action === "delete") {
       const { userId } = body;
 
+      console.log("Delete request for user:", userId);
+
       // Prevent self-deletion
       if (userId === user.id) {
+        console.log("Attempted self-deletion blocked");
         return new Response(
           JSON.stringify({ error: "Cannot delete your own account" }),
           { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
       }
 
-      // Delete user from auth (this will cascade to profiles due to FK)
+      // First, delete related data that might block the deletion
+      // Delete user roles
+      const { error: rolesDeleteError } = await supabaseAdmin
+        .from("user_roles")
+        .delete()
+        .eq("user_id", userId);
+      
+      if (rolesDeleteError) {
+        console.log("Roles deletion error (non-fatal):", rolesDeleteError);
+      }
+
+      // Delete user favorites
+      const { error: favoritesDeleteError } = await supabaseAdmin
+        .from("user_favorites")
+        .delete()
+        .eq("user_id", userId);
+      
+      if (favoritesDeleteError) {
+        console.log("Favorites deletion error (non-fatal):", favoritesDeleteError);
+      }
+
+      // Delete course favorites
+      const { error: courseFavoritesDeleteError } = await supabaseAdmin
+        .from("course_favorites")
+        .delete()
+        .eq("user_id", userId);
+      
+      if (courseFavoritesDeleteError) {
+        console.log("Course favorites deletion error (non-fatal):", courseFavoritesDeleteError);
+      }
+
+      // Delete user section progress
+      const { error: progressDeleteError } = await supabaseAdmin
+        .from("user_section_progress")
+        .delete()
+        .eq("user_id", userId);
+      
+      if (progressDeleteError) {
+        console.log("Progress deletion error (non-fatal):", progressDeleteError);
+      }
+
+      // Delete user finished content
+      const { error: finishedDeleteError } = await supabaseAdmin
+        .from("user_finished_content")
+        .delete()
+        .eq("user_id", userId);
+      
+      if (finishedDeleteError) {
+        console.log("Finished content deletion error (non-fatal):", finishedDeleteError);
+      }
+
+      // Delete profile
+      const { error: profileDeleteError } = await supabaseAdmin
+        .from("profiles")
+        .delete()
+        .eq("id", userId);
+      
+      if (profileDeleteError) {
+        console.log("Profile deletion error (non-fatal):", profileDeleteError);
+      }
+
+      // Delete user from auth
       const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(userId);
 
       if (deleteError) {
-        console.error("Delete user error:", deleteError);
+        console.error("Delete user auth error:", deleteError);
+        console.error("Error details:", JSON.stringify(deleteError, null, 2));
         return new Response(
-          JSON.stringify({ error: "Failed to delete user." }),
+          JSON.stringify({ error: `Failed to delete user: ${deleteError.message || 'Unknown error'}` }),
           { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
       }
 
+      console.log("User deleted successfully:", userId);
       return new Response(
         JSON.stringify({ success: true }),
         { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
