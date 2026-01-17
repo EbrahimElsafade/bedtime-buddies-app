@@ -131,6 +131,8 @@ const handler = async (req: Request): Promise<Response> => {
     if (body.action === "create") {
       const { email, password, parentName, childName, preferredLanguage, role } = body;
 
+      console.log("Creating user with email:", email);
+
       // Create user in auth
       const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
         email,
@@ -146,19 +148,61 @@ const handler = async (req: Request): Promise<Response> => {
       if (createError) {
         console.error("Create user error:", createError);
         return new Response(
-          JSON.stringify({ error: "Failed to create user. Please check the provided information." }),
+          JSON.stringify({ error: `Failed to create user: ${createError.message}` }),
           { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
       }
 
+      if (!newUser.user) {
+        console.error("User created but no user object returned");
+        return new Response(
+          JSON.stringify({ error: "User creation failed unexpectedly" }),
+          { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
+
+      console.log("User created in auth:", newUser.user.id);
+
+      // Create profile for the user
+      const { error: profileError } = await supabaseAdmin
+        .from("profiles")
+        .insert({
+          id: newUser.user.id,
+          parent_name: parentName,
+          child_name: childName || null,
+          preferred_language: preferredLanguage || "ar-fos7a",
+          is_premium: false,
+          total_points: 0,
+          unlocked_milestones: [],
+        });
+
+      if (profileError) {
+        console.error("Create profile error:", profileError);
+        // If profile creation fails, we should delete the auth user to maintain consistency
+        await supabaseAdmin.auth.admin.deleteUser(newUser.user.id);
+        return new Response(
+          JSON.stringify({ error: `Failed to create user profile: ${profileError.message}` }),
+          { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        );
+      }
+
+      console.log("Profile created for user:", newUser.user.id);
+
       // Assign role if specified
-      if (role && role !== "user" && newUser.user) {
-        await supabaseAdmin.from("user_roles").insert({
+      if (role && role !== "user") {
+        const { error: roleError } = await supabaseAdmin.from("user_roles").insert({
           user_id: newUser.user.id,
           role: role,
         });
+        
+        if (roleError) {
+          console.error("Assign role error (non-fatal):", roleError);
+        } else {
+          console.log("Role assigned:", role);
+        }
       }
 
+      console.log("User creation complete:", newUser.user.id);
       return new Response(
         JSON.stringify({ success: true, user: newUser.user }),
         { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
