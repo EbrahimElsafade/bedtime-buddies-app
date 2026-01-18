@@ -147,8 +147,15 @@ const handler = async (req: Request): Promise<Response> => {
 
       if (createError) {
         console.error("Create user error:", createError);
+        // Check for common error cases and provide user-friendly messages
+        let errorMessage = createError.message;
+        if (createError.message?.includes('already been registered') || 
+            createError.message?.includes('already exists') ||
+            createError.message?.includes('duplicate')) {
+          errorMessage = "This email is already registered. Please use a different email address.";
+        }
         return new Response(
-          JSON.stringify({ error: `Failed to create user: ${createError.message}` }),
+          JSON.stringify({ error: errorMessage }),
           { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
         );
       }
