@@ -123,8 +123,8 @@ serve(async (req: Request): Promise<Response> => {
       const newUserId = authData.user!.id;
       console.log("Auth user created:", newUserId);
 
-      // Create profile
-      const { error: profileError } = await adminClient.from("profiles").insert({
+      // Upsert profile (trigger may have already created it)
+      const { error: profileError } = await adminClient.from("profiles").upsert({
         id: newUserId,
         parent_name: parentName,
         child_name: childName || null,
@@ -132,10 +132,10 @@ serve(async (req: Request): Promise<Response> => {
         is_premium: false,
         total_points: 0,
         unlocked_milestones: [],
-      });
+      }, { onConflict: "id" });
 
       if (profileError) {
-        console.error("Create profile error:", profileError);
+        console.error("Upsert profile error:", profileError);
         // Rollback: delete auth user
         await adminClient.auth.admin.deleteUser(newUserId);
         return new Response(
