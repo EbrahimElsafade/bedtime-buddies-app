@@ -1,386 +1,303 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.8";
 
-// Allowed origins for CORS
-const allowedOrigins = [
-  'https://dolphoon.com',
-  'https://www.dolphoon.com',
-  'https://brxbtgzaumryxflkykpp.supabase.co',
-  'http://localhost:5173',
-  'http://localhost:8080',
-  'https://lovable.dev',
-];
-
-const getCorsHeaders = (origin: string | null) => {
-  // Allow Lovable preview domains (pattern: *.lovable.app)
-  const isLovableOrigin = origin && (
-    origin.endsWith('.lovable.app') || 
-    origin.endsWith('.lovableproject.com') ||
-    allowedOrigins.includes(origin)
-  );
-  
-  const allowedOrigin = isLovableOrigin ? origin : allowedOrigins[0];
-  
-  return {
-    "Access-Control-Allow-Origin": allowedOrigin,
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-    "Access-Control-Allow-Credentials": "true",
-  };
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-interface CreateUserRequest {
-  action: "create";
-  email: string;
-  password: string;
-  parentName: string;
-  childName?: string;
-  preferredLanguage?: string;
-  role?: "user" | "editor" | "admin";
-}
-
-interface UpdateUserRequest {
-  action: "update";
-  userId: string;
+interface RequestBody {
+  action: "create" | "update" | "delete" | "changePassword";
+  email?: string;
+  password?: string;
   parentName?: string;
   childName?: string;
   preferredLanguage?: string;
+  role?: "user" | "editor" | "admin";
+  userId?: string;
   isPremium?: boolean;
-  subscriptionTier?: string;
+  subscriptionTier?: string | null;
   subscriptionStart?: string | null;
   subscriptionEnd?: string | null;
+  newPassword?: string;
 }
 
-interface ChangePasswordRequest {
-  action: "changePassword";
-  userId: string;
-  newPassword: string;
-}
-
-interface DeleteUserRequest {
-  action: "delete";
-  userId: string;
-}
-
-type AdminUserRequest = CreateUserRequest | UpdateUserRequest | DeleteUserRequest | ChangePasswordRequest;
-
-const handler = async (req: Request): Promise<Response> => {
-  const origin = req.headers.get("origin");
-  const corsHeaders = getCorsHeaders(origin);
-
+serve(async (req: Request): Promise<Response> => {
+  // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    // Create admin client with service role key
-    const supabaseAdmin = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false,
-        },
-      }
-    );
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
 
-    // Verify the requesting user is an admin
+    // Admin client for privileged operations
+    const adminClient = createClient(supabaseUrl, serviceRoleKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    });
+
+    // Verify caller is authenticated and is admin
     const authHeader = req.headers.get("authorization");
     if (!authHeader) {
       return new Response(
         JSON.stringify({ error: "Authentication required" }),
-        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Create regular client to verify the user
-    const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-      {
-        global: {
-          headers: { Authorization: authHeader },
-        },
-      }
-    );
+    const userClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
 
-    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
-    
-    if (userError || !user) {
+    const { data: { user }, error: authError } = await userClient.auth.getUser();
+    if (authError || !user) {
       return new Response(
         JSON.stringify({ error: "Invalid credentials" }),
-        { status: 401, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    // Check if user is admin using the has_role function
-    const { data: isAdmin, error: roleError } = await supabaseAdmin.rpc("has_role", {
+    // Check admin role
+    const { data: isAdmin } = await adminClient.rpc("has_role", {
       _user_id: user.id,
       _role: "admin",
     });
 
-    if (roleError || !isAdmin) {
+    if (!isAdmin) {
       return new Response(
-        JSON.stringify({ error: "Insufficient permissions" }),
-        { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        JSON.stringify({ error: "Admin access required" }),
+        { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const body: AdminUserRequest = await req.json();
+    const body: RequestBody = await req.json();
+    console.log("Action:", body.action);
 
+    // CREATE USER
     if (body.action === "create") {
       const { email, password, parentName, childName, preferredLanguage, role } = body;
 
-      console.log("Creating user with email:", email);
+      if (!email || !password || !parentName) {
+        return new Response(
+          JSON.stringify({ error: "Email, password, and parent name are required" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
 
-      // Create user in auth
-      const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
+      if (password.length < 8) {
+        return new Response(
+          JSON.stringify({ error: "Password must be at least 8 characters" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      // Create auth user
+      const { data: authData, error: createError } = await adminClient.auth.admin.createUser({
         email,
         password,
         email_confirm: true,
         user_metadata: {
           parent_name: parentName,
-          child_name: childName,
+          child_name: childName || null,
           preferred_language: preferredLanguage || "ar-fos7a",
         },
       });
 
       if (createError) {
-        console.error("Create user error:", createError);
-        // Check for common error cases and provide user-friendly messages
-        let errorMessage = createError.message;
-        if (createError.message?.includes('already been registered') || 
-            createError.message?.includes('already exists') ||
-            createError.message?.includes('duplicate')) {
-          errorMessage = "This email is already registered. Please use a different email address.";
+        console.error("Create auth user error:", createError);
+        const msg = createError.message?.toLowerCase() || "";
+        if (msg.includes("already") || msg.includes("duplicate") || msg.includes("registered")) {
+          return new Response(
+            JSON.stringify({ error: "This email is already registered" }),
+            { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
         }
         return new Response(
-          JSON.stringify({ error: errorMessage }),
-          { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+          JSON.stringify({ error: createError.message }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
-      if (!newUser.user) {
-        console.error("User created but no user object returned");
-        return new Response(
-          JSON.stringify({ error: "User creation failed unexpectedly" }),
-          { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
-        );
-      }
+      const newUserId = authData.user!.id;
+      console.log("Auth user created:", newUserId);
 
-      console.log("User created in auth:", newUser.user.id);
-
-      // Create profile for the user
-      const { error: profileError } = await supabaseAdmin
-        .from("profiles")
-        .insert({
-          id: newUser.user.id,
-          parent_name: parentName,
-          child_name: childName || null,
-          preferred_language: preferredLanguage || "ar-fos7a",
-          is_premium: false,
-          total_points: 0,
-          unlocked_milestones: [],
-        });
+      // Create profile
+      const { error: profileError } = await adminClient.from("profiles").insert({
+        id: newUserId,
+        parent_name: parentName,
+        child_name: childName || null,
+        preferred_language: preferredLanguage || "ar-fos7a",
+        is_premium: false,
+        total_points: 0,
+        unlocked_milestones: [],
+      });
 
       if (profileError) {
         console.error("Create profile error:", profileError);
-        // If profile creation fails, we should delete the auth user to maintain consistency
-        await supabaseAdmin.auth.admin.deleteUser(newUser.user.id);
+        // Rollback: delete auth user
+        await adminClient.auth.admin.deleteUser(newUserId);
         return new Response(
-          JSON.stringify({ error: `Failed to create user profile: ${profileError.message}` }),
-          { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+          JSON.stringify({ error: "Failed to create user profile" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
-      console.log("Profile created for user:", newUser.user.id);
+      console.log("Profile created:", newUserId);
 
-      // Assign role if specified
+      // Assign role if not default user
       if (role && role !== "user") {
-        const { error: roleError } = await supabaseAdmin.from("user_roles").insert({
-          user_id: newUser.user.id,
+        const { error: roleError } = await adminClient.from("user_roles").insert({
+          user_id: newUserId,
           role: role,
         });
-        
         if (roleError) {
-          console.error("Assign role error (non-fatal):", roleError);
+          console.error("Assign role error:", roleError);
         } else {
           console.log("Role assigned:", role);
         }
       }
 
-      console.log("User creation complete:", newUser.user.id);
       return new Response(
-        JSON.stringify({ success: true, user: newUser.user }),
-        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        JSON.stringify({ success: true, userId: newUserId }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
+    // UPDATE USER
     if (body.action === "update") {
       const { userId, parentName, childName, preferredLanguage, isPremium, subscriptionTier, subscriptionStart, subscriptionEnd } = body;
 
+      if (!userId) {
+        return new Response(
+          JSON.stringify({ error: "User ID is required" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
       const updates: Record<string, unknown> = {};
       if (parentName !== undefined) updates.parent_name = parentName;
-      if (childName !== undefined) updates.child_name = childName;
+      if (childName !== undefined) updates.child_name = childName || null;
       if (preferredLanguage !== undefined) updates.preferred_language = preferredLanguage;
       if (isPremium !== undefined) updates.is_premium = isPremium;
       if (subscriptionTier !== undefined) updates.subscription_tier = subscriptionTier;
       if (subscriptionStart !== undefined) updates.subscription_start = subscriptionStart;
       if (subscriptionEnd !== undefined) updates.subscription_end = subscriptionEnd;
 
-      const { error: updateError } = await supabaseAdmin
+      const { error: updateError } = await adminClient
         .from("profiles")
         .update(updates)
         .eq("id", userId);
 
       if (updateError) {
-        console.error("Update user error:", updateError);
+        console.error("Update profile error:", updateError);
         return new Response(
-          JSON.stringify({ error: "Failed to update user profile." }),
-          { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+          JSON.stringify({ error: "Failed to update user" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
+      console.log("User updated:", userId);
       return new Response(
         JSON.stringify({ success: true }),
-        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
+    // CHANGE PASSWORD
     if (body.action === "changePassword") {
       const { userId, newPassword } = body;
 
-      if (!newPassword || newPassword.length < 8) {
+      if (!userId || !newPassword) {
         return new Response(
-          JSON.stringify({ error: "Password must be at least 8 characters" }),
-          { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+          JSON.stringify({ error: "User ID and new password are required" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
-      const { error: passwordError } = await supabaseAdmin.auth.admin.updateUserById(
-        userId,
-        { password: newPassword }
-      );
+      if (newPassword.length < 8) {
+        return new Response(
+          JSON.stringify({ error: "Password must be at least 8 characters" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+
+      const { error: passwordError } = await adminClient.auth.admin.updateUserById(userId, {
+        password: newPassword,
+      });
 
       if (passwordError) {
         console.error("Change password error:", passwordError);
         return new Response(
-          JSON.stringify({ error: "Failed to update password." }),
-          { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+          JSON.stringify({ error: "Failed to change password" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
+      console.log("Password changed for:", userId);
       return new Response(
         JSON.stringify({ success: true }),
-        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
+    // DELETE USER
     if (body.action === "delete") {
       const { userId } = body;
 
-      console.log("Delete request for user:", userId);
+      if (!userId) {
+        return new Response(
+          JSON.stringify({ error: "User ID is required" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
 
       // Prevent self-deletion
       if (userId === user.id) {
-        console.log("Attempted self-deletion blocked");
         return new Response(
           JSON.stringify({ error: "Cannot delete your own account" }),
-          { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
-      // First, delete related data that might block the deletion
-      // Delete user roles
-      const { error: rolesDeleteError } = await supabaseAdmin
-        .from("user_roles")
-        .delete()
-        .eq("user_id", userId);
-      
-      if (rolesDeleteError) {
-        console.log("Roles deletion error (non-fatal):", rolesDeleteError);
-      }
+      console.log("Deleting user:", userId);
 
-      // Delete user favorites
-      const { error: favoritesDeleteError } = await supabaseAdmin
-        .from("user_favorites")
-        .delete()
-        .eq("user_id", userId);
-      
-      if (favoritesDeleteError) {
-        console.log("Favorites deletion error (non-fatal):", favoritesDeleteError);
-      }
+      // Delete related data first (cascade manually for tables without FK cascade)
+      await adminClient.from("user_roles").delete().eq("user_id", userId);
+      await adminClient.from("user_favorites").delete().eq("user_id", userId);
+      await adminClient.from("course_favorites").delete().eq("user_id", userId);
+      await adminClient.from("user_section_progress").delete().eq("user_id", userId);
+      await adminClient.from("user_finished_content").delete().eq("user_id", userId);
+      await adminClient.from("profiles").delete().eq("id", userId);
 
-      // Delete course favorites
-      const { error: courseFavoritesDeleteError } = await supabaseAdmin
-        .from("course_favorites")
-        .delete()
-        .eq("user_id", userId);
-      
-      if (courseFavoritesDeleteError) {
-        console.log("Course favorites deletion error (non-fatal):", courseFavoritesDeleteError);
-      }
-
-      // Delete user section progress
-      const { error: progressDeleteError } = await supabaseAdmin
-        .from("user_section_progress")
-        .delete()
-        .eq("user_id", userId);
-      
-      if (progressDeleteError) {
-        console.log("Progress deletion error (non-fatal):", progressDeleteError);
-      }
-
-      // Delete user finished content
-      const { error: finishedDeleteError } = await supabaseAdmin
-        .from("user_finished_content")
-        .delete()
-        .eq("user_id", userId);
-      
-      if (finishedDeleteError) {
-        console.log("Finished content deletion error (non-fatal):", finishedDeleteError);
-      }
-
-      // Delete profile
-      const { error: profileDeleteError } = await supabaseAdmin
-        .from("profiles")
-        .delete()
-        .eq("id", userId);
-      
-      if (profileDeleteError) {
-        console.log("Profile deletion error (non-fatal):", profileDeleteError);
-      }
-
-      // Delete user from auth
-      const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(userId);
+      // Delete from auth
+      const { error: deleteError } = await adminClient.auth.admin.deleteUser(userId);
 
       if (deleteError) {
-        console.error("Delete user auth error:", deleteError);
-        console.error("Error details:", JSON.stringify(deleteError, null, 2));
+        console.error("Delete auth user error:", deleteError);
         return new Response(
-          JSON.stringify({ error: `Failed to delete user: ${deleteError.message || 'Unknown error'}` }),
-          { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+          JSON.stringify({ error: "Failed to delete user" }),
+          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
-      console.log("User deleted successfully:", userId);
+      console.log("User deleted:", userId);
       return new Response(
         JSON.stringify({ success: true }),
-        { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     return new Response(
-      JSON.stringify({ error: "Invalid request" }),
-      { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      JSON.stringify({ error: "Invalid action" }),
+      { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
-    console.error("Admin users error:", error);
+    console.error("Unexpected error:", error);
     return new Response(
-      JSON.stringify({ error: "An unexpected error occurred. Please try again." }),
-      { status: 500, headers: { "Content-Type": "application/json", ...getCorsHeaders(req.headers.get("origin")) } }
+      JSON.stringify({ error: "An unexpected error occurred" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   }
-};
-
-serve(handler);
+});
