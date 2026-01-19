@@ -15,8 +15,9 @@ import GoogleDrivePlayer from '@/components/course/GoogleDrivePlayer'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 import { useTranslation } from 'react-i18next'
-import { useUserRole } from '@/hooks/useUserRole'
 import { useGamification } from '@/hooks/useGamification'
+import { useProfileManagement } from '@/hooks/useProfileManagement'
+import { PremiumMessage } from '@/components/story/PremiumMessage'
 
 const CourseLessons = () => {
   const { id: courseId } = useParams<{ id: string }>()
@@ -25,36 +26,54 @@ const CourseLessons = () => {
   const { isAuthenticated, isLoading: authLoading, user } = useAuth()
   const { toast } = useToast()
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
+  const [showPremiumMessage, setShowPremiumMessage] = useState(false)
   
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
-  const { isPremium } = useUserRole(user)
+  const { profile, isLoading: profileLoading } = useProfileManagement(user)
+  const isPremium = profile?.is_premium ?? false
   const { recordProgress } = useGamification()
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
 
+  // Check if course requires premium and user is not premium
   useEffect(() => {
-    setIsLoading(isLoading)
-    if (isLoading) {
-      setLoadingMessage(t('loading.course', { ns: 'common' }))
+    if (course && !profileLoading) {
+      const courseIsFree = course.isFree
+      const hasFirstFreeVideo = course.videos?.some(v => v.isFree)
+      
+      // Show premium message if course is not free and user is not premium
+      if (!courseIsFree && !isPremium && !hasFirstFreeVideo) {
+        setShowPremiumMessage(true)
+      } else {
+        setShowPremiumMessage(false)
+      }
     }
-  }, [isLoading, setIsLoading, setLoadingMessage, t])
+  }, [course, isPremium, profileLoading])
 
   useEffect(() => {
-    if (course) {
+    setIsLoading(isLoading || profileLoading)
+    if (isLoading || profileLoading) {
+      setLoadingMessage(t('loading.course', { ns: 'common' }))
+    }
+  }, [isLoading, profileLoading, setIsLoading, setLoadingMessage, t])
+
+  useEffect(() => {
+    if (course && !profileLoading) {
       document.title = `${getLocalized(course, 'title', lang)} - ${t('course.lessons')} | Dolphoon`
       // Set the first video as selected by default if there are videos
-        if (course.videos && course.videos.length > 0 && !selectedVideo) {
+      if (course.videos && course.videos.length > 0 && !selectedVideo) {
         const firstVideo = course.videos[0]
-        setSelectedVideo(firstVideo)
-        
-        
-        // Record initial lesson progress
-        if (courseId && firstVideo.id && (isPremium || firstVideo.isFree)) {
-          recordProgress('course_lesson', firstVideo.id, courseId)
+        // Only auto-select if premium or video is free
+        if (isPremium || firstVideo.isFree) {
+          setSelectedVideo(firstVideo)
+          // Record initial lesson progress
+          if (courseId && firstVideo.id) {
+            recordProgress('course_lesson', firstVideo.id, courseId)
+          }
         }
       }
     }
-  }, [course, lang, t, selectedVideo, courseId, isPremium, recordProgress])
+  }, [course, lang, t, selectedVideo, courseId, isPremium, profileLoading, recordProgress])
 
   const handleVideoSelect = async (video: CourseVideo) => {
     // Allow access if user is premium OR if the lesson is free
@@ -139,6 +158,32 @@ const CourseLessons = () => {
             <ArrowLeft className="mr-2 h-4 w-4" /> {t('button.backToCourses')}
           </Button>
         </Link>
+      </div>
+    )
+  }
+
+  // Show premium message for non-premium users on premium courses
+  if (showPremiumMessage && !profileLoading) {
+    return (
+      <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-8">
+        <div className="container mx-auto">
+          <Button
+            variant="tertiary"
+            onClick={() => navigate(`/courses/${courseId}`)}
+            className="mb-8 w-fit rounded-md shadow"
+          >
+            <ChevronLeft className="me-1 h-4 w-4 rtl:rotate-180" />{' '}
+            {t('button.backToCourses')}
+          </Button>
+          
+          <div className="mx-auto max-w-2xl">
+            <PremiumMessage
+              onSubscriptionClick={() => navigate('/profile?tab=subscription')}
+              onLoginClick={() => navigate('/login')}
+              isAuthenticated={isAuthenticated}
+            />
+          </div>
+        </div>
       </div>
     )
   }
