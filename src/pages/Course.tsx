@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 import { useToast } from '@/components/ui/use-toast'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { useCourseData, useCourseCategories } from '@/hooks/useCourseData'
 import { useCourseFavorites } from '@/hooks/useFavorites'
 import { useAuth } from '@/contexts/AuthContext'
@@ -17,6 +18,7 @@ import { CourseHeader } from '@/components/course/CourseHeader'
 import { ContactFormModal } from '@/components/course/ContactFormModal'
 import { useUserRole } from '@/hooks/useUserRole'
 import { getCategoryText } from '@/utils/courseUtils'
+import { CoursePremiumModal } from '@/components/course/CoursePremiumModal'
 // import { WhatsappSubscribeButton } from '@/components/WhatsappSubscribeButton'
 
 const Course = () => {
@@ -35,6 +37,7 @@ const Course = () => {
   const effectiveRoleLoading = roleLoading && !isProfileLoaded
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
+  const [showPremiumModal, setShowPremiumModal] = useState(false)
 
   // Compute category from course data
   const category = course
@@ -80,11 +83,7 @@ const Course = () => {
 
     // Allow access if course is free OR user is premium
     if (!course?.isFree && !isPremium) {
-      toast({
-        title: t('toast.premiumRequired'),
-        description: t('toast.upgradeToPremium'),
-        variant: 'destructive',
-      })
+      setShowPremiumModal(true)
       return
     }
 
@@ -354,6 +353,18 @@ const Course = () => {
         open={isContactModalOpen}
         onOpenChange={setIsContactModalOpen}
       />
+
+      <Dialog open={showPremiumModal} onOpenChange={setShowPremiumModal}>
+        <DialogContent className="max-w-2xl">
+          <CoursePremiumModal
+            courseTitle={getLocalized(course, 'title', lang)}
+            onSubscriptionClick={() => {
+              setShowPremiumModal(false)
+              navigate('/profile?tab=subscription')
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
