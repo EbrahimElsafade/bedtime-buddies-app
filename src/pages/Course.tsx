@@ -23,14 +23,16 @@ const Course = () => {
   const { id: courseId } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { t } = useTranslation(['courses', 'meta', 'common'])
-  const { isAuthenticated, isLoading: authLoading, user } = useAuth()
+  const { isAuthenticated, isLoading: authLoading, user, profile, isProfileLoaded } = useAuth()
   const { toast } = useToast()
 
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
   const { data: categories = [] } = useCourseCategories()
   const { isFavorite, addFavorite, removeFavorite } = useCourseFavorites()
-  const { isPremium, isLoading: roleLoading } = useUserRole(user)
+  const { isPremium: roleIsPremium, isLoading: roleLoading } = useUserRole(user)
+  const isPremium = profile?.is_premium ?? roleIsPremium
+  const effectiveRoleLoading = roleLoading && !isProfileLoaded
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
 
@@ -67,8 +69,8 @@ const Course = () => {
       return
     }
 
-    // Wait for role to load before checking premium status
-    if (roleLoading) {
+    // Wait for role to load before checking premium status (only if profile isn't loaded)
+    if (effectiveRoleLoading) {
       toast({
         title: t('toast.loading', { ns: 'common', defaultValue: 'Loading...' }),
         description: t('toast.pleaseWait', { ns: 'common', defaultValue: 'Please wait...' }),
