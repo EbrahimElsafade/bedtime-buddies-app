@@ -38,7 +38,7 @@ export const StoryContent = ({
   usePreloadNextSection(story, currentSectionIndex)
 
   const currentSection = story.sections[currentSectionIndex]
-  
+
   // Track section progress for gamification
   useContentProgress({
     contentType: 'story_section',
@@ -48,8 +48,7 @@ export const StoryContent = ({
   })
 
   const currentText =
-    currentSection?.texts[currentLanguage] ||
-    t('contentNotAvailable')
+    currentSection?.texts[currentLanguage] || t('contentNotAvailable')
 
   const currentVideo = currentSection?.video ? currentSection.video : null
 
@@ -113,7 +112,7 @@ export const StoryContent = ({
   // Handle playing state change - start/stop video in sync with audio
   const handlePlayingChange = (playing: boolean) => {
     setIsAudioPlaying(playing)
-    
+
     // Immediately try to play/pause video when audio state changes
     if (videoRef.current) {
       if (playing) {
@@ -216,10 +215,10 @@ export const StoryContent = ({
 
               <span>{t('previous')}</span>
             </Button>
-{/* 
+
             <span className="px-2 text-xs text-muted-foreground md:text-sm">
               {currentSectionIndex + 1} / {story.sections.length || 1}
-            </span> */}
+            </span>
 
             <Button
               variant="outline"

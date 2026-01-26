@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client'
 import { logger } from '@/utils/logger'
 import { useLoading } from '@/contexts/LoadingContext'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
-import { LoadMoreIndicator } from '@/components/LoadMoreIndicator'
+// import { LoadMoreIndicator } from '@/components/LoadMoreIndicator'
 import {
   Card,
   CardHeader,
@@ -252,12 +252,12 @@ const Stories = () => {
                 )
               })}
             </div>
-            <LoadMoreIndicator
+            {/* <LoadMoreIndicator
               isLoading={isLoadingMore}
               hasMore={hasMore}
               loadedCount={loadedCount}
               totalCount={totalCount}
-            />
+            /> */}
           </>
         )}
       </div>

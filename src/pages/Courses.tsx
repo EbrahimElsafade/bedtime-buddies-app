@@ -7,7 +7,7 @@ import { useUserRole } from '@/hooks/useUserRole'
 import { Input } from '@/components/ui/input'
 import { useLoading } from '@/contexts/LoadingContext'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
-import { LoadMoreIndicator } from '@/components/LoadMoreIndicator'
+// import { LoadMoreIndicator } from '@/components/LoadMoreIndicator'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -354,12 +354,12 @@ const Courses = () => {
                 )
               })}
             </div>
-            <LoadMoreIndicator
+            {/* <LoadMoreIndicator
               isLoading={isLoadingMore}
               hasMore={hasMore}
               loadedCount={loadedCount}
               totalCount={totalCount}
-            />
+            /> */}
           </>
         )}
       </div>
