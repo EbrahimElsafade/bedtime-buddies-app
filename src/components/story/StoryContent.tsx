@@ -218,10 +218,10 @@ export const StoryContent = ({
 
               <span>{t('previous')}</span>
             </Button>
-
+{/* 
             <span className="px-2 text-xs text-muted-foreground md:text-sm">
               {currentSectionIndex + 1} / {story.sections.length || 1}
-            </span>
+            </span> */}
 
             <Button
               variant="outline"
