@@ -14,7 +14,22 @@
     "about": "À Propos de ce Cours",
     "whatYouLearn": "Ce que Vous Apprendrez",
     "instructor": "Instructeur",
-    "communicateWithASpecialist": "communiquer avec un spécialiste"
+    "communicateWithASpecialist": "communiquer avec un spécialiste",
+    "lessons": "Leçons",
+    "error": "Erreur de Chargement du Cours",
+    "errorDesc": "Un problème est survenu lors du chargement de ce cours. Veuillez réessayer.",
+    "notFound": "Cours Non Trouvé",
+    "notFoundDesc": "Le cours que vous recherchez n'existe pas.",
+    "selectVideo": "Sélectionnez une leçon dans la liste pour commencer à regarder",
+    "noVideos": "Aucune leçon disponible pour ce cours",
+    "legacyVideoFormat": "Format vidéo ancien - veuillez mettre à jour vers Google Drive",
+    "noVideoSource": "Aucune source vidéo disponible"
+  },
+  "toast": {
+    "premiumRequired": "Premium Requis",
+    "upgradeToPremium": "Passez à premium pour accéder à cette leçon",
+    "loginRequired": "Connexion Requise",
+    "pleaseLoginToStart": "Veuillez vous connecter pour commencer ce cours"
   },
   "button": {
     "backToCourses": "Retour aux Cours",

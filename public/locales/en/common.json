@@ -6,7 +6,12 @@
     "courses": "Loading courses...",
     "course": "Loading course...",
     "profile": "Loading profile...",
-    "data": "Loading data..."
+    "data": "Loading data...",
+    "more": "Loading more..."
+  },
+  "pagination": {
+    "showingAll": "Showing all {{count}} items",
+    "scrollForMore": "Showing {{loaded}} of {{total}} - scroll for more"
   },
   "appName": "Dolphoon",
   "languages": {
@@ -124,6 +129,7 @@
   "pointEarned": "You earned 1 point!",
   "free": "Free",
   "login": "Log In",
+  "noImage": "No Image",
   "backHome": "Back to Home",
   "pwa": {
     "installApp": "Install App",

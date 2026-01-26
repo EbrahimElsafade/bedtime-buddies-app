@@ -32,7 +32,7 @@ const Courses = () => {
   const searchQuery = searchParams.get('search') || ''
   const activeCategory = searchParams.get('category') || 'all'
 
-  const { t } = useTranslation(['courses', 'meta', 'common', 'premium'])
+  const { t } = useTranslation(['courses', 'meta', 'common', 'premium', 'misc'])
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const navigate = useNavigate()
   const { user, isAuthenticated } = useAuth()

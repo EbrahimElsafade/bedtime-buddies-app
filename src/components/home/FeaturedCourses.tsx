@@ -19,7 +19,7 @@ import { getLocalized } from '@/utils/getLocalized'
 import { getCategoryText } from '@/utils/courseUtils'
 
 const FeaturedCourses = () => {
-  const { t } = useTranslation(['misc', 'stories', 'premium', 'courses'])
+  const { t } = useTranslation(['misc', 'stories', 'premium', 'courses', 'auth'])
   const { data: featuredCourses = [], isLoading } = useFeaturedCourses()
   const { data: categories = [] } = useCourseCategories()
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
@@ -69,9 +69,9 @@ const FeaturedCourses = () => {
                         {getLocalized(course, 'title', lang)}
                       </h3>
                       <p className="mb-4 text-sm text-muted-foreground">
-                        Please log in to view courses
+                        {t('courses:courses.loginToView')}
                       </p>
-                      <Button className="w-full">Log In</Button>
+                      <Button className="w-full">{t('auth:login')}</Button>
                     </div>
                   </Card>
                 </div>

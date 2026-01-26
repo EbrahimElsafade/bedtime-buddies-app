@@ -13,7 +13,22 @@
     "overview": "نظرة عامة",
     "about": "عن هذه الدورة",
     "whatYouLearn": "ماذا ستتعلم",
-    "instructor": "المدرب"
+    "instructor": "المدرب",
+    "lessons": "الدروس",
+    "error": "خطأ في تحميل الدورة",
+    "errorDesc": "حدثت مشكلة في تحميل هذه الدورة. يرجى المحاولة مرة أخرى.",
+    "notFound": "الدورة غير موجودة",
+    "notFoundDesc": "الدورة التي تبحث عنها غير موجودة.",
+    "selectVideo": "اختر درساً من القائمة لبدء المشاهدة",
+    "noVideos": "لا توجد دروس متاحة لهذه الدورة",
+    "legacyVideoFormat": "تنسيق فيديو قديم - يرجى التحديث إلى Google Drive",
+    "noVideoSource": "لا يوجد مصدر فيديو متاح"
+  },
+  "toast": {
+    "premiumRequired": "مطلوب اشتراك مميز",
+    "upgradeToPremium": "قم بالترقية للاشتراك المميز للوصول إلى هذا الدرس",
+    "loginRequired": "تسجيل الدخول مطلوب",
+    "pleaseLoginToStart": "يرجى تسجيل الدخول لبدء هذه الدورة"
   },
   "button": {
     "backToCourses": "العودة إلى الدورات",
