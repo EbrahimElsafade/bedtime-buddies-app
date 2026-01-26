@@ -98,6 +98,14 @@ const Courses = () => {
     return counts
   }, [courses])
 
+  const knowledgeStationCategory = useMemo(
+    () =>
+      categories.find(
+        category => category.name.toLowerCase() === 'knowledge station',
+      ),
+    [categories],
+  )
+
   return (
     <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-3 py-8 md:px-4 md:py-12">
       <Helmet>
@@ -132,23 +140,26 @@ const Courses = () => {
             <TabsList className="mb-4 w-full justify-start gap-2 overflow-x-auto p-1 md:mb-6 lg:mb-8">
               <TabsTrigger value="all">{t('courses.allCourses')}</TabsTrigger>
 
-              {categories.map(category => {
-                const isKnowledgeStation =
-                  category.name.toLowerCase() === 'knowledge station'
-
-                return (
-                  <TabsTrigger
-                    key={category.id}
-                    value={category.name}
-                    className={
-                      isKnowledgeStation &&
-                      '!bg-primary/20 data-[state=active]:!bg-primary'
-                    }
-                  >
+              {categories
+                .filter(
+                  category =>
+                    category.name.toLowerCase() !== 'knowledge station',
+                )
+                .map(category => (
+                  <TabsTrigger key={category.id} value={category.name}>
                     {getCategoryText(category, 'name', lang)}
                   </TabsTrigger>
-                )
-              })}
+                ))}
+
+              {knowledgeStationCategory && (
+                <TabsTrigger
+                  key={knowledgeStationCategory.id}
+                  value={knowledgeStationCategory.name}
+                  className="!bg-primary/20 data-[state=active]:!bg-primary"
+                >
+                  {getCategoryText(knowledgeStationCategory, 'name', lang)}
+                </TabsTrigger>
+              )}
             </TabsList>
           </Tabs>
           {/* {categories.map(category => (
