@@ -235,7 +235,7 @@ const PicturePuzzleGame = () => {
               {t('puzzle.solved')}
             </div>
             <div className="text-lg text-white">
-              ⭐ Amazing work! You did it! ⭐
+              ⭐ {t('puzzle.amazingWork')} ⭐
             </div>
           </div>
         )}

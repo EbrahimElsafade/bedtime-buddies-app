@@ -198,19 +198,19 @@ const Appearance = () => {
           </div>
 
           {settings.freeStoryEnabled && (
-            <div className="space-y-2 pl-6 border-l-2 border-muted">
-              <Label htmlFor="free-story">Select Free Story</Label>
+            <div className="space-y-2 ps-6 border-s-2 border-muted">
+              <Label htmlFor="free-story">{t('appearance.selectFreeStory')}</Label>
               <Select
                 value={settings.freeStory}
                 onValueChange={(value) => updateSetting('freeStory', value)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Choose a free story to feature" />
+                  <SelectValue placeholder={t('appearance.chooseFreeStory')} />
                 </SelectTrigger>
                 <SelectContent>
                   {storiesLoading ? (
                     <div className="px-2 py-1 text-sm text-muted-foreground">
-                      Loading stories...
+                      {t('appearance.loadingStories')}
                     </div>
                   ) : stories && stories.length > 0 ? (
                     stories.map((story) => {
@@ -223,7 +223,7 @@ const Appearance = () => {
                     })
                   ) : (
                     <div className="px-2 py-1 text-sm text-muted-foreground">
-                      No published stories available
+                      {t('appearance.noPublishedStories')}
                     </div>
                   )}
                 </SelectContent>
@@ -233,9 +233,9 @@ const Appearance = () => {
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="stories-section">Stories Section</Label>
+              <Label htmlFor="stories-section">{t('appearance.storiesSection')}</Label>
               <p className="text-sm text-muted-foreground">
-                Display the main stories browsing section
+                {t('appearance.storiesSectionDesc')}
               </p>
             </div>
             <Switch
@@ -247,9 +247,9 @@ const Appearance = () => {
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="top-rated">Top Rated Section</Label>
+              <Label htmlFor="top-rated">{t('appearance.topRatedSection')}</Label>
               <p className="text-sm text-muted-foreground">
-                Show popular and highly-rated stories
+                {t('appearance.topRatedSectionDesc')}
               </p>
             </div>
             <Switch
@@ -261,9 +261,9 @@ const Appearance = () => {
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="courses">Courses Section</Label>
+              <Label htmlFor="courses">{t('appearance.coursesSection')}</Label>
               <p className="text-sm text-muted-foreground">
-                Display available courses and learning materials
+                {t('appearance.coursesSectionDesc')}
               </p>
             </div>
             <Switch
@@ -274,19 +274,19 @@ const Appearance = () => {
           </div>
 
           {settings.courses && (
-            <div className="space-y-2 pl-6 border-l-2 border-muted">
-              <Label>Select Featured Courses</Label>
+            <div className="space-y-2 ps-6 border-s-2 border-muted">
+              <Label>{t('appearance.selectFeaturedCourses')}</Label>
               <p className="text-sm text-muted-foreground mb-2">
-                Choose which courses to display on the homepage. Leave empty to show the latest courses.
+                {t('appearance.selectFeaturedCoursesDesc')}
               </p>
               <div className="space-y-2 max-h-60 overflow-y-auto">
                 {coursesLoading ? (
                   <div className="px-2 py-1 text-sm text-muted-foreground">
-                    Loading courses...
+                    {t('appearance.loadingCourses')}
                   </div>
                 ) : courses && courses.length > 0 ? (
                   courses.map((course) => (
-                    <div key={course.id} className="flex items-center space-x-2">
+                    <div key={course.id} className="flex items-center gap-2">
                       <input
                         type="checkbox"
                         id={`course-${course.id}`}
@@ -302,19 +302,19 @@ const Appearance = () => {
                         className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
                       />
                       <Label htmlFor={`course-${course.id}`} className="text-sm font-normal cursor-pointer">
-                        {course.title_en || course.title_ar || course.title_fr || 'Untitled'}
+                        {course.title_en || course.title_ar || course.title_fr || t('common.untitled')}
                       </Label>
                     </div>
                   ))
                 ) : (
                   <div className="px-2 py-1 text-sm text-muted-foreground">
-                    No published courses available
+                    {t('appearance.noPublishedCourses')}
                   </div>
                 )}
               </div>
               {settings.featuredCourses && settings.featuredCourses.length > 0 && (
                 <p className="text-xs text-muted-foreground mt-2">
-                  {settings.featuredCourses.length} course(s) selected
+                  {t('appearance.coursesSelected', { count: settings.featuredCourses.length })}
                 </p>
               )}
             </div>
@@ -322,9 +322,9 @@ const Appearance = () => {
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="special-story">Special Story Section</Label>
+              <Label htmlFor="special-story">{t('appearance.specialStorySection')}</Label>
               <p className="text-sm text-muted-foreground">
-                Feature a special highlighted story
+                {t('appearance.specialStorySectionDesc')}
               </p>
             </div>
             <Switch

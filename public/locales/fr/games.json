@@ -41,7 +41,10 @@
     "rock": "Pierre",
     "paper": "Feuille",
     "scissors": "Ciseaux",
-    "resetGame": "Réinitialiser"
+    "resetGame": "Réinitialiser",
+    "you": "Toi",
+    "computer": "Ordinateur",
+    "vs": "VS"
   },
   "snake": {
     "title": "Serpent",
@@ -99,7 +102,8 @@
     "title": "Puzzle d'Images",
     "description": "Glisse-dépose les pièces pour compléter l'image",
     "solved": "Puzzle résolu ! 🎉",
-    "shuffle": "Mélanger"
+    "shuffle": "Mélanger",
+    "amazingWork": "Excellent travail ! Tu l'as fait !"
   },
   "whereDidIt": {
     "title": "Où est-ce Parti?",

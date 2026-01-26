@@ -46,6 +46,7 @@ import {
   Eye,
   AlertTriangle,
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 type Course = {
   id: string
@@ -82,7 +83,8 @@ const Courses = () => {
   const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState('')
   const [filter, setFilter] = useState<'all' | 'published' | 'draft'>('all')
-  const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
+  const { t, i18n } = useTranslation(['admin', 'common'])
+  const lang = i18n.language as 'en' | 'ar' | 'fr'
   const [courseToDelete, setCourseToDelete] = useState<string | null>(null)
 
   const fetchCourses = async () => {
@@ -167,7 +169,7 @@ const Courses = () => {
       {
         accessorKey: 'title',
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Title" />
+          <DataTableColumnHeader column={column} title={t('admin:courses.courseTitle')} />
         ),
         cell: ({ row }) => (
           <span className="font-medium">
@@ -183,7 +185,7 @@ const Courses = () => {
       {
         accessorKey: 'category',
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Category" />
+          <DataTableColumnHeader column={column} title={t('admin:courses.category')} />
         ),
         cell: ({ row }) =>
           row.original.category.charAt(0).toUpperCase() +
@@ -192,7 +194,7 @@ const Courses = () => {
       {
         accessorKey: 'is_free',
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Type" />
+          <DataTableColumnHeader column={column} title={t('common:type')} />
         ),
         cell: ({ row }) =>
           row.original.is_free ? (
@@ -200,14 +202,14 @@ const Courses = () => {
               variant="default"
               className="bg-primary-foreground hover:bg-primary"
             >
-              Free
+              {t('admin:courses.free')}
             </Badge>
           ) : (
             <Badge
               variant="default"
               className="bg-moon-DEFAULT hover:bg-moon-dark"
             >
-              Premium
+              {t('admin:courses.premium')}
             </Badge>
           ),
       },
@@ -216,7 +218,7 @@ const Courses = () => {
         header: ({ column }) => (
           <DataTableColumnHeader
             column={column}
-            title="Languages"
+            title={t('common:languages')}
             className="hidden md:table-cell"
           />
         ),
@@ -233,7 +235,7 @@ const Courses = () => {
       {
         accessorKey: 'is_published',
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Status" />
+          <DataTableColumnHeader column={column} title={t('admin:courses.status')} />
         ),
         cell: ({ row }) =>
           row.original.is_published ? (
@@ -241,15 +243,15 @@ const Courses = () => {
               variant="default"
               className="bg-green-600 hover:bg-green-700"
             >
-              Published
+              {t('admin:courses.published')}
             </Badge>
           ) : (
-            <Badge variant="outline">Draft</Badge>
+            <Badge variant="outline">{t('admin:courses.draft')}</Badge>
           ),
       },
       {
         id: 'actions',
-        header: () => <span className="sr-only">Actions</span>,
+        header: () => <span className="sr-only">{t('admin:courses.actions')}</span>,
         cell: ({ row }) => {
           const course = row.original
           return (
@@ -259,33 +261,33 @@ const Courses = () => {
                   <Button
                     variant="ghost"
                     className="h-8 w-8 p-0"
-                    aria-label="Open menu"
+                    aria-label={t('common:openMenu')}
                   >
                     <MoreHorizontal className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuLabel>{t('admin:courses.actions')}</DropdownMenuLabel>
                   <DropdownMenuItem asChild>
                     <Link to={`/courses/${course.id}`}>
-                      <Eye className="mr-2 h-4 w-4" /> View
+                      <Eye className="mr-2 h-4 w-4" /> {t('common:view')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to={`/admin/courses/edit/${course.id}`}>
-                      <Edit className="mr-2 h-4 w-4" /> Edit
+                      <Edit className="mr-2 h-4 w-4" /> {t('admin:courses.edit')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => togglePublishStatus(course)}>
-                    {course.is_published ? 'Unpublish' : 'Publish'} Course
+                    {course.is_published ? t('admin:courses.unpublish') : t('admin:courses.publish')}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="text-red-600"
                     onClick={() => handleDeleteClick(course.id)}
                   >
-                    <Trash2 className="mr-2 h-4 w-4" /> Delete
+                    <Trash2 className="mr-2 h-4 w-4" /> {t('admin:courses.delete')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -294,7 +296,7 @@ const Courses = () => {
         },
       },
     ],
-    [lang],
+    [lang, t],
   )
 
   return (
@@ -302,33 +304,32 @@ const Courses = () => {
       <header className="mb-8">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Courses</h1>
+            <h1 className="text-3xl font-bold">{t('admin:courses.title')}</h1>
             <p className="text-muted-foreground">
-              Manage all educational courses
+              {t('admin:courses.description')}
             </p>
           </div>
           <Button onClick={() => navigate('/admin/courses/new')}>
             <PlusCircle className="mr-2 h-4 w-4" />
-            Add New Course
+            {t('admin:courses.addNew')}
           </Button>
         </div>
       </header>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-xl">All Courses</CardTitle>
+          <CardTitle className="text-xl">{t('common:all')} {t('admin:courses.title')}</CardTitle>
           <CardDescription>
-            Total: {courses.length} courses | Published:{' '}
-            {courses.filter(c => c.is_published).length} courses
+            {t('common:total')}: {courses.length} | {t('admin:courses.published')}: {courses.filter(c => c.is_published).length}
           </CardDescription>
           <div className="mt-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
             <div className="relative w-full flex-1">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground rtl:left-auto rtl:right-2.5" />
               <Input
-                placeholder="Search courses..."
+                placeholder={t('admin:courses.searchPlaceholder')}
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="w-full pl-8"
+                className="w-full ps-8"
               />
             </div>
             <div className="flex items-center gap-2">
@@ -337,21 +338,21 @@ const Courses = () => {
                 size="sm"
                 onClick={() => setFilter('all')}
               >
-                All
+                {t('common:all')}
               </Button>
               <Button
                 variant={filter === 'published' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setFilter('published')}
               >
-                Published
+                {t('admin:courses.published')}
               </Button>
               <Button
                 variant={filter === 'draft' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setFilter('draft')}
               >
-                Draft
+                {t('admin:courses.draft')}
               </Button>
               <Button
                 variant="outline"
@@ -369,8 +370,8 @@ const Courses = () => {
             columns={columns}
             data={filteredCourses}
             isLoading={isLoading}
-            emptyMessage="No courses found"
-            loadingMessage="Loading courses..."
+            emptyMessage={t('common:noDataFound')}
+            loadingMessage={t('common:loading')}
           />
         </CardContent>
       </Card>
@@ -383,20 +384,19 @@ const Courses = () => {
           <AlertDialogHeader>
             <div className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-destructive" />
-              <AlertDialogTitle>Delete Course</AlertDialogTitle>
+              <AlertDialogTitle>{t('admin:courses.delete')}</AlertDialogTitle>
             </div>
             <AlertDialogDescription>
-              Are you sure you want to delete this course? This action cannot be
-              undone.
+              {t('admin:forms.deleteConfirm')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('admin:forms.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              {t('admin:forms.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

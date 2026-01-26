@@ -97,6 +97,7 @@
   },
   "stories": {
     "title": "إدارة القصص",
+    "description": "إدارة جميع القصص في دولفون",
     "addNew": "إضافة قصة جديدة",
     "totalStories": "إجمالي القصص",
     "publishedStories": "القصص المنشورة",
@@ -145,6 +146,7 @@
   },
   "courses": {
     "title": "إدارة الدورات",
+    "description": "إدارة جميع الدورات التعليمية",
     "addNew": "إضافة دورة جديدة",
     "totalCourses": "إجمالي الدورات",
     "publishedCourses": "الدورات المنشورة",
@@ -161,7 +163,9 @@
     "publish": "نشر",
     "unpublish": "إلغاء النشر",
     "published": "منشور",
-    "draft": "مسودة"
+    "draft": "مسودة",
+    "free": "مجاني",
+    "premium": "مميز"
   },
   "storyOptions": {
     "title": "خيارات القصص",

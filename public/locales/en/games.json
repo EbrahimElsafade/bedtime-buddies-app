@@ -41,7 +41,10 @@
     "rock": "Rock",
     "paper": "Paper",
     "scissors": "Scissors",
-    "resetGame": "Reset Game"
+    "resetGame": "Reset Game",
+    "you": "You",
+    "computer": "Computer",
+    "vs": "VS"
   },
   "snake": {
     "title": "Snake",
@@ -99,7 +102,8 @@
     "title": "Picture Puzzle",
     "description": "Drag and drop the pieces to complete the picture",
     "solved": "Puzzle solved! 🎉",
-    "shuffle": "Shuffle"
+    "shuffle": "Shuffle",
+    "amazingWork": "Amazing work! You did it!"
   },
   "whereDidIt": {
     "title": "Where Did It Go?",
