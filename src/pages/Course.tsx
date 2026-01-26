@@ -57,9 +57,9 @@ const Course = () => {
     if (course) {
       document.title = `${getLocalized(course, 'title', lang)} | Dolphoon`
     } else {
-      document.title = 'Course Not Found | Dolphoon'
+      document.title = `${t('course.notFound')} | Dolphoon`
     }
-  }, [course, lang])
+  }, [course, lang, t])
 
   const handleStartCourse = () => {
     if (!isAuthenticated) {

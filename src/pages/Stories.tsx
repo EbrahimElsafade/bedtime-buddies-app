@@ -203,7 +203,7 @@ const Stories = () => {
                         ) : (
                           <div className="flex h-full w-full items-center justify-center bg-gray-200">
                             <span className="text-sm text-gray-500">
-                              No Image
+                              {t('common:noImage')}
                             </span>
                           </div>
                         )}

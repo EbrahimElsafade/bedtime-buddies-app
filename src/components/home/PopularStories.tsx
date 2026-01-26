@@ -17,7 +17,7 @@ import { getMultilingualText } from '@/utils/multilingualUtils'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 const PopularStories = () => {
-  const { t, i18n } = useTranslation(['misc', 'stories'])
+  const { t, i18n } = useTranslation(['misc', 'stories', 'common'])
   const { language } = useLanguage()
 
   const { data: popularStories = [], isLoading } = useQuery({
@@ -124,7 +124,7 @@ const PopularStories = () => {
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center bg-gray-200">
-                        <span className="text-gray-500">No Image</span>
+                        <span className="text-gray-500">{t('common:noImage')}</span>
                       </div>
                     )}
                     {story.is_free ? (

@@ -14,7 +14,22 @@
     "about": "About This Course",
     "whatYouLearn": "What You'll Learn",
     "instructor": "Instructor",
-    "communicateWithASpecialist": "communicate with a specialist"
+    "communicateWithASpecialist": "communicate with a specialist",
+    "lessons": "Lessons",
+    "error": "Error Loading Course",
+    "errorDesc": "There was a problem loading this course. Please try again.",
+    "notFound": "Course Not Found",
+    "notFoundDesc": "The course you're looking for doesn't exist.",
+    "selectVideo": "Select a lesson from the list to start watching",
+    "noVideos": "No lessons available for this course",
+    "legacyVideoFormat": "Legacy video format - please update to Google Drive",
+    "noVideoSource": "No video source available"
+  },
+  "toast": {
+    "premiumRequired": "Premium Required",
+    "upgradeToPremium": "Upgrade to premium to access this lesson",
+    "loginRequired": "Login Required",
+    "pleaseLoginToStart": "Please log in to start this course"
   },
   "button": {
     "backToCourses": "Back to Courses",

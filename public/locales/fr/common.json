@@ -6,7 +6,12 @@
     "courses": "Chargement des cours...",
     "course": "Chargement du cours...",
     "profile": "Chargement du profil...",
-    "data": "Chargement des données..."
+    "data": "Chargement des données...",
+    "more": "Chargement de plus..."
+  },
+  "pagination": {
+    "showingAll": "Affichage de tous les {{count}} éléments",
+    "scrollForMore": "Affichage de {{loaded}} sur {{total}} - faites défiler pour plus"
   },
   "appName": "Dolphoon",
   "tagline": "Votre ami pour les histoires, l'apprentissage et le jeu",
@@ -117,6 +122,7 @@
   "pointEarned": "Vous avez gagné 1 point!",
   "free": "Gratuit",
   "login": "Connexion",
+  "noImage": "Pas d'Image",
   "backHome": "Retour à l'accueil",
   "pwa": {
     "installApp": "Installer l'application",
