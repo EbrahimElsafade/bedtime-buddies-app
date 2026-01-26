@@ -17,17 +17,17 @@ interface GameSetting {
 }
 
 const GAME_INFO = {
-  'tic-tac-toe': { icon: '⭕', title: 'Tic Tac Toe' },
-  'hangman': { icon: '🎯', title: 'Hangman' },
-  'memory': { icon: '🧠', title: 'Memory Match' },
-  'snake': { icon: '🐍', title: 'Snake' },
-  'rock-paper-scissors': { icon: '✂️', title: 'Rock Paper Scissors' },
-  'choose-color': { icon: '🎨', title: 'Choose the Color' },
-  'guess-number': { icon: '🔢', title: 'Guess the Number' },
-  'catch-animal': { icon: '🦊', title: 'Catch the Animal' },
-  'puzzle': { icon: '🧩', title: 'Picture Puzzle' },
-  'where-did-it-go': { icon: '🔍', title: 'Where Did It Go?' },
-  'snake-ladder': { icon: '🎲', title: 'Snake and Ladder' },
+  'tic-tac-toe': { icon: '⭕', titleKey: 'games:ticTacToe.title' },
+  'hangman': { icon: '🎯', titleKey: 'games:hangman.title' },
+  'memory': { icon: '🧠', titleKey: 'games:memory.title' },
+  'snake': { icon: '🐍', titleKey: 'games:snake.title' },
+  'rock-paper-scissors': { icon: '✂️', titleKey: 'games:rockPaperScissors.title' },
+  'choose-color': { icon: '🎨', titleKey: 'games:chooseColor.title' },
+  'guess-number': { icon: '🔢', titleKey: 'games:guessNumber.title' },
+  'catch-animal': { icon: '🦊', titleKey: 'games:catchAnimal.title' },
+  'puzzle': { icon: '🧩', titleKey: 'games:puzzle.title' },
+  'where-did-it-go': { icon: '🔍', titleKey: 'games:whereDidIt.title' },
+  'snake-ladder': { icon: '🎲', titleKey: 'games:snakeLadder.title' },
 }
 
 const GamesManagement = () => {
@@ -110,7 +110,7 @@ const GamesManagement = () => {
                   <div className="flex items-center gap-3">
                     <span className="text-4xl">{info?.icon}</span>
                     <div>
-                      <CardTitle className="text-lg">{info?.title}</CardTitle>
+                      <CardTitle className="text-lg">{info?.titleKey ? t(info.titleKey) : game.game_id}</CardTitle>
                       <Badge variant={game.is_free ? 'success' : 'accent'} className="mt-1">
                         {game.is_free ? t('games:free') : t('games:premium')}
                       </Badge>

@@ -124,6 +124,7 @@
   },
   "stories": {
     "title": "Story Management",
+    "description": "Manage all Dolphoon stories",
     "addNew": "Add New Story",
     "totalStories": "Total Stories",
     "publishedStories": "Published Stories",
@@ -172,6 +173,7 @@
   },
   "courses": {
     "title": "Course Management",
+    "description": "Manage all educational courses",
     "addNew": "Add New Course",
     "totalCourses": "Total Courses",
     "publishedCourses": "Published Courses",
@@ -188,7 +190,9 @@
     "publish": "Publish",
     "unpublish": "Unpublish",
     "published": "Published",
-    "draft": "Draft"
+    "draft": "Draft",
+    "free": "Free",
+    "premium": "Premium"
   },
   "settings": {
     "title": "Admin Settings",

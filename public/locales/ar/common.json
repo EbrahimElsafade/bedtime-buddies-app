@@ -153,5 +153,14 @@
   "whatsapp": {
     "contactViaWhatsapp": "تواصل عبر واتساب",
     "communicateWithASpecialist": "مرحباً، أود التواصل مع أخصائي"
-  }
+  },
+  "all": "الكل",
+  "total": "الإجمالي",
+  "type": "النوع",
+  "languages": "اللغات",
+  "openMenu": "فتح القائمة",
+  "view": "عرض",
+  "noDataFound": "لم يتم العثور على بيانات",
+  "loading": "جاري التحميل...",
+  "untitled": "بدون عنوان"
 }

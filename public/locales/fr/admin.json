@@ -86,6 +86,7 @@
   },
   "stories": {
     "title": "Gestion des Histoires",
+    "description": "Gérer toutes les histoires de Dolphoon",
     "addNew": "Ajouter Nouvelle Histoire",
     "totalStories": "Total Histoires",
     "publishedStories": "Histoires Publiées",
@@ -134,6 +135,7 @@
   },
   "courses": {
     "title": "Gestion des Cours",
+    "description": "Gérer tous les cours éducatifs",
     "addNew": "Ajouter Nouveau Cours",
     "totalCourses": "Total Cours",
     "publishedCourses": "Cours Publiés",
@@ -150,7 +152,9 @@
     "publish": "Publier",
     "unpublish": "Dépublier",
     "published": "Publié",
-    "draft": "Brouillon"
+    "draft": "Brouillon",
+    "free": "Gratuit",
+    "premium": "Premium"
   },
   "settings": {
     "title": "Paramètres Admin",

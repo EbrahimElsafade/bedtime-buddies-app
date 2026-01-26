@@ -68,7 +68,7 @@ const Stories = () => {
   const [filter, setFilter] = useState<'all' | 'published' | 'draft'>('all')
   const [storyToDelete, setStoryToDelete] = useState<string | null>(null)
 
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation(['admin', 'common'])
 
   const fetchStories = async () => {
     const { data, error } = await supabase.from('stories').select('*')
@@ -152,7 +152,7 @@ const Stories = () => {
       {
         accessorKey: 'title',
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Title" />
+          <DataTableColumnHeader column={column} title={t('admin:stories.storyTitle')} />
         ),
         cell: ({ row }) => (
           <span className="font-medium">
@@ -168,7 +168,7 @@ const Stories = () => {
       {
         accessorKey: 'category',
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Category" />
+          <DataTableColumnHeader column={column} title={t('admin:stories.category')} />
         ),
         cell: ({ row }) =>
           row.original.category.charAt(0).toUpperCase() +
@@ -177,13 +177,13 @@ const Stories = () => {
       {
         accessorKey: 'is_free',
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Type" />
+          <DataTableColumnHeader column={column} title={t('common:type')} />
         ),
         cell: ({ row }) =>
           row.original.is_free ? (
-            <Badge>Free</Badge>
+            <Badge>{t('admin:stories.free')}</Badge>
           ) : (
-            <Badge variant="accent">Premium</Badge>
+            <Badge variant="accent">{t('admin:stories.premium')}</Badge>
           ),
       },
       {
@@ -191,7 +191,7 @@ const Stories = () => {
         header: ({ column }) => (
           <DataTableColumnHeader
             column={column}
-            title="Languages"
+            title={t('common:languages')}
             className="hidden md:table-cell"
           />
         ),
@@ -208,18 +208,18 @@ const Stories = () => {
       {
         accessorKey: 'is_published',
         header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Status" />
+          <DataTableColumnHeader column={column} title={t('admin:stories.status')} />
         ),
         cell: ({ row }) =>
           row.original.is_published ? (
-            <Badge variant="success">Published</Badge>
+            <Badge variant="success">{t('admin:stories.published')}</Badge>
           ) : (
-            <Badge variant="outline">Draft</Badge>
+            <Badge variant="outline">{t('admin:stories.draft')}</Badge>
           ),
       },
       {
         id: 'actions',
-        header: () => <span className="sr-only">Actions</span>,
+        header: () => <span className="sr-only">{t('admin:stories.actions')}</span>,
         cell: ({ row }) => {
           const story = row.original
           return (
@@ -229,33 +229,33 @@ const Stories = () => {
                   <Button
                     variant="ghost"
                     className="h-8 w-8 p-0"
-                    aria-label="Open menu"
+                    aria-label={t('common:openMenu')}
                   >
                     <MoreHorizontal className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                  <DropdownMenuLabel>{t('admin:stories.actions')}</DropdownMenuLabel>
                   <DropdownMenuItem asChild>
                     <Link to={`/stories/${story.id}`}>
-                      <Eye className="mr-2 h-4 w-4" /> View
+                      <Eye className="mr-2 h-4 w-4" /> {t('common:view')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
                     <Link to={`/admin/stories/edit/${story.id}`}>
-                      <Edit className="mr-2 h-4 w-4" /> Edit
+                      <Edit className="mr-2 h-4 w-4" /> {t('admin:stories.edit')}
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => togglePublishStatus(story)}>
-                    {story.is_published ? 'Unpublish' : 'Publish'} Story
+                    {story.is_published ? t('admin:stories.unpublish') : t('admin:stories.publish')}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="text-red-600"
                     onClick={() => handleDeleteClick(story.id)}
                   >
-                    <Trash2 className="mr-2 h-4 w-4" /> Delete
+                    <Trash2 className="mr-2 h-4 w-4" /> {t('admin:stories.delete')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -264,7 +264,7 @@ const Stories = () => {
         },
       },
     ],
-    [i18n.language],
+    [i18n.language, t],
   )
 
   return (
@@ -272,31 +272,30 @@ const Stories = () => {
       <header className="mb-8">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-3xl font-bold">Stories</h1>
-            <p className="text-muted-foreground">Manage all Dolphoon</p>
+            <h1 className="text-3xl font-bold">{t('admin:stories.title')}</h1>
+            <p className="text-muted-foreground">{t('admin:stories.description')}</p>
           </div>
           <Button onClick={() => navigate('/admin/stories/new')}>
             <PlusCircle className="mr-2 h-4 w-4" />
-            Add New Story
+            {t('admin:stories.addNew')}
           </Button>
         </div>
       </header>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-xl">All Stories</CardTitle>
+          <CardTitle className="text-xl">{t('common:all')} {t('admin:stories.title')}</CardTitle>
           <CardDescription>
-            Total: {stories.length} stories | Published:{' '}
-            {stories.filter(s => s.is_published).length} stories
+            {t('common:total')}: {stories.length} | {t('admin:stories.published')}: {stories.filter(s => s.is_published).length}
           </CardDescription>
           <div className="mt-4 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
             <div className="relative w-full flex-1">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground rtl:left-auto rtl:right-2.5" />
               <Input
-                placeholder="Search stories..."
+                placeholder={t('admin:stories.searchPlaceholder')}
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
-                className="w-full pl-8"
+                className="w-full ps-8"
               />
             </div>
             <div className="flex items-center gap-2">
@@ -305,21 +304,21 @@ const Stories = () => {
                 size="sm"
                 onClick={() => setFilter('all')}
               >
-                All
+                {t('common:all')}
               </Button>
               <Button
                 variant={filter === 'published' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setFilter('published')}
               >
-                Published
+                {t('admin:stories.published')}
               </Button>
               <Button
                 variant={filter === 'draft' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setFilter('draft')}
               >
-                Draft
+                {t('admin:stories.draft')}
               </Button>
               <Button
                 variant="outline"
@@ -337,8 +336,8 @@ const Stories = () => {
             columns={columns}
             data={filteredStories}
             isLoading={isLoading}
-            emptyMessage="No stories found"
-            loadingMessage="Loading stories..."
+            emptyMessage={t('common:noDataFound')}
+            loadingMessage={t('common:loading')}
           />
         </CardContent>
       </Card>
@@ -351,20 +350,19 @@ const Stories = () => {
           <AlertDialogHeader>
             <div className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-destructive" />
-              <AlertDialogTitle>Delete Story</AlertDialogTitle>
+              <AlertDialogTitle>{t('admin:stories.delete')}</AlertDialogTitle>
             </div>
             <AlertDialogDescription>
-              Are you sure you want to delete this story? This action cannot be
-              undone.
+              {t('admin:forms.deleteConfirm')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{t('admin:forms.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={confirmDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              Delete
+              {t('admin:forms.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -104,12 +104,12 @@ const RockPaperScissorsGame = () => {
                 {playerScore}
               </div>
               <div className="text-xs font-medium text-gray-600 md:text-sm">
-                You
+                {t('rockPaperScissors.you')}
               </div>
             </div>
             <div className="flex items-center text-center">
               <div className="text-xl font-bold text-gray-500 md:text-2xl">
-                VS
+                {t('rockPaperScissors.vs')}
               </div>
             </div>
             <div className="text-center">
@@ -117,7 +117,7 @@ const RockPaperScissorsGame = () => {
                 {computerScore}
               </div>
               <div className="text-xs font-medium text-gray-600 md:text-sm">
-                Computer
+                {t('rockPaperScissors.computer')}
               </div>
             </div>
           </div>
@@ -135,7 +135,7 @@ const RockPaperScissorsGame = () => {
                   </div>
                 </div>
                 <div className="text-sm font-semibold text-primary md:text-lg">
-                  You
+                  {t('rockPaperScissors.you')}
                 </div>
               </div>
 
@@ -143,7 +143,7 @@ const RockPaperScissorsGame = () => {
                 <div className="animate-pulse text-2xl font-bold text-gray-500 md:text-3xl">
                   ⚡
                 </div>
-                <div className="mt-2 text-xs text-gray-500 md:text-sm">VS</div>
+                <div className="mt-2 text-xs text-gray-500 md:text-sm">{t('rockPaperScissors.vs')}</div>
               </div>
 
               <div className="text-center">
@@ -157,7 +157,7 @@ const RockPaperScissorsGame = () => {
                   </div>
                 </div>
                 <div className="text-sm font-semibold text-red-500 md:text-lg">
-                  Computer
+                  {t('rockPaperScissors.computer')}
                 </div>
               </div>
             </div>
