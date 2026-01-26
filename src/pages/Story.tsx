@@ -135,7 +135,6 @@ const Story = () => {
         {canAccessStory ? (
           <StoryContent
             story={story}
-            currentSectionDir={currentStoryDir}
             currentLanguage={currentLanguage}
             storyTitle={getStoryTitle()}
             currentSectionIndex={currentSectionIndex}

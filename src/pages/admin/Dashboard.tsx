@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/utils/logger";
-import { User, CircleUser, BookOpen, Presentation, CalendarClock } from "lucide-react";
+import { User, BookOpen, Presentation, CalendarClock } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useLoading } from "@/contexts/LoadingContext";
 

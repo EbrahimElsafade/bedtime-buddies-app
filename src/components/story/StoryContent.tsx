@@ -7,7 +7,7 @@ import { logger } from '@/utils/logger'
 import { AudioControls } from './AudioControls'
 import { TextHighlight } from './TextHighlight'
 import VideoPlayer from './VideoPlayer'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { usePreloadNextSection } from '@/hooks/usePreloadNextSection'
 import { useTranslation } from 'react-i18next'
 import { useContentProgress } from '@/hooks/useContentProgress'
@@ -15,7 +15,6 @@ import { useContentProgress } from '@/hooks/useContentProgress'
 interface StoryContentProps {
   story: Story
   currentLanguage: string
-  currentSectionDir: 'rtl' | 'ltr'
   storyTitle: string
   currentSectionIndex?: number
   onSectionChange?: (index: number) => void
@@ -24,7 +23,6 @@ interface StoryContentProps {
 export const StoryContent = ({
   story,
   currentLanguage,
-  currentSectionDir,
   storyTitle,
   currentSectionIndex = 0,
   onSectionChange,
