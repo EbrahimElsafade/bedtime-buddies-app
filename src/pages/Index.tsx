@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
-// import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import { logger } from '@/utils/logger'
 import { Helmet } from 'react-helmet-async'
+import { useAuth } from '@/contexts/AuthContext'
 // import PricingPopup from '@/components/PricingPopup'
 import Hero from '@/components/home/Hero'
 import FreeStory from '@/components/home/FreeStory'
@@ -27,7 +27,11 @@ interface HomePageSettings {
 }
 
 const Index = () => {
-  // const { isAuthenticated } = useAuth()
+  const {
+    //  isAuthenticated,
+    profile,
+  } = useAuth()
+
   const { i18n, t } = useTranslation(['meta'])
 
   // Fetch home page appearance settings
@@ -88,7 +92,10 @@ const Index = () => {
       {/* {homePageSettings?.specialStory !== false && <EntertainmentStories />} */}
 
       {homePageSettings?.features !== false && <Features />}
-      {homePageSettings?.subscribeBanner !== false && <SubscribeBanner />}
+      {/* hide subscribe banner when user already has premium subscription */}
+      {homePageSettings?.subscribeBanner !== false && !profile?.is_premium && (
+        <SubscribeBanner />
+      )}
     </div>
   )
 }
