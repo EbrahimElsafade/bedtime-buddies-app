@@ -34,7 +34,9 @@
   "button": {
     "backToCourses": "Back to Courses",
     "startLearning": "Start Learning",
-    "communicateWithASpecialist": "Contact a Specialist"
+    "communicateWithASpecialist": "Contact a Specialist",
+    "getCertificate": "Get Certificate",
+    "downloadCertificate": "Download Certificate"
   },
   "free": {
     "tag": "Free"

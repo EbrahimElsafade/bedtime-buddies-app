@@ -34,7 +34,9 @@
   "button": {
     "backToCourses": "Retour aux Cours",
     "startLearning": "Commencer l'Apprentissage",
-    "communicateWithASpecialist": "Contacter un Spécialiste"
+    "communicateWithASpecialist": "Contacter un Spécialiste",
+    "getCertificate": "Obtenir le Certificat",
+    "downloadCertificate": "Télécharger le Certificat"
   },
   "free": {
     "tag": "Gratuit"

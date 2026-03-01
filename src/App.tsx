@@ -24,6 +24,7 @@ import GamePage from "./pages/GamePage";
 import Courses from "./pages/Courses";
 import Course from "./pages/Course";
 import CourseLessons from "./pages/CourseLessons";
+import CourseCertificate from "./pages/CourseCertificate";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
@@ -70,6 +71,7 @@ function App() {
                     <Route path="courses" element={<Courses />} />
                     <Route path="courses/:id" element={<Course />} />
                     <Route path="courses/:id/lessons" element={<ProtectedRoute><CourseLessons /></ProtectedRoute>} />
+                    <Route path="courses/:id/certificate" element={<ProtectedRoute><CourseCertificate /></ProtectedRoute>} />
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />
                     <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
