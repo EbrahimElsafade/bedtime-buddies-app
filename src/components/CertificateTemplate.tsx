@@ -18,7 +18,7 @@ const CertificateTemplate: React.FC<CertificateTemplateProps> = ({
   instructorName = 'Dolphoon',
   ceoName = 'Ibrahim Elsafade',
   dateIssued = new Date().toLocaleDateString(),
-  certificateCode = `${courseTitle}-${new Date().toLocaleDateString()}`,
+  certificateCode = `CERT-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
 }) => {
   const { t } = useTranslation('certificate')
 

@@ -120,6 +120,7 @@
   "coursesCompleted": "courses completed",
   "noFinishedStoriesYet": "You haven't finished any stories yet. Start exploring!",
   "noFinishedCoursesYet": "You haven't finished any courses yet. Start learning!",
+  "pleaseFinishCourseToGetCertificate": "Please finish the course before accessing the certificate.",
   "completed": "Completed",
   "finishedOn": "Finished on",
   "story": "Story",
