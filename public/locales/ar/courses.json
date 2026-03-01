@@ -33,7 +33,9 @@
   "button": {
     "backToCourses": "العودة إلى الدورات",
     "startLearning": "ابدأ التعلم",
-    "communicateWithASpecialist": "تواصل مع متخصص"
+    "communicateWithASpecialist": "تواصل مع متخصص",
+    "getCertificate": "الحصول على الشهادة",
+    "downloadCertificate": "تحميل الشهادة"
   },
   "free": {
     "tag": "مجاني"
