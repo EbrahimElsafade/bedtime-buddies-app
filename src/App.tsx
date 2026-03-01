@@ -24,6 +24,7 @@ import GamePage from "./pages/GamePage";
 import Courses from "./pages/Courses";
 import Course from "./pages/Course";
 import CourseLessons from "./pages/CourseLessons";
+import CourseCertificate from "./pages/CourseCertificate";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
