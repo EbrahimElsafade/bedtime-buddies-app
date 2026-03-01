@@ -39,7 +39,7 @@ const CertificateTemplate: React.FC<CertificateTemplateProps> = ({
           {/* Logo area */}
           <div className="mb-4 flex justify-center">
             <img
-              src="/src/assets/dolphoon-logo-removebg-preview.png"
+              src="/icons/icon-192x192.png"
               alt="logo"
               className="h-20 w-auto"
             />

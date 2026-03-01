@@ -301,6 +301,14 @@ const Course = () => {
                 </Button>
 
                 <Button
+                  variant="outline"
+                  onClick={() => navigate(`/courses/${courseId}/certificate`)}
+                  className="border-primary text-primary hover:bg-primary/10"
+                >
+                  {t('button.getCertificate')}
+                </Button>
+
+                <Button
                   variant="secondary"
                   onClick={() => setIsContactModalOpen(true)}
                 >

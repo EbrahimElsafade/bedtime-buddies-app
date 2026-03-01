@@ -71,6 +71,7 @@ function App() {
                     <Route path="courses" element={<Courses />} />
                     <Route path="courses/:id" element={<Course />} />
                     <Route path="courses/:id/lessons" element={<ProtectedRoute><CourseLessons /></ProtectedRoute>} />
+                    <Route path="courses/:id/certificate" element={<ProtectedRoute><CourseCertificate /></ProtectedRoute>} />
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />
                     <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
