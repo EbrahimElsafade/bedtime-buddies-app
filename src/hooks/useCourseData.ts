@@ -20,7 +20,7 @@ export const useCourseData = (courseId: string | undefined) => {
         .select('*')
         .eq('id', courseId)
         .eq('is_published', true)
-        .single()
+        .maybeSingle()
 
       if (courseError) {
         logger.error('Error fetching course:', courseError)
