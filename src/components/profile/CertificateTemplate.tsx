@@ -1,9 +1,47 @@
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, useState } from 'react'
 import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 import { Button } from '@/components/ui/button'
-import { Download, GraduationCap } from 'lucide-react'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { Download, FileImage, FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import dolphoonLogo from '@/assets/dolphoon-logo-removebg-preview.png'
+
+const CERT_STRINGS: Record<string, Record<string, string>> = {
+  en: {
+    completionCertificate: 'COMPLETION CERTIFICATE',
+    presentedTo: 'PRESENTED TO',
+    graduatedFrom: 'Graduated from the',
+    certificateDescription:
+      'For persistence, boundless hunger for knowledge and outstanding dedication to learning.',
+    certificateId: 'Certificate ID',
+    issuingDate: 'Issuing Date',
+  },
+  ar: {
+    completionCertificate: 'شهادة إتمام',
+    presentedTo: 'تُقدّم إلى',
+    graduatedFrom: 'تخرّج من دورة',
+    certificateDescription:
+      'تقديرًا للمثابرة والشغف بالمعرفة والتفاني المتميّز في التعلّم.',
+    certificateId: 'رقم الشهادة',
+    issuingDate: 'تاريخ الإصدار',
+  },
+  fr: {
+    completionCertificate: "CERTIFICAT D'ACHÈVEMENT",
+    presentedTo: 'DÉCERNÉ À',
+    graduatedFrom: 'A terminé le cours',
+    certificateDescription:
+      "Pour sa persévérance, sa soif de connaissance et son dévouement exceptionnel à l'apprentissage.",
+    certificateId: 'ID du Certificat',
+    issuingDate: "Date d'émission",
+  },
+}
 
 interface CertificateTemplateProps {
   studentName: string
@@ -18,31 +56,69 @@ export const CertificateTemplate = ({
   completionDate,
   certificateId,
 }: CertificateTemplateProps) => {
-  const { t } = useTranslation(['common'])
+  const { t, i18n } = useTranslation(['common'])
   const certRef = useRef<HTMLDivElement>(null)
+  const [certLang, setCertLang] = useState(i18n.language === 'ar' ? 'ar' : i18n.language === 'fr' ? 'fr' : 'en')
 
-  const handleDownload = useCallback(async () => {
-    if (!certRef.current) return
+  const s = CERT_STRINGS[certLang] || CERT_STRINGS.en
+  const isRtl = certLang === 'ar'
+
+  const getCanvas = useCallback(async () => {
+    if (!certRef.current) return null
+    return html2canvas(certRef.current, {
+      scale: 3,
+      backgroundColor: null,
+      useCORS: true,
+    })
+  }, [])
+
+  const handleDownloadPng = useCallback(async () => {
     try {
-      const canvas = await html2canvas(certRef.current, {
-        scale: 3,
-        backgroundColor: null,
-        useCORS: true,
-      })
+      const canvas = await getCanvas()
+      if (!canvas) return
       const link = document.createElement('a')
       link.download = `certificate-${certificateId}.png`
       link.href = canvas.toDataURL('image/png')
       link.click()
     } catch (err) {
-      console.error('Failed to generate certificate image', err)
+      console.error('Failed to generate certificate PNG', err)
     }
-  }, [certificateId])
+  }, [certificateId, getCanvas])
+
+  const handleDownloadPdf = useCallback(async () => {
+    try {
+      const canvas = await getCanvas()
+      if (!canvas) return
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [canvas.width, canvas.height] })
+      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height)
+      pdf.save(`certificate-${certificateId}.pdf`)
+    } catch (err) {
+      console.error('Failed to generate certificate PDF', err)
+    }
+  }, [certificateId, getCanvas])
 
   return (
     <div className="space-y-4">
+      {/* Language Selector */}
+      <div className="flex items-center gap-2">
+        <span className="text-sm text-muted-foreground">{t('certificateLanguage')}:</span>
+        <Select value={certLang} onValueChange={setCertLang}>
+          <SelectTrigger className="w-36">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="en">English</SelectItem>
+            <SelectItem value="ar">العربية</SelectItem>
+            <SelectItem value="fr">Français</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Certificate Preview */}
       <div
         ref={certRef}
+        dir={isRtl ? 'rtl' : 'ltr'}
         className="relative mx-auto aspect-[1.414/1] w-full overflow-hidden bg-[#faf6ee]"
         style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
       >
@@ -62,21 +138,21 @@ export const CertificateTemplate = ({
           {/* Top row */}
           <div className="flex w-full items-start justify-between text-[0.55rem] text-[#5c4033]/70 sm:text-xs">
             <span>
-              {t('certificateId')}: {certificateId}
+              {s.certificateId}: {certificateId}
             </span>
             <span>
-              {t('issuingDate')}: {completionDate}
+              {s.issuingDate}: {completionDate}
             </span>
           </div>
 
           {/* Main content */}
           <div className="flex flex-col items-center gap-2 text-center sm:gap-4">
             <h1 className="text-lg font-bold tracking-widest text-[#3b2314] sm:text-2xl md:text-3xl">
-              {t('completionCertificate')}
+              {s.completionCertificate}
             </h1>
 
             <div className="mt-1 text-[0.6rem] font-semibold uppercase tracking-wider text-[#5c4033]/80 sm:mt-2 sm:text-xs">
-              {t('presentedTo')}
+              {s.presentedTo}
             </div>
 
             <div className="mt-1 border-b-2 border-[#5c4033]/30 px-6 pb-1 text-xl font-bold text-[#3b2314] sm:text-3xl md:text-4xl">
@@ -84,9 +160,9 @@ export const CertificateTemplate = ({
             </div>
 
             <p className="mt-1 max-w-[80%] text-[0.6rem] leading-relaxed text-[#5c4033]/80 sm:mt-2 sm:text-sm">
-              {t('graduatedFrom')}{' '}
+              {s.graduatedFrom}{' '}
               <span className="font-bold text-[#3b2314]">{courseTitle}</span>.{' '}
-              {t('certificateDescription')}
+              {s.certificateDescription}
             </p>
           </div>
 
@@ -107,11 +183,17 @@ export const CertificateTemplate = ({
         </div>
       </div>
 
-      {/* Download Button */}
-      <Button onClick={handleDownload} className="w-full gap-2">
-        <Download className="h-4 w-4" />
-        {t('downloadCertificate')}
-      </Button>
+      {/* Download Buttons */}
+      <div className="flex gap-2">
+        <Button onClick={handleDownloadPng} className="flex-1 gap-2">
+          <FileImage className="h-4 w-4" />
+          {t('downloadPng')}
+        </Button>
+        <Button onClick={handleDownloadPdf} variant="outline" className="flex-1 gap-2">
+          <FileText className="h-4 w-4" />
+          {t('downloadPdf')}
+        </Button>
+      </div>
     </div>
   )
 }
