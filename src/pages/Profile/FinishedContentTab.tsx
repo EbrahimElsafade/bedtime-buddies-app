@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,7 +10,7 @@ import {
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { CheckCircle, Trophy, Star, Award, Medal, Crown } from 'lucide-react'
+import { CheckCircle, Trophy, Star, Award, Medal, Crown, GraduationCap } from 'lucide-react'
 import { getImageUrl } from '@/utils/imageUtils'
 import {
   FinishedStory,
@@ -17,6 +18,12 @@ import {
   GamificationStats,
 } from '@/hooks/useGamification'
 import { cn } from '@/lib/utils'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 interface FinishedContentTabProps {
   stats: GamificationStats
