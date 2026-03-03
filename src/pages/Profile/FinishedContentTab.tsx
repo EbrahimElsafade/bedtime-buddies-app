@@ -24,6 +24,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { useAuth } from '@/contexts/AuthContext'
+import { CertificateTemplate } from '@/components/profile/CertificateTemplate'
 
 interface FinishedContentTabProps {
   stats: GamificationStats
@@ -75,6 +77,7 @@ export const FinishedContentTab = ({
   isLoading,
 }: FinishedContentTabProps) => {
   const navigate = useNavigate()
+  const { profile } = useAuth()
   const [selectedCourse, setSelectedCourse] = useState<FinishedCourse | null>(null)
   const getStoryTitle = (story: FinishedStory['story']) => {
     if (!story) return ''
@@ -340,7 +343,7 @@ export const FinishedContentTab = ({
       </Card>
       {/* Certificate Dialog */}
       <Dialog open={!!selectedCourse} onOpenChange={(open) => !open && setSelectedCourse(null)}>
-        <DialogContent className="max-w-lg">
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <GraduationCap className="h-5 w-5 text-primary" />
@@ -348,21 +351,12 @@ export const FinishedContentTab = ({
             </DialogTitle>
           </DialogHeader>
           {selectedCourse?.course && (
-            <div className="space-y-4">
-              {getImageUrl(selectedCourse.course.cover_image) && (
-                <img
-                  src={getImageUrl(selectedCourse.course.cover_image)!}
-                  alt={getCourseTitle(selectedCourse.course)}
-                  className="h-40 w-full rounded-lg object-cover"
-                />
-              )}
-              <div>
-                <h3 className="text-lg font-semibold">{getCourseTitle(selectedCourse.course)}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {t('finishedOn')} {new Date(selectedCourse.finished_at).toLocaleDateString()}
-                </p>
-              </div>
-            </div>
+            <CertificateTemplate
+              studentName={profile?.child_name || profile?.parent_name || ''}
+              courseTitle={getCourseTitle(selectedCourse.course)}
+              completionDate={new Date(selectedCourse.finished_at).toLocaleDateString()}
+              certificateId={selectedCourse.id.slice(0, 15).toUpperCase()}
+            />
           )}
         </DialogContent>
       </Dialog>
