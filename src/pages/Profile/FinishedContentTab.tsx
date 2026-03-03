@@ -338,6 +338,34 @@ export const FinishedContentTab = ({
           )}
         </CardContent>
       </Card>
+      {/* Certificate Dialog */}
+      <Dialog open={!!selectedCourse} onOpenChange={(open) => !open && setSelectedCourse(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <GraduationCap className="h-5 w-5 text-primary" />
+              {t('getCertificate')}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedCourse?.course && (
+            <div className="space-y-4">
+              {getImageUrl(selectedCourse.course.cover_image) && (
+                <img
+                  src={getImageUrl(selectedCourse.course.cover_image)!}
+                  alt={getCourseTitle(selectedCourse.course)}
+                  className="h-40 w-full rounded-lg object-cover"
+                />
+              )}
+              <div>
+                <h3 className="text-lg font-semibold">{getCourseTitle(selectedCourse.course)}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {t('finishedOn')} {new Date(selectedCourse.finished_at).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
