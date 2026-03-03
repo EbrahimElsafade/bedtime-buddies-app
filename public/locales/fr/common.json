@@ -114,7 +114,6 @@
   "coursesCompleted": "cours terminés",
   "noFinishedStoriesYet": "Vous n'avez pas encore terminé d'histoires. Commencez à explorer!",
   "noFinishedCoursesYet": "Vous n'avez pas encore terminé de cours. Commencez à apprendre!",
-  "pleaseFinishCourseToGetCertificate": "Veuillez terminer le cours avant d'accéder au certificat.",
   "completed": "Terminé",
   "finishedOn": "Terminé le",
   "story": "Histoire",
@@ -159,8 +158,10 @@
   "all": "Tout",
   "total": "Total",
   "type": "Type",
+  "languages": "Langues",
   "openMenu": "Ouvrir le menu",
   "view": "Voir",
   "noDataFound": "Aucune donnée trouvée",
+  "loading": "Chargement...",
   "untitled": "Sans titre"
 }

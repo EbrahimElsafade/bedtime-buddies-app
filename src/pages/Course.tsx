@@ -18,7 +18,6 @@ import { CourseHeader } from '@/components/course/CourseHeader'
 import { ContactFormModal } from '@/components/course/ContactFormModal'
 import { useUserRole } from '@/hooks/useUserRole'
 import { getCategoryText } from '@/utils/courseUtils'
-import { useGamification } from '@/hooks/useGamification'
 import { CoursePremiumModal } from '@/components/course/CoursePremiumModal'
 // import { WhatsappSubscribeButton } from '@/components/WhatsappSubscribeButton'
 
@@ -26,13 +25,7 @@ const Course = () => {
   const { id: courseId } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { t } = useTranslation(['courses', 'meta', 'common'])
-  const {
-    isAuthenticated,
-    isLoading: authLoading,
-    user,
-    profile,
-    isProfileLoaded,
-  } = useAuth()
+  const { isAuthenticated, isLoading: authLoading, user, profile, isProfileLoaded } = useAuth()
   const { toast } = useToast()
 
   const { setIsLoading, setLoadingMessage } = useLoading()
@@ -46,20 +39,12 @@ const Course = () => {
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
 
-  // determine if user finished this course (for certificate access)
-  const { finishedCourses } = useGamification()
-  const courseFinished =
-    !!courseId && finishedCourses.some(f => f.content_id === courseId)
-
   // Compute category from course data
   const category = course
     ? categories.find(
         cat => cat.id === course.category || cat.name === course.category,
       )
     : null
-
-  const getCertificate = () =>
-    courseFinished && navigate(`/courses/${courseId}/certificate`)
 
   useEffect(() => {
     setIsLoading(isLoading)
@@ -91,10 +76,7 @@ const Course = () => {
     if (effectiveRoleLoading) {
       toast({
         title: t('toast.loading', { ns: 'common', defaultValue: 'Loading...' }),
-        description: t('toast.pleaseWait', {
-          ns: 'common',
-          defaultValue: 'Please wait...',
-        }),
+        description: t('toast.pleaseWait', { ns: 'common', defaultValue: 'Please wait...' }),
       })
       return
     }
@@ -316,15 +298,6 @@ const Course = () => {
               <div className="flex gap-4">
                 <Button variant="accent" onClick={handleStartCourse}>
                   {t('button.startLearning')}
-                </Button>
-
-                <Button
-                  variant="outline"
-                  onClick={getCertificate}
-                  className="border-primary text-primary hover:bg-primary/10"
-                  disabled={!courseFinished}
-                >
-                  {t('button.getCertificate')}
                 </Button>
 
                 <Button

@@ -113,7 +113,6 @@
   "coursesCompleted": "دورات مكتملة",
   "noFinishedStoriesYet": "لم تنهِ أي قصص بعد. ابدأ الاستكشاف!",
   "noFinishedCoursesYet": "لم تنهِ أي دورات بعد. ابدأ التعلم!",
-  "pleaseFinishCourseToGetCertificate": "يرجى إكمال الدورة قبل الوصول إلى الشهادة.",
   "completed": "مكتمل",
   "finishedOn": "اكتمل في",
   "story": "قصة",
@@ -162,5 +161,6 @@
   "openMenu": "فتح القائمة",
   "view": "عرض",
   "noDataFound": "لم يتم العثور على بيانات",
+  "loading": "جاري التحميل...",
   "untitled": "بدون عنوان"
 }
