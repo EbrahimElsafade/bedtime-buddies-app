@@ -318,6 +318,18 @@ export const FinishedContentTab = ({
                         {t('finishedOn')}{' '}
                         {new Date(item.finished_at).toLocaleDateString()}
                       </p>
+                      <Button
+                        variant="accent"
+                        size="sm"
+                        className="mt-3 w-full"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setSelectedCourse(item)
+                        }}
+                      >
+                        <GraduationCap className="h-4 w-4" />
+                        {t('getCertificate')}
+                      </Button>
                     </CardContent>
                   </Card>
                 )
