@@ -169,5 +169,6 @@
   "openMenu": "Open menu",
   "view": "View",
   "noDataFound": "No data found",
-  "untitled": "Untitled"
+  "untitled": "Untitled",
+  "getCertificate": "Get Certificate"
 }

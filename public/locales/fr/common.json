@@ -163,5 +163,6 @@
   "view": "Voir",
   "noDataFound": "Aucune donnée trouvée",
   "loading": "Chargement...",
-  "untitled": "Sans titre"
+  "untitled": "Sans titre",
+  "getCertificate": "Obtenir le Certificat"
 }
