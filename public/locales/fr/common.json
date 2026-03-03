@@ -171,5 +171,8 @@
   "presentedTo": "DÉCERNÉ À",
   "graduatedFrom": "A terminé avec succès le cours",
   "certificateDescription": "Pour sa persévérance, sa soif de connaissances et son dévouement exceptionnel à l'apprentissage.",
-  "downloadCertificate": "Télécharger le certificat"
+  "downloadCertificate": "Télécharger le certificat",
+  "downloadPng": "Télécharger PNG",
+  "downloadPdf": "Télécharger PDF",
+  "certificateLanguage": "Langue du certificat"
 }

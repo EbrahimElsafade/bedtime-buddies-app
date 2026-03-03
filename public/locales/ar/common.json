@@ -170,5 +170,8 @@
   "presentedTo": "مُقدَّمة إلى",
   "graduatedFrom": "أتمّ بنجاح دورة",
   "certificateDescription": "تقديراً للمثابرة والشغف بالمعرفة والتفاني المتميز في التعلم.",
-  "downloadCertificate": "تحميل الشهادة"
+  "downloadCertificate": "تحميل الشهادة",
+  "downloadPng": "تحميل PNG",
+  "downloadPdf": "تحميل PDF",
+  "certificateLanguage": "لغة الشهادة"
 }
