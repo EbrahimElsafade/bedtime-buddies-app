@@ -10,7 +10,15 @@ import {
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { CheckCircle, Trophy, Star, Award, Medal, Crown, GraduationCap } from 'lucide-react'
+import {
+  CheckCircle,
+  Trophy,
+  Star,
+  Award,
+  Medal,
+  Crown,
+  GraduationCap,
+} from 'lucide-react'
 import { getImageUrl } from '@/utils/imageUtils'
 import {
   FinishedStory,
@@ -78,7 +86,9 @@ export const FinishedContentTab = ({
 }: FinishedContentTabProps) => {
   const navigate = useNavigate()
   const { profile } = useAuth()
-  const [selectedCourse, setSelectedCourse] = useState<FinishedCourse | null>(null)
+  const [selectedCourse, setSelectedCourse] = useState<FinishedCourse | null>(
+    null,
+  )
   const getStoryTitle = (story: FinishedStory['story']) => {
     if (!story) return ''
     return story.title[language] || story.title.en || ''
@@ -171,10 +181,10 @@ export const FinishedContentTab = ({
                 <div
                   key={milestone.id}
                   className={cn(
-                    'flex flex-col items-center gap-1 rounded-lg p-3 transition-all min-w-28',
+                    'flex min-w-28 flex-col items-center gap-1 rounded-lg p-3 transition-all',
                     isUnlocked
                       ? 'scale-105 bg-primary/20'
-                      : 'bg-muted/50 opacity-50 grayscale hidden sm:flex',
+                      : 'hidden bg-muted/50 opacity-50 grayscale sm:flex',
                   )}
                 >
                   <div
@@ -316,7 +326,9 @@ export const FinishedContentTab = ({
                           </Badge>
                         </div>
                       )}
-                      <h4 className="mb-1 font-medium">{title}</h4>
+                      <h4 className="mb-1 max-w-xs overflow-hidden text-ellipsis whitespace-nowrap font-medium">
+                        {title}
+                      </h4>
                       <p className="text-xs text-muted-foreground">
                         {t('finishedOn')}{' '}
                         {new Date(item.finished_at).toLocaleDateString()}
@@ -325,7 +337,7 @@ export const FinishedContentTab = ({
                         variant="accent"
                         size="sm"
                         className="mt-3 w-full"
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation()
                           setSelectedCourse(item)
                         }}
@@ -342,7 +354,10 @@ export const FinishedContentTab = ({
         </CardContent>
       </Card>
       {/* Certificate Dialog */}
-      <Dialog open={!!selectedCourse} onOpenChange={(open) => !open && setSelectedCourse(null)}>
+      <Dialog
+        open={!!selectedCourse}
+        onOpenChange={open => !open && setSelectedCourse(null)}
+      >
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -354,7 +369,9 @@ export const FinishedContentTab = ({
             <CertificateTemplate
               studentName={profile?.child_name || profile?.parent_name || ''}
               courseTitle={getCourseTitle(selectedCourse.course)}
-              completionDate={new Date(selectedCourse.finished_at).toLocaleDateString()}
+              completionDate={new Date(
+                selectedCourse.finished_at,
+              ).toLocaleDateString()}
               certificateId={selectedCourse.id.slice(0, 15).toUpperCase()}
             />
           )}
