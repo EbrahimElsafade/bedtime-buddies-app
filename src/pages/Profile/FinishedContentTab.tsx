@@ -75,7 +75,7 @@ export const FinishedContentTab = ({
   isLoading,
 }: FinishedContentTabProps) => {
   const navigate = useNavigate()
-
+  const [selectedCourse, setSelectedCourse] = useState<FinishedCourse | null>(null)
   const getStoryTitle = (story: FinishedStory['story']) => {
     if (!story) return ''
     return story.title[language] || story.title.en || ''
