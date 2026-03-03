@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,7 +10,7 @@ import {
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
-import { CheckCircle, Trophy, Star, Award, Medal, Crown } from 'lucide-react'
+import { CheckCircle, Trophy, Star, Award, Medal, Crown, GraduationCap } from 'lucide-react'
 import { getImageUrl } from '@/utils/imageUtils'
 import {
   FinishedStory,
@@ -17,6 +18,12 @@ import {
   GamificationStats,
 } from '@/hooks/useGamification'
 import { cn } from '@/lib/utils'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 interface FinishedContentTabProps {
   stats: GamificationStats
@@ -68,7 +75,7 @@ export const FinishedContentTab = ({
   isLoading,
 }: FinishedContentTabProps) => {
   const navigate = useNavigate()
-
+  const [selectedCourse, setSelectedCourse] = useState<FinishedCourse | null>(null)
   const getStoryTitle = (story: FinishedStory['story']) => {
     if (!story) return ''
     return story.title[language] || story.title.en || ''
@@ -311,6 +318,18 @@ export const FinishedContentTab = ({
                         {t('finishedOn')}{' '}
                         {new Date(item.finished_at).toLocaleDateString()}
                       </p>
+                      <Button
+                        variant="accent"
+                        size="sm"
+                        className="mt-3 w-full"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setSelectedCourse(item)
+                        }}
+                      >
+                        <GraduationCap className="h-4 w-4" />
+                        {t('getCertificate')}
+                      </Button>
                     </CardContent>
                   </Card>
                 )
@@ -319,6 +338,34 @@ export const FinishedContentTab = ({
           )}
         </CardContent>
       </Card>
+      {/* Certificate Dialog */}
+      <Dialog open={!!selectedCourse} onOpenChange={(open) => !open && setSelectedCourse(null)}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <GraduationCap className="h-5 w-5 text-primary" />
+              {t('getCertificate')}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedCourse?.course && (
+            <div className="space-y-4">
+              {getImageUrl(selectedCourse.course.cover_image) && (
+                <img
+                  src={getImageUrl(selectedCourse.course.cover_image)!}
+                  alt={getCourseTitle(selectedCourse.course)}
+                  className="h-40 w-full rounded-lg object-cover"
+                />
+              )}
+              <div>
+                <h3 className="text-lg font-semibold">{getCourseTitle(selectedCourse.course)}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {t('finishedOn')} {new Date(selectedCourse.finished_at).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
