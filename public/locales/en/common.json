@@ -177,5 +177,8 @@
   "presentedTo": "PRESENTED TO",
   "graduatedFrom": "Graduated from the",
   "certificateDescription": "For persistence, boundless hunger for knowledge and outstanding dedication to learning.",
-  "downloadCertificate": "Download Certificate"
+  "downloadCertificate": "Download Certificate",
+  "downloadPng": "Download PNG",
+  "downloadPdf": "Download PDF",
+  "certificateLanguage": "Certificate Language"
 }
