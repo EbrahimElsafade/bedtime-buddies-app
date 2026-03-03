@@ -170,5 +170,12 @@
   "view": "View",
   "noDataFound": "No data found",
   "untitled": "Untitled",
-  "getCertificate": "Get Certificate"
+  "getCertificate": "Get Certificate",
+  "certificateId": "Certificate ID",
+  "issuingDate": "Issuing Date",
+  "completionCertificate": "COMPLETION CERTIFICATE",
+  "presentedTo": "PRESENTED TO",
+  "graduatedFrom": "Graduated from the",
+  "certificateDescription": "For persistence, boundless hunger for knowledge and outstanding dedication to learning.",
+  "downloadCertificate": "Download Certificate"
 }

@@ -164,5 +164,12 @@
   "noDataFound": "Aucune donnée trouvée",
   "loading": "Chargement...",
   "untitled": "Sans titre",
-  "getCertificate": "Obtenir le Certificat"
+  "getCertificate": "Obtenir le Certificat",
+  "certificateId": "ID du certificat",
+  "issuingDate": "Date de délivrance",
+  "completionCertificate": "CERTIFICAT DE RÉUSSITE",
+  "presentedTo": "DÉCERNÉ À",
+  "graduatedFrom": "A terminé avec succès le cours",
+  "certificateDescription": "Pour sa persévérance, sa soif de connaissances et son dévouement exceptionnel à l'apprentissage.",
+  "downloadCertificate": "Télécharger le certificat"
 }

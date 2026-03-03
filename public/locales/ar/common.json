@@ -163,5 +163,12 @@
   "noDataFound": "لم يتم العثور على بيانات",
   "loading": "جاري التحميل...",
   "untitled": "بدون عنوان",
-  "getCertificate": "احصل على الشهادة"
+  "getCertificate": "احصل على الشهادة",
+  "certificateId": "رقم الشهادة",
+  "issuingDate": "تاريخ الإصدار",
+  "completionCertificate": "شهادة إتمام",
+  "presentedTo": "مُقدَّمة إلى",
+  "graduatedFrom": "أتمّ بنجاح دورة",
+  "certificateDescription": "تقديراً للمثابرة والشغف بالمعرفة والتفاني المتميز في التعلم.",
+  "downloadCertificate": "تحميل الشهادة"
 }
