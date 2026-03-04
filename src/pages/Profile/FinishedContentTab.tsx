@@ -314,17 +314,11 @@ export const FinishedContentTab = ({
                   >
                     <CardContent className="p-4">
                       {imageUrl && (
-                        <div className="relative">
-                          <img
-                            src={imageUrl}
-                            alt={title}
-                            className="mb-3 h-32 w-full rounded object-cover"
-                          />
-                          <Badge className="absolute right-2 top-2 bg-green-500">
-                            <CheckCircle className="mr-1 h-3 w-3" />
-                            {t('completed')}
-                          </Badge>
-                        </div>
+                        <img
+                          src={imageUrl}
+                          alt={title}
+                          className="mb-3 h-32 w-full rounded object-cover"
+                        />
                       )}
                       <h4 className="mb-1 font-medium sm:truncate">{title}</h4>
                       <p className="text-xs text-muted-foreground">

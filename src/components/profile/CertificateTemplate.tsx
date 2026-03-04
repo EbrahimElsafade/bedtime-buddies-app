@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Download, FileImage, FileText } from 'lucide-react'
+import { FileImage, FileText } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import dolphoonLogo from '@/assets/dolphoon-logo-removebg-preview.png'
 
@@ -58,7 +58,9 @@ export const CertificateTemplate = ({
 }: CertificateTemplateProps) => {
   const { t, i18n } = useTranslation(['common'])
   const certRef = useRef<HTMLDivElement>(null)
-  const [certLang, setCertLang] = useState(i18n.language === 'ar' ? 'ar' : i18n.language === 'fr' ? 'fr' : 'en')
+  const [certLang, setCertLang] = useState(
+    i18n.language === 'ar' ? 'ar' : i18n.language === 'fr' ? 'fr' : 'en',
+  )
 
   const s = CERT_STRINGS[certLang] || CERT_STRINGS.en
   const isRtl = certLang === 'ar'
@@ -90,7 +92,11 @@ export const CertificateTemplate = ({
       const canvas = await getCanvas()
       if (!canvas) return
       const imgData = canvas.toDataURL('image/png')
-      const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [canvas.width, canvas.height] })
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'px',
+        format: [canvas.width, canvas.height],
+      })
       pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height)
       pdf.save(`certificate-${certificateId}.pdf`)
     } catch (err) {
@@ -102,7 +108,9 @@ export const CertificateTemplate = ({
     <div className="space-y-4">
       {/* Language Selector */}
       <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">{t('certificateLanguage')}:</span>
+        <span className="text-sm text-muted-foreground">
+          {t('certificateLanguage')}:
+        </span>
         <Select value={certLang} onValueChange={setCertLang}>
           <SelectTrigger className="w-36">
             <SelectValue />
@@ -120,7 +128,7 @@ export const CertificateTemplate = ({
         ref={certRef}
         dir={isRtl ? 'rtl' : 'ltr'}
         className="relative mx-auto aspect-[1.414/1] w-full overflow-hidden bg-[#faf6ee]"
-        style={{ fontFamily: isRtl ? '"Noto Naskh Arabic", "Amiri", "Traditional Arabic", serif' : 'Georgia, "Times New Roman", serif' }}
+        style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
       >
         {/* Outer border */}
         <div className="absolute inset-3 border-2 border-[#5c4033]" />
@@ -189,7 +197,11 @@ export const CertificateTemplate = ({
           <FileImage className="h-4 w-4" />
           {t('downloadPng')}
         </Button>
-        <Button onClick={handleDownloadPdf} variant="outline" className="flex-1 gap-2">
+        <Button
+          onClick={handleDownloadPdf}
+          variant="outline"
+          className="flex-1 gap-2"
+        >
           <FileText className="h-4 w-4" />
           {t('downloadPdf')}
         </Button>
