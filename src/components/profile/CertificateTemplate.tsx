@@ -68,6 +68,12 @@ export const CertificateTemplate = ({
 
   const s = CERT_STRINGS[certLang] || CERT_STRINGS.en
   const isRtl = certLang === 'ar'
+  const localizedTitle =
+    certLang === 'ar' && courseTitleAr
+      ? courseTitleAr
+      : certLang === 'fr' && courseTitleFr
+        ? courseTitleFr
+        : courseTitle
 
   const getCanvas = useCallback(async () => {
     if (!certRef.current) return null
