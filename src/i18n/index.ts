@@ -39,6 +39,7 @@ i18n
       'games',
       'courses',
       'story',
+      'social',
     ],
   })
 
