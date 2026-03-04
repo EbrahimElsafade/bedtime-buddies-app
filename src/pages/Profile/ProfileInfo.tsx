@@ -294,7 +294,7 @@ export const ProfileInfo = ({
           <SubscriptionProfile isPremium={isPremium} />
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between">
+      <CardFooter className="flex flex-wrap-reverse gap-2 justify-between">
         {isEditing ? (
           <>
             <Button variant="outline" onClick={() => setIsEditing(false)}>

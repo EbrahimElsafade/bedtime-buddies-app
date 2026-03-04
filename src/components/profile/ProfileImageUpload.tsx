@@ -80,8 +80,8 @@ export const ProfileImageUpload = () => {
   }
 
   return (
-    <div className="flex items-center gap-4">
-      <Avatar className="h-24 w-24">
+    <div className="flex flex-wrap items-center gap-4">
+      <Avatar className="h-24 w-24 mx-auto sm:mx-0">
         <AvatarImage src={imageUrl} alt={profile?.parent_name} />
         <AvatarFallback>
           <User className="h-12 w-12" />

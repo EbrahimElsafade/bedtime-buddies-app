@@ -99,7 +99,7 @@ export const SocialAccountsManager = () => {
         {/* Available Accounts to Link */}
         <div className="space-y-2">
           <h4 className="text-sm font-medium">{t('addAccount')}</h4>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid sm:grid-cols-2 grid-cols-1 gap-2">
             {availableAccounts
               .filter(account => !actualLinkedProviders.includes(account))
               .map((account) => (

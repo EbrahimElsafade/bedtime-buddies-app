@@ -326,9 +326,7 @@ export const FinishedContentTab = ({
                           </Badge>
                         </div>
                       )}
-                      <h4 className="mb-1 max-w-xs overflow-hidden text-ellipsis whitespace-nowrap font-medium">
-                        {title}
-                      </h4>
+                      <h4 className="mb-1 font-medium sm:truncate">{title}</h4>
                       <p className="text-xs text-muted-foreground">
                         {t('finishedOn')}{' '}
                         {new Date(item.finished_at).toLocaleDateString()}
@@ -358,7 +356,7 @@ export const FinishedContentTab = ({
         open={!!selectedCourse}
         onOpenChange={open => !open && setSelectedCourse(null)}
       >
-        <DialogContent className="sm:max-w-4xl max-w-2xl">
+        <DialogContent className="max-w-2xl sm:max-w-4xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <GraduationCap className="h-5 w-5 text-primary" />
