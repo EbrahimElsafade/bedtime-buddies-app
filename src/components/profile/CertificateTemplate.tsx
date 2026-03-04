@@ -46,6 +46,8 @@ const CERT_STRINGS: Record<string, Record<string, string>> = {
 interface CertificateTemplateProps {
   studentName: string
   courseTitle: string
+  courseTitleAr?: string
+  courseTitleFr?: string
   completionDate: string
   certificateId: string
 }
@@ -53,6 +55,8 @@ interface CertificateTemplateProps {
 export const CertificateTemplate = ({
   studentName,
   courseTitle,
+  courseTitleAr,
+  courseTitleFr,
   completionDate,
   certificateId,
 }: CertificateTemplateProps) => {
