@@ -120,7 +120,7 @@ export const CertificateTemplate = ({
         ref={certRef}
         dir={isRtl ? 'rtl' : 'ltr'}
         className="relative mx-auto aspect-[1.414/1] w-full overflow-hidden bg-[#faf6ee]"
-        style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
+        style={{ fontFamily: isRtl ? '"Noto Naskh Arabic", "Amiri", "Traditional Arabic", serif' : 'Georgia, "Times New Roman", serif' }}
       >
         {/* Outer border */}
         <div className="absolute inset-3 border-2 border-[#5c4033]" />
