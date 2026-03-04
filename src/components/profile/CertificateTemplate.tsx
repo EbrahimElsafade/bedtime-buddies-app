@@ -127,7 +127,7 @@ export const CertificateTemplate = ({
       <div
         ref={certRef}
         dir={isRtl ? 'rtl' : 'ltr'}
-        className="relative mx-auto aspect-[1.414/1] w-full overflow-hidden bg-[#faf6ee]"
+        className="relative mx-auto aspect-[1.75/1] w-full bg-[#faf6ee]"
         style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
       >
         {/* Outer border */}
@@ -143,23 +143,26 @@ export const CertificateTemplate = ({
 
         {/* Content */}
         <div className="relative flex h-full flex-col items-center justify-between px-8 py-10 sm:px-12 sm:py-14">
-          {/* Top row */}
-          <div className="flex w-full items-start justify-between text-[0.55rem] text-[#5c4033]/70 sm:text-xs">
-            <span>
-              {s.certificateId}: {certificateId}
-            </span>
-            <span>
-              {s.issuingDate}: {completionDate}
-            </span>
+          {/* row with logo */}
+          <div className="flex w-full items-end justify-center">
+            <div className="flex flex-col items-center gap-1">
+              <img
+                src={dolphoonLogo}
+                alt="Dolphoon"
+                className="size-10 sm:size-16"
+                crossOrigin="anonymous"
+              />
+              <span className="text-[#5c4033]/60">{t('appName')}</span>
+            </div>
           </div>
 
           {/* Main content */}
           <div className="flex flex-col items-center gap-2 text-center sm:gap-4">
-            <h1 className="text-lg font-bold tracking-widest text-[#3b2314] sm:text-2xl md:text-3xl">
+            <h1 className="text-lg font-bold text-[#3b2314] sm:text-2xl md:text-3xl">
               {s.completionCertificate}
             </h1>
 
-            <div className="mt-1 text-[0.6rem] font-semibold uppercase tracking-wider text-[#5c4033]/80 sm:mt-2 sm:text-xs">
+            <div className="mt-1 text-[0.6rem] font-semibold uppercase text-[#5c4033]/80 sm:mt-2 sm:text-xs">
               {s.presentedTo}
             </div>
 
@@ -174,19 +177,14 @@ export const CertificateTemplate = ({
             </p>
           </div>
 
-          {/* Bottom row with logo */}
-          <div className="flex w-full items-end justify-center">
-            <div className="flex flex-col items-center gap-1">
-              <img
-                src={dolphoonLogo}
-                alt="Dolphoon"
-                className="h-8 w-8 sm:h-10 sm:w-10"
-                crossOrigin="anonymous"
-              />
-              <span className="text-[0.5rem] text-[#5c4033]/60 sm:text-[0.65rem]">
-                Dolphoon
-              </span>
-            </div>
+          {/* Top row */}
+          <div className="flex w-full items-start justify-between text-[0.55rem] text-[#5c4033]/70 sm:text-xs">
+            <span>
+              {s.certificateId}: {certificateId}
+            </span>
+            <span>
+              {s.issuingDate}: {completionDate}
+            </span>
           </div>
         </div>
       </div>
