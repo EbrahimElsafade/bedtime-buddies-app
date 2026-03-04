@@ -182,7 +182,7 @@ export const CertificateTemplate = ({
 
             <p className="mt-1 max-w-[80%] text-[0.6rem] leading-relaxed text-[#5c4033]/80 sm:mt-2 sm:text-sm">
               {s.graduatedFrom}{' '}
-              <span className="font-bold text-[#3b2314]">{courseTitle}</span>.{' '}
+              <span className="font-bold text-[#3b2314]">{localizedTitle}</span>.{' '}
               {s.certificateDescription}
             </p>
           </div>
