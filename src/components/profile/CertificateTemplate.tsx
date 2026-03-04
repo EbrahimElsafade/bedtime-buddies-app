@@ -127,7 +127,7 @@ export const CertificateTemplate = ({
       <div
         ref={certRef}
         dir={isRtl ? 'rtl' : 'ltr'}
-        className="relative mx-auto aspect-[1.75/1] w-full bg-[#faf6ee]"
+        className="relative mx-auto w-full bg-[#faf6ee]"
         style={{ fontFamily: 'Georgia, "Times New Roman", serif' }}
       >
         {/* Outer border */}
@@ -178,7 +178,7 @@ export const CertificateTemplate = ({
           </div>
 
           {/* Top row */}
-          <div className="flex w-full items-start justify-between text-[0.55rem] text-[#5c4033]/70 sm:text-xs">
+          <div className="flex pt-6 w-full items-start justify-between text-[0.55rem] text-[#5c4033]/70 sm:text-xs">
             <span>
               {s.certificateId}: {certificateId}
             </span>
