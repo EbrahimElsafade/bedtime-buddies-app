@@ -360,7 +360,9 @@ export const FinishedContentTab = ({
           {selectedCourse?.course && (
             <CertificateTemplate
               studentName={profile?.child_name || profile?.parent_name || ''}
-              courseTitle={getCourseTitle(selectedCourse.course)}
+              courseTitle={selectedCourse.course.title_en || ''}
+              courseTitleAr={selectedCourse.course.title_ar || undefined}
+              courseTitleFr={selectedCourse.course.title_fr || undefined}
               completionDate={new Date(
                 selectedCourse.finished_at,
               ).toLocaleDateString()}
