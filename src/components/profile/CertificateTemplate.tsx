@@ -46,6 +46,8 @@ const CERT_STRINGS: Record<string, Record<string, string>> = {
 interface CertificateTemplateProps {
   studentName: string
   courseTitle: string
+  courseTitleAr?: string
+  courseTitleFr?: string
   completionDate: string
   certificateId: string
 }
@@ -53,6 +55,8 @@ interface CertificateTemplateProps {
 export const CertificateTemplate = ({
   studentName,
   courseTitle,
+  courseTitleAr,
+  courseTitleFr,
   completionDate,
   certificateId,
 }: CertificateTemplateProps) => {
@@ -64,6 +68,12 @@ export const CertificateTemplate = ({
 
   const s = CERT_STRINGS[certLang] || CERT_STRINGS.en
   const isRtl = certLang === 'ar'
+  const localizedTitle =
+    certLang === 'ar' && courseTitleAr
+      ? courseTitleAr
+      : certLang === 'fr' && courseTitleFr
+        ? courseTitleFr
+        : courseTitle
 
   const getCanvas = useCallback(async () => {
     if (!certRef.current) return null
@@ -172,7 +182,7 @@ export const CertificateTemplate = ({
 
             <p className="mt-1 max-w-[80%] text-[0.6rem] leading-relaxed text-[#5c4033]/80 sm:mt-2 sm:text-sm">
               {s.graduatedFrom}{' '}
-              <span className="font-bold text-[#3b2314]">{courseTitle}</span>.{' '}
+              <span className="font-bold text-[#3b2314]">{localizedTitle}</span>.{' '}
               {s.certificateDescription}
             </p>
           </div>
