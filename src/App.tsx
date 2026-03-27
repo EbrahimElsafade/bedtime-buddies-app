@@ -53,6 +53,7 @@ function App() {
       <ThemeProvider attribute="class" defaultTheme="light">
         <LanguageProvider>
           <AuthProvider>
+            <CountryProvider>
             <LoadingProvider>
               <TooltipProvider>
                 <HelmetProvider>
