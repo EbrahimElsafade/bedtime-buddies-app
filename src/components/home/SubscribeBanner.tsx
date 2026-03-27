@@ -8,13 +8,15 @@ import {
   CardTitle,
   CardDescription,
 } from '@/components/ui/card'
-import { Check, Crown, Sparkles } from 'lucide-react'
+import { Check, Crown, Loader, Sparkles } from 'lucide-react'
 import { Badge } from '../ui/badge'
 import { WhatsappSubscribeButton } from '@/components/WhatsappSubscribeButton'
+import { useCountry } from '@/contexts/CountryContext'
+import { getCurrencySymbol, getPlanPrice } from '@/utils/getPlanPrice'
 
 const SubscribeBanner = () => {
   const { t } = useTranslation(['misc', 'subscription'])
-  const planPrice = 499
+  const { countryCode, loading } = useCountry()
 
   const features = t('subscription:plans.yearly.features', {
     returnObjects: true,
@@ -50,18 +52,25 @@ const SubscribeBanner = () => {
               <CardDescription className="text-muted-foreground">
                 {t('subscription:plans.yearly.description')}
               </CardDescription>
-              <div className="mt-4">
-                <span className="text-4xl font-bold text-primary">
-                  {planPrice}
-                </span>
-                <span className="ms-1 text-muted-foreground">
-                  {t('subscription:currency')}
-                </span>
-                <span className="text-sm text-muted-foreground">
-                  {' '}
-                  / {t('subscription:plans.yearly.name')}
-                </span>
-              </div>
+              {loading ? (
+                <div className="mx-auto flex h-12 items-center justify-center">
+                  <Loader />
+                </div>
+              ) : (
+                <div className="flex items-center justify-center gap-1">
+                  <span className="text-4xl font-bold text-primary">
+                    {getPlanPrice(countryCode)}
+                  </span>
+                  <span className="ms-1 text-muted-foreground">
+                    {t(
+                      `subscription:currency.${getCurrencySymbol(countryCode)}`,
+                    )}
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    / {t('subscription:year')}
+                  </span>
+                </div>
+              )}
             </CardHeader>
             <CardContent className="pt-4">
               <ul className="mb-6 space-y-3 text-start">

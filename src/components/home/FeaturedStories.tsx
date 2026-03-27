@@ -36,7 +36,7 @@ const FeaturedStories = () => {
         throw error
       }
 
-      logger.debug('data:', data)
+      // logger.debug('data:', data)
 
       return data || []
     },

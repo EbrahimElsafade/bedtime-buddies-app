@@ -17,7 +17,17 @@
   "subscribeNow": "اشترك الآن",
   "subscribeViaWhatsapp": " WhatsApp اشترك عبر",
   "subscribeViaWhatsappMessage": "مرحباً، أريد الاشتراك في خدمة دولفون المميزة",
-  "currency": "ج.م",
+  "currency": {
+    "USD": "دولار أمريكي",
+    "EGP": "جنيه مصري",
+    "SAR": "ريال سعودي",
+    "AED": "درهم إماراتي",
+    "KWD": "دينار كويتي",
+    "QAR": "ريال قطري",
+    "BHD": "دينار بحريني",
+    "OMR": "ريال عماني"
+  },
+  "year": "سنة",
   "sendAsGift": "أرسل كهدية",
   "giftDescription": "أضف رسالة شخصية وأرسل هذا الاشتراك كهدية",
   "faq": {

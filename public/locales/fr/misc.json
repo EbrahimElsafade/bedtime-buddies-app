@@ -50,25 +50,6 @@
     "title": "Choisissez Votre Plan",
     "monthly": "Mensuel",
     "yearly": "Annuel (Économisez 20%)",
-    "free": {
-      "title": "Gratuit",
-      "price": "0€",
-      "features": [
-        "Accès limité au contenu",
-        "Fonctionnalités de base",
-        "Support communautaire"
-      ]
-    },
-    "premium": {
-      "title": "Premium",
-      "price": "499/année",
-      "features": [
-        "Accès illimité au contenu",
-        "Toutes les fonctionnalités premium",
-        "Support prioritaire",
-        "Téléchargements hors ligne"
-      ]
-    },
     "selectPlan": "Choisir le Plan",
     "currentPlan": "Plan Actuel"
   },

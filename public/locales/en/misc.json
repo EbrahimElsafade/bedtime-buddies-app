@@ -50,25 +50,6 @@
     "title": "Choose Your Plan",
     "monthly": "Monthly",
     "yearly": "Yearly (Save 20%)",
-    "free": {
-      "title": "Free",
-      "price": "$0",
-      "features": [
-        "Limited content access",
-        "Basic features",
-        "Community support"
-      ]
-    },
-    "premium": {
-      "title": "Premium",
-      "price": "$499/year",
-      "features": [
-        "Unlimited content access",
-        "All premium features",
-        "Priority support",
-        "Offline downloads"
-      ]
-    },
     "selectPlan": "Select Plan",
     "currentPlan": "Current Plan"
   },

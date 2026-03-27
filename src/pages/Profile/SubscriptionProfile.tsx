@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Check } from 'lucide-react'
+import { Check, Loader } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -15,20 +15,20 @@ import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { useTranslation } from 'react-i18next'
 import { WhatsappSubscribeButton } from '@/components/WhatsappSubscribeButton'
+import { useCountry } from '@/contexts/CountryContext'
+import { getCurrencySymbol, getPlanPrice } from '@/utils/getPlanPrice'
 
 interface SubscriptionProfileProps {
   isPremium: boolean
 }
 
-export const SubscriptionProfile = ({ isPremium }: SubscriptionProfileProps) => {
+export const SubscriptionProfile = ({
+  isPremium,
+}: SubscriptionProfileProps) => {
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
   const { t } = useTranslation(['subscription', 'meta', 'common'])
-  const [isGift, setIsGift] = useState(false)
-
-  const getPlanPrice = () => {
-    return 499
-  }
+  const { countryCode, loading } = useCountry()
 
   const handleSubscribe = () => {
     if (!isAuthenticated) {
@@ -47,7 +47,9 @@ export const SubscriptionProfile = ({ isPremium }: SubscriptionProfileProps) => 
         // Premium user - show subscription status
         <Card className="border-green-200 bg-green-50">
           <CardHeader>
-            <CardTitle className="text-green-900">{t('common:mySubscription')}</CardTitle>
+            <CardTitle className="text-green-900">
+              {t('common:mySubscription')}
+            </CardTitle>
             <CardDescription className="text-green-700">
               {t('common:premiumPlanDescription')}
             </CardDescription>
@@ -56,8 +58,12 @@ export const SubscriptionProfile = ({ isPremium }: SubscriptionProfileProps) => 
             <div className="flex items-center gap-3 rounded-lg bg-green-100 p-4">
               <Check className="h-6 w-6 text-green-600" />
               <div>
-                <p className="font-semibold text-green-900">{t('common:premiumPlan')}</p>
-                <p className="text-sm text-green-700">{t('subscription:plans.yearly.name')}</p>
+                <p className="font-semibold text-green-900">
+                  {t('common:premiumPlan')}
+                </p>
+                <p className="text-sm text-green-700">
+                  {t('subscription:plans.yearly.name')}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -69,13 +75,23 @@ export const SubscriptionProfile = ({ isPremium }: SubscriptionProfileProps) => 
             <CardTitle className="text-2xl">
               {t('subscription:plans.yearly.name')}
             </CardTitle>
-            <div
-              dir="auto"
-              className="flex gap-2 text-start text-3xl font-bold"
-            >
-              <span>{getPlanPrice()}</span>
-              <span>{t('subscription:currency')}</span>
-            </div>
+            {loading ? (
+              <div className="mx-auto flex items-center justify-center">
+                <Loader />
+              </div>
+            ) : (
+              <div className="flex items-center justify-center gap-1">
+                <span className="text-4xl font-bold text-primary">
+                  {getPlanPrice(countryCode)}
+                </span>
+                <span className="ms-1 text-muted-foreground">
+                  {t(`subscription:currency.${getCurrencySymbol(countryCode)}`)}
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  / {t('subscription:year')}
+                </span>
+              </div>
+            )}
             <CardDescription>
               {t('subscription:plans.yearly.description')}
             </CardDescription>

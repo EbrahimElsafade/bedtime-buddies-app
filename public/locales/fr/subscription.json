@@ -17,7 +17,17 @@
   "subscribeNow": "S'abonner Maintenant",
   "subscribeViaWhatsapp": "S'abonner via WhatsApp",
   "subscribeViaWhatsappMessage": "Bonjour, je souhaite m'abonner au premium Dolphoon",
-  "currency": "EGP",
+  "currency": {
+    "USD": "Dollar Américain",
+    "EGP": "Livre Égyptienne",
+    "SAR": "Riyal Saoudien",
+    "AED": "Dirham Émirati",
+    "KWD": "Dinar Koweïtien",
+    "QAR": "Riyal Qatari",
+    "BHD": "Dinar Bahreïni",
+    "OMR": "Rial Omani"
+  },
+  "year": "année",
   "sendAsGift": "Envoyer en cadeau",
   "giftDescription": "Ajoutez un message personnalisé et envoyez cet abonnement en cadeau",
   "faq": {
