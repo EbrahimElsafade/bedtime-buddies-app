@@ -11,6 +11,3 @@ verify_jwt = true
 
 [functions.get-video-duration]
 verify_jwt = true
-
-[functions.get-country]
-verify_jwt = false
