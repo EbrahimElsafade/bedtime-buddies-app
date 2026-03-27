@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import { CountryProvider } from "@/contexts/CountryContext";
 import { LoadingProvider } from "@/contexts/LoadingContext";
 import { ThemeProvider } from "next-themes";
 import { HelmetProvider } from "react-helmet-async";
@@ -52,6 +53,7 @@ function App() {
       <ThemeProvider attribute="class" defaultTheme="light">
         <LanguageProvider>
           <AuthProvider>
+            <CountryProvider>
             <LoadingProvider>
               <TooltipProvider>
                 <HelmetProvider>
@@ -110,6 +112,7 @@ function App() {
                 </HelmetProvider>
               </TooltipProvider>
             </LoadingProvider>
+            </CountryProvider>
           </AuthProvider>
         </LanguageProvider>
       </ThemeProvider>
