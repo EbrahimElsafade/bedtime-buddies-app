@@ -32,7 +32,7 @@ const createDebounce = <T extends unknown[]>(
   func: (...args: T) => void,
   wait: number
 ) => {
-  let timeout: NodeJS.Timeout;
+  let timeout: ReturnType<typeof setTimeout>;
   return function executedFunction(...args: T) {
     const later = () => {
       clearTimeout(timeout);
