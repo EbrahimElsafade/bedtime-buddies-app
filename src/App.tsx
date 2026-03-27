@@ -112,6 +112,7 @@ function App() {
                 </HelmetProvider>
               </TooltipProvider>
             </LoadingProvider>
+            </CountryProvider>
           </AuthProvider>
         </LanguageProvider>
       </ThemeProvider>
