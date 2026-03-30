@@ -112,18 +112,17 @@ export const getVideoUrl = (
     return videoUrl
   }
 
-  // If there's a storage path, convert to public URL
+  // If there's a storage path, return it as-is
+  // The actual signed URL will be fetched by the video player components
+  // via the useSignedVideoUrl hook / getSignedVideoUrl utility
   if (videoPath) {
     // If it's already a full URL, return as is
     if (videoPath.startsWith('http://') || videoPath.startsWith('https://')) {
       return videoPath
     }
 
-    // Get the public URL from course-videos storage bucket
-    const { data } = supabase.storage
-      .from('course-videos')
-      .getPublicUrl(videoPath)
-    return data.publicUrl
+    // Return the storage path - video components will resolve via signed URLs
+    return videoPath
   }
 
   return ''

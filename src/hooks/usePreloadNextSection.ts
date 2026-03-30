@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
-import { supabase } from '@/integrations/supabase/client'
 import { Story } from '@/types/story'
 import { getImageUrl } from '@/utils/imageUtils'
+import { getSignedVideoUrl } from '@/hooks/useSignedVideoUrl'
 
 export const usePreloadNextSection = (
   story: Story,
@@ -30,24 +30,19 @@ export const usePreloadNextSection = (
 
     const nextSection = story.sections[nextSectionIndex]
 
-    // Preload next section's video
+    // Preload next section's video using signed URL
     if (nextSection?.video) {
-      const video = document.createElement('video')
-      video.preload = 'auto'
-      video.muted = true
-      video.playsInline = true
-      
-      // Get video URL from Supabase storage
-      const { data } = supabase.storage
-        .from('course-videos')
-        .getPublicUrl(nextSection.video)
-      
-      if (data?.publicUrl) {
-        video.src = data.publicUrl
-        // Load the video in the background
-        video.load()
-        preloadedVideoRef.current = video
-      }
+      getSignedVideoUrl(nextSection.video).then((signedUrl) => {
+        if (signedUrl) {
+          const video = document.createElement('video')
+          video.preload = 'auto'
+          video.muted = true
+          video.playsInline = true
+          video.src = signedUrl
+          video.load()
+          preloadedVideoRef.current = video
+        }
+      })
     }
 
     // Preload next section's image
@@ -57,7 +52,6 @@ export const usePreloadNextSection = (
       img.src = imageUrl
       preloadedImageRef.current = img
     } else if (story.cover_image && !nextSection?.video) {
-      // Preload cover image if it will be shown as fallback
       const img = new Image()
       const imageUrl = getImageUrl(story.cover_image)
       img.src = imageUrl

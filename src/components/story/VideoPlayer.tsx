@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
-import { supabase } from '@/integrations/supabase/client'
 import { logger } from '@/utils/logger'
+import { useSignedVideoUrl } from '@/hooks/useSignedVideoUrl'
 
 interface VideoPlayerProps {
   videoPath: string
@@ -16,6 +16,7 @@ const VideoPlayer = ({
   onVideoRef,
 }: VideoPlayerProps) => {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const { url: videoUrl, loading } = useSignedVideoUrl(videoPath)
 
   useEffect(() => {
     if (onVideoRef && videoRef.current) {
@@ -23,31 +24,30 @@ const VideoPlayer = ({
     }
   }, [onVideoRef])
 
-  // Reset video when videoPath changes (section switch)
+  // Reset video when videoUrl changes (section switch)
   useEffect(() => {
-    if (videoRef.current) {
+    if (videoRef.current && videoUrl) {
       videoRef.current.pause()
       videoRef.current.currentTime = 0
-      // just update the src, not reload()
       const source = videoRef.current.querySelector('source')
       if (source) {
-        source.setAttribute('src', getVideoUrl(videoPath))
-        videoRef.current.load() // optional: only if needed
+        source.setAttribute('src', videoUrl)
+        videoRef.current.load()
       }
     }
-  }, [videoPath])
+  }, [videoUrl])
 
-  // Allow natural buffering - don't interfere with mobile playback
-
-  // Get video URL from Supabase storage
-  const getVideoUrl = (path: string) => {
-    const { data } = supabase.storage.from('course-videos').getPublicUrl(path)
-    return data.publicUrl
+  if (loading || !videoUrl) {
+    return (
+      <div className={`flex aspect-[16/9] h-full w-full items-center justify-center rounded-xl bg-black/80 ${className}`}>
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+      </div>
+    )
   }
 
   return (
     <video
-      key={videoPath}
+      key={videoUrl}
       ref={videoRef}
       className={`aspect-[16/9] h-full w-full rounded-xl object-cover ${className}`}
       style={{ objectFit: 'cover' }}
@@ -59,7 +59,7 @@ const VideoPlayer = ({
       webkit-playsinline="true"
       x5-playsinline="true"
     >
-      <source src={getVideoUrl(videoPath)} type="video/mp4" />
+      <source src={videoUrl} type="video/mp4" />
       Your browser does not support the video tag.
     </video>
   )

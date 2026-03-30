@@ -3,7 +3,7 @@ import Hls from 'hls.js'
 import Plyr from 'plyr'
 import { logger } from '@/utils/logger'
 import 'plyr/dist/plyr.css'
-import { supabase } from '@/integrations/supabase/client'
+import { useSignedVideoUrl } from '@/hooks/useSignedVideoUrl'
 
 interface HLSVideoPlayerProps {
   videoPath: string
@@ -19,6 +19,7 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
   const plyrRef = useRef<Plyr | null>(null)
   const hlsRef = useRef<Hls | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const { url: videoUrl, loading } = useSignedVideoUrl(videoPath)
 
   useEffect(() => {
     if (onVideoRef && videoRef.current) {
@@ -28,7 +29,7 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
 
   useEffect(() => {
     const video = videoRef.current
-    if (!video || !videoPath) return
+    if (!video || !videoUrl) return
 
     // Cleanup previous instances
     if (plyrRef.current) {
@@ -43,16 +44,9 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
 
     const initializePlayer = async () => {
       try {
-        // Get the public URL from Supabase storage
-        const { data } = supabase.storage
-          .from('course-videos')
-          .getPublicUrl(videoPath)
-
-        const videoUrl = data.publicUrl
         const isHLS = videoPath.endsWith('.m3u8')
 
         if (isHLS && Hls.isSupported()) {
-          // Use HLS.js for HLS streams
           const hls = new Hls({
             enableWorker: false,
             lowLatencyMode: true,
@@ -83,14 +77,11 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
             }
           })
         } else if (isHLS && video.canPlayType('application/vnd.apple.mpegurl')) {
-          // For Safari, which has native HLS support
           video.src = videoUrl
         } else {
-          // For regular MP4/video files
           video.src = videoUrl
         }
 
-        // Initialize Plyr after video source is set
         if (plyrRef.current) {
           plyrRef.current.destroy()
           plyrRef.current = null
@@ -123,7 +114,6 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
 
     initializePlayer()
 
-    // Cleanup
     return () => {
       if (plyrRef.current) {
         plyrRef.current.destroy()
@@ -134,12 +124,20 @@ const HLSVideoPlayer = ({ videoPath, title, className = '', muted = true, contro
         hlsRef.current = null
       }
     }
-  }, [videoPath, muted, title])
+  }, [videoUrl, muted, title])
 
   if (error) {
     return (
       <div className={`flex h-full w-full items-center justify-center bg-black/80 text-white rounded-lg ${className}`}>
         <p>{error}</p>
+      </div>
+    )
+  }
+
+  if (loading) {
+    return (
+      <div className={`flex h-full w-full items-center justify-center bg-black/80 rounded-lg ${className}`}>
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
       </div>
     )
   }
