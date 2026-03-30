@@ -81,7 +81,7 @@ const MemoryCardGame = () => {
   }
 
   useEffect(() => {
-    let interval: NodeJS.Timeout
+    let interval: ReturnType<typeof setInterval>
     if (gameStarted && gameStatus === 'playing') {
       interval = setInterval(() => {
         setTimeElapsed(prev => prev + 1)
