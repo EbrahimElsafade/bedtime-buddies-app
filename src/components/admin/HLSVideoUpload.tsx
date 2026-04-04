@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Video, X, FolderOpen, Loader2 } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { useSignedVideoUrl } from '@/hooks/useSignedVideoUrl';
 
 interface HLSVideoUploadProps {
   sectionIndex: number;
@@ -22,17 +23,25 @@ export const HLSVideoUpload: React.FC<HLSVideoUploadProps> = ({
   onVideoChange,
   onClearVideo,
 }) => {
+  // If videoPreview is a blob URL, use it directly; otherwise resolve via signed URL
+  const isBlob = videoPreview?.startsWith('blob:');
+  const storagePath = videoPreview && !isBlob ? videoPreview : null;
+  const { url: signedUrl, loading: signedLoading } = useSignedVideoUrl(storagePath);
+  const resolvedPreview = isBlob ? videoPreview : signedUrl;
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       await onVideoChange(sectionIndex, file);
-      e.target.value = ''; // Reset input
+      e.target.value = '';
     }
   };
 
   const handleRemove = () => {
     onClearVideo(sectionIndex);
   };
+
+  const hasVideo = videoPreview || videoUrl;
 
   return (
     <div className="space-y-2">
@@ -49,19 +58,23 @@ export const HLSVideoUpload: React.FC<HLSVideoUploadProps> = ({
           <Loader2 className="h-4 w-4 animate-spin text-primary" />
           <span className="text-sm text-muted-foreground">Uploading video...</span>
         </div>
-      ) : (videoPreview || videoUrl) ? (
+      ) : hasVideo ? (
         <div className="space-y-2">
-          {videoPreview && (
+          {signedLoading && storagePath ? (
+            <div className="flex items-center justify-center h-96 aspect-video rounded-md border bg-muted">
+              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            </div>
+          ) : resolvedPreview ? (
             <div className="relative h-96 aspect-video overflow-hidden rounded-md border">
               <video
-                src={videoPreview}
+                src={resolvedPreview}
                 className="h-full w-full object-cover"
                 muted
                 playsInline
                 controls
               />
             </div>
-          )}
+          ) : null}
           
           <div className="flex items-center gap-2 p-3 border rounded-md bg-muted/50">
             <Video className="h-4 w-4 text-green-600" />
