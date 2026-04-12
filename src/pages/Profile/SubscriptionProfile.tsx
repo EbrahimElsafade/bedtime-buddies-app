@@ -30,17 +30,6 @@ export const SubscriptionProfile = ({
   const { t } = useTranslation(['subscription', 'meta', 'common'])
   const { countryCode, loading } = useCountry()
 
-  const handleSubscribe = () => {
-    if (!isAuthenticated) {
-      navigate('/login')
-      return
-    }
-
-    setTimeout(() => {
-      toast.success(t('subscription:subscribeNow'))
-    }, 1500)
-  }
-
   return (
     <div className="space-y-6">
       {isPremium ? (
