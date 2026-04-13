@@ -62,7 +62,7 @@ export const PricingCard = memo(function PricingCard({
       aria-label={ariaLabel}
     >
       {showMostPopularBadge && isPopular && (
-        <div className="absolute -top-4 right-4 z-10">
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
           <Badge className="flex items-center gap-2 rounded-full bg-primary px-3 py-1 text-xs font-semibold">
             <Crown className="h-3 w-3" aria-hidden="true" />
             {mostPopularLabel}
