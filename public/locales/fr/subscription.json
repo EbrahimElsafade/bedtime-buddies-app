@@ -4,7 +4,17 @@
   "plans": {
     "yearly": {
       "name": "Annuel",
-      "description": "Meilleure valeur, économisez plus de 30%",
+      "description": "Meilleur rapport qualité-prix - Payez une fois et profitez toute l'année",
+      "features": [
+        "Accès illimité à toutes les histoires",
+        "Nouvelles histoires chaque semaine",
+        "Accès à toutes les langues",
+        "Accès prioritaire aux nouvelles fonctionnalités"
+      ]
+    },
+    "monthly": {
+      "name": "Mensuel",
+      "description": "Option flexible - Payez mensuellement et obtenez tous les avantages",
       "features": [
         "Accès illimité à toutes les histoires",
         "Nouvelles histoires chaque semaine",
@@ -28,6 +38,7 @@
     "OMR": "Rial Omani"
   },
   "year": "année",
+  "month": "mois",
   "sendAsGift": "Envoyer en cadeau",
   "giftDescription": "Ajoutez un message personnalisé et envoyez cet abonnement en cadeau",
   "faq": {

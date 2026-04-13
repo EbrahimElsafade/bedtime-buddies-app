@@ -4,7 +4,17 @@
   "plans": {
     "yearly": {
       "name": "Yearly",
-      "description": "Best value, save over 30%",
+      "description": "Best Value - Pay once and enjoy all year long",
+      "features": [
+        "Unlimited access to all stories",
+        "New stories weekly",
+        "Access to all languages",
+        "Priority access to new features"
+      ]
+    },
+    "monthly": {
+      "name": "Monthly",
+      "description": "Flexible Option - Pay monthly and get full benefits",
       "features": [
         "Unlimited access to all stories",
         "New stories weekly",
@@ -28,6 +38,7 @@
     "OMR": "Omani Rial"
   },
   "year": "Year",
+  "month": "Month",
   "sendAsGift": "Send as a gift",
   "giftDescription": "Add a personalized message and send this subscription as a gift",
   "faq": {
