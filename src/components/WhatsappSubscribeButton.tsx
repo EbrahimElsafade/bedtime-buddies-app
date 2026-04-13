@@ -6,6 +6,7 @@ interface WhatsappSubscribeButtonProps {
   message?: string
   className?: string
   label?: string
+  planType?: 'monthly' | 'yearly'
 }
 
 export const WhatsappSubscribeButton = ({
@@ -13,10 +14,16 @@ export const WhatsappSubscribeButton = ({
   message,
   className,
   label,
+  planType,
 }: WhatsappSubscribeButtonProps) => {
   const { t } = useTranslation('subscription')
   const buttonLabel = label || t('subscribeViaWhatsapp')
-  const finalMessage = message || t('subscribeViaWhatsappMessage')
+  
+  let finalMessage = message || t('subscribeViaWhatsappMessage')
+  if (planType) {
+    const planName = planType === 'monthly' ? t('plans.monthly.name') : t('plans.yearly.name')
+    finalMessage = `${finalMessage}\n\n${t('selectedPlan')}: ${planName}`
+  }
 
   const handleWhatsappSubscribe = () => {
     const encodedMessage = encodeURIComponent(finalMessage)

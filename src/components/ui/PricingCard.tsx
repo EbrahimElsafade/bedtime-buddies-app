@@ -1,4 +1,5 @@
 import { Check, Crown, Loader } from 'lucide-react'
+import { memo } from 'react'
 import {
   Card,
   CardContent,
@@ -19,14 +20,14 @@ interface PricingCardProps {
   isPopular?: boolean
   isLoading?: boolean
   countryCode?: string
-  translationKey?: (key: string) => string
   showMostPopularBadge?: boolean
   mostPopularLabel?: string
   periodLabel?: string
   currencyLabel?: string
+  showButton?: boolean
 }
 
-export const PricingCard = ({
+export const PricingCard = memo(function PricingCard({
   planType,
   title,
   description,
@@ -38,7 +39,8 @@ export const PricingCard = ({
   mostPopularLabel = 'Most Popular',
   periodLabel = '',
   currencyLabel = '',
-}: PricingCardProps) => {
+  showButton = true,
+}: PricingCardProps) {
   const price = getPlanPrice(
     countryCode,
     planType === 'monthly' ? 'monthly' : undefined,
@@ -50,15 +52,19 @@ export const PricingCard = ({
   const shadowClass = isPopular
     ? 'shadow-xl hover:shadow-2xl'
     : 'shadow-lg hover:shadow-xl'
+  const ariaLabel = `${title} - ${price}${displayCurrency} ${period}`
 
   return (
     <Card
       className={`relative mx-auto w-full border-2 ${borderClass} transition-shadow duration-300 ${shadowClass}`}
+      role="option"
+      aria-selected={isPopular}
+      aria-label={ariaLabel}
     >
       {showMostPopularBadge && isPopular && (
         <div className="absolute -top-4 right-4 z-10">
           <Badge className="flex items-center gap-2 rounded-full bg-primary px-3 py-1 text-xs font-semibold">
-            <Crown className="h-3 w-3" />
+            <Crown className="h-3 w-3" aria-hidden="true" />
             {mostPopularLabel}
           </Badge>
         </div>
@@ -67,37 +73,39 @@ export const PricingCard = ({
       <CardHeader
         className={`pb-2 text-center ${isPopular && showMostPopularBadge ? 'mt-4' : ''}`}
       >
-        <CardTitle className="text-2xl">{title}</CardTitle>
+        <CardTitle className="text-xl md:text-2xl">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
 
         {isLoading ? (
           <div className="mx-auto flex h-12 items-center justify-center">
-            <Loader />
+            <Loader aria-label="Loading price information" className="animate-spin" />
           </div>
         ) : (
           <div className="flex items-center justify-center gap-1">
-            <span className="text-4xl font-bold text-primary">{price}</span>
-            <span className="ms-1 text-muted-foreground">{displayCurrency}</span>
-            <span className="text-sm text-muted-foreground">{period}</span>
+            <span className="text-3xl md:text-4xl font-bold text-primary">{price}</span>
+            <span className="ms-1 text-muted-foreground text-sm md:text-base">{displayCurrency}</span>
+            <span className="text-xs md:text-sm text-muted-foreground">{period}</span>
           </div>
         )}
       </CardHeader>
 
       <CardContent className="pt-6" dir="auto">
-        <ul className="space-y-2">
+        <ul className="space-y-2" role="list">
           {Array.isArray(features) &&
             features.map((feature: string, index: number) => (
-              <li key={index} className="flex items-start">
-                <Check className="mr-2 mt-0.5 h-5 w-5 text-primary" />
-                <span>{feature}</span>
+              <li key={index} className="flex items-start" role="listitem">
+                <Check className="mr-2 mt-0.5 h-4 w-4 md:h-5 md:w-5 text-primary flex-shrink-0" aria-hidden="true" />
+                <span className="text-sm md:text-base">{feature}</span>
               </li>
             ))}
         </ul>
       </CardContent>
 
-      <CardFooter className="gap-4">
-        <WhatsappSubscribeButton />
-      </CardFooter>
+      {showButton && (
+        <CardFooter className="gap-4">
+          <WhatsappSubscribeButton planType={planType} />
+        </CardFooter>
+      )}
     </Card>
   )
-}
+})
