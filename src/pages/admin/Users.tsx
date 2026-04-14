@@ -60,6 +60,8 @@ const Users = () => {
     language: "",
     isPremium: false,
     subscriptionStart: "",
+    subscriptionDuration: "yearly" as "yearly" | "custom",
+    subscriptionEnd: "",
   });
 
   // Password state
