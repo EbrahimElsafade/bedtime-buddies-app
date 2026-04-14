@@ -540,10 +540,31 @@ const Users = () => {
               <Switch checked={editForm.isPremium} onCheckedChange={(v) => setEditForm((f) => ({ ...f, isPremium: v }))} />
             </div>
             {editForm.isPremium && (
-              <div className="space-y-2">
-                <Label>{t("users.startDate")}</Label>
-                <Input type="date" value={editForm.subscriptionStart} onChange={(e) => setEditForm((f) => ({ ...f, subscriptionStart: e.target.value }))} />
-                <p className="text-xs text-muted-foreground">{t("users.yearlySubscriptionNote")}</p>
+              <div className="space-y-3">
+                <div className="space-y-2">
+                  <Label>{t("users.startDate")}</Label>
+                  <Input type="date" value={editForm.subscriptionStart} onChange={(e) => setEditForm((f) => ({ ...f, subscriptionStart: e.target.value }))} />
+                </div>
+                <div className="space-y-2">
+                  <Label>{t("users.subscriptionDuration") || "Subscription Duration"}</Label>
+                  <Select value={editForm.subscriptionDuration} onValueChange={(v) => setEditForm((f) => ({ ...f, subscriptionDuration: v as "yearly" | "custom" }))}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="yearly">{t("users.oneYear") || "1 Year (auto)"}</SelectItem>
+                      <SelectItem value="custom">{t("users.customEndDate") || "Custom End Date"}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {editForm.subscriptionDuration === "yearly" && (
+                  <p className="text-xs text-muted-foreground">{t("users.yearlySubscriptionNote")}</p>
+                )}
+                {editForm.subscriptionDuration === "custom" && (
+                  <div className="space-y-2">
+                    <Label>{t("users.endDate")}</Label>
+                    <Input type="date" value={editForm.subscriptionEnd} onChange={(e) => setEditForm((f) => ({ ...f, subscriptionEnd: e.target.value }))} />
+                    <p className="text-xs text-muted-foreground">{t("users.leaveEmptyForUnlimited")}</p>
+                  </div>
+                )}
               </div>
             )}
           </div>
