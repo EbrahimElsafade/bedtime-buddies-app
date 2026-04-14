@@ -1,30 +1,23 @@
-import { Check, Crown, Loader } from 'lucide-react'
-import { memo } from 'react'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { WhatsappSubscribeButton } from '@/components/WhatsappSubscribeButton'
-import { getCurrencySymbol, getPlanPrice } from '@/utils/getPlanPrice'
+import { Check, Crown, Loader } from "lucide-react";
+import { memo } from "react";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { WhatsappSubscribeButton } from "@/components/WhatsappSubscribeButton";
+import { getCurrencySymbol, getPlanPrice } from "@/utils/getPlanPrice";
 
 interface PricingCardProps {
-  planType: 'monthly' | 'yearly'
-  title: string
-  description: string
-  features: string[]
-  isPopular?: boolean
-  isLoading?: boolean
-  countryCode?: string
-  showMostPopularBadge?: boolean
-  mostPopularLabel?: string
-  periodLabel?: string
-  currencyLabel?: string
-  showButton?: boolean
+  planType: "monthly" | "yearly";
+  title: string;
+  description: string;
+  features: string[];
+  isPopular?: boolean;
+  isLoading?: boolean;
+  countryCode?: string;
+  showMostPopularBadge?: boolean;
+  mostPopularLabel?: string;
+  periodLabel?: string;
+  currencyLabel?: string;
+  showButton?: boolean;
 }
 
 export const PricingCard = memo(function PricingCard({
@@ -34,25 +27,20 @@ export const PricingCard = memo(function PricingCard({
   features,
   isPopular = false,
   isLoading = false,
-  countryCode = 'US',
+  countryCode = "US",
   showMostPopularBadge = false,
-  mostPopularLabel = 'Most Popular',
-  periodLabel = '',
-  currencyLabel = '',
+  mostPopularLabel = "Most Popular",
+  periodLabel = "",
+  currencyLabel = "",
   showButton = true,
 }: PricingCardProps) {
-  const price = getPlanPrice(
-    countryCode,
-    planType === 'monthly' ? 'monthly' : undefined,
-  )
-  const currency = getCurrencySymbol(countryCode)
-  const displayCurrency = currencyLabel || currency
-  const period = periodLabel || (planType === 'monthly' ? '/month' : '/year')
-  const borderClass = isPopular ? 'border-primary/30' : 'border-primary/20'
-  const shadowClass = isPopular
-    ? 'shadow-xl hover:shadow-2xl'
-    : 'shadow-lg hover:shadow-xl'
-  const ariaLabel = `${title} - ${price}${displayCurrency} ${period}`
+  const price = getPlanPrice(countryCode, planType === "monthly" ? "monthly" : undefined);
+  const currency = getCurrencySymbol(countryCode);
+  const displayCurrency = currencyLabel || currency;
+  const period = periodLabel || (planType === "monthly" ? "/month" : "/year");
+  const borderClass = isPopular ? "border-primary/30" : "border-primary/20";
+  const shadowClass = isPopular ? "shadow-xl hover:shadow-2xl" : "shadow-lg hover:shadow-xl";
+  const ariaLabel = `${title} - ${price}${displayCurrency} ${period}`;
 
   return (
     <Card
@@ -70,9 +58,7 @@ export const PricingCard = memo(function PricingCard({
         </div>
       )}
 
-      <CardHeader
-        className={`pb-2 text-center ${isPopular && showMostPopularBadge ? 'mt-4' : ''}`}
-      >
+      <CardHeader className={`pb-2 text-center ${isPopular && showMostPopularBadge ? "mt-4" : ""}`}>
         <CardTitle className="text-xl md:text-2xl">{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
 
@@ -83,7 +69,7 @@ export const PricingCard = memo(function PricingCard({
         ) : (
           <div className="flex items-center justify-center gap-1">
             <span className="text-3xl md:text-4xl font-bold text-primary">{price}</span>
-            <span className="ms-1 text-muted-foreground text-sm md:text-base">{displayCurrency}</span>
+            {/* <span className="ms-1 text-muted-foreground text-sm md:text-base">{displayCurrency}</span> */}
             <span className="text-xs md:text-sm text-muted-foreground">{period}</span>
           </div>
         )}
@@ -107,5 +93,5 @@ export const PricingCard = memo(function PricingCard({
         </CardFooter>
       )}
     </Card>
-  )
-})
+  );
+});
