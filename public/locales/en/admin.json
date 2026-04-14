@@ -119,6 +119,9 @@
     "endDate": "End Date",
     "leaveEmptyForUnlimited": "Leave empty for unlimited",
     "yearlySubscriptionNote": "Subscription will automatically end 1 year from start date",
+    "subscriptionDuration": "Subscription Duration",
+    "oneYear": "1 Year (auto)",
+    "customEndDate": "Custom End Date",
     "noUsersFound": "No users found",
     "showing_users": "Showing {{showing}} of {{total}} users"
   },

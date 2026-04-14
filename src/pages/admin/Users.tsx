@@ -60,6 +60,8 @@ const Users = () => {
     language: "",
     isPremium: false,
     subscriptionStart: "",
+    subscriptionDuration: "yearly" as "yearly" | "custom",
+    subscriptionEnd: "",
   });
 
   // Password state
@@ -151,12 +153,21 @@ const Users = () => {
   // EDIT
   const openEdit = (user: UserWithRole) => {
     setEditUser(user);
+    const hasCustomEnd = user.subscription_end && user.subscription_start
+      ? (() => {
+          const autoEnd = new Date(user.subscription_start!);
+          autoEnd.setFullYear(autoEnd.getFullYear() + 1);
+          return autoEnd.toISOString().split("T")[0] !== user.subscription_end.split("T")[0];
+        })()
+      : false;
     setEditForm({
       parentName: user.parent_name,
       childName: user.child_name || "",
       language: user.preferred_language,
       isPremium: user.is_premium,
       subscriptionStart: user.subscription_start?.split("T")[0] || "",
+      subscriptionDuration: hasCustomEnd ? "custom" : "yearly",
+      subscriptionEnd: user.subscription_end?.split("T")[0] || "",
     });
     setEditOpen(true);
   };
@@ -169,9 +180,13 @@ const Users = () => {
 
     let subscriptionEnd: string | null = null;
     if (editForm.isPremium && editForm.subscriptionStart) {
-      const start = new Date(editForm.subscriptionStart);
-      start.setFullYear(start.getFullYear() + 1);
-      subscriptionEnd = start.toISOString().split("T")[0];
+      if (editForm.subscriptionDuration === "yearly") {
+        const start = new Date(editForm.subscriptionStart);
+        start.setFullYear(start.getFullYear() + 1);
+        subscriptionEnd = start.toISOString().split("T")[0];
+      } else if (editForm.subscriptionEnd) {
+        subscriptionEnd = editForm.subscriptionEnd;
+      }
     }
 
     setEditLoading(true);
@@ -525,10 +540,31 @@ const Users = () => {
               <Switch checked={editForm.isPremium} onCheckedChange={(v) => setEditForm((f) => ({ ...f, isPremium: v }))} />
             </div>
             {editForm.isPremium && (
-              <div className="space-y-2">
-                <Label>{t("users.startDate")}</Label>
-                <Input type="date" value={editForm.subscriptionStart} onChange={(e) => setEditForm((f) => ({ ...f, subscriptionStart: e.target.value }))} />
-                <p className="text-xs text-muted-foreground">{t("users.yearlySubscriptionNote")}</p>
+              <div className="space-y-3">
+                <div className="space-y-2">
+                  <Label>{t("users.startDate")}</Label>
+                  <Input type="date" value={editForm.subscriptionStart} onChange={(e) => setEditForm((f) => ({ ...f, subscriptionStart: e.target.value }))} />
+                </div>
+                <div className="space-y-2">
+                  <Label>{t("users.subscriptionDuration") || "Subscription Duration"}</Label>
+                  <Select value={editForm.subscriptionDuration} onValueChange={(v) => setEditForm((f) => ({ ...f, subscriptionDuration: v as "yearly" | "custom" }))}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="yearly">{t("users.oneYear") || "1 Year (auto)"}</SelectItem>
+                      <SelectItem value="custom">{t("users.customEndDate") || "Custom End Date"}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {editForm.subscriptionDuration === "yearly" && (
+                  <p className="text-xs text-muted-foreground">{t("users.yearlySubscriptionNote")}</p>
+                )}
+                {editForm.subscriptionDuration === "custom" && (
+                  <div className="space-y-2">
+                    <Label>{t("users.endDate")}</Label>
+                    <Input type="date" value={editForm.subscriptionEnd} onChange={(e) => setEditForm((f) => ({ ...f, subscriptionEnd: e.target.value }))} />
+                    <p className="text-xs text-muted-foreground">{t("users.leaveEmptyForUnlimited")}</p>
+                  </div>
+                )}
               </div>
             )}
           </div>
