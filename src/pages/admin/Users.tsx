@@ -180,9 +180,13 @@ const Users = () => {
 
     let subscriptionEnd: string | null = null;
     if (editForm.isPremium && editForm.subscriptionStart) {
-      const start = new Date(editForm.subscriptionStart);
-      start.setFullYear(start.getFullYear() + 1);
-      subscriptionEnd = start.toISOString().split("T")[0];
+      if (editForm.subscriptionDuration === "yearly") {
+        const start = new Date(editForm.subscriptionStart);
+        start.setFullYear(start.getFullYear() + 1);
+        subscriptionEnd = start.toISOString().split("T")[0];
+      } else if (editForm.subscriptionEnd) {
+        subscriptionEnd = editForm.subscriptionEnd;
+      }
     }
 
     setEditLoading(true);
