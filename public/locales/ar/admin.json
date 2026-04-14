@@ -92,6 +92,9 @@
     "endDate": "تاريخ النهاية",
     "leaveEmptyForUnlimited": "اتركه فارغاً للاشتراك غير المحدود",
     "yearlySubscriptionNote": "سينتهي الاشتراك تلقائياً بعد سنة من تاريخ البداية",
+    "subscriptionDuration": "مدة الاشتراك",
+    "oneYear": "سنة واحدة (تلقائي)",
+    "customEndDate": "تاريخ انتهاء مخصص",
     "noUsersFound": "لم يتم العثور على مستخدمين",
     "showing_users": "عرض {{showing}} من {{total}} مستخدم"
   },
