@@ -153,12 +153,21 @@ const Users = () => {
   // EDIT
   const openEdit = (user: UserWithRole) => {
     setEditUser(user);
+    const hasCustomEnd = user.subscription_end && user.subscription_start
+      ? (() => {
+          const autoEnd = new Date(user.subscription_start!);
+          autoEnd.setFullYear(autoEnd.getFullYear() + 1);
+          return autoEnd.toISOString().split("T")[0] !== user.subscription_end.split("T")[0];
+        })()
+      : false;
     setEditForm({
       parentName: user.parent_name,
       childName: user.child_name || "",
       language: user.preferred_language,
       isPremium: user.is_premium,
       subscriptionStart: user.subscription_start?.split("T")[0] || "",
+      subscriptionDuration: hasCustomEnd ? "custom" : "yearly",
+      subscriptionEnd: user.subscription_end?.split("T")[0] || "",
     });
     setEditOpen(true);
   };
