@@ -3,27 +3,20 @@ import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useTranslation } from 'react-i18next'
 import HeroSkillPathCard from './HeroSkillPathCard'
-
-const skillPathsMini = [
-  {
-    icon: '🤖',
-    title: 'الذكاء الاصطناعي للأطفال',
-    subtitle: '٢٧ درس • مبتدئ',
-  },
-  {
-    icon: '💻',
-    title: 'البرمجة بـ Scratch',
-    subtitle: '٩٦ درس • متوسط',
-  },
-  {
-    icon: '♟️',
-    title: 'تعلّم الشطرنج',
-    subtitle: '٥٧ درس • كل المستويات',
-  },
-]
+import { useSkillPaths } from '@/hooks/useSkillPaths'
+import { getMultilingualText } from '@/utils/multilingualUtils'
 
 const Hero = () => {
   const { t } = useTranslation('hero')
+  const { i18n } = useTranslation()
+  const tSkillPaths = useTranslation('skillPaths').t
+  const { data: paths = [] } = useSkillPaths()
+  const skillPathsMini = paths.slice(0, 3).map(path => ({
+    id: path.id,
+    icon: path.icon,
+    title: getMultilingualText(path.name, i18n.language, 'en'),
+    subtitle: `${path.course_ids.length} ${tSkillPaths('skillPaths:skillPaths.courses')}`,
+  }))
 
   return (
     <section className="relative overflow-hidden px-4 py-12 md:py-16">
@@ -73,14 +66,14 @@ const Hero = () => {
           {/* Right Side - Skill Path Cards */}
           <div className="flex my-auto flex-col gap-4">
             {skillPathsMini.map((path, index) => (
-              <div key={index} className={index % 2 === 1 ? 'ms-4' : ''}>
+              <Link key={path.id} to={`/skill-path/${path.id}`} className={index % 2 === 1 ? 'ms-4' : ''}>
                 <HeroSkillPathCard
                   icon={path.icon}
                   title={path.title}
                   subtitle={path.subtitle}
                   delay={index * 0.5}
                 />
-              </div>
+              </Link>
             ))}
           </div>
         </div>

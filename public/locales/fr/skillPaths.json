@@ -1,0 +1,12 @@
+{
+  "skillPaths": {
+    "title": "Parcours de Compétences",
+    "loading": "Chargement en cours...",
+    "noPathsAvailable": "Aucun parcours de compétences n'est actuellement disponible.",
+    "progress": "Progression",
+    "courses": "leçons",
+    "coursesLabel": "Cours",
+    "noCoursesInPath": "Aucun cours dans ce parcours pour le moment.",
+    "pathNotFound": "Parcours de compétences introuvable."
+  }
+}

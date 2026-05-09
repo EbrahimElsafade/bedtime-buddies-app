@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { Home, BookOpen, User, Gamepad2, LibraryBig } from 'lucide-react'
+import { Home, BookOpen, User, LibraryBig } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { Navbar } from './navigation/Navbar'
@@ -17,7 +17,8 @@ const Layout = () => {
     { name: t('navigation:home'), path: '/', icon: Home, key: 'home' },
     { name: t('navigation:stories'), path: '/stories', icon: BookOpen, key: 'stories' },
     { name: t('navigation:courses'), path: '/courses', icon: LibraryBig, key: 'courses' },
-    { name: t('navigation:games'), path: '/games', icon: Gamepad2, key: 'games' },
+    // { name: t('navigation:games'), path: '/games', icon: Gamepad2, key: 'games' },
+    { name: t('navigation:paths'), path: '/skill-paths', icon: LibraryBig, key: 'paths' },
     {
       name: t('navigation:profile'),
       path: isAuthenticated ? '/profile' : '/login',

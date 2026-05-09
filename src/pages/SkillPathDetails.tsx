@@ -13,17 +13,17 @@ import { getMultilingualText } from '@/utils/multilingualUtils'
 
 const SkillPathDetails = () => {
   const { id } = useParams<{ id: string }>()
-  const { i18n, t } = useTranslation(['misc', 'courses', 'premium'])
+  const { i18n, t } = useTranslation(['misc', 'courses', 'premium', 'skillPaths'])
   const lang = i18n.language as 'en' | 'ar' | 'fr'
   const { data: path, isLoading } = useSkillPath(id)
   const { data: allCourses = [] } = useCoursesData()
   const { data: progressMap } = useSkillPathProgress(path ? [path] : undefined)
 
   if (isLoading) {
-    return <div className="container mx-auto p-6">Loading...</div>
+    return <div className="container mx-auto p-6">{t('skillPaths:skillPaths.loading')}</div>
   }
   if (!path) {
-    return <div className="container mx-auto p-6">Skill path not found.</div>
+    return <div className="container mx-auto p-6">{t('skillPaths:skillPaths.pathNotFound')}</div>
   }
 
   const courses = path.course_ids
@@ -37,7 +37,7 @@ const SkillPathDetails = () => {
   return (
     <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-12">
       <Helmet>
-        <title>{title} - Skill Path</title>
+        <title>{title} - {t('skillPaths:skillPaths.title')}</title>
       </Helmet>
       <div className="container mx-auto max-w-7xl">
         <div className="mb-8 rounded-2xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 p-6 backdrop-blur-xl">
@@ -50,18 +50,18 @@ const SkillPathDetails = () => {
           </div>
           <div className="space-y-1">
             <div className="flex justify-between text-sm">
-              <span>Progress</span>
+              <span>{t('skillPaths:skillPaths.progress')}</span>
               <span>
-                {stats.completed} / {stats.total} courses
+                {stats.completed} / {stats.total} {t('skillPaths:skillPaths.courses')}
               </span>
             </div>
             <Progress value={progress} />
           </div>
         </div>
 
-        <h2 className="mb-4 text-xl font-bold">Courses</h2>
+        <h2 className="mb-4 text-xl font-bold">{t('skillPaths:skillPaths.coursesLabel')}</h2>
         {courses.length === 0 ? (
-          <p className="text-muted-foreground">No courses in this skill path yet.</p>
+          <p className="text-muted-foreground">{t('skillPaths:skillPaths.noCoursesInPath')}</p>
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {courses.map((course) => (

@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 
 interface SkillPathCardProps {
   icon: ReactNode
@@ -17,6 +18,8 @@ const SkillPathCard = ({
   coursesCount = 0,
   showDescription = true,
 }: SkillPathCardProps) => {
+  const { t } = useTranslation('skillPaths')
+
   return (
     <div className="group relative h-full overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 p-6 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:border-white/20 hover:shadow-xl">
       <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-cyan-500/15 blur-2xl transition-all duration-300 group-hover:scale-150"></div>
@@ -35,7 +38,7 @@ const SkillPathCard = ({
           ></div>
         </div>
 
-        <p className="text-xs text-slate-600">{coursesCount} courses</p>
+        <p className="text-xs text-slate-600">{coursesCount} {t('skillPaths:skillPaths.courses')}</p>
       </div>
     </div>
   )

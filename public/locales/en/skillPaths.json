@@ -1,0 +1,12 @@
+{
+  "skillPaths": {
+    "title": "Skill Paths",
+    "loading": "Loading...",
+    "noPathsAvailable": "No skill paths available yet.",
+    "progress": "Progress",
+    "courses": "courses",
+    "coursesLabel": "Courses",
+    "noCoursesInPath": "No courses in this skill path yet.",
+    "pathNotFound": "Skill path not found."
+  }
+}
