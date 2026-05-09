@@ -6,7 +6,7 @@ import { useSkillPaths, useSkillPathProgress } from '@/hooks/useSkillPaths'
 import { getMultilingualText } from '@/utils/multilingualUtils'
 
 const SkillPaths = () => {
-  const { i18n } = useTranslation()
+  const { i18n, t } = useTranslation('skillPaths')
   const { data: paths = [], isLoading } = useSkillPaths()
   const top3 = paths.slice(0, 3)
   const { data: progressMap } = useSkillPathProgress(top3)
@@ -18,7 +18,7 @@ const SkillPaths = () => {
       <div className="container mx-auto">
         <div className="relative z-10 mb-6 flex items-center justify-between">
           <h2 className="text-lg text-primary-foreground md:text-3xl">
-            مسارات المهارات
+            {t('skillPaths:skillPaths.title')}
           </h2>
         </div>
 
@@ -43,7 +43,7 @@ const SkillPaths = () => {
         {paths.length > 3 && (
           <div className="mt-4 flex items-center justify-center">
             <Link to="/skill-paths">
-              <Button variant="accent">عرض المزيد</Button>
+              <Button variant="accent">{t('skillPaths:skillPaths.title')} ←</Button>
             </Link>
           </div>
         )}

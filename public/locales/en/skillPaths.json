@@ -3,6 +3,8 @@
     "title": "Skill Paths",
     "loading": "Loading...",
     "noPathsAvailable": "No skill paths available yet.",
+    "searchPlaceholder": "Search skill paths...",
+    "noResults": "No skill paths found matching your search.",
     "progress": "Progress",
     "courses": "courses",
     "coursesLabel": "Courses",
