@@ -40,7 +40,10 @@ import AdminCourses from "./pages/admin/Courses";
 import AdminCourseOptions from "./pages/admin/CourseOptions";
 import AdminCoursesEditor from "./pages/admin/CourseEditor";
 import AdminSettings from "./pages/admin/Settings";
-import AdminAppearance from "./pages/admin/Appearance";
+import AdminSkillPaths from "./pages/admin/SkillPaths";
+import AdminSkillPathEditor from "./pages/admin/SkillPathEditor";
+import SkillPathsPage from "./pages/SkillPaths";
+import SkillPathDetails from "./pages/SkillPathDetails";
 import GamesManagement from "./pages/admin/GamesManagement";
 import SpecialistRequests from "./pages/admin/SpecialistRequests";
 
@@ -81,6 +84,8 @@ function App() {
                     <Route path="favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
                     <Route path="subscription" element={<Subscription />} />
                     <Route path="reset-password" element={<ResetPassword />} />
+                    <Route path="skill-paths" element={<SkillPathsPage />} />
+                    <Route path="skill-path/:id" element={<SkillPathDetails />} />
                   </Route>
 
                   {/* Admin Routes */}
@@ -103,7 +108,9 @@ function App() {
                     <Route path="courses/new" element={<AdminCoursesEditor />} />
                     <Route path="courses/edit/:id" element={<AdminCoursesEditor />} />
                     <Route path="settings" element={<AdminSettings />} />
-                    <Route path="appearance" element={<AdminAppearance />} />
+                    <Route path="skill-paths" element={<AdminSkillPaths />} />
+                    <Route path="skill-paths/new" element={<AdminSkillPathEditor />} />
+                    <Route path="skill-paths/edit/:id" element={<AdminSkillPathEditor />} />
                     <Route path="games-management" element={<GamesManagement />} />
                     <Route path="specialist-requests" element={<SpecialistRequests />} />
                   </Route>

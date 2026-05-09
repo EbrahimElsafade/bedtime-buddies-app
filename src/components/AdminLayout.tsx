@@ -7,9 +7,9 @@ import {
   Home,
   Settings,
   LogOut,
-  Palette,
   Gamepad2,
   MessageSquare,
+  Route as RouteIcon,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
@@ -167,12 +167,15 @@ const AdminLayout = () => {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   asChild
-                  isActive={isActive('/admin/appearance')}
-                  tooltip={t('navigation.appearance')}
+                  isActive={
+                    isActive('/admin/skill-paths') ||
+                    location.pathname.startsWith('/admin/skill-paths/')
+                  }
+                  tooltip="Skill Paths"
                 >
-                  <NavLink to="/admin/appearance" className="flex items-center">
-                    <Palette className="mr-3 h-5 w-5 rtl:ml-3" />
-                    <span>{t('navigation.appearance')}</span>
+                  <NavLink to="/admin/skill-paths" className="flex items-center">
+                    <RouteIcon className="mr-3 h-5 w-5 rtl:ml-3" />
+                    <span>Skill Paths</span>
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>

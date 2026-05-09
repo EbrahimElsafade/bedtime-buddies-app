@@ -14,30 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      appearance_settings: {
-        Row: {
-          created_at: string
-          id: string
-          setting_key: string
-          setting_value: Json
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          setting_key: string
-          setting_value?: Json
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          setting_key?: string
-          setting_value?: Json
-          updated_at?: string
-        }
-        Relationships: []
-      }
       course_categories: {
         Row: {
           created_at: string
@@ -411,6 +387,75 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      skill_path_courses: {
+        Row: {
+          course_id: string
+          created_at: string
+          display_order: number
+          id: string
+          skill_path_id: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          skill_path_id: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          skill_path_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "skill_path_courses_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "skill_path_courses_skill_path_id_fkey"
+            columns: ["skill_path_id"]
+            isOneToOne: false
+            referencedRelation: "skill_paths"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      skill_paths: {
+        Row: {
+          created_at: string
+          description: Json
+          display_order: number
+          icon: string
+          id: string
+          name: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: Json
+          display_order?: number
+          icon?: string
+          id?: string
+          name?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: Json
+          display_order?: number
+          icon?: string
+          id?: string
+          name?: Json
+          updated_at?: string
+        }
+        Relationships: []
       }
       specialist_requests: {
         Row: {
