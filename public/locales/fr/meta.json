@@ -11,7 +11,9 @@
     "register": "Dolphoon - Inscription",
     "notFound": "Dolphoon - Page non trouvée",
     "admin": "Dolphoon - Administration",
-    "subscription": "Dolphoon - Abonnement"
+    "subscription": "Dolphoon - Abonnement",
+    "skillPaths": "Dolphoon - Parcours de Compétences"
+
   },
   "descriptions": {
     "home": "Découvrez un monde magique d'histoires interactives, de cours éducatifs et de jeux amusants conçus pour rendre l'apprentissage agréable pour les enfants.",
@@ -24,6 +26,7 @@
     "register": "Créez votre compte pour débloquer un monde d'histoires interactives, de cours éducatifs et de jeux amusants pour les enfants.",
     "notFound": "Page non trouvée. Retournez à notre collection d'histoires interactives, de cours éducatifs et de jeux pour enfants.",
     "admin": "Interface d'administration pour gérer le contenu sur la plateforme.",
-    "subscription": "Choisissez le plan d'abonnement qui convient le mieux à vous et votre famille pour un accès illimité à toutes les histoires et fonctionnalités."
+    "subscription": "Choisissez le plan d'abonnement qui convient le mieux à vous et votre famille pour un accès illimité à toutes les histoires et fonctionnalités.",
+    "skillPaths": "Explorez des parcours de compétences structurés qui combinent des cours en des parcours d'apprentissage progressifs. Maîtrisez la programmation, la créativité et les compétences de vie grâce à des parcours d'apprentissage organisés."
   }
 }

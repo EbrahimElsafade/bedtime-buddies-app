@@ -1,14 +1,14 @@
 {
   "skillPaths": {
-    "title": "مسارات المهارات",
+    "title": "مسارات التعلم",
     "loading": "جاري التحميل...",
     "noPathsAvailable": "لا توجد مسارات مهارات متاحة حالياً.",
-    "searchPlaceholder": "البحث عن مسارات المهارات...",
+    "searchPlaceholder": "البحث عن مسارات التعلم...",
     "noResults": "لم يتم العثور على مسارات تطابق بحثك.",
     "progress": "التقدم",
     "courses": "دروس",
     "coursesLabel": "الدورات",
     "noCoursesInPath": "لا توجد دورات في هذا المسار حالياً.",
-    "pathNotFound": "مسار المهارات غير موجود."
+    "pathNotFound": "مسار التعلم غير موجود."
   }
 }

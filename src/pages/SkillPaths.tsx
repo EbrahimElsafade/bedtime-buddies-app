@@ -3,6 +3,8 @@ import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 import { Search } from 'lucide-react'
 import { useMemo } from 'react'
+import { useLoading } from '@/contexts/LoadingContext'
+import { useEffect } from 'react'
 import SkillPathCard from '@/components/home/SkillPathCard'
 import { useSkillPaths, useSkillPathProgress } from '@/hooks/useSkillPaths'
 import { getMultilingualText } from '@/utils/multilingualUtils'
@@ -12,10 +14,16 @@ const SkillPathsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const searchQuery = searchParams.get('search') || ''
   
-  const { i18n, t } = useTranslation(['skillPaths', 'meta'])
+  const { i18n, t } = useTranslation(['skillPaths', 'meta', 'common'])
   const lang = i18n.language as 'en' | 'ar' | 'fr'
+  const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: paths = [], isLoading } = useSkillPaths()
   const { data: progressMap } = useSkillPathProgress(paths)
+
+  useEffect(() => {
+    setIsLoading(isLoading)
+    setLoadingMessage(isLoading ? t('common:loading.courses') : undefined)
+  }, [isLoading, setIsLoading, setLoadingMessage, t])
 
   const handleSearchChange = (value: string) => {
     const newParams = new URLSearchParams(searchParams)
@@ -42,8 +50,14 @@ const SkillPathsPage = () => {
   return (
     <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-3 py-8 md:px-4 md:py-12">
       <Helmet>
-        <title>{t('skillPaths:skillPaths.title')}</title>
-        <meta name="description" content={t('skillPaths:skillPaths.title')} />
+        <title>{t('meta:titles.skillPaths')}</title>
+        <meta name="description" content={t('meta:descriptions.skillPaths')} />
+        <meta property="og:title" content={t('meta:titles.skillPaths')} />
+        <meta
+          property="og:description"
+          content={t('meta:descriptions.skillPaths')}
+        />
+        <meta property="og:type" content="website" />
       </Helmet>
       <div className="container mx-auto max-w-7xl">
         {/* Header */}

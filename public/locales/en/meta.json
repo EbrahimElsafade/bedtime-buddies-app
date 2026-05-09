@@ -11,7 +11,8 @@
     "register": "Dolphoon - Register",
     "notFound": "Dolphoon - Not Found",
     "admin": "Dolphoon - Admin",
-    "subscription": "Dolphoon - Subscription"
+    "subscription": "Dolphoon - Subscription",
+    "skillPaths": "Dolphoon - Skill Paths"
   },
   "descriptions": {
     "home": "Discover a magical world of interactive Dolphoon, educational courses, and fun games designed to make learning enjoyable for children.",
@@ -24,6 +25,7 @@
     "register": "Create your Dolphoon account to unlock a world of interactive stories, educational courses, and fun games for children.",
     "notFound": "Page not found. Return to our collection of interactive stories, educational courses, and games for children.",
     "admin": "Administrative interface for managing content on Dolphoon platform.",
-    "subscription": "Choose the subscription plan that works best for you and your family for unlimited access to all stories and features."
+    "subscription": "Choose the subscription plan that works best for you and your family for unlimited access to all stories and features.",
+    "skillPaths": "Explore structured skill paths that combine courses into progressive learning journeys. Master programming, creativity, and life skills through curated learning paths."
   }
 }
