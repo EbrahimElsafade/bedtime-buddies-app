@@ -7,49 +7,12 @@ import FeaturedCourses from '@/components/home/FeaturedCourses'
 
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useQuery } from '@tanstack/react-query'
-import { supabase } from '@/integrations/supabase/client'
-import { logger } from '@/utils/logger'
 import { Helmet } from 'react-helmet-async'
 import { useAuth } from '@/contexts/AuthContext'
 
-interface HomePageSettings {
-  freeStory: string
-  freeStoryEnabled: boolean
-  storiesSection: boolean
-  topRated: boolean
-  courses: boolean
-  specialStory: boolean
-  features: boolean
-  subscribeBanner: boolean
-}
-
 const Index = () => {
-  const {
-    //  isAuthenticated,
-    profile,
-  } = useAuth()
-
+  const { profile } = useAuth()
   const { i18n, t } = useTranslation(['meta'])
-
-  // Fetch home page appearance settings
-  const { data: homePageSettings } = useQuery({
-    queryKey: ['appearance-settings', 'home_page'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('appearance_settings')
-        .select('setting_value')
-        .eq('setting_key', 'home_page')
-        .maybeSingle()
-
-      if (error) {
-        logger.error('Error fetching home page settings:', error)
-        throw error
-      }
-
-      return data?.setting_value as unknown as HomePageSettings
-    },
-  })
 
   useEffect(() => {
     if (i18n.language === 'ar') {
@@ -89,7 +52,6 @@ const Index = () => {
 
       <Features />
 
-      {/* hide subscribe banner when user already has premium subscription */}
       {!profile?.is_premium && <SubscribeBanner />}
     </div>
   )
