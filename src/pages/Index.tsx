@@ -1,3 +1,10 @@
+import Hero from '@/components/home/Hero'
+import StatsBar from '@/components/home/StatsBar'
+import SkillPaths from '@/components/home/SkillPaths'
+import Features from '@/components/home/Features'
+import SubscribeBanner from '@/components/home/SubscribeBanner'
+import FeaturedCourses from '@/components/home/FeaturedCourses'
+
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
@@ -5,15 +12,6 @@ import { supabase } from '@/integrations/supabase/client'
 import { logger } from '@/utils/logger'
 import { Helmet } from 'react-helmet-async'
 import { useAuth } from '@/contexts/AuthContext'
-// import PricingPopup from '@/components/PricingPopup'
-import Hero from '@/components/home/Hero'
-import FreeStory from '@/components/home/FreeStory'
-import FeaturedStories from '@/components/home/FeaturedStories'
-import Features from '@/components/home/Features'
-import SubscribeBanner from '@/components/home/SubscribeBanner'
-// import PopularStories from '@/components/home/PopularStories'
-import FeaturedCourses from '@/components/home/FeaturedCourses'
-// import FunElements from '@/components/home/FunElements'
 
 interface HomePageSettings {
   freeStory: string
@@ -74,28 +72,25 @@ const Index = () => {
         <link rel="canonical" href={window.location.origin} />
       </Helmet>
 
-      {/* Fun floating elements */}
-      {/* <FunElements /> */}
-
-      {/* PricingPopup - Making sure it's rendered for non-authenticated users */}
-      {/* <PricingPopup /> */}
-
-      {/* Component Sections */}
       <Hero />
 
-      {/* Conditionally render sections based on appearance settings */}
-      {homePageSettings?.freeStoryEnabled !== false && <FreeStory />}
+      <StatsBar
+        stats={[
+          { label: 'درس تفاعلي', value: '+200' },
+          { label: 'مسار تعليمي', value: '12' },
+          { label: 'الفئة العمرية', value: '8-16' },
+          { label: 'السعر في السنة', value: '$499.99' },
+        ]}
+      />
 
-      {homePageSettings?.storiesSection !== false && <FeaturedStories />}
-      {homePageSettings?.courses !== false && <FeaturedCourses />}
-      {/* {homePageSettings?.topRated !== false && <PopularStories />}  */}
-      {/* {homePageSettings?.specialStory !== false && <EntertainmentStories />} */}
+      <FeaturedCourses />
 
-      {homePageSettings?.features !== false && <Features />}
+      <SkillPaths />
+
+      <Features />
+
       {/* hide subscribe banner when user already has premium subscription */}
-      {homePageSettings?.subscribeBanner !== false && !profile?.is_premium && (
-        <SubscribeBanner />
-      )}
+      {!profile?.is_premium && <SubscribeBanner />}
     </div>
   )
 }
