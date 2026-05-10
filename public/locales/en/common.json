@@ -181,5 +181,9 @@
   "downloadCertificate": "Download Certificate",
   "downloadPng": "Download PNG",
   "downloadPdf": "Download PDF",
-  "certificateLanguage": "Certificate Language"
+  "certificateLanguage": "Certificate Language",
+  "courseProgress": "Course Progress",
+  "completeAllLessonsTooltip": "Complete all lessons to unlock certificate",
+  "certificateUnlocked": "Certificate unlocked",
+  "certificateLocked": "Certificate locked"
 }

@@ -175,5 +175,9 @@
   "downloadCertificate": "Télécharger le certificat",
   "downloadPng": "Télécharger PNG",
   "downloadPdf": "Télécharger PDF",
-  "certificateLanguage": "Langue du certificat"
+  "certificateLanguage": "Langue du certificat",
+  "courseProgress": "Progression du cours",
+  "completeAllLessonsTooltip": "Terminez toutes les leçons pour débloquer le certificat",
+  "certificateUnlocked": "Certificat débloqué",
+  "certificateLocked": "Certificat verrouillé"
 }

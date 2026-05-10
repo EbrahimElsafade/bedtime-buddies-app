@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { ArrowLeft, Clock, Play, Lock, ChevronLeft } from 'lucide-react'
+import { ArrowLeft, Clock, Play, Lock, ChevronLeft, CheckCircle2 } from 'lucide-react'
 import { useLoading } from '@/contexts/LoadingContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -18,6 +18,8 @@ import { useTranslation } from 'react-i18next'
 import { useGamification } from '@/hooks/useGamification'
 import { useProfileManagement } from '@/hooks/useProfileManagement'
 import { PremiumMessage } from '@/components/story/PremiumMessage'
+import { CourseCertificateSection } from '@/components/course/CourseCertificateSection'
+import { useCourseProgress } from '@/hooks/useCourseProgress'
 
 const CourseLessons = () => {
   const { id: courseId } = useParams<{ id: string }>()
@@ -34,6 +36,12 @@ const CourseLessons = () => {
   const isPremium = profile?.is_premium ?? false
   const { recordProgress } = useGamification()
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
+  const {
+    completedLessons,
+    courseProgress,
+    isComplete,
+    refetch: refetchProgress,
+  } = useCourseProgress(courseId, course?.lessons ?? course?.videos?.length ?? 0)
 
   // Check if course requires premium and user is not premium
   useEffect(() => {
@@ -68,7 +76,9 @@ const CourseLessons = () => {
           setSelectedVideo(firstVideo)
           // Record initial lesson progress
           if (courseId && firstVideo.id) {
-            recordProgress('course_lesson', firstVideo.id, courseId)
+            recordProgress('course_lesson', firstVideo.id, courseId).then(() =>
+              refetchProgress(),
+            )
           }
         }
       }
@@ -90,6 +100,7 @@ const CourseLessons = () => {
     // Record lesson progress for gamification
     if (courseId && video.id) {
       await recordProgress('course_lesson', video.id, courseId)
+      await refetchProgress()
     }
   }
 
@@ -227,6 +238,16 @@ const CourseLessons = () => {
           </div>
         </div>
 
+        <div className="mb-6">
+          <CourseCertificateSection
+            course={course}
+            studentName={profile?.child_name || profile?.parent_name || ''}
+            progress={courseProgress}
+            isComplete={isComplete}
+            compact
+          />
+        </div>
+
         {/* Content */}
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Video Player */}
@@ -324,6 +345,9 @@ const CourseLessons = () => {
                               >
                                 {t('common:free', 'Free')}
                               </Badge>
+                            )}
+                            {completedLessons.includes(video.id) && (
+                              <CheckCircle2 className="h-4 w-4 shrink-0 text-green-600" />
                             )}
                           </div>
                           <div className="mt-1 flex items-center text-xs text-primary-foreground/70">

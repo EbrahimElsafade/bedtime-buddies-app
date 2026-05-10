@@ -19,6 +19,8 @@ import { ContactFormModal } from '@/components/course/ContactFormModal'
 import { useUserRole } from '@/hooks/useUserRole'
 import { getCategoryText } from '@/utils/courseUtils'
 import { CoursePremiumModal } from '@/components/course/CoursePremiumModal'
+import { CourseCertificateSection } from '@/components/course/CourseCertificateSection'
+import { useCourseProgress } from '@/hooks/useCourseProgress'
 // import { WhatsappSubscribeButton } from '@/components/WhatsappSubscribeButton'
 
 const Course = () => {
@@ -38,6 +40,10 @@ const Course = () => {
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
+  const { courseProgress, isComplete } = useCourseProgress(
+    courseId,
+    course?.lessons ?? course?.videos?.length ?? 0,
+  )
 
   // Compute category from course data
   const category = course
@@ -315,6 +321,19 @@ const Course = () => {
               </div>
             </div>
           </div>
+
+          {isAuthenticated && (
+            <div className="mt-6">
+              <CourseCertificateSection
+                course={course}
+                studentName={
+                  profile?.child_name || profile?.parent_name || ''
+                }
+                progress={courseProgress}
+                isComplete={isComplete}
+              />
+            </div>
+          )}
 
           {/* Overview Section */}
 

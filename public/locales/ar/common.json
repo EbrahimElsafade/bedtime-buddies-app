@@ -174,5 +174,9 @@
   "downloadCertificate": "تحميل الشهادة",
   "downloadPng": "تحميل PNG",
   "downloadPdf": "تحميل PDF",
-  "certificateLanguage": "لغة الشهادة"
+  "certificateLanguage": "لغة الشهادة",
+  "courseProgress": "تقدّم الدورة",
+  "completeAllLessonsTooltip": "أكمل جميع الدروس لفتح الشهادة",
+  "certificateUnlocked": "تم فتح الشهادة",
+  "certificateLocked": "الشهادة مقفلة"
 }
