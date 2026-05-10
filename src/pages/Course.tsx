@@ -40,6 +40,10 @@ const Course = () => {
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
+  const { courseProgress, isComplete } = useCourseProgress(
+    courseId,
+    course?.lessons ?? course?.videos?.length ?? 0,
+  )
 
   // Compute category from course data
   const category = course
