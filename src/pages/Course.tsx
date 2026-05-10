@@ -57,7 +57,22 @@ const Course = () => {
     if (isLoading) {
       setLoadingMessage(t('loading.course', { ns: 'common' }))
     }
+    // Always clear loader on unmount or when error/data resolves — prevents stuck loader
+    return () => {
+      setIsLoading(false)
+      setLoadingMessage(undefined)
+    }
   }, [isLoading, setIsLoading, setLoadingMessage, t])
+
+  // Safety timeout: if course query hangs, clear loader after 10s and surface error
+  useEffect(() => {
+    if (!isLoading) return
+    const id = setTimeout(() => {
+      setIsLoading(false)
+      setLoadingMessage(undefined)
+    }, 10000)
+    return () => clearTimeout(id)
+  }, [isLoading, setIsLoading, setLoadingMessage])
 
   useEffect(() => {
     if (course) {
