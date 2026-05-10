@@ -25,14 +25,14 @@ const CourseLessons = () => {
   const { id: courseId } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { t } = useTranslation(['courses', 'meta', 'common'])
-  const { isAuthenticated, isLoading: authLoading, user } = useAuth()
+  const { isAuthenticated, isLoading: authLoading, user, profile, isProfileLoaded } = useAuth()
   const { toast } = useToast()
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
   const [showPremiumMessage, setShowPremiumMessage] = useState(false)
   
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
-  const { profile, isLoading: profileLoading } = useProfileManagement(user)
+  const profileLoading = !!user && !isProfileLoaded
   const isPremium = profile?.is_premium ?? false
   const { recordProgress } = useGamification()
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
