@@ -36,6 +36,12 @@ const CourseLessons = () => {
   const isPremium = profile?.is_premium ?? false
   const { recordProgress } = useGamification()
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
+  const {
+    completedLessons,
+    courseProgress,
+    isComplete,
+    refetch: refetchProgress,
+  } = useCourseProgress(courseId, course?.lessons ?? course?.videos?.length ?? 0)
 
   // Check if course requires premium and user is not premium
   useEffect(() => {
