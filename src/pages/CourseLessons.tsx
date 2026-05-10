@@ -141,8 +141,7 @@ const CourseLessons = () => {
 
   // Redirect to login if not authenticated
   if (!isAuthenticated && !authLoading) {
-    navigate('/login')
-    return null
+    return <Navigate to="/login" replace />
   }
 
   // Error state
