@@ -184,6 +184,21 @@ const Course = () => {
             content={getImageUrl(course.coverImagePath)}
           />
         )}
+        <link rel="canonical" href={`${window.location.origin}/courses/${courseId}`} />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Course',
+            name: getLocalized(course, 'title', lang),
+            description: getLocalized(course, 'description', lang),
+            provider: {
+              '@type': 'Organization',
+              name: 'Dolphoon',
+              sameAs: window.location.origin,
+            },
+            ...(course.coverImagePath && { image: getImageUrl(course.coverImagePath) }),
+          })}
+        </script>
       </Helmet>
 
       {/* Decorative background elements */}
