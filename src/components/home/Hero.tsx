@@ -19,7 +19,7 @@ const Hero = () => {
   }));
 
   return (
-    <section className="relative overflow-hidden px-4 py-12 md:py-16">
+    <section className="relative overflow-hidden px-4 md:py-16">
       <div className="container relative z-10 mx-auto">
         {/* Main Hero Grid */}
         <div className="mb-12 flex flex-col items-center md:my-32 justify-between gap-16 md:flex-row md:items-start">
