@@ -114,8 +114,7 @@ const Course = () => {
 
   // Redirect to login if not authenticated (but wait while auth is loading)
   if (!isAuthenticated && !authLoading) {
-    navigate('/login')
-    return null
+    return <Navigate to="/login" replace />
   }
 
   // Error state
