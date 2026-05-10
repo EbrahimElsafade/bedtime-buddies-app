@@ -76,7 +76,9 @@ const CourseLessons = () => {
           setSelectedVideo(firstVideo)
           // Record initial lesson progress
           if (courseId && firstVideo.id) {
-            recordProgress('course_lesson', firstVideo.id, courseId)
+            recordProgress('course_lesson', firstVideo.id, courseId).then(() =>
+              refetchProgress(),
+            )
           }
         }
       }
