@@ -100,6 +100,7 @@ const CourseLessons = () => {
     // Record lesson progress for gamification
     if (courseId && video.id) {
       await recordProgress('course_lesson', video.id, courseId)
+      await refetchProgress()
     }
   }
 
