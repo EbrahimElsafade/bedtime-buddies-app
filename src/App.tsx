@@ -103,7 +103,9 @@ function App() {
                     path="/admin"
                     element={
                       <AdminRoute>
-                        <AdminLayout />
+                        <Suspense fallback={<RouteFallback />}>
+                          <AdminLayout />
+                        </Suspense>
                       </AdminRoute>
                     }
                   >
