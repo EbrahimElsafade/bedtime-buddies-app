@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { ArrowLeft, Clock, Play, Lock, ChevronLeft } from 'lucide-react'
+import { ArrowLeft, Clock, Play, Lock, ChevronLeft, CheckCircle2 } from 'lucide-react'
 import { useLoading } from '@/contexts/LoadingContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -345,6 +345,9 @@ const CourseLessons = () => {
                               >
                                 {t('common:free', 'Free')}
                               </Badge>
+                            )}
+                            {completedLessons.includes(video.id) && (
+                              <CheckCircle2 className="h-4 w-4 shrink-0 text-green-600" />
                             )}
                           </div>
                           <div className="mt-1 flex items-center text-xs text-primary-foreground/70">
