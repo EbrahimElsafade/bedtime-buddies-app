@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate, Link, Navigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { ArrowLeft, Clock, BookOpen, BookA, Hourglass } from 'lucide-react'
 import { useLoading } from '@/contexts/LoadingContext'
