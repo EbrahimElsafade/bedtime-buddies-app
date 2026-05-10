@@ -322,6 +322,19 @@ const Course = () => {
             </div>
           </div>
 
+          {isAuthenticated && (
+            <div className="mt-6">
+              <CourseCertificateSection
+                course={course}
+                studentName={
+                  profile?.child_name || profile?.parent_name || ''
+                }
+                progress={courseProgress}
+                isComplete={isComplete}
+              />
+            </div>
+          )}
+
           {/* Overview Section */}
 
           {(() => {
