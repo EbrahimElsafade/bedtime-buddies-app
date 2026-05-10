@@ -63,7 +63,21 @@ const CourseLessons = () => {
     if (isLoading || profileLoading) {
       setLoadingMessage(t('loading.course', { ns: 'common' }))
     }
+    return () => {
+      setIsLoading(false)
+      setLoadingMessage(undefined)
+    }
   }, [isLoading, profileLoading, setIsLoading, setLoadingMessage, t])
+
+  // Safety timeout: never let the global loader hang
+  useEffect(() => {
+    if (!isLoading && !profileLoading) return
+    const id = setTimeout(() => {
+      setIsLoading(false)
+      setLoadingMessage(undefined)
+    }, 10000)
+    return () => clearTimeout(id)
+  }, [isLoading, profileLoading, setIsLoading, setLoadingMessage])
 
   useEffect(() => {
     if (course && !profileLoading) {
