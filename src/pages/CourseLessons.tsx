@@ -18,6 +18,8 @@ import { useTranslation } from 'react-i18next'
 import { useGamification } from '@/hooks/useGamification'
 import { useProfileManagement } from '@/hooks/useProfileManagement'
 import { PremiumMessage } from '@/components/story/PremiumMessage'
+import { CourseCertificateSection } from '@/components/course/CourseCertificateSection'
+import { useCourseProgress } from '@/hooks/useCourseProgress'
 
 const CourseLessons = () => {
   const { id: courseId } = useParams<{ id: string }>()
