@@ -19,6 +19,8 @@ import { ContactFormModal } from '@/components/course/ContactFormModal'
 import { useUserRole } from '@/hooks/useUserRole'
 import { getCategoryText } from '@/utils/courseUtils'
 import { CoursePremiumModal } from '@/components/course/CoursePremiumModal'
+import { CourseCertificateSection } from '@/components/course/CourseCertificateSection'
+import { useCourseProgress } from '@/hooks/useCourseProgress'
 // import { WhatsappSubscribeButton } from '@/components/WhatsappSubscribeButton'
 
 const Course = () => {
