@@ -238,6 +238,16 @@ const CourseLessons = () => {
           </div>
         </div>
 
+        <div className="mb-6">
+          <CourseCertificateSection
+            course={course}
+            studentName={profile?.child_name || profile?.parent_name || ''}
+            progress={courseProgress}
+            isComplete={isComplete}
+            compact
+          />
+        </div>
+
         {/* Content */}
         <div className="flex flex-col gap-8 lg:flex-row">
           {/* Video Player */}
