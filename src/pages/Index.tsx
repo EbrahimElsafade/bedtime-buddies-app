@@ -33,6 +33,16 @@ const Index = () => {
         <meta property="og:description" content={t('meta:descriptions.home')} />
         <meta property="og:type" content="website" />
         <link rel="canonical" href={window.location.origin} />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'Dolphoon',
+            url: window.location.origin,
+            logo: `${window.location.origin}/icons/apple-touch-icon.png`,
+            sameAs: [],
+          })}
+        </script>
       </Helmet>
 
       <Hero />

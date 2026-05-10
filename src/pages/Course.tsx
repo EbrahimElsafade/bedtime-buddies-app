@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate, Link, Navigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { ArrowLeft, Clock, BookOpen, BookA, Hourglass } from 'lucide-react'
 import { useLoading } from '@/contexts/LoadingContext'
@@ -57,7 +57,22 @@ const Course = () => {
     if (isLoading) {
       setLoadingMessage(t('loading.course', { ns: 'common' }))
     }
+    // Always clear loader on unmount or when error/data resolves — prevents stuck loader
+    return () => {
+      setIsLoading(false)
+      setLoadingMessage(undefined)
+    }
   }, [isLoading, setIsLoading, setLoadingMessage, t])
+
+  // Safety timeout: if course query hangs, clear loader after 10s and surface error
+  useEffect(() => {
+    if (!isLoading) return
+    const id = setTimeout(() => {
+      setIsLoading(false)
+      setLoadingMessage(undefined)
+    }, 10000)
+    return () => clearTimeout(id)
+  }, [isLoading, setIsLoading, setLoadingMessage])
 
   useEffect(() => {
     if (course) {
@@ -99,8 +114,7 @@ const Course = () => {
 
   // Redirect to login if not authenticated (but wait while auth is loading)
   if (!isAuthenticated && !authLoading) {
-    navigate('/login')
-    return null
+    return <Navigate to="/login" replace />
   }
 
   // Error state
@@ -170,6 +184,21 @@ const Course = () => {
             content={getImageUrl(course.coverImagePath)}
           />
         )}
+        <link rel="canonical" href={`${window.location.origin}/courses/${courseId}`} />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Course',
+            name: getLocalized(course, 'title', lang),
+            description: getLocalized(course, 'description', lang),
+            provider: {
+              '@type': 'Organization',
+              name: 'Dolphoon',
+              sameAs: window.location.origin,
+            },
+            ...(course.coverImagePath && { image: getImageUrl(course.coverImagePath) }),
+          })}
+        </script>
       </Helmet>
 
       {/* Decorative background elements */}
@@ -204,6 +233,8 @@ const Course = () => {
                 <img
                   src={getImageUrl(course.coverImagePath)}
                   alt={getLocalized(course, 'title', lang)}
+                  loading="lazy"
+                  decoding="async"
                   className="aspect-[4/3] h-auto w-full object-fill"
                 />
               </Card>

@@ -1,4 +1,5 @@
 
+import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -9,6 +10,7 @@ import { CountryProvider, useCountry } from "@/contexts/CountryContext";
 import { LoadingProvider } from "@/contexts/LoadingContext";
 import { ThemeProvider } from "next-themes";
 import { HelmetProvider } from "react-helmet-async";
+import { Loader2 } from "lucide-react";
 import Layout from "@/components/Layout";
 import AdminLayout from "@/components/AdminLayout";
 import AdminRoute from "@/components/AdminRoute";
@@ -31,21 +33,29 @@ import Favorites from "./pages/Favorites";
 import Subscription from "./pages/Subscription";
 import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
-import AdminDashboard from "./pages/admin/Dashboard";
-import AdminStories from "./pages/admin/Stories";
-import AdminStoryEditor from "./pages/admin/StoryEditor";
-import AdminStoryOptions from "./pages/admin/StoryOptions";
-import AdminUsers from "./pages/admin/Users";
-import AdminCourses from "./pages/admin/Courses";
-import AdminCourseOptions from "./pages/admin/CourseOptions";
-import AdminCoursesEditor from "./pages/admin/CourseEditor";
-import AdminSettings from "./pages/admin/Settings";
-import AdminSkillPaths from "./pages/admin/SkillPaths";
-import AdminSkillPathEditor from "./pages/admin/SkillPathEditor";
 import SkillPathsPage from "./pages/SkillPaths";
 import SkillPathDetails from "./pages/SkillPathDetails";
-import GamesManagement from "./pages/admin/GamesManagement";
-import SpecialistRequests from "./pages/admin/SpecialistRequests";
+
+// Code-split admin routes — they are only used by a small subset of users
+const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
+const AdminStories = lazy(() => import("./pages/admin/Stories"));
+const AdminStoryEditor = lazy(() => import("./pages/admin/StoryEditor"));
+const AdminStoryOptions = lazy(() => import("./pages/admin/StoryOptions"));
+const AdminUsers = lazy(() => import("./pages/admin/Users"));
+const AdminCourses = lazy(() => import("./pages/admin/Courses"));
+const AdminCourseOptions = lazy(() => import("./pages/admin/CourseOptions"));
+const AdminCoursesEditor = lazy(() => import("./pages/admin/CourseEditor"));
+const AdminSettings = lazy(() => import("./pages/admin/Settings"));
+const AdminSkillPaths = lazy(() => import("./pages/admin/SkillPaths"));
+const AdminSkillPathEditor = lazy(() => import("./pages/admin/SkillPathEditor"));
+const GamesManagement = lazy(() => import("./pages/admin/GamesManagement"));
+const SpecialistRequests = lazy(() => import("./pages/admin/SpecialistRequests"));
+
+const RouteFallback = () => (
+  <div className="flex min-h-[60vh] items-center justify-center">
+    <Loader2 className="h-10 w-10 animate-spin text-primary" />
+  </div>
+);
 
 const queryClient = new QueryClient();
 
@@ -93,7 +103,9 @@ function App() {
                     path="/admin"
                     element={
                       <AdminRoute>
-                        <AdminLayout />
+                        <Suspense fallback={<RouteFallback />}>
+                          <AdminLayout />
+                        </Suspense>
                       </AdminRoute>
                     }
                   >

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate, Link, Navigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { ArrowLeft, Clock, Play, Lock, ChevronLeft, CheckCircle2 } from 'lucide-react'
 import { useLoading } from '@/contexts/LoadingContext'
@@ -16,7 +16,7 @@ import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 import { useTranslation } from 'react-i18next'
 import { useGamification } from '@/hooks/useGamification'
-import { useProfileManagement } from '@/hooks/useProfileManagement'
+
 import { PremiumMessage } from '@/components/story/PremiumMessage'
 import { CourseCertificateSection } from '@/components/course/CourseCertificateSection'
 import { useCourseProgress } from '@/hooks/useCourseProgress'
@@ -25,14 +25,14 @@ const CourseLessons = () => {
   const { id: courseId } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { t } = useTranslation(['courses', 'meta', 'common'])
-  const { isAuthenticated, isLoading: authLoading, user } = useAuth()
+  const { isAuthenticated, isLoading: authLoading, user, profile, isProfileLoaded } = useAuth()
   const { toast } = useToast()
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
   const [showPremiumMessage, setShowPremiumMessage] = useState(false)
   
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
-  const { profile, isLoading: profileLoading } = useProfileManagement(user)
+  const profileLoading = !!user && !isProfileLoaded
   const isPremium = profile?.is_premium ?? false
   const { recordProgress } = useGamification()
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
@@ -63,7 +63,21 @@ const CourseLessons = () => {
     if (isLoading || profileLoading) {
       setLoadingMessage(t('loading.course', { ns: 'common' }))
     }
+    return () => {
+      setIsLoading(false)
+      setLoadingMessage(undefined)
+    }
   }, [isLoading, profileLoading, setIsLoading, setLoadingMessage, t])
+
+  // Safety timeout: never let the global loader hang
+  useEffect(() => {
+    if (!isLoading && !profileLoading) return
+    const id = setTimeout(() => {
+      setIsLoading(false)
+      setLoadingMessage(undefined)
+    }, 10000)
+    return () => clearTimeout(id)
+  }, [isLoading, profileLoading, setIsLoading, setLoadingMessage])
 
   useEffect(() => {
     if (course && !profileLoading) {
@@ -127,8 +141,7 @@ const CourseLessons = () => {
 
   // Redirect to login if not authenticated
   if (!isAuthenticated && !authLoading) {
-    navigate('/login')
-    return null
+    return <Navigate to="/login" replace />
   }
 
   // Error state
