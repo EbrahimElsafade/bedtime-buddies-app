@@ -233,6 +233,8 @@ const Course = () => {
                 <img
                   src={getImageUrl(course.coverImagePath)}
                   alt={getLocalized(course, 'title', lang)}
+                  loading="lazy"
+                  decoding="async"
                   className="aspect-[4/3] h-auto w-full object-fill"
                 />
               </Card>
