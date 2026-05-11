@@ -1,10 +1,13 @@
 {
   "name": "Dolphoon",
-  "title": "Votre univers merveilleux de divertissement et d'apprentissage",
-  "subtitle": "Votre premier pas vers la révélation de votre potentiel",
-  "cta": "Commencer l'Essai Gratuit",
-  "watchDemo": "Voir la Démo",
+  "badge": "Plateforme d'apprentissage intelligent #1 pour les ados arabes",
+  "titlePart1": "Apprends les compétences",
+  "titleAccent": "du Futur",
+  "titlePart2": "dès maintenant",
+  "subtitle": "Programmation, IA, langues et design — un contenu professionnel conçu pour les 8 à 16 ans, à des prix accessibles à tous.",
+  "cta": "Commencer Gratuitement",
+  "watchDemo": "Voir comment ça marche",
   "exploreButton": "Explorez les Histoires",
   "exploreButton2": "Explorez les Cours",
-  "signUpButton": "Commencer l'Essai Gratuit"
+  "signUpButton": "Commencer Gratuitement"
 }
