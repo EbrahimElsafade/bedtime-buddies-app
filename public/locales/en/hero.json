@@ -1,10 +1,13 @@
 {
   "name": "Dolphoon",
-  "title": "Your wonderful world of fun and learning",
-  "subtitle": "Your first step towards unlocking your potential",
-  "cta": "Start Free Trial",
-  "watchDemo": "Watch Demo",
+  "badge": "#1 Smart Learning Platform for Arab Teens",
+  "titlePart1": "Learn the skills of",
+  "titleAccent": "the Future",
+  "titlePart2": "starting now",
+  "subtitle": "Programming, AI, languages, and design — professional content crafted for youth aged 8 to 16, at prices everyone can afford.",
+  "cta": "Start Free",
+  "watchDemo": "Watch How It Works",
   "exploreButton": "Explore the Stories",
   "exploreButton2": "Explore the Courses",
-  "signUpButton": "Start Free Trial"
+  "signUpButton": "Start Free"
 }
