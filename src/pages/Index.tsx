@@ -1,7 +1,6 @@
 import Hero from '@/components/home/Hero'
 import StatsBar from '@/components/home/StatsBar'
 import SkillPaths from '@/components/home/SkillPaths'
-import Features from '@/components/home/Features'
 import SubscribeBanner from '@/components/home/SubscribeBanner'
 import FeaturedCourses from '@/components/home/FeaturedCourses'
 
@@ -12,7 +11,7 @@ import { useAuth } from '@/contexts/AuthContext'
 
 const Index = () => {
   const { profile } = useAuth()
-  const { i18n, t } = useTranslation(['meta'])
+  const { i18n, t } = useTranslation(['meta', 'misc'])
 
   useEffect(() => {
     if (i18n.language === 'ar') {
@@ -49,18 +48,16 @@ const Index = () => {
 
       <StatsBar
         stats={[
-          { label: 'درس تفاعلي', value: '+200' },
-          { label: 'مسار تعليمي', value: '12' },
-          { label: 'الفئة العمرية', value: '8-16' },
-          { label: 'السعر في السنة', value: '$499.99' },
+          { label: t('misc:stats.lessonsLabel'), value: t('misc:stats.lessonsValue') },
+          { label: t('misc:stats.pathsLabel'), value: t('misc:stats.pathsValue') },
+          { label: t('misc:stats.ageLabel'), value: t('misc:stats.ageValue') },
+          { label: t('misc:stats.priceLabel'), value: t('misc:stats.priceValue') },
         ]}
       />
 
       <FeaturedCourses />
 
       <SkillPaths />
-
-      <Features />
 
       {!profile?.is_premium && <SubscribeBanner />}
     </div>
