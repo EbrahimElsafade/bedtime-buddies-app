@@ -115,5 +115,15 @@
     "title": "Subscribe for Premium Content",
     "subtitle": "Unlock all stories, games, and courses with our premium subscription",
     "button": "Subscribe Now"
+  },
+  "stats": {
+    "lessonsLabel": "Interactive Lessons",
+    "lessonsValue": "+200",
+    "pathsLabel": "Learning Paths",
+    "pathsValue": "4 Paths",
+    "ageLabel": "Age Group",
+    "ageValue": "8-16",
+    "priceLabel": "Per Month",
+    "priceValue": "100 EGP / month"
   }
 }

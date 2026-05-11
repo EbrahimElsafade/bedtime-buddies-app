@@ -115,5 +115,15 @@
     "title": "S'abonner pour le Contenu Premium",
     "subtitle": "Débloquez toutes les histoires, jeux et cours avec notre abonnement premium",
     "button": "S'abonner Maintenant"
+  },
+  "stats": {
+    "lessonsLabel": "Leçons interactives",
+    "lessonsValue": "+200",
+    "pathsLabel": "Parcours d'apprentissage",
+    "pathsValue": "4 parcours",
+    "ageLabel": "Tranche d'âge",
+    "ageValue": "8-16",
+    "priceLabel": "Par mois",
+    "priceValue": "100 EGP / mois"
   }
 }
