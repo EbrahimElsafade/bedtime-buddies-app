@@ -9,20 +9,20 @@ interface StatsBarProps {
 
 const StatsBar = ({ stats }: StatsBarProps) => {
   return (
-    <div className="border-y border-white/50 bg-white/5 backdrop-blur-xl">
-      <div className="container mx-auto">
-        <div className="grid gap-0 py-8 sm:grid-cols-2 md:grid-cols-4">
+    <div className="bg-[#0F1B3D]">
+      <div className="container mx-auto px-4">
+        <div className="grid gap-0 py-10 sm:grid-cols-2 md:grid-cols-4">
           {stats.map((stat, index) => (
             <div
               key={index}
-              className="flex flex-col items-center justify-center border-x border-white/50 px-4 py-4 first:border-l-0 sm:py-0"
+              className="flex flex-col items-center justify-center gap-2 border-white/10 px-4 py-4 sm:py-0 md:border-s md:first:border-s-0"
             >
-              <div className="bg-gradient-to-l text-center from-accent to-black/15 bg-clip-text text-2xl font-bold text-transparent md:text-3xl">
+              <div className="text-center text-3xl font-extrabold text-[#F97316] md:text-4xl">
                 {stat.value}
-                <p className="mt-1 text-xs  sm:text-sm">
-                  {stat.label}
-                </p>
               </div>
+              <p className="text-center text-xs text-white/80 sm:text-sm">
+                {stat.label}
+              </p>
             </div>
           ))}
         </div>

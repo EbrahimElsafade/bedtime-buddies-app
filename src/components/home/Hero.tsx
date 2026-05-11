@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, Play, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import HeroSkillPathCard from "./HeroSkillPathCard";
@@ -19,101 +19,89 @@ const Hero = () => {
   }));
 
   return (
-    <section className="relative overflow-hidden px-4 md:py-16">
+    <section
+      className="relative overflow-hidden px-4 py-12 md:py-20"
+      style={{
+        background:
+          "radial-gradient(ellipse at top, #ffffff 0%, #f5f7fb 60%, #eef2f9 100%)",
+      }}
+    >
+      {/* Dotted pattern overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-40"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, #c7d2e0 1px, transparent 1px)",
+          backgroundSize: "22px 22px",
+        }}
+      />
+
       <div className="container relative z-10 mx-auto">
-        {/* Main Hero Grid */}
-        <div className="mb-12 flex flex-col items-center md:my-32 justify-between gap-16 md:flex-row md:items-start">
-          {/* Left Side - Content */}
-          <div className="flex flex-col justify-center">
-            <h1 className="animate-slide-up font-bubbly text-2xl leading-tight text-accent drop-shadow-lg sm:text-3xl md:text-4xl lg:text-5xl">
-              {t("name")}
+        <div className="flex flex-col items-center justify-between gap-12 md:flex-row md:items-center md:gap-8">
+          {/* Skill Path Cards */}
+          <div className="order-2 flex flex-col gap-4 md:order-1">
+            {skillPathsMini.map((path, index) => (
+              <Link
+                key={path.id}
+                to={`/skill-path/${path.id}`}
+                className={index % 2 === 1 ? "ms-6" : ""}
+              >
+                <HeroSkillPathCard
+                  icon={path.icon}
+                  title={path.title}
+                  subtitle={path.subtitle}
+                  delay={index * 0.5}
+                />
+              </Link>
+            ))}
+          </div>
+
+          {/* Content */}
+          <div className="order-1 flex max-w-2xl flex-col md:order-2 md:items-end md:text-end">
+            {/* Badge */}
+            <div className="mb-6 inline-flex items-center gap-2 self-start rounded-full border border-[#F97316]/30 bg-[#F97316]/10 px-4 py-2 md:self-end">
+              <Zap className="h-4 w-4 fill-[#F97316] text-[#F97316]" />
+              <span className="text-xs font-semibold text-[#F97316] md:text-sm">
+                {t("badge")}
+              </span>
+            </div>
+
+            <h1 className="font-bubbly text-4xl font-extrabold leading-tight text-[#0F1B3D] sm:text-5xl md:text-6xl lg:text-7xl">
+              {t("titlePart1")}{" "}
+              <span className="text-[#F97316]">{t("titleAccent")}</span>
+              <br />
+              {t("titlePart2")}
             </h1>
 
-            <h1 className="animate-slide-up mt-4 font-bubbly text-2xl leading-tight text-secondary drop-shadow-lg sm:text-3xl md:text-4xl lg:text-5xl">
-              {t("title")}
-            </h1>
-
-            <p className="mt-4 text-base leading-relaxed text-primary-foreground sm:text-lg md:text-xl">
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg">
               {t("subtitle")}
             </p>
 
-            <div className="mt-8 flex flex-col gap-2 sm:flex-row md:gap-4">
-              <Link to="/stories" className="w-full sm:w-auto">
-                <Button size="sm" variant="tertiary" className="w-full rounded-full sm:w-auto">
-                  {t("exploreButton")}
-                  <ArrowRight className="ms-2 h-4 w-4 rtl:rotate-180" />
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row md:justify-end">
+              <Link to="/register" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  className="w-full rounded-xl bg-[#F97316] px-8 text-white shadow-lg shadow-[#F97316]/30 hover:bg-[#ea6a0c] sm:w-auto"
+                >
+                  <ArrowLeft className="h-4 w-4 rtl:rotate-180" />
+                  {t("cta")}
                 </Button>
               </Link>
 
               <Link to="/courses" className="w-full sm:w-auto">
-                <Button size="sm" variant="accent" className="w-full rounded-full sm:w-auto">
-                  {t("exploreButton2")}
-                  <ArrowRight className="ms-2 h-4 w-4 rtl:rotate-180" />
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full rounded-xl border-2 border-[#0F1B3D] bg-white px-8 text-[#0F1B3D] hover:bg-[#0F1B3D] hover:text-white sm:w-auto"
+                >
+                  <Play className="h-4 w-4 fill-current" />
+                  {t("watchDemo")}
                 </Button>
               </Link>
             </div>
           </div>
-
-          {/* Right Side - Skill Path Cards */}
-          <div className="flex my-auto flex-col gap-4">
-            {skillPathsMini.map((path, index) => (
-              <Link key={path.id} to={`/skill-path/${path.id}`} className={index % 2 === 1 ? "ms-4" : ""}>
-                <HeroSkillPathCard icon={path.icon} title={path.title} subtitle={path.subtitle} delay={index * 0.5} />
-              </Link>
-            ))}
-          </div>
         </div>
       </div>
-
-      {/* Ocean-themed decorative elements */}
-      <div className="absolute left-4 top-1/2 h-12 w-12 -translate-y-1/2 transform animate-float rounded-full bg-gradient-to-br from-white/60 to-white/20 md:left-10 md:h-20 md:w-20"></div>
-
-      <div className="to-sunshine-DEFAULT absolute bottom-6 right-4 h-8 w-8 animate-bubble rounded-full bg-gradient-to-tl from-sunshine-light delay-1000 md:bottom-10 md:right-10 md:h-12 md:w-12"></div>
-
-      <div className="absolute right-12 top-6 h-6 w-6 animate-wave rounded-full bg-gradient-to-r from-white/20 to-white/50 md:right-20 md:top-10 md:h-8 md:w-8"></div>
-
-      <div className="absolute left-1/4 top-1/4 h-4 w-4 animate-bubble rounded-full bg-secondary/50 delay-500"></div>
-
-      <div
-        className="absolute bottom-1/4 right-1/4 h-6 w-6 animate-float rounded-full bg-secondary/20"
-        style={{ animationDelay: "1.5s" }}
-      ></div>
-
-      <div
-        className="absolute left-3/4 top-3/4 h-3 w-3 animate-wave rounded-full bg-secondary/40"
-        style={{ animationDelay: "2s" }}
-      ></div>
-
-      {/* Additional decorative elements */}
-      <div
-        className="absolute left-[15%] top-[60%] h-5 w-5 animate-float rounded-full bg-gradient-to-tr from-white/40 to-white/10 md:h-8 md:w-8"
-        style={{ animationDelay: "800ms" }}
-      ></div>
-
-      <div
-        className="to-sunshine-DEFAULT absolute right-[35%] top-[15%] h-4 w-4 animate-bubble rounded-full bg-gradient-to-bl from-sunshine-light md:h-6 md:w-6"
-        style={{ animationDelay: "1500ms" }}
-      ></div>
-
-      <div
-        className="absolute bottom-[35%] right-[15%] h-7 w-7 animate-wave rounded-full bg-gradient-to-r from-white/30 to-white/60 md:h-10 md:w-10"
-        style={{ animationDelay: "1200ms" }}
-      ></div>
-
-      <div
-        className="absolute left-[40%] top-[75%] h-3 w-3 animate-bubble rounded-full bg-secondary/60 md:h-5 md:w-5"
-        style={{ animationDelay: "2500ms" }}
-      ></div>
-
-      <div
-        className="absolute right-[45%] top-[40%] h-6 w-6 animate-float rounded-full bg-gradient-to-tl from-white/50 to-white/20 md:h-9 md:w-9"
-        style={{ animationDelay: "1800ms" }}
-      ></div>
-
-      <div
-        className="to-sunshine-DEFAULT/40 absolute bottom-[20%] left-[20%] h-4 w-4 animate-wave rounded-full bg-gradient-to-br from-sunshine-light/40 md:h-7 md:w-7"
-        style={{ animationDelay: "2200ms" }}
-      ></div>
     </section>
   );
 };
