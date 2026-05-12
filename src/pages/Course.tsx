@@ -83,38 +83,9 @@ const Course = () => {
   }, [course, lang, t])
 
   const handleStartCourse = () => {
-    if (!isAuthenticated) {
-      toast({
-        title: t('toast.loginRequired'),
-        description: t('toast.pleaseLoginToStart'),
-        variant: 'destructive',
-      })
-      navigate('/login')
-      return
-    }
-
-    // Wait for role to load before checking premium status (only if profile isn't loaded)
-    if (effectiveRoleLoading) {
-      toast({
-        title: t('toast.loading', { ns: 'common', defaultValue: 'Loading...' }),
-        description: t('toast.pleaseWait', { ns: 'common', defaultValue: 'Please wait...' }),
-      })
-      return
-    }
-
-    // Allow access if course is free OR user is premium
-    if (!course?.isFree && !isPremium) {
-      setShowPremiumModal(true)
-      return
-    }
-
-    // Navigate to the lessons page
+    // Allow everyone (including unauthenticated) to enter the lessons page.
+    // Premium gating happens per-video inside the lessons page.
     navigate(`/courses/${courseId}/lessons`)
-  }
-
-  // Redirect to login if not authenticated (but wait while auth is loading)
-  if (!isAuthenticated && !authLoading) {
-    return <Navigate to="/login" replace />
   }
 
   // Error state
