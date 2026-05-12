@@ -6,7 +6,7 @@ import { useLoading } from '@/contexts/LoadingContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
-import { useToast } from '@/components/ui/use-toast'
+
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { CourseVideo } from '@/types/course'
 import { useCourseData } from '@/hooks/useCourseData'
