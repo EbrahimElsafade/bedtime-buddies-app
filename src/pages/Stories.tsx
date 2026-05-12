@@ -191,7 +191,7 @@ const Stories = () => {
                           <img
                             src={imageUrl}
                             alt={storyTitle}
-                            className="aspect-[3/2] h-56 w-full object-fill"
+                            className="aspect-[16/9] h-56 w-full object-fill"
                             onError={e => {
                               logger.debug(
                                 'Story image failed to load:',
