@@ -120,10 +120,10 @@
     "lessonsLabel": "درس تفاعلي",
     "lessonsValue": "+200",
     "pathsLabel": "مسار تعليمي",
-    "pathsValue": "4 مسار تعليمي",
+    "pathsValue": "4",
     "ageLabel": "الفئة العمرية",
     "ageValue": "8-16",
     "priceLabel": "الاشتراك الشهري",
-    "priceValue": "100 جنيه في الشهر"
+    "priceValue": "100 جنيه"
   }
 }
