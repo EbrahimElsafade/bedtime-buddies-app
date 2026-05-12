@@ -40,26 +40,8 @@ const Hero = () => {
 
       <div className="container relative z-10 mx-auto">
         <div className="flex flex-col items-center justify-between gap-12 md:flex-row md:items-center md:gap-8">
-          {/* Skill Path Cards */}
-          <div className="order-2 flex flex-col gap-4 md:order-1">
-            {skillPathsMini.map((path, index) => (
-              <Link
-                key={path.id}
-                to={`/skill-path/${path.id}`}
-                className={index % 2 === 1 ? "ms-6" : ""}
-              >
-                <HeroSkillPathCard
-                  icon={path.icon}
-                  title={path.title}
-                  subtitle={path.subtitle}
-                  delay={index * 0.5}
-                />
-              </Link>
-            ))}
-          </div>
-
           {/* Content */}
-          <div className="order-1 flex max-w-2xl flex-col items-start text-start md:order-2 md:items-end md:text-end">
+          <div className="order-1 flex max-w-2xl flex-col items-start text-start md:order-1 md:items-start md:text-start">_CONTENT_PLACEHOLDER_
             <h1 className="font-bubbly text-4xl font-extrabold leading-tight text-[#0F1B3D] sm:text-5xl md:text-6xl lg:text-7xl">
               {t("titlePart1")}{" "}
               <span className="text-[#F97316]">{t("titleAccent")}</span>
