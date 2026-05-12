@@ -139,10 +139,9 @@ const CourseLessons = () => {
 
   
 
-  // Redirect to login if not authenticated
-  if (!isAuthenticated && !authLoading) {
-    return <Navigate to="/login" replace />
-  }
+  // Note: we intentionally allow unauthenticated users to enter the lessons
+  // page so they can preview free lessons. Premium-locked lessons trigger
+  // the subscription modal instead of a redirect.
 
   // Error state
   if (error) {
