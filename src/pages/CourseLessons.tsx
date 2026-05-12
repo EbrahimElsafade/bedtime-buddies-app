@@ -27,7 +27,7 @@ const CourseLessons = () => {
   const navigate = useNavigate()
   const { t } = useTranslation(['courses', 'meta', 'common'])
   const { isAuthenticated, isLoading: authLoading, user, profile, isProfileLoaded } = useAuth()
-  const { toast } = useToast()
+  
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
   
