@@ -44,20 +44,7 @@ const CourseLessons = () => {
     refetch: refetchProgress,
   } = useCourseProgress(courseId, course?.lessons ?? course?.videos?.length ?? 0)
 
-  // Check if course requires premium and user is not premium
-  useEffect(() => {
-    if (course && !profileLoading) {
-      const courseIsFree = course.isFree
-      const hasFirstFreeVideo = course.videos?.some(v => v.isFree)
-      
-      // Show premium message if course is not free and user is not premium
-      if (!courseIsFree && !isPremium && !hasFirstFreeVideo) {
-        setShowPremiumMessage(true)
-      } else {
-        setShowPremiumMessage(false)
-      }
-    }
-  }, [course, isPremium, profileLoading])
+  // (Premium gating now happens per-lesson via the modal triggered in handleVideoSelect)
 
   useEffect(() => {
     setIsLoading(isLoading || profileLoading)
