@@ -29,7 +29,7 @@ const CourseLessons = () => {
   const { isAuthenticated, isLoading: authLoading, user, profile, isProfileLoaded } = useAuth()
   const { toast } = useToast()
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
-  const [showPremiumMessage, setShowPremiumMessage] = useState(false)
+  const [showPremiumModal, setShowPremiumModal] = useState(false)
   
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
