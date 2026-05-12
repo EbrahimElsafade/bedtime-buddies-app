@@ -343,6 +343,22 @@ const CourseLessons = () => {
           </div>
         </div>
       </div>
+
+      <Dialog open={showPremiumModal} onOpenChange={setShowPremiumModal}>
+        <DialogContent className="max-w-2xl">
+          <CoursePremiumModal
+            courseTitle={getLocalized(course, 'title', lang)}
+            onSubscriptionClick={() => {
+              setShowPremiumModal(false)
+              if (!isAuthenticated) {
+                navigate('/login')
+              } else {
+                navigate('/profile?tab=subscription')
+              }
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
