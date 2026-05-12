@@ -41,7 +41,7 @@ const Hero = () => {
       <div className="container relative z-10 mx-auto">
         <div className="flex flex-col items-center justify-between gap-12 md:flex-row md:items-center md:gap-8">
           {/* Content */}
-          <div className="order-1 flex max-w-2xl flex-col items-start text-start md:order-1 md:items-start md:text-start">_CONTENT_PLACEHOLDER_
+          <div className="order-1 flex max-w-2xl flex-col items-start text-start md:order-1 md:items-start md:text-start">
             <h1 className="font-bubbly text-4xl font-extrabold leading-tight text-[#0F1B3D] sm:text-5xl md:text-6xl lg:text-7xl">
               {t("titlePart1")}{" "}
               <span className="text-[#F97316]">{t("titleAccent")}</span>
@@ -53,8 +53,8 @@ const Hero = () => {
               {t("subtitle")}
             </p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row md:justify-end">
-              <Link to="/register" className="w-full sm:w-auto">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row md:justify-start">
+              <Link to="/skill-paths" className="w-full sm:w-auto">
                 <Button
                   size="lg"
                   className="w-full rounded-xl bg-[#F97316] px-8 text-white shadow-lg shadow-[#F97316]/30 transition-all duration-200 hover:bg-[#ea6a0c] hover:shadow-xl hover:shadow-[#F97316]/40 sm:w-auto"
@@ -68,6 +68,24 @@ const Hero = () => {
                 </Button>
               </Link>
             </div>
+          </div>
+
+          {/* Skill Path Cards */}
+          <div className="order-2 flex flex-col gap-4 md:order-2">
+            {skillPathsMini.map((path, index) => (
+              <Link
+                key={path.id}
+                to={`/skill-path/${path.id}`}
+                className={index % 2 === 1 ? "ms-6" : ""}
+              >
+                <HeroSkillPathCard
+                  icon={path.icon}
+                  title={path.title}
+                  subtitle={path.subtitle}
+                  delay={index * 0.5}
+                />
+              </Link>
+            ))}
           </div>
         </div>
       </div>
