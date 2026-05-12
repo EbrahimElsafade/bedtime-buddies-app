@@ -26,7 +26,7 @@ const CourseLessons = () => {
   const { id: courseId } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { t } = useTranslation(['courses', 'meta', 'common'])
-  const { isAuthenticated, isLoading: authLoading, user, profile, isProfileLoaded } = useAuth()
+  const { isAuthenticated, user, profile, isProfileLoaded } = useAuth()
   
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
