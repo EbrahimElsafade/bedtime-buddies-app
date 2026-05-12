@@ -169,31 +169,7 @@ const CourseLessons = () => {
     )
   }
 
-  // Show premium message for non-premium users on premium courses
-  if (showPremiumMessage && !profileLoading) {
-    return (
-      <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-8">
-        <div className="container mx-auto">
-          <Button
-            variant="tertiary"
-            onClick={() => navigate(`/courses/${courseId}`)}
-            className="mb-8 w-fit rounded-md shadow"
-          >
-            <ChevronLeft className="me-1 h-4 w-4 rtl:rotate-180" />{' '}
-            {t('button.backToCourses')}
-          </Button>
-          
-          <div className="mx-auto max-w-2xl">
-            <PremiumMessage
-              onSubscriptionClick={() => navigate('/profile?tab=subscription')}
-              onLoginClick={() => navigate('/login')}
-              isAuthenticated={isAuthenticated}
-            />
-          </div>
-        </div>
-      </div>
-    )
-  }
+  // (Premium gating now uses an inline modal instead of a full-page block.)
 
   return (
     <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-8">
