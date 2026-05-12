@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate, Link, Navigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { ArrowLeft, Clock, Play, Lock, ChevronLeft, CheckCircle2 } from 'lucide-react'
 import { useLoading } from '@/contexts/LoadingContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
-import { useToast } from '@/components/ui/use-toast'
+
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { CourseVideo } from '@/types/course'
 import { useCourseData } from '@/hooks/useCourseData'
 import { useAuth } from '@/contexts/AuthContext'
@@ -17,7 +18,7 @@ import { getLocalized } from '@/utils/getLocalized'
 import { useTranslation } from 'react-i18next'
 import { useGamification } from '@/hooks/useGamification'
 
-import { PremiumMessage } from '@/components/story/PremiumMessage'
+import { CoursePremiumModal } from '@/components/course/CoursePremiumModal'
 import { CourseCertificateSection } from '@/components/course/CourseCertificateSection'
 import { useCourseProgress } from '@/hooks/useCourseProgress'
 
@@ -25,10 +26,10 @@ const CourseLessons = () => {
   const { id: courseId } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { t } = useTranslation(['courses', 'meta', 'common'])
-  const { isAuthenticated, isLoading: authLoading, user, profile, isProfileLoaded } = useAuth()
-  const { toast } = useToast()
+  const { isAuthenticated, user, profile, isProfileLoaded } = useAuth()
+  
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
-  const [showPremiumMessage, setShowPremiumMessage] = useState(false)
+  const [showPremiumModal, setShowPremiumModal] = useState(false)
   
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
@@ -43,20 +44,7 @@ const CourseLessons = () => {
     refetch: refetchProgress,
   } = useCourseProgress(courseId, course?.lessons ?? course?.videos?.length ?? 0)
 
-  // Check if course requires premium and user is not premium
-  useEffect(() => {
-    if (course && !profileLoading) {
-      const courseIsFree = course.isFree
-      const hasFirstFreeVideo = course.videos?.some(v => v.isFree)
-      
-      // Show premium message if course is not free and user is not premium
-      if (!courseIsFree && !isPremium && !hasFirstFreeVideo) {
-        setShowPremiumMessage(true)
-      } else {
-        setShowPremiumMessage(false)
-      }
-    }
-  }, [course, isPremium, profileLoading])
+  // (Premium gating now happens per-lesson via the modal triggered in handleVideoSelect)
 
   useEffect(() => {
     setIsLoading(isLoading || profileLoading)
@@ -102,15 +90,11 @@ const CourseLessons = () => {
   const handleVideoSelect = async (video: CourseVideo) => {
     // Allow access if user is premium OR if the lesson is free
     if (!isPremium && !video.isFree) {
-      toast({
-        title: t('toast.premiumRequired'),
-        description: t('toast.upgradeToPremium'),
-        variant: 'destructive',
-      })
+      setShowPremiumModal(true)
       return
     }
     setSelectedVideo(video)
-    
+
     // Record lesson progress for gamification
     if (courseId && video.id) {
       await recordProgress('course_lesson', video.id, courseId)
@@ -139,10 +123,9 @@ const CourseLessons = () => {
 
   
 
-  // Redirect to login if not authenticated
-  if (!isAuthenticated && !authLoading) {
-    return <Navigate to="/login" replace />
-  }
+  // Note: we intentionally allow unauthenticated users to enter the lessons
+  // page so they can preview free lessons. Premium-locked lessons trigger
+  // the subscription modal instead of a redirect.
 
   // Error state
   if (error) {
@@ -186,31 +169,7 @@ const CourseLessons = () => {
     )
   }
 
-  // Show premium message for non-premium users on premium courses
-  if (showPremiumMessage && !profileLoading) {
-    return (
-      <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-8">
-        <div className="container mx-auto">
-          <Button
-            variant="tertiary"
-            onClick={() => navigate(`/courses/${courseId}`)}
-            className="mb-8 w-fit rounded-md shadow"
-          >
-            <ChevronLeft className="me-1 h-4 w-4 rtl:rotate-180" />{' '}
-            {t('button.backToCourses')}
-          </Button>
-          
-          <div className="mx-auto max-w-2xl">
-            <PremiumMessage
-              onSubscriptionClick={() => navigate('/profile?tab=subscription')}
-              onLoginClick={() => navigate('/login')}
-              isAuthenticated={isAuthenticated}
-            />
-          </div>
-        </div>
-      </div>
-    )
-  }
+  // (Premium gating now uses an inline modal instead of a full-page block.)
 
   return (
     <div className="relative min-h-[82.7svh] bg-gradient-to-b from-primary/20 to-primary/10 px-4 py-8">
@@ -384,6 +343,22 @@ const CourseLessons = () => {
           </div>
         </div>
       </div>
+
+      <Dialog open={showPremiumModal} onOpenChange={setShowPremiumModal}>
+        <DialogContent className="max-w-2xl">
+          <CoursePremiumModal
+            courseTitle={getLocalized(course, 'title', lang)}
+            onSubscriptionClick={() => {
+              setShowPremiumModal(false)
+              if (!isAuthenticated) {
+                navigate('/login')
+              } else {
+                navigate('/profile?tab=subscription')
+              }
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

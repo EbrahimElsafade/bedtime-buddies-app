@@ -294,7 +294,7 @@ const Register = () => {
                     </Button>
                     <Button
                       type="submit"
-                      className="flex-1 bg-primary-foreground hover:bg-primary"
+                      className="flex-1 rounded-xl bg-[#F97316] px-8 text-white shadow-lg shadow-[#F97316]/30 transition-all duration-200 hover:bg-[#ea6a0c] hover:shadow-xl hover:shadow-[#F97316]/40"
                       disabled={isLoading}
                     >
                       {isLoading ? (

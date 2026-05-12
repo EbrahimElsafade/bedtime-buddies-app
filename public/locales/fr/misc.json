@@ -120,10 +120,10 @@
     "lessonsLabel": "Leçons interactives",
     "lessonsValue": "+200",
     "pathsLabel": "Parcours d'apprentissage",
-    "pathsValue": "4 parcours",
+    "pathsValue": "4",
     "ageLabel": "Tranche d'âge",
     "ageValue": "8-16",
     "priceLabel": "Par mois",
-    "priceValue": "100 EGP / mois"
+    "priceValue": "100 EGP"
   }
 }

@@ -40,8 +40,38 @@ const Hero = () => {
 
       <div className="container relative z-10 mx-auto">
         <div className="flex flex-col items-center justify-between gap-12 md:flex-row md:items-center md:gap-8">
+          {/* Content */}
+          <div className="order-1 flex max-w-2xl flex-col items-start text-start md:order-1 md:items-start md:text-start">
+            <h1 className="font-bubbly text-4xl font-extrabold leading-tight text-[#0F1B3D] sm:text-5xl md:text-6xl lg:text-7xl">
+              {t("titlePart1")}{" "}
+              <span className="text-[#F97316]">{t("titleAccent")}</span>
+              <br />
+              {t("titlePart2")}
+            </h1>
+
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg">
+              {t("subtitle")}
+            </p>
+
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row md:justify-start">
+              <Link to="/skill-paths" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  className="w-full rounded-xl bg-[#F97316] px-8 text-white shadow-lg shadow-[#F97316]/30 transition-all duration-200 hover:bg-[#ea6a0c] hover:shadow-xl hover:shadow-[#F97316]/40 sm:w-auto"
+                >
+                  {isRTL ? (
+                    <ArrowLeft className="h-4 w-4" />
+                  ) : (
+                    <ArrowRight className="h-4 w-4" />
+                  )}
+                  {t("cta")}
+                </Button>
+              </Link>
+            </div>
+          </div>
+
           {/* Skill Path Cards */}
-          <div className="order-2 flex flex-col gap-4 md:order-1">
+          <div className="order-2 flex flex-col gap-4 md:order-2">
             {skillPathsMini.map((path, index) => (
               <Link
                 key={path.id}
@@ -56,36 +86,6 @@ const Hero = () => {
                 />
               </Link>
             ))}
-          </div>
-
-          {/* Content */}
-          <div className="order-1 flex max-w-2xl flex-col items-start text-start md:order-2 md:items-end md:text-end">
-            <h1 className="font-bubbly text-4xl font-extrabold leading-tight text-[#0F1B3D] sm:text-5xl md:text-6xl lg:text-7xl">
-              {t("titlePart1")}{" "}
-              <span className="text-[#F97316]">{t("titleAccent")}</span>
-              <br />
-              {t("titlePart2")}
-            </h1>
-
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg">
-              {t("subtitle")}
-            </p>
-
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row md:justify-end">
-              <Link to="/register" className="w-full sm:w-auto">
-                <Button
-                  size="lg"
-                  className="w-full rounded-xl bg-[#F97316] px-8 text-white shadow-lg shadow-[#F97316]/30 transition-all duration-200 hover:bg-[#ea6a0c] hover:shadow-xl hover:shadow-[#F97316]/40 sm:w-auto"
-                >
-                  {isRTL ? (
-                    <ArrowLeft className="h-4 w-4" />
-                  ) : (
-                    <ArrowRight className="h-4 w-4" />
-                  )}
-                  {t("cta")}
-                </Button>
-              </Link>
-            </div>
           </div>
         </div>
       </div>

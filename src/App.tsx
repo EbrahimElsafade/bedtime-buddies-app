@@ -87,7 +87,7 @@ function App() {
                     <Route path="games/:gameId" element={<GamePage />} />
                     <Route path="courses" element={<Courses />} />
                     <Route path="courses/:id" element={<Course />} />
-                    <Route path="courses/:id/lessons" element={<ProtectedRoute><CourseLessons /></ProtectedRoute>} />
+                    <Route path="courses/:id/lessons" element={<CourseLessons />} />
                     <Route path="login" element={<Login />} />
                     <Route path="register" element={<Register />} />
                     <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />

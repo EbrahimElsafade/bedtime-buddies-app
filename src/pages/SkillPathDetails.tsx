@@ -67,7 +67,7 @@ const SkillPathDetails = () => {
             {courses.map((course) => (
               <Link key={course.id} to={`/courses/${course.id}`}>
                 <Card className="story-card relative z-10 grid h-full cursor-pointer gap-4 overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm transition-transform hover:scale-105">
-                  <div className="relative aspect-[3/2]">
+                  <div className="relative aspect-[16/9]">
                     <img
                       src={getImageUrl(course.coverImagePath)}
                       alt={getLocalized(course, 'title', lang)}

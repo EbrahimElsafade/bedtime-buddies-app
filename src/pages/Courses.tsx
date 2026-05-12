@@ -214,7 +214,7 @@ const Courses = () => {
                       className="cursor-pointer"
                     >
                       <Card className="story-card relative z-10 h-[500px] overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm">
-                        <div className="relative aspect-[3/2]">
+                        <div className="relative aspect-[16/9]">
                           <img
                             src={getImageUrl(course.coverImagePath)}
                             alt={getLocalized(course, 'title', lang)}
@@ -254,7 +254,7 @@ const Courses = () => {
                           : 'border-primary/20 bg-secondary/70'
                       }`}
                     >
-                      <div className="relative aspect-[3/2]">
+                      <div className="relative aspect-[16/9]">
                         <img
                           src={getImageUrl(course.coverImagePath)}
                           alt={getLocalized(course, 'title', lang)}
