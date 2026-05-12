@@ -90,15 +90,11 @@ const CourseLessons = () => {
   const handleVideoSelect = async (video: CourseVideo) => {
     // Allow access if user is premium OR if the lesson is free
     if (!isPremium && !video.isFree) {
-      toast({
-        title: t('toast.premiumRequired'),
-        description: t('toast.upgradeToPremium'),
-        variant: 'destructive',
-      })
+      setShowPremiumModal(true)
       return
     }
     setSelectedVideo(video)
-    
+
     // Record lesson progress for gamification
     if (courseId && video.id) {
       await recordProgress('course_lesson', video.id, courseId)
