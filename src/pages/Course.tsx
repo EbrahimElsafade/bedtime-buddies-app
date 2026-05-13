@@ -217,37 +217,43 @@ const Course = () => {
               </h1>
 
               <div className="flex max-w-60 flex-wrap gap-2 sm:max-w-none">
-                <Badge className="flex items-center gap-2 px-4 py-2 shadow-md hover:bg-primary">
-                  <BookA className="size-4" />
-
-                  <span>
-                    {getCategoryText(category, 'name', lang) ||
-                      course.category ||
-                      'General'}
-                  </span>
-                </Badge>
-                <Badge className="flex items-center gap-2 px-4 py-2 shadow-md hover:bg-primary">
-                  <Hourglass className="size-4" />
-
-                  <span>
-                    {course.minAge}-{course.maxAge} {t('courses.years')}
-                  </span>
-                </Badge>
-
-                {course.duration > 0 && (
-                  <Badge className="flex items-center gap-2 px-4 py-2 shadow-md hover:bg-primary">
-                    <Clock className="size-4" />
-                    <span>
-                      {Math.floor(course.duration / 60)} {t('duration')}
-                    </span>
-                  </Badge>
-                )}
-                <Badge className="flex items-center gap-2 px-4 py-2 shadow-md hover:bg-primary">
-                  <BookOpen className="size-4" />
-                  <span>
-                    {course.lessons} {t('courses.lessons')}
-                  </span>
-                </Badge>
+                {(() => {
+                  const tagClass =
+                    'inline-flex items-center gap-2 border border-primary/30 bg-transparent px-3 py-1.5 text-xs font-medium text-primary-foreground/90'
+                  const tagStyle = { borderRadius: '5px' } as const
+                  return (
+                    <>
+                      <span className={tagClass} style={tagStyle}>
+                        <BookA className="size-3.5" />
+                        <span>
+                          {getCategoryText(category, 'name', lang) ||
+                            course.category ||
+                            'General'}
+                        </span>
+                      </span>
+                      <span className={tagClass} style={tagStyle}>
+                        <Hourglass className="size-3.5" />
+                        <span>
+                          {course.minAge}-{course.maxAge} {t('courses.years')}
+                        </span>
+                      </span>
+                      {course.duration > 0 && (
+                        <span className={tagClass} style={tagStyle}>
+                          <Clock className="size-3.5" />
+                          <span>
+                            {Math.floor(course.duration / 60)} {t('duration')}
+                          </span>
+                        </span>
+                      )}
+                      <span className={tagClass} style={tagStyle}>
+                        <BookOpen className="size-3.5" />
+                        <span>
+                          {course.lessons} {t('courses.lessons')}
+                        </span>
+                      </span>
+                    </>
+                  )
+                })()}
               </div>
 
               <p className="text-primary-foreground">
