@@ -1,65 +1,75 @@
 import { z } from 'zod';
+import type { TFunction } from 'i18next';
 
-// Login validation schema
+// Translated schema builders
+export const buildLoginSchema = (t: TFunction) =>
+  z.object({
+    email: z
+      .string()
+      .trim()
+      .min(1, { message: t('auth:validation.emailRequired') })
+      .email({ message: t('auth:validation.emailInvalid') })
+      .max(255, { message: t('auth:validation.emailMax') }),
+    password: z
+      .string()
+      .min(8, { message: t('auth:validation.passwordMin') })
+      .max(128, { message: t('auth:validation.passwordMax') }),
+  });
+
+export const buildRegisterSchema = (t: TFunction) =>
+  z.object({
+    parentName: z
+      .string()
+      .trim()
+      .min(1, { message: t('auth:validation.nameRequired') })
+      .max(100, { message: t('auth:validation.nameMax') }),
+    email: z
+      .string()
+      .trim()
+      .min(1, { message: t('auth:validation.emailRequired') })
+      .email({ message: t('auth:validation.emailInvalid') })
+      .max(255, { message: t('auth:validation.emailMax') }),
+    password: z
+      .string()
+      .min(8, { message: t('auth:validation.passwordMin') })
+      .max(128, { message: t('auth:validation.passwordMax') })
+      .regex(/[A-Z]/, { message: t('auth:validation.passwordUppercase') })
+      .regex(/[a-z]/, { message: t('auth:validation.passwordLowercase') })
+      .regex(/[0-9]/, { message: t('auth:validation.passwordNumber') }),
+    childName: z
+      .string()
+      .trim()
+      .max(100, { message: t('auth:validation.childNameMax') })
+      .optional(),
+    preferredLanguage: z.enum(['en', 'ar-eg', 'ar-fos7a', 'fr'], {
+      errorMap: () => ({ message: t('auth:validation.languageRequired') }),
+    }),
+  });
+
+// Backwards-compatible non-translated schemas (used outside of components)
 export const loginSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .min(1, { message: "Email is required" })
-    .email({ message: "Invalid email address" })
-    .max(255, { message: "Email must be less than 255 characters" }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 characters" })
-    .max(128, { message: "Password must be less than 128 characters" })
+  email: z.string().trim().min(1).email().max(255),
+  password: z.string().min(8).max(128),
 });
 
-// Registration validation schema
 export const registerSchema = z.object({
-  parentName: z
-    .string()
-    .trim()
-    .min(1, { message: "Name is required" })
-    .max(100, { message: "Name must be less than 100 characters" }),
-  email: z
-    .string()
-    .trim()
-    .min(1, { message: "Email is required" })
-    .email({ message: "Invalid email address" })
-    .max(255, { message: "Email must be less than 255 characters" }),
+  parentName: z.string().trim().min(1).max(100),
+  email: z.string().trim().min(1).email().max(255),
   password: z
     .string()
-    .min(8, { message: "Password must be at least 8 characters" })
-    .max(128, { message: "Password must be less than 128 characters" })
-    .regex(/[A-Z]/, { message: "Password must contain at least one uppercase letter" })
-    .regex(/[a-z]/, { message: "Password must contain at least one lowercase letter" })
-    .regex(/[0-9]/, { message: "Password must contain at least one number" }),
-  childName: z
-    .string()
-    .trim()
-    .max(100, { message: "Child's name must be less than 100 characters" })
-    .optional(),
-  preferredLanguage: z.enum(['en', 'ar-eg', 'ar-fos7a', 'fr'], {
-    errorMap: () => ({ message: "Please select a valid language" })
-  })
+    .min(8)
+    .max(128)
+    .regex(/[A-Z]/)
+    .regex(/[a-z]/)
+    .regex(/[0-9]/),
+  childName: z.string().trim().max(100).optional(),
+  preferredLanguage: z.enum(['en', 'ar-eg', 'ar-fos7a', 'fr']),
 });
 
-// Profile update validation schema
 export const profileUpdateSchema = z.object({
-  parentName: z
-    .string()
-    .trim()
-    .min(1, { message: "Name is required" })
-    .max(100, { message: "Name must be less than 100 characters" }),
-  childName: z
-    .string()
-    .trim()
-    .max(100, { message: "Child's name must be less than 100 characters" })
-    .optional()
-    .or(z.literal('')),
-  preferredLanguage: z.enum(['en', 'ar-eg', 'ar-fos7a', 'fr'], {
-    errorMap: () => ({ message: "Please select a valid language" })
-  })
+  parentName: z.string().trim().min(1, { message: 'Name is required' }).max(100),
+  childName: z.string().trim().max(100).optional().or(z.literal('')),
+  preferredLanguage: z.enum(['en', 'ar-eg', 'ar-fos7a', 'fr']),
 });
 
 export type LoginFormData = z.infer<typeof loginSchema>;
