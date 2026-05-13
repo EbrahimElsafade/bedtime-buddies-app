@@ -214,7 +214,7 @@ const Register = () => {
 
                   <Button
                     type="button"
-                    className="w-full "
+                    className="h-11 w-full rounded-xl"
                     onClick={handleNextStep}
                   >
                     {t('auth:register.nextButton')}
@@ -222,31 +222,34 @@ const Register = () => {
 
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
-                      <span className="w-full border-t border-gray-300" />
+                      <span className="w-full border-t border-primary/20" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-secondary px-2 text-muted-foreground">
+                      <span className="bg-secondary/70 px-2 text-muted-foreground">
                         {t('auth:common.orContinueWith')}
                       </span>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-3">
                     <Button
-                      variant="outline"
                       type="button"
+                      variant="outline"
                       onClick={handleGoogleSignUp}
                       disabled={isLoading}
+                      className="h-11 w-full justify-center gap-3 rounded-xl border-2 bg-white text-base font-medium text-slate-700 shadow-sm transition-all duration-200 hover:bg-slate-50 hover:shadow-md"
                     >
-                      {t('auth:common.google')}
+                      {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <GoogleIcon />}
+                      <span>{t('auth:common.continueWithGoogle')}</span>
                     </Button>
                     <Button
-                      variant="outline"
                       type="button"
                       onClick={handleFacebookSignUp}
                       disabled={isLoading}
+                      className="h-11 w-full justify-center gap-3 rounded-xl bg-[#1877F2] text-base font-medium text-white shadow-sm transition-all duration-200 hover:bg-[#166fe0] hover:shadow-md"
                     >
-                      {t('auth:common.facebook')}
+                      {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <FacebookIcon />}
+                      <span>{t('auth:common.continueWithFacebook')}</span>
                     </Button>
                   </div>
                 </div>
