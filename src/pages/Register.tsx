@@ -304,7 +304,7 @@ const Register = () => {
                     <Button
                       type="button"
                       variant="outline"
-                      className="flex-1"
+                      className="h-11 flex-1 rounded-xl"
                       onClick={() => setCurrentStep(1)}
                       disabled={isLoading}
                     >
@@ -312,7 +312,7 @@ const Register = () => {
                     </Button>
                     <Button
                       type="submit"
-                      className="flex-1 rounded-xl bg-[#F97316] px-8 text-white shadow-lg shadow-[#F97316]/30 transition-all duration-200 hover:bg-[#ea6a0c] hover:shadow-xl hover:shadow-[#F97316]/40"
+                      className="h-11 flex-1 rounded-xl"
                       disabled={isLoading}
                     >
                       {isLoading ? (
