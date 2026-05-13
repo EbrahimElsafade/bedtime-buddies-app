@@ -72,7 +72,7 @@ const Register = () => {
 
   const handleNextStep = () => {
     // Validate step 1 inputs
-    const validationResult = registerSchema.pick({
+    const validationResult = buildRegisterSchema(t).pick({
       parentName: true,
       email: true,
       password: true
