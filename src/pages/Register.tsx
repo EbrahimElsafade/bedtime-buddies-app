@@ -98,7 +98,7 @@ const Register = () => {
     setError('')
 
     // Validate all inputs
-    const validationResult = registerSchema.safeParse({
+    const validationResult = buildRegisterSchema(t).safeParse({
       parentName: name,
       email,
       password,
