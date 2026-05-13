@@ -23,7 +23,22 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Loader2 } from 'lucide-react'
-import { registerSchema } from '@/utils/validation'
+import { buildRegisterSchema } from '@/utils/validation'
+
+const GoogleIcon = () => (
+  <svg className="h-5 w-5" viewBox="0 0 48 48" aria-hidden="true">
+    <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303C33.972 32.91 29.418 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20c11.045 0 20-8.955 20-20 0-1.341-.138-2.65-.389-3.917z"/>
+    <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+    <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238C29.211 35.091 26.715 36 24 36c-5.397 0-9.937-3.067-11.282-7.541l-6.523 5.025C9.51 39.556 16.227 44 24 44z"/>
+    <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.001-.001 6.19 5.238C36.973 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+  </svg>
+);
+
+const FacebookIcon = () => (
+  <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true" fill="#FFFFFF">
+    <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06C2 17.08 5.66 21.24 10.44 22v-7.03H7.9v-2.91h2.54V9.84c0-2.51 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.45 2.91h-2.33V22C18.34 21.24 22 17.08 22 12.06z"/>
+  </svg>
+);
 
 const Register = () => {
   const navigate = useNavigate()
@@ -57,7 +72,7 @@ const Register = () => {
 
   const handleNextStep = () => {
     // Validate step 1 inputs
-    const validationResult = registerSchema.pick({
+    const validationResult = buildRegisterSchema(t).pick({
       parentName: true,
       email: true,
       password: true
@@ -83,7 +98,7 @@ const Register = () => {
     setError('')
 
     // Validate all inputs
-    const validationResult = registerSchema.safeParse({
+    const validationResult = buildRegisterSchema(t).safeParse({
       parentName: name,
       email,
       password,
@@ -199,7 +214,7 @@ const Register = () => {
 
                   <Button
                     type="button"
-                    className="w-full "
+                    className="h-11 w-full rounded-xl"
                     onClick={handleNextStep}
                   >
                     {t('auth:register.nextButton')}
@@ -207,31 +222,34 @@ const Register = () => {
 
                   <div className="relative">
                     <div className="absolute inset-0 flex items-center">
-                      <span className="w-full border-t border-gray-300" />
+                      <span className="w-full border-t border-primary/20" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                      <span className="bg-secondary px-2 text-muted-foreground">
+                      <span className="bg-secondary/70 px-2 text-muted-foreground">
                         {t('auth:common.orContinueWith')}
                       </span>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-3">
                     <Button
-                      variant="outline"
                       type="button"
+                      variant="outline"
                       onClick={handleGoogleSignUp}
                       disabled={isLoading}
+                      className="h-11 w-full justify-center gap-3 rounded-xl border-2 bg-white text-base font-medium text-slate-700 shadow-sm transition-all duration-200 hover:bg-slate-50 hover:shadow-md"
                     >
-                      {t('auth:common.google')}
+                      {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <GoogleIcon />}
+                      <span>{t('auth:common.continueWithGoogle')}</span>
                     </Button>
                     <Button
-                      variant="outline"
                       type="button"
                       onClick={handleFacebookSignUp}
                       disabled={isLoading}
+                      className="h-11 w-full justify-center gap-3 rounded-xl bg-[#1877F2] text-base font-medium text-white shadow-sm transition-all duration-200 hover:bg-[#166fe0] hover:shadow-md"
                     >
-                      {t('auth:common.facebook')}
+                      {isLoading ? <Loader2 className="h-5 w-5 animate-spin" /> : <FacebookIcon />}
+                      <span>{t('auth:common.continueWithFacebook')}</span>
                     </Button>
                   </div>
                 </div>
@@ -286,7 +304,7 @@ const Register = () => {
                     <Button
                       type="button"
                       variant="outline"
-                      className="flex-1"
+                      className="h-11 flex-1 rounded-xl"
                       onClick={() => setCurrentStep(1)}
                       disabled={isLoading}
                     >
@@ -294,7 +312,7 @@ const Register = () => {
                     </Button>
                     <Button
                       type="submit"
-                      className="flex-1 rounded-xl bg-[#F97316] px-8 text-white shadow-lg shadow-[#F97316]/30 transition-all duration-200 hover:bg-[#ea6a0c] hover:shadow-xl hover:shadow-[#F97316]/40"
+                      className="h-11 flex-1 rounded-xl"
                       disabled={isLoading}
                     >
                       {isLoading ? (
