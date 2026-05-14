@@ -38,9 +38,9 @@ export const NavbarUserProgress = ({
 
   return (
     <Link
-      to="/profile?tab=finished"
+      to="/profile?tab=finished-content"
       className={cn(
-        'group flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5 transition-all hover:border-primary/40 hover:bg-primary/10 hover:shadow-sm',
+        'group flex cursor-pointer items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5 transition-all hover:border-primary/40 hover:bg-primary/10 hover:shadow-sm',
         className,
       )}
       aria-label={t('common:myProgress', { defaultValue: 'My progress' })}
