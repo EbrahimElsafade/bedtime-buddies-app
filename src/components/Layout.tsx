@@ -15,10 +15,9 @@ const Layout = () => {
 
   const navItems = [
     { name: t('navigation:home'), path: '/', icon: Home, key: 'home' },
-    { name: t('navigation:stories'), path: '/stories', icon: BookOpen, key: 'stories' },
     { name: t('navigation:courses'), path: '/courses', icon: LibraryBig, key: 'courses' },
-    // { name: t('navigation:games'), path: '/games', icon: Gamepad2, key: 'games' },
     { name: t('navigation:paths'), path: '/skill-paths', icon: LibraryBig, key: 'paths' },
+    { name: t('navigation:stories'), path: '/stories', icon: BookOpen, key: 'stories' },
     {
       name: t('navigation:profile'),
       path: isAuthenticated ? '/profile' : '/login',

@@ -5,6 +5,7 @@ import { DolphoonMascot } from '../DolphoonMascot'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 import { useAuth } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
+import { NavbarUserProgress } from './NavbarUserProgress'
 
 interface NavbarProps {
   navItems: Array<{
@@ -33,20 +34,22 @@ export const Navbar = ({ navItems, isActive }: NavbarProps) => {
 
         {/* Desktop Navigation */}
         <nav className="hidden items-center space-x-1 md:flex">
-          {navItems.map(item => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={cn(
-                'rounded-full px-4 py-2 text-sm font-medium transition-colors',
-                isActive(item.path)
-                  ? 'bg-accent/10 text-accent shadow-md'
-                  : 'text-primary hover:bg-primary/10',
-              )}
-            >
-              {item.name}
-            </Link>
-          ))}
+          {navItems
+            .filter(item => item.key !== 'profile')
+            .map(item => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={cn(
+                  'rounded-full px-4 py-2 text-sm font-medium transition-colors',
+                  isActive(item.path)
+                    ? 'bg-accent/10 text-accent shadow-md'
+                    : 'text-primary hover:bg-primary/10',
+                )}
+              >
+                {item.name}
+              </Link>
+            ))}
         </nav>
 
         {/* Actions */}
@@ -54,7 +57,8 @@ export const Navbar = ({ navItems, isActive }: NavbarProps) => {
           <LanguageSwitcher />
 
           {isAuthenticated ? (
-            <div className="hidden items-center space-x-2 md:flex">
+            <div className="hidden items-center gap-2 md:flex">
+              <NavbarUserProgress />
               <Link to="/profile">
                 <Button variant="ghost" size="sm" className="rounded-sm">
                   {profile?.parent_name || t('auth:profile')}
