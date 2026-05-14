@@ -1,0 +1,17 @@
+# Dolphoon
+
+> Dolphoon is a kids' edutainment platform offering interactive stories, educational courses, skill paths, and games for children ages 8–16, with content in Arabic, English, and French.
+
+## Pages
+
+- [Home](/): Overview of Dolphoon — stories, courses, skill paths, and games for kids.
+- [Courses](/courses): Educational courses on programming, AI, languages, and design designed for ages 8–16.
+- [Skill Paths](/skill-paths): Structured learning journeys that combine multiple courses into progressive curricula.
+- [Stories](/stories): Interactive stories crafted to engage children while teaching valuable lessons.
+- [Games](/games): Educational games that make learning fun.
+- [Subscription](/subscription): Premium plans for unlimited access to all content.
+
+## Optional
+
+- [Login](/login): Sign in to your account.
+- [Register](/register): Create a new account.
