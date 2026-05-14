@@ -32,7 +32,7 @@ export const MobileNavigation = ({
             key={item.path}
             to={item.path}
             className={cn(
-              'flex w-1/5 flex-col items-center justify-center rounded-lg px-2 py-1',
+              'flex flex-1 flex-col items-center justify-center rounded-lg px-2 py-1',
               isActive(item.path) ? 'text-accent' : 'text-primary',
             )}
           >
