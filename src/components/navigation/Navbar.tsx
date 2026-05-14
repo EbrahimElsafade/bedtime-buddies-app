@@ -57,13 +57,13 @@ export const Navbar = ({ navItems, isActive }: NavbarProps) => {
           <LanguageSwitcher />
 
           {isAuthenticated ? (
-            <div className="hidden items-center gap-2 md:flex">
-              <NavbarUserProgress />
+            <div className="relative hidden md:block">
               <Link to="/profile">
                 <Button variant="ghost" size="sm" className="rounded-sm">
                   {profile?.parent_name || t('auth:profile')}
                 </Button>
               </Link>
+              <NavbarUserProgress className="absolute left-1/2 top-full z-50 mt-1 -translate-x-1/2" />
             </div>
           ) : (
             <Link to="/login" className="hidden md:block">
