@@ -84,6 +84,7 @@ const Hero = () => {
                   title={path.title}
                   subtitle={path.subtitle}
                   delay={index * 0.5}
+                  theme={path.theme}
                 />
               </Link>
             ))}
