@@ -32,6 +32,7 @@ const SkillPathEditor = () => {
   const [descFr, setDescFr] = useState('')
   const [order, setOrder] = useState(0)
   const [selectedCourses, setSelectedCourses] = useState<string[]>([])
+  const [theme, setTheme] = useState<SkillPathTheme>('blue-neon')
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
@@ -45,6 +46,7 @@ const SkillPathEditor = () => {
       setDescFr(existing.description.fr || '')
       setOrder(existing.display_order)
       setSelectedCourses(existing.course_ids)
+      setTheme(existing.theme)
     }
   }, [existing])
 
