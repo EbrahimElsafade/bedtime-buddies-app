@@ -105,6 +105,7 @@ const SkillPathsPage = () => {
                     description={getMultilingualText(path.description, lang, 'en')}
                     progress={progress}
                     coursesCount={path.course_ids.length}
+                    theme={path.theme}
                   />
                 </Link>
               )

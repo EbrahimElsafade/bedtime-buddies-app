@@ -55,9 +55,9 @@ const Index = () => {
         ]}
       />
 
-      <FeaturedCourses />
-
       <SkillPaths />
+
+      <FeaturedCourses />
 
       {!profile?.is_premium && <SubscribeBanner />}
     </div>

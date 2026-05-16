@@ -1,0 +1,1 @@
+ALTER TABLE public.skill_paths ADD COLUMN IF NOT EXISTS theme TEXT NOT NULL DEFAULT 'blue-neon';

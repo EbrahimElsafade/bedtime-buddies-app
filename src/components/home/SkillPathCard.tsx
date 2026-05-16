@@ -1,5 +1,7 @@
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
+import { cn } from '@/lib/utils'
+import type { SkillPathTheme } from './skillPathThemes'
 
 interface SkillPathCardProps {
   icon: ReactNode
@@ -8,6 +10,7 @@ interface SkillPathCardProps {
   progress?: number
   coursesCount?: number
   showDescription?: boolean
+  theme?: SkillPathTheme
 }
 
 const SkillPathCard = ({
@@ -17,28 +20,29 @@ const SkillPathCard = ({
   progress = 0,
   coursesCount = 0,
   showDescription = true,
+  theme = 'blue-neon',
 }: SkillPathCardProps) => {
   const { t } = useTranslation('skillPaths')
 
   return (
-    <div className="group relative h-full overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 p-6 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:border-white/20 hover:shadow-xl">
-      <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full bg-cyan-500/15 blur-2xl transition-all duration-300 group-hover:scale-150"></div>
-
+    <div className={cn('sp-card group h-full p-6', `sp-theme--${theme}`)}>
       <div className="relative z-10">
-        <div className="mb-3 text-3xl">{icon}</div>
-        <h3 className="mb-2 font-bold text-slate-700">{title}</h3>
+        <div className="mb-3 text-3xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.4)]">{icon}</div>
+        <h3 className="mb-2 font-bold text-current">{title}</h3>
         {showDescription && description && (
-          <p className="mb-4 text-sm text-slate-600 line-clamp-2">{description}</p>
+          <p className="mb-4 line-clamp-2 text-sm text-current/80">{description}</p>
         )}
 
-        <div className="mb-2 h-1 overflow-hidden rounded-full bg-white/30">
+        <div className="mb-2 h-1.5 overflow-hidden rounded-full bg-white/20">
           <div
-            className="h-full bg-gradient-to-r from-cyan-500 to-purple-500 transition-all duration-500"
+            className="h-full rounded-full bg-gradient-to-r from-white/90 to-white/60 shadow-[0_0_8px_rgba(255,255,255,0.7)] transition-all duration-500"
             style={{ width: `${progress}%` }}
-          ></div>
+          />
         </div>
 
-        <p className="text-xs text-slate-600">{coursesCount} {t('skillPaths:skillPaths.courses')}</p>
+        <p className="text-xs text-current/80">
+          {coursesCount} {t('skillPaths:skillPaths.courses')}
+        </p>
       </div>
     </div>
   )

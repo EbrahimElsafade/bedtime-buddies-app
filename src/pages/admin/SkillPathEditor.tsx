@@ -13,6 +13,7 @@ import { Loader2, ArrowLeft } from 'lucide-react'
 import { useSkillPath } from '@/hooks/useSkillPaths'
 import { useCoursesData } from '@/hooks/useCourseData'
 import { getLocalized } from '@/utils/getLocalized'
+import { SKILL_PATH_THEMES, type SkillPathTheme } from '@/components/home/skillPathThemes'
 
 const SkillPathEditor = () => {
   const { id } = useParams<{ id: string }>()
@@ -31,6 +32,7 @@ const SkillPathEditor = () => {
   const [descFr, setDescFr] = useState('')
   const [order, setOrder] = useState(0)
   const [selectedCourses, setSelectedCourses] = useState<string[]>([])
+  const [theme, setTheme] = useState<SkillPathTheme>('blue-neon')
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
@@ -44,6 +46,7 @@ const SkillPathEditor = () => {
       setDescFr(existing.description.fr || '')
       setOrder(existing.display_order)
       setSelectedCourses(existing.course_ids)
+      setTheme(existing.theme)
     }
   }, [existing])
 
@@ -65,7 +68,8 @@ const SkillPathEditor = () => {
         name: { en: nameEn, ar: nameAr, fr: nameFr },
         description: { en: descEn, ar: descAr, fr: descFr },
         display_order: order,
-      }
+        theme,
+      } as never
       let pathId = id
       if (isEdit && id) {
         const { error } = await supabase.from('skill_paths').update(payload).eq('id', id)
@@ -164,6 +168,30 @@ const SkillPathEditor = () => {
               <Label>Description (FR)</Label>
               <Textarea value={descFr} onChange={(e) => setDescFr(e.target.value)} />
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Card Theme</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+            {SKILL_PATH_THEMES.map((th) => (
+              <button
+                key={th.id}
+                type="button"
+                onClick={() => setTheme(th.id)}
+                className={`sp-card sp-theme--${th.id} relative h-24 cursor-pointer p-3 text-left transition-all ${
+                  theme === th.id ? 'ring-4 ring-offset-2 ring-primary' : ''
+                }`}
+              >
+                <span className="relative z-10 text-sm font-semibold text-current drop-shadow">
+                  {th.label}
+                </span>
+              </button>
+            ))}
           </div>
         </CardContent>
       </Card>

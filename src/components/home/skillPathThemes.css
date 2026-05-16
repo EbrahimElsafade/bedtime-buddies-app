@@ -1,0 +1,179 @@
+/* ============================================================
+   Skill Path animated card themes (CSS-only, GPU friendly)
+   Apply via: <div class="sp-card sp-theme--blue-neon"> ... </div>
+   ============================================================ */
+
+.sp-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--card));
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.sp-card:hover {
+  transform: translateY(-6px) scale(1.02);
+}
+.sp-card::before,
+.sp-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ---------- Shared keyframes ---------- */
+@keyframes sp-gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+@keyframes sp-pulse-glow {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50%      { opacity: 0.75; transform: scale(1.15); }
+}
+@keyframes sp-streak {
+  0%   { transform: translateX(-120%) skewX(-20deg); }
+  100% { transform: translateX(220%)  skewX(-20deg); }
+}
+@keyframes sp-grid-move {
+  0%   { background-position: 0 0; }
+  100% { background-position: 40px 40px; }
+}
+@keyframes sp-particles {
+  0%   { transform: translateY(0) translateX(0); }
+  100% { transform: translateY(-40px) translateX(20px); }
+}
+@keyframes sp-matrix-rain {
+  0%   { background-position: 0 -100%; }
+  100% { background-position: 0 100%; }
+}
+@keyframes sp-progress-shine {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+/* ---------- Blue Neon ---------- */
+.sp-theme--blue-neon {
+  background: linear-gradient(135deg, #0b1e3d 0%, #0f3a7a 50%, #0b1e3d 100%);
+  background-size: 200% 200%;
+  animation: sp-gradient-shift 8s ease infinite;
+  border-color: rgba(96, 165, 250, 0.35);
+  box-shadow: 0 0 0 1px rgba(59,130,246,0.2), 0 10px 40px -10px rgba(59,130,246,0.45);
+  color: #e0f2fe;
+}
+.sp-theme--blue-neon::after {
+  background: radial-gradient(circle at 80% 20%, rgba(96,165,250,0.55), transparent 55%);
+  animation: sp-pulse-glow 3.5s ease-in-out infinite;
+}
+
+/* ---------- Purple Pulse ---------- */
+.sp-theme--purple-pulse {
+  background: linear-gradient(135deg, #2a0b4a 0%, #6d28d9 50%, #2a0b4a 100%);
+  background-size: 200% 200%;
+  animation: sp-gradient-shift 7s ease infinite;
+  border-color: rgba(168,85,247,0.4);
+  box-shadow: 0 0 0 1px rgba(168,85,247,0.25), 0 10px 40px -10px rgba(168,85,247,0.5);
+  color: #f5f3ff;
+}
+.sp-theme--purple-pulse::before {
+  background: radial-gradient(circle at 30% 70%, rgba(217,70,239,0.45), transparent 50%);
+  animation: sp-pulse-glow 2.8s ease-in-out infinite;
+}
+
+/* ---------- Orange Energy ---------- */
+.sp-theme--orange-energy {
+  background: linear-gradient(135deg, #4a1a02 0%, #ea580c 50%, #4a1a02 100%);
+  background-size: 200% 200%;
+  animation: sp-gradient-shift 6s ease infinite;
+  border-color: rgba(251,146,60,0.45);
+  box-shadow: 0 0 0 1px rgba(251,146,60,0.25), 0 10px 40px -10px rgba(251,146,60,0.5);
+  color: #fff7ed;
+}
+.sp-theme--orange-energy::after {
+  background: linear-gradient(120deg, transparent 40%, rgba(255,237,213,0.55) 50%, transparent 60%);
+  animation: sp-streak 3.5s linear infinite;
+}
+
+/* ---------- Cyber Grid ---------- */
+.sp-theme--cyber-grid {
+  background-color: #050b18;
+  background-image:
+    linear-gradient(rgba(34,211,238,0.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,211,238,0.18) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: sp-grid-move 6s linear infinite;
+  border-color: rgba(34,211,238,0.4);
+  box-shadow: 0 0 0 1px rgba(34,211,238,0.2), 0 10px 40px -10px rgba(34,211,238,0.45);
+  color: #ecfeff;
+}
+.sp-theme--cyber-grid::after {
+  background: radial-gradient(circle at 50% 100%, rgba(34,211,238,0.4), transparent 60%);
+  animation: sp-pulse-glow 3s ease-in-out infinite;
+}
+
+/* ---------- Space Glow ---------- */
+.sp-theme--space-glow {
+  background:
+    radial-gradient(2px 2px at 20% 30%, #fff, transparent 60%),
+    radial-gradient(1.5px 1.5px at 70% 60%, #c7d2fe, transparent 60%),
+    radial-gradient(1.5px 1.5px at 40% 80%, #fff, transparent 60%),
+    radial-gradient(2px 2px at 85% 25%, #a5b4fc, transparent 60%),
+    linear-gradient(135deg, #0a0a23 0%, #1e1b4b 60%, #0a0a23 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 200% 200%;
+  animation: sp-gradient-shift 10s ease infinite, sp-particles 6s ease-in-out infinite alternate;
+  border-color: rgba(165,180,252,0.4);
+  box-shadow: 0 0 0 1px rgba(99,102,241,0.25), 0 10px 40px -10px rgba(99,102,241,0.5);
+  color: #ede9fe;
+}
+
+/* ---------- Matrix Flow ---------- */
+.sp-theme--matrix-flow {
+  background-color: #001b0d;
+  background-image: linear-gradient(180deg, rgba(34,197,94,0.18) 0%, transparent 50%, rgba(34,197,94,0.18) 100%);
+  background-size: 100% 300%;
+  animation: sp-matrix-rain 5s linear infinite;
+  border-color: rgba(34,197,94,0.4);
+  box-shadow: 0 0 0 1px rgba(34,197,94,0.2), 0 10px 40px -10px rgba(34,197,94,0.5);
+  color: #dcfce7;
+}
+.sp-theme--matrix-flow::after {
+  background: radial-gradient(circle at 50% 50%, rgba(34,197,94,0.25), transparent 70%);
+  animation: sp-pulse-glow 4s ease-in-out infinite;
+}
+
+/* ============================================================
+   Animated progress bar (shine + flowing gradient)
+   Wrap any Radix <Progress> with .sp-progress--animated
+   ============================================================ */
+.sp-progress--animated {
+  position: relative;
+  overflow: hidden;
+}
+.sp-progress--animated [data-state] {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--primary)) 0%,
+    hsl(var(--accent)) 50%,
+    hsl(var(--primary)) 100%
+  );
+  background-size: 200% 100%;
+  animation: sp-gradient-shift 2.5s ease-in-out infinite;
+}
+.sp-progress--animated::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 40%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%
+  );
+  animation: sp-progress-shine 2.2s ease-in-out infinite;
+  pointer-events: none;
+}

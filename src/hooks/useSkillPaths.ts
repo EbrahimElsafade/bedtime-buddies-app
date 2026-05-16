@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import { useAuth } from '@/contexts/AuthContext'
+import type { SkillPathTheme } from '@/components/home/skillPathThemes'
+import { isSkillPathTheme } from '@/components/home/skillPathThemes'
 
 export interface SkillPath {
   id: string
@@ -9,6 +11,7 @@ export interface SkillPath {
   description: Record<string, string>
   display_order: number
   course_ids: string[]
+  theme: SkillPathTheme
 }
 
 export const useSkillPaths = () => {
@@ -28,16 +31,20 @@ export const useSkillPaths = () => {
         .order('display_order', { ascending: true })
       if (linksError) throw linksError
 
-      return (paths || []).map((p) => ({
-        id: p.id,
-        name: (p.name as Record<string, string>) || {},
-        icon: p.icon || '📚',
-        description: (p.description as Record<string, string>) || {},
-        display_order: p.display_order,
-        course_ids: (links || [])
-          .filter((l) => l.skill_path_id === p.id)
-          .map((l) => l.course_id),
-      }))
+      return (paths || []).map((p) => {
+        const rawTheme = (p as { theme?: unknown }).theme
+        return {
+          id: p.id,
+          name: (p.name as Record<string, string>) || {},
+          icon: p.icon || '📚',
+          description: (p.description as Record<string, string>) || {},
+          display_order: p.display_order,
+          theme: isSkillPathTheme(rawTheme) ? rawTheme : 'blue-neon',
+          course_ids: (links || [])
+            .filter((l) => l.skill_path_id === p.id)
+            .map((l) => l.course_id),
+        }
+      })
     },
   })
 }
@@ -60,12 +67,14 @@ export const useSkillPath = (id: string | undefined) => {
         .select('course_id, display_order')
         .eq('skill_path_id', id)
         .order('display_order', { ascending: true })
+      const rawTheme = (p as { theme?: unknown }).theme
       return {
         id: p.id,
         name: (p.name as Record<string, string>) || {},
         icon: p.icon || '📚',
         description: (p.description as Record<string, string>) || {},
         display_order: p.display_order,
+        theme: isSkillPathTheme(rawTheme) ? rawTheme : 'blue-neon',
         course_ids: (links || []).map((l) => l.course_id),
       }
     },

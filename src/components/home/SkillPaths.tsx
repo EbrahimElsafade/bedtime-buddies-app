@@ -34,6 +34,7 @@ const SkillPaths = () => {
                   showDescription={false}
                   progress={progress}
                   coursesCount={path.course_ids.length}
+                  theme={path.theme}
                 />
               </Link>
             )
