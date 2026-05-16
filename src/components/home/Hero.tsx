@@ -17,6 +17,7 @@ const Hero = () => {
     icon: path.icon,
     title: getMultilingualText(path.name, i18n.language, "en"),
     subtitle: `${path.course_ids.length} ${tSkillPaths("skillPaths:skillPaths.courses")}`,
+    theme: path.theme,
   }));
 
   return (
