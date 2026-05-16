@@ -31,16 +31,20 @@ export const useSkillPaths = () => {
         .order('display_order', { ascending: true })
       if (linksError) throw linksError
 
-      return (paths || []).map((p) => ({
-        id: p.id,
-        name: (p.name as Record<string, string>) || {},
-        icon: p.icon || '📚',
-        description: (p.description as Record<string, string>) || {},
-        display_order: p.display_order,
-        course_ids: (links || [])
-          .filter((l) => l.skill_path_id === p.id)
-          .map((l) => l.course_id),
-      }))
+      return (paths || []).map((p) => {
+        const rawTheme = (p as { theme?: unknown }).theme
+        return {
+          id: p.id,
+          name: (p.name as Record<string, string>) || {},
+          icon: p.icon || '📚',
+          description: (p.description as Record<string, string>) || {},
+          display_order: p.display_order,
+          theme: isSkillPathTheme(rawTheme) ? rawTheme : 'blue-neon',
+          course_ids: (links || [])
+            .filter((l) => l.skill_path_id === p.id)
+            .map((l) => l.course_id),
+        }
+      })
     },
   })
 }
