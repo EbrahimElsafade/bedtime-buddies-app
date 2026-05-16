@@ -67,12 +67,14 @@ export const useSkillPath = (id: string | undefined) => {
         .select('course_id, display_order')
         .eq('skill_path_id', id)
         .order('display_order', { ascending: true })
+      const rawTheme = (p as { theme?: unknown }).theme
       return {
         id: p.id,
         name: (p.name as Record<string, string>) || {},
         icon: p.icon || '📚',
         description: (p.description as Record<string, string>) || {},
         display_order: p.display_order,
+        theme: isSkillPathTheme(rawTheme) ? rawTheme : 'blue-neon',
         course_ids: (links || []).map((l) => l.course_id),
       }
     },
