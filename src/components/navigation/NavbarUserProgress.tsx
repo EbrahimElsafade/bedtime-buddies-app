@@ -40,7 +40,7 @@ export const NavbarUserProgress = ({
     <Link
       to="/profile?tab=finished-content"
       className={cn(
-        'group flex cursor-pointer items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1.5 transition-all hover:border-primary/40 hover:bg-primary/10 hover:shadow-sm',
+        'group flex cursor-pointer items-center gap-2 rounded-full border border-border bg-white px-3 py-1.5 shadow-sm transition-all hover:border-primary/40 hover:shadow-md',
         className,
       )}
       aria-label={t('common:myProgress', { defaultValue: 'My progress' })}
@@ -58,7 +58,9 @@ export const NavbarUserProgress = ({
             {achievements}/{MILESTONES.length}
           </span>
         </div>
-        <Progress value={progress} className="h-1.5" />
+        <div className="sp-progress--animated overflow-hidden rounded-full">
+          <Progress value={progress} className="h-1.5 bg-muted" />
+        </div>
       </div>
     </Link>
   )
