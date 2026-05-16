@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/integrations/supabase/client'
 import { useAuth } from '@/contexts/AuthContext'
+import type { SkillPathTheme } from '@/components/home/skillPathThemes'
+import { isSkillPathTheme } from '@/components/home/skillPathThemes'
 
 export interface SkillPath {
   id: string
@@ -9,6 +11,7 @@ export interface SkillPath {
   description: Record<string, string>
   display_order: number
   course_ids: string[]
+  theme: SkillPathTheme
 }
 
 export const useSkillPaths = () => {
