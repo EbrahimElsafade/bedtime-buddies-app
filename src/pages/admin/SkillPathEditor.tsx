@@ -174,6 +174,30 @@ const SkillPathEditor = () => {
 
       <Card>
         <CardHeader>
+          <CardTitle>Card Theme</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+            {SKILL_PATH_THEMES.map((th) => (
+              <button
+                key={th.id}
+                type="button"
+                onClick={() => setTheme(th.id)}
+                className={`sp-card sp-theme--${th.id} relative h-24 cursor-pointer p-3 text-left transition-all ${
+                  theme === th.id ? 'ring-4 ring-offset-2 ring-primary' : ''
+                }`}
+              >
+                <span className="relative z-10 text-sm font-semibold text-current drop-shadow">
+                  {th.label}
+                </span>
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <CardTitle>Courses ({selectedCourses.length} selected)</CardTitle>
         </CardHeader>
         <CardContent>
