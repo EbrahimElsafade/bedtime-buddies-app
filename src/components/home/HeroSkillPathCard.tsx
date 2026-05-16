@@ -1,4 +1,6 @@
 import { ReactNode } from 'react'
+import { cn } from '@/lib/utils'
+import type { SkillPathTheme } from './skillPathThemes'
 
 interface HeroSkillPathCardProps {
   icon: ReactNode
@@ -6,6 +8,7 @@ interface HeroSkillPathCardProps {
   subtitle?: string
   description?: string
   delay?: number
+  theme?: SkillPathTheme
 }
 
 const HeroSkillPathCard = ({
@@ -14,31 +17,37 @@ const HeroSkillPathCard = ({
   subtitle,
   description,
   delay = 0,
+  theme = 'blue-neon',
 }: HeroSkillPathCardProps) => {
   return (
     <div
-      className="flex w-64 items-center gap-3 rounded-2xl border border-slate-100 bg-white p-4 shadow-[0_8px_30px_rgb(15,27,61,0.08)] transition-all duration-300 hover:shadow-[0_12px_40px_rgb(15,27,61,0.12)]"
+      className={cn(
+        'sp-hero-card group flex w-64 items-center gap-3 p-4',
+        `sp-theme--${theme}`,
+      )}
       style={{
         animation: `floatCard 3s ease-in-out infinite`,
         animationDelay: `${delay}s`,
       }}
     >
       {/* Content (text-first in RTL) */}
-      <div className="flex flex-1 flex-col gap-1">
-        <h3 className="text-sm font-bold text-[#0F1B3D]">{title}</h3>
+      <div className="relative z-10 flex flex-1 flex-col gap-1">
+        <h3 className="text-sm font-bold text-current drop-shadow-[0_1px_4px_rgba(0,0,0,0.35)]">
+          {title}
+        </h3>
         {subtitle && (
-          <p className="text-xs text-slate-500">
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-[#F97316] align-middle me-1.5" />
+          <p className="text-xs text-current/85">
+            <span className="me-1.5 inline-block h-1.5 w-1.5 rounded-full bg-white/90 align-middle" />
             {subtitle}
           </p>
         )}
         {description && (
-          <p className="line-clamp-1 text-xs text-slate-400">{description}</p>
+          <p className="line-clamp-1 text-xs text-current/70">{description}</p>
         )}
       </div>
 
       {/* Icon */}
-      <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-slate-50 text-2xl">
+      <div className="relative z-10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-white/15 text-2xl backdrop-blur-sm">
         {icon}
       </div>
 
