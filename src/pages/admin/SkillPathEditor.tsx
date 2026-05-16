@@ -68,7 +68,8 @@ const SkillPathEditor = () => {
         name: { en: nameEn, ar: nameAr, fr: nameFr },
         description: { en: descEn, ar: descAr, fr: descFr },
         display_order: order,
-      }
+        theme,
+      } as never
       let pathId = id
       if (isEdit && id) {
         const { error } = await supabase.from('skill_paths').update(payload).eq('id', id)
