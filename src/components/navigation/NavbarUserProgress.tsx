@@ -58,9 +58,11 @@ export const NavbarUserProgress = ({
             {achievements}/{MILESTONES.length}
           </span>
         </div>
-        <div className="sp-progress--animated overflow-hidden rounded-full">
-          <Progress value={progress} className="h-1.5 bg-muted" />
-        </div>
+        <Progress
+          value={progress}
+          className="sp-progress--animated h-1.5"
+          indicatorClassName="sp-progress-indicator--animated"
+        />
       </div>
     </Link>
   )
