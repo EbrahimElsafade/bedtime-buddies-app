@@ -102,12 +102,28 @@ const Story = () => {
       <Helmet>
         <title>{getStoryTitle()} - Dolphoon</title>
         <meta name="description" content={getStoryDescription()} />
+        <link rel="canonical" href={`https://thedolphoon.com/stories/${id}`} />
         <meta property="og:title" content={`${getStoryTitle()} - Dolphoon`} />
         <meta property="og:description" content={getStoryDescription()} />
         <meta property="og:type" content="article" />
+        <meta property="og:url" content={`https://thedolphoon.com/stories/${id}`} />
         {story && story.cover_image && (
           <meta property="og:image" content={story.cover_image} />
         )}
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Article",
+          headline: getStoryTitle(),
+          description: getStoryDescription(),
+          image: story?.cover_image || "https://thedolphoon.com/og-image.jpg",
+          url: `https://thedolphoon.com/stories/${id}`,
+          inLanguage: currentLanguageKey,
+          publisher: {
+            "@type": "Organization",
+            name: "Dolphoon",
+            url: "https://thedolphoon.com",
+          },
+        })}</script>
       </Helmet>
 
       <div className="container mx-auto max-w-4xl">
