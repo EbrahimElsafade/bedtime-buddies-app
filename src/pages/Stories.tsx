@@ -135,12 +135,23 @@ const Stories = () => {
       <Helmet>
         <title>{t('meta:titles.stories')}</title>
         <meta name="description" content={t('meta:descriptions.stories')} />
+        <link rel="canonical" href="https://thedolphoon.com/stories" />
         <meta property="og:title" content={t('meta:titles.stories')} />
         <meta
           property="og:description"
           content={t('meta:descriptions.stories')}
         />
         <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://thedolphoon.com/stories" />
+        <meta property="og:image" content="https://thedolphoon.com/og-image.jpg" />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: t('meta:titles.stories'),
+          description: t('meta:descriptions.stories'),
+          url: "https://thedolphoon.com/stories",
+          about: "Interactive stories for children",
+        })}</script>
       </Helmet>
 
       <div className="container mx-auto max-w-7xl">

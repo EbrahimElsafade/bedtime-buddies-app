@@ -111,12 +111,23 @@ const Courses = () => {
       <Helmet>
         <title>{t('meta:titles.courses')}</title>
         <meta name="description" content={t('meta:descriptions.courses')} />
+        <link rel="canonical" href="https://thedolphoon.com/courses" />
         <meta property="og:title" content={t('meta:titles.courses')} />
         <meta
           property="og:description"
           content={t('meta:descriptions.courses')}
         />
         <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://thedolphoon.com/courses" />
+        <meta property="og:image" content="https://thedolphoon.com/og-image.jpg" />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: t('meta:titles.courses'),
+          description: t('meta:descriptions.courses'),
+          url: "https://thedolphoon.com/courses",
+          about: "Educational courses for children",
+        })}</script>
       </Helmet>
 
       {/* Fun decorative elements */}

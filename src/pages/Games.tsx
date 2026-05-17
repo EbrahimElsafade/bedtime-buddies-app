@@ -207,12 +207,23 @@ const Games = () => {
       <Helmet>
         <title>{t('meta:titles.games')}</title>
         <meta name="description" content={t('meta:descriptions.games')} />
+        <link rel="canonical" href="https://thedolphoon.com/games" />
         <meta property="og:title" content={t('meta:titles.games')} />
         <meta
           property="og:description"
           content={t('meta:descriptions.games')}
         />
         <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://thedolphoon.com/games" />
+        <meta property="og:image" content="https://thedolphoon.com/og-image.jpg" />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: t('meta:titles.games'),
+          description: t('meta:descriptions.games'),
+          url: "https://thedolphoon.com/games",
+          about: "Interactive games for children",
+        })}</script>
       </Helmet>
 
       <div className="container mx-auto max-w-7xl">
