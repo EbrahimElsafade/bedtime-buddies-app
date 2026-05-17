@@ -105,9 +105,22 @@ const GamePage = () => {
       <Helmet>
         <title>{t(game.title)} - {t('meta:titles.games')}</title>
         <meta name="description" content={t(game.description)} />
+        <link rel="canonical" href={`https://thedolphoon.com/games/${gameId}`} />
         <meta property="og:title" content={t(game.title)} />
         <meta property="og:description" content={t(game.description)} />
         <meta property="og:type" content="website" />
+        <meta property="og:url" content={`https://thedolphoon.com/games/${gameId}`} />
+        <meta property="og:image" content="https://thedolphoon.com/og-image.jpg" />
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: t(game.title),
+          description: t(game.description),
+          applicationCategory: "GameApplication",
+          operatingSystem: "Web",
+          url: `https://thedolphoon.com/games/${gameId}`,
+          offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+        })}</script>
       </Helmet>
 
       <div className="container mx-auto max-w-6xl ">
