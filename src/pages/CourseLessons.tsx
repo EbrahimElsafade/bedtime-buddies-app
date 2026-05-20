@@ -6,6 +6,7 @@ import { useLoading } from '@/contexts/LoadingContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress'
 
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { CourseVideo } from '@/types/course'
@@ -71,35 +72,32 @@ const CourseLessons = () => {
     if (course && !profileLoading) {
       document.title = `${getLocalized(course, 'title', lang)} - ${t('course.lessons')} | Dolphoon`
       // Set the first video as selected by default if there are videos
+      // NOTE: we no longer record progress here — completion is explicit only.
       if (course.videos && course.videos.length > 0 && !selectedVideo) {
         const firstVideo = course.videos[0]
-        // Only auto-select if premium or video is free
         if (isPremium || firstVideo.isFree) {
           setSelectedVideo(firstVideo)
-          // Record initial lesson progress
-          if (courseId && firstVideo.id) {
-            recordProgress('course_lesson', firstVideo.id, courseId).then(() =>
-              refetchProgress(),
-            )
-          }
         }
       }
     }
-  }, [course, lang, t, selectedVideo, courseId, isPremium, profileLoading, recordProgress])
+  }, [course, lang, t, selectedVideo, isPremium, profileLoading])
 
-  const handleVideoSelect = async (video: CourseVideo) => {
+  const handleVideoSelect = (video: CourseVideo) => {
     // Allow access if user is premium OR if the lesson is free
     if (!isPremium && !video.isFree) {
       setShowPremiumModal(true)
       return
     }
     setSelectedVideo(video)
+    // Progress is no longer auto-recorded on lesson open — user must explicitly
+    // click "Mark as completed" to count the lesson toward course progress.
+  }
 
-    // Record lesson progress for gamification
-    if (courseId && video.id) {
-      await recordProgress('course_lesson', video.id, courseId)
-      await refetchProgress()
-    }
+  const handleMarkCompleted = async () => {
+    if (!courseId || !selectedVideo) return
+    if (completedLessons.includes(selectedVideo.id)) return
+    await recordProgress('course_lesson', selectedVideo.id, courseId)
+    await refetchProgress()
   }
 
   const handleVideoEnd = () => {
