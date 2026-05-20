@@ -23,7 +23,9 @@
     "selectVideo": "Sélectionnez une leçon dans la liste pour commencer à regarder",
     "noVideos": "Aucune leçon disponible pour ce cours",
     "legacyVideoFormat": "Format vidéo ancien - veuillez mettre à jour vers Google Drive",
-    "noVideoSource": "Aucune source vidéo disponible"
+    "noVideoSource": "Aucune source vidéo disponible",
+    "markCompleted": "Marquer comme terminé",
+    "completed": "Terminé"
   },
   "toast": {
     "premiumRequired": "Premium Requis",
