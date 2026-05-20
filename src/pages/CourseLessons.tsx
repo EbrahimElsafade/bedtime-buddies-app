@@ -260,6 +260,42 @@ const CourseLessons = () => {
                     </span>
                   </div>
                 </div>
+
+                {/* Explicit completion button — only marks lesson done when user clicks */}
+                {isAuthenticated && (isPremium || selectedVideo.isFree) && (
+                  <div className="flex flex-col gap-2 rounded-lg border border-border bg-white/60 p-3 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex-1">
+                      <div className="mb-1 flex items-center justify-between text-xs text-primary-foreground/80">
+                        <span>{Math.round(courseProgress)}%</span>
+                        <span>
+                          {completedLessons.length}/{course.videos?.length ?? 0}
+                        </span>
+                      </div>
+                      <Progress
+                        value={courseProgress}
+                        className="sp-progress--animated h-2"
+                        indicatorClassName="sp-progress-indicator--animated"
+                      />
+                    </div>
+                    <Button
+                      onClick={handleMarkCompleted}
+                      disabled={completedLessons.includes(selectedVideo.id)}
+                      variant={
+                        completedLessons.includes(selectedVideo.id)
+                          ? 'secondary'
+                          : 'default'
+                      }
+                      className="shrink-0 transition-all"
+                    >
+                      <CheckCircle2 className="me-2 h-4 w-4" />
+                      {completedLessons.includes(selectedVideo.id)
+                        ? t('course.completed', { defaultValue: 'Completed' })
+                        : t('course.markCompleted', {
+                            defaultValue: 'Mark as completed',
+                          })}
+                    </Button>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="flex aspect-video items-center justify-center rounded-lg bg-secondary">
