@@ -23,7 +23,9 @@
     "selectVideo": "Select a lesson from the list to start watching",
     "noVideos": "No lessons available for this course",
     "legacyVideoFormat": "Legacy video format - please update to Google Drive",
-    "noVideoSource": "No video source available"
+    "noVideoSource": "No video source available",
+    "markCompleted": "Mark as completed",
+    "completed": "Completed"
   },
   "toast": {
     "premiumRequired": "Premium Required",
