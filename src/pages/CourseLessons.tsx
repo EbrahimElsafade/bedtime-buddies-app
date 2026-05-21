@@ -97,10 +97,18 @@ const CourseLessons = () => {
   }
 
   const handleMarkCompleted = async () => {
-    if (!courseId || !selectedVideo || !user) return
+    if (!courseId || !selectedVideo) {
+      toast({ title: 'Cannot mark complete', description: 'Missing course or lesson.', variant: 'destructive' })
+      return
+    }
+    if (!user) {
+      toast({ title: 'Sign in required', description: 'Please log in to track progress.' })
+      navigate('/login')
+      return
+    }
     if (completedLessons.includes(selectedVideo.id)) return
-    const duration = selectedVideo.duration || 0
-    await supabase.rpc('record_course_lesson_watch_progress', {
+    const duration = Math.max(selectedVideo.duration || 0, 1)
+    const { error } = await supabase.rpc('record_course_lesson_watch_progress', {
       _user_id: user.id,
       _course_id: courseId,
       _lesson_id: selectedVideo.id,
@@ -109,11 +117,17 @@ const CourseLessons = () => {
       _explicit_complete: true,
       _completion_threshold: 85,
     })
+    if (error) {
+      console.error('record_course_lesson_watch_progress error', error)
+      toast({ title: 'Failed to save progress', description: error.message, variant: 'destructive' })
+      return
+    }
     await Promise.all([
       refetchProgress(),
       refreshStats(),
       refreshFinishedContent(),
     ])
+    toast({ title: t('course.completed', { defaultValue: 'Completed' }) })
   }
 
   const handleVideoEnd = () => {
