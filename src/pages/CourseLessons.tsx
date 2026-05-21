@@ -36,14 +36,16 @@ const CourseLessons = () => {
   const { data: course, isLoading, error } = useCourseData(courseId)
   const profileLoading = !!user && !isProfileLoaded
   const isPremium = profile?.is_premium ?? false
-  const { recordProgress } = useGamification()
+  const { refreshStats, refreshFinishedContent } = useGamification()
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const {
     completedLessons,
+    lessonProgress,
     courseProgress,
     isComplete,
+    totalLessons,
     refetch: refetchProgress,
-  } = useCourseProgress(courseId, course?.lessons ?? course?.videos?.length ?? 0)
+  } = useCourseProgress(courseId)
 
   // (Premium gating now happens per-lesson via the modal triggered in handleVideoSelect)
 
