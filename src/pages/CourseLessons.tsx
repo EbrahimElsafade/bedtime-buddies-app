@@ -22,6 +22,7 @@ import { useGamification } from '@/hooks/useGamification'
 import { CoursePremiumModal } from '@/components/course/CoursePremiumModal'
 import { CourseCertificateSection } from '@/components/course/CourseCertificateSection'
 import { useCourseProgress } from '@/hooks/useCourseProgress'
+import { supabase } from '@/integrations/supabase/client'
 
 const CourseLessons = () => {
   const { id: courseId } = useParams<{ id: string }>()
@@ -36,14 +37,16 @@ const CourseLessons = () => {
   const { data: course, isLoading, error } = useCourseData(courseId)
   const profileLoading = !!user && !isProfileLoaded
   const isPremium = profile?.is_premium ?? false
-  const { recordProgress } = useGamification()
+  const { refreshStats, refreshFinishedContent } = useGamification()
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const {
     completedLessons,
+    lessonProgress,
     courseProgress,
     isComplete,
+    totalLessons,
     refetch: refetchProgress,
-  } = useCourseProgress(courseId, course?.lessons ?? course?.videos?.length ?? 0)
+  } = useCourseProgress(courseId)
 
   // (Premium gating now happens per-lesson via the modal triggered in handleVideoSelect)
 
@@ -94,10 +97,23 @@ const CourseLessons = () => {
   }
 
   const handleMarkCompleted = async () => {
-    if (!courseId || !selectedVideo) return
+    if (!courseId || !selectedVideo || !user) return
     if (completedLessons.includes(selectedVideo.id)) return
-    await recordProgress('course_lesson', selectedVideo.id, courseId)
-    await refetchProgress()
+    const duration = selectedVideo.duration || 0
+    await supabase.rpc('record_course_lesson_watch_progress', {
+      _user_id: user.id,
+      _course_id: courseId,
+      _lesson_id: selectedVideo.id,
+      _watched_seconds: duration,
+      _duration_seconds: duration,
+      _explicit_complete: true,
+      _completion_threshold: 85,
+    })
+    await Promise.all([
+      refetchProgress(),
+      refreshStats(),
+      refreshFinishedContent(),
+    ])
   }
 
   const handleVideoEnd = () => {
@@ -263,12 +279,12 @@ const CourseLessons = () => {
 
                 {/* Explicit completion button — only marks lesson done when user clicks */}
                 {isAuthenticated && (isPremium || selectedVideo.isFree) && (
-                  <div className="flex flex-col gap-2 rounded-lg border border-border bg-white/60 p-3 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex flex-col gap-2 rounded-lg border border-border bg-white p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex-1">
-                      <div className="mb-1 flex items-center justify-between text-xs text-primary-foreground/80">
-                        <span>{Math.round(courseProgress)}%</span>
-                        <span>
-                          {completedLessons.length}/{course.videos?.length ?? 0}
+                      <div className="mb-1 flex items-center justify-between text-xs font-medium text-primary-foreground/80">
+                        <span className="tabular-nums">{Math.round(courseProgress)}%</span>
+                        <span className="tabular-nums">
+                          {completedLessons.length}/{totalLessons}
                         </span>
                       </div>
                       <Progress
@@ -285,7 +301,7 @@ const CourseLessons = () => {
                           ? 'secondary'
                           : 'default'
                       }
-                      className="shrink-0 transition-all"
+                      className="shrink-0 transition-all duration-300"
                     >
                       <CheckCircle2 className="me-2 h-4 w-4" />
                       {completedLessons.includes(selectedVideo.id)
@@ -310,64 +326,96 @@ const CourseLessons = () => {
           <div className="max-h-[55vh] pe-4 flex-1 overflow-y-scroll">
             <div className="space-y-3">
               {course.videos && course.videos.length > 0 ? (
-                course.videos.map(video => (
-                  <Card
-                    key={video.id}
-                    className={cn(
-                      'cursor-pointer transition-all hover:border-primary-foreground',
-                      selectedVideo?.id === video.id &&
-                        'border-primary-foreground',
-                    )}
-                    onClick={() => handleVideoSelect(video)}
-                  >
-                    <CardContent className="p-3">
-                      <div className="flex items-start gap-3">
-                        <div className="relative h-16 w-24 flex-shrink-0">
-                          <img
-                            src={getImageUrl(video.thumbnailPath)}
-                            alt={getLocalized(video, 'title', lang)}
-                            className="h-full w-full rounded object-cover"
-                          />
-                          {!isPremium && !video.isFree && (
-                            <div className="absolute inset-0 flex items-center justify-center rounded bg-black/50">
-                              <Lock className="h-6 w-6 text-secondary" />
-                            </div>
-                          )}
-                          <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity hover:opacity-100">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-foreground">
-                              <Play className="h-4 w-4 text-secondary" />
-                            </div>
+                course.videos.map(video => {
+                  const isCompleted = completedLessons.includes(video.id)
+                  const isCurrent = selectedVideo?.id === video.id
+                  const isLocked = !isPremium && !video.isFree
+                  const watch = lessonProgress[video.id]
+                  return (
+                    <Card
+                      key={video.id}
+                      className={cn(
+                        'group cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md',
+                        isCurrent && 'border-primary-foreground shadow-md ring-2 ring-primary-foreground/30',
+                        isCompleted && !isCurrent && 'border-green-500/60 bg-green-500/5',
+                        isLocked && 'opacity-90',
+                      )}
+                      onClick={() => handleVideoSelect(video)}
+                    >
+                      <CardContent className="p-3">
+                        <div className="flex items-start gap-3">
+                          <div className="relative h-16 w-24 flex-shrink-0">
+                            <img
+                              src={getImageUrl(video.thumbnailPath)}
+                              alt={getLocalized(video, 'title', lang)}
+                              className="h-full w-full rounded object-cover"
+                            />
+                            {isLocked && (
+                              <div className="absolute inset-0 flex items-center justify-center rounded bg-black/50">
+                                <Lock className="h-6 w-6 text-secondary" />
+                              </div>
+                            )}
+                            {isCompleted && !isLocked && (
+                              <div className="absolute inset-0 flex items-center justify-center rounded bg-green-600/70 transition-opacity">
+                                <CheckCircle2 className="h-7 w-7 text-white drop-shadow" />
+                              </div>
+                            )}
+                            {!isCompleted && !isLocked && (
+                              <div className="absolute inset-0 flex items-center justify-center rounded opacity-0 transition-opacity group-hover:opacity-100">
+                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-foreground">
+                                  <Play className="h-4 w-4 text-secondary" />
+                                </div>
+                              </div>
+                            )}
                           </div>
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2">
-                            <h4 className="truncate text-sm font-medium text-primary-foreground">
-                              {getLocalized(video, 'title', lang)}
-                            </h4>
-                            {video.isFree && (
-                              <Badge
-                                variant="secondary"
-                                className="px-1.5 py-0 text-xs"
+                          <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-2">
+                              <h4
+                                className={cn(
+                                  'truncate text-sm font-medium text-primary-foreground transition-colors',
+                                  isCompleted && 'text-green-700',
+                                )}
                               >
-                                {t('common:free', 'Free')}
-                              </Badge>
-                            )}
-                            {completedLessons.includes(video.id) && (
-                              <CheckCircle2 className="h-4 w-4 shrink-0 text-green-600" />
-                            )}
-                          </div>
-                          <div className="mt-1 flex items-center text-xs text-primary-foreground/70">
-                            <Clock className="mx-1 h-3 w-3" />
-                            <span>
-                              {Math.floor(video.duration / 60)}:
-                              {String(video.duration % 60).padStart(2, '0')}
-                            </span>
+                                {getLocalized(video, 'title', lang)}
+                              </h4>
+                              {video.isFree && !isCompleted && (
+                                <Badge
+                                  variant="secondary"
+                                  className="px-1.5 py-0 text-xs"
+                                >
+                                  {t('common:free', 'Free')}
+                                </Badge>
+                              )}
+                              {isCompleted && (
+                                <Badge className="gap-1 bg-green-600 px-1.5 py-0 text-xs text-white hover:bg-green-600">
+                                  <CheckCircle2 className="h-3 w-3" />
+                                  {t('course.completed', { defaultValue: 'Completed' })}
+                                </Badge>
+                              )}
+                              {isCurrent && !isCompleted && (
+                                <Badge variant="outline" className="px-1.5 py-0 text-xs">
+                                  ●
+                                </Badge>
+                              )}
+                            </div>
+                            <div className="mt-1 flex items-center gap-2 text-xs text-primary-foreground/70">
+                              <Clock className="mx-1 h-3 w-3" />
+                              <span>
+                                {Math.floor(video.duration / 60)}:
+                                {String(video.duration % 60).padStart(2, '0')}
+                              </span>
+                              {watch && !isCompleted && watch.watchedPercent > 0 && (
+                                <span className="tabular-nums text-primary-foreground/60">
+                                  · {Math.round(watch.watchedPercent)}%
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
+                      </CardContent>
+                    </Card>
+                  )
+                })
               ) : (
                 <p className="py-4 text-center text-muted-foreground">
                   {t('course.noVideos')}

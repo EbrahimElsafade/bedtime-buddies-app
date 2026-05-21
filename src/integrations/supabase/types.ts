@@ -82,6 +82,48 @@ export type Database = {
           },
         ]
       }
+      course_lesson_watch_progress: {
+        Row: {
+          completed_at: string | null
+          course_id: string
+          created_at: string
+          duration_seconds: number
+          id: string
+          last_watched_at: string
+          lesson_id: string
+          updated_at: string
+          user_id: string
+          watched_percent: number
+          watched_seconds: number
+        }
+        Insert: {
+          completed_at?: string | null
+          course_id: string
+          created_at?: string
+          duration_seconds?: number
+          id?: string
+          last_watched_at?: string
+          lesson_id: string
+          updated_at?: string
+          user_id: string
+          watched_percent?: number
+          watched_seconds?: number
+        }
+        Update: {
+          completed_at?: string | null
+          course_id?: string
+          created_at?: string
+          duration_seconds?: number
+          id?: string
+          last_watched_at?: string
+          lesson_id?: string
+          updated_at?: string
+          user_id?: string
+          watched_percent?: number
+          watched_seconds?: number
+        }
+        Relationships: []
+      }
       course_lessons: {
         Row: {
           course_id: string
@@ -854,6 +896,18 @@ export type Database = {
           _content_type: string
           _parent_id: string
           _user_id: string
+        }
+        Returns: Json
+      }
+      record_course_lesson_watch_progress: {
+        Args: {
+          _completion_threshold?: number
+          _course_id: string
+          _duration_seconds?: number
+          _explicit_complete?: boolean
+          _lesson_id: string
+          _user_id: string
+          _watched_seconds?: number
         }
         Returns: Json
       }
