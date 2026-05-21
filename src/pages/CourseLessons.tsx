@@ -279,12 +279,12 @@ const CourseLessons = () => {
 
                 {/* Explicit completion button — only marks lesson done when user clicks */}
                 {isAuthenticated && (isPremium || selectedVideo.isFree) && (
-                  <div className="flex flex-col gap-2 rounded-lg border border-border bg-white/60 p-3 backdrop-blur-sm sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex flex-col gap-2 rounded-lg border border-border bg-white p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex-1">
-                      <div className="mb-1 flex items-center justify-between text-xs text-primary-foreground/80">
-                        <span>{Math.round(courseProgress)}%</span>
-                        <span>
-                          {completedLessons.length}/{course.videos?.length ?? 0}
+                      <div className="mb-1 flex items-center justify-between text-xs font-medium text-primary-foreground/80">
+                        <span className="tabular-nums">{Math.round(courseProgress)}%</span>
+                        <span className="tabular-nums">
+                          {completedLessons.length}/{totalLessons}
                         </span>
                       </div>
                       <Progress
@@ -301,7 +301,7 @@ const CourseLessons = () => {
                           ? 'secondary'
                           : 'default'
                       }
-                      className="shrink-0 transition-all"
+                      className="shrink-0 transition-all duration-300"
                     >
                       <CheckCircle2 className="me-2 h-4 w-4" />
                       {completedLessons.includes(selectedVideo.id)
