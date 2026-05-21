@@ -96,10 +96,23 @@ const CourseLessons = () => {
   }
 
   const handleMarkCompleted = async () => {
-    if (!courseId || !selectedVideo) return
+    if (!courseId || !selectedVideo || !user) return
     if (completedLessons.includes(selectedVideo.id)) return
-    await recordProgress('course_lesson', selectedVideo.id, courseId)
-    await refetchProgress()
+    const duration = selectedVideo.duration || 0
+    await supabase.rpc('record_course_lesson_watch_progress', {
+      _user_id: user.id,
+      _course_id: courseId,
+      _lesson_id: selectedVideo.id,
+      _watched_seconds: duration,
+      _duration_seconds: duration,
+      _explicit_complete: true,
+      _completion_threshold: 85,
+    })
+    await Promise.all([
+      refetchProgress(),
+      refreshStats(),
+      refreshFinishedContent(),
+    ])
   }
 
   const handleVideoEnd = () => {
