@@ -22,6 +22,7 @@ import { useGamification } from '@/hooks/useGamification'
 import { CoursePremiumModal } from '@/components/course/CoursePremiumModal'
 import { CourseCertificateSection } from '@/components/course/CourseCertificateSection'
 import { useCourseProgress } from '@/hooks/useCourseProgress'
+import { supabase } from '@/integrations/supabase/client'
 
 const CourseLessons = () => {
   const { id: courseId } = useParams<{ id: string }>()
