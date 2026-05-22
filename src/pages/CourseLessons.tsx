@@ -97,30 +97,35 @@ const CourseLessons = () => {
     // click "Mark as completed" to count the lesson toward course progress.
   }
 
-  const handleMarkCompleted = async () => {
-    if (!courseId || !selectedVideo) {
-      toast({ title: 'Cannot mark complete', description: 'Missing course or lesson.', variant: 'destructive' })
-      return
-    }
-    if (!user) {
-      toast({ title: 'Sign in required', description: 'Please log in to track progress.' })
-      navigate('/login')
-      return
-    }
-    if (completedLessons.includes(selectedVideo.id)) return
-    const duration = Math.max(selectedVideo.duration || 0, 1)
+  // Auto-track watch time for the currently selected lesson and persist
+  // progress to Supabase. The RPC marks the lesson complete automatically
+  // once watched/duration crosses the 85% threshold — no manual button.
+  const watchedRef = useRef<Record<string, number>>({})
+  const lastSavedRef = useRef<Record<string, number>>({})
+
+  const persistWatchProgress = async (
+    lessonId: string,
+    durationSec: number,
+    explicit = false,
+  ) => {
+    if (!courseId || !user) return
+    const watched = Math.min(
+      Math.round(watchedRef.current[lessonId] ?? 0),
+      Math.max(durationSec, 1),
+    )
+    if (!explicit && watched - (lastSavedRef.current[lessonId] ?? 0) < 5) return
+    lastSavedRef.current[lessonId] = watched
     const { error } = await supabase.rpc('record_course_lesson_watch_progress', {
       _user_id: user.id,
       _course_id: courseId,
-      _lesson_id: selectedVideo.id,
-      _watched_seconds: duration,
-      _duration_seconds: duration,
-      _explicit_complete: true,
+      _lesson_id: lessonId,
+      _watched_seconds: watched,
+      _duration_seconds: Math.max(durationSec, 1),
+      _explicit_complete: false,
       _completion_threshold: 85,
     })
     if (error) {
       console.error('record_course_lesson_watch_progress error', error)
-      toast({ title: 'Failed to save progress', description: error.message, variant: 'destructive' })
       return
     }
     await Promise.all([
@@ -128,11 +133,50 @@ const CourseLessons = () => {
       refreshStats(),
       refreshFinishedContent(),
     ])
-    toast({ title: t('course.completed', { defaultValue: 'Completed' }) })
   }
+
+  useEffect(() => {
+    if (!selectedVideo || !user || !courseId) return
+    if (!isPremium && !selectedVideo.isFree) return
+    const lessonId = selectedVideo.id
+    const durationSec = Math.max(selectedVideo.duration || 0, 1)
+    if (completedLessons.includes(lessonId)) return
+
+    const tickInterval = setInterval(() => {
+      if (document.visibilityState !== 'visible') return
+      const current = watchedRef.current[lessonId] ?? 0
+      if (current >= durationSec) return
+      watchedRef.current[lessonId] = current + 1
+    }, 1000)
+
+    const saveInterval = setInterval(() => {
+      persistWatchProgress(lessonId, durationSec)
+    }, 10000)
+
+    const onHide = () => {
+      if (document.visibilityState === 'hidden') {
+        persistWatchProgress(lessonId, durationSec)
+      }
+    }
+    document.addEventListener('visibilitychange', onHide)
+
+    return () => {
+      clearInterval(tickInterval)
+      clearInterval(saveInterval)
+      document.removeEventListener('visibilitychange', onHide)
+      persistWatchProgress(lessonId, durationSec, true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedVideo?.id, user?.id, courseId, isPremium])
 
   const handleVideoEnd = () => {
     if (!course?.videos || !selectedVideo) return
+
+    // Mark current lesson as fully watched on natural end.
+    const lessonId = selectedVideo.id
+    const durationSec = Math.max(selectedVideo.duration || 0, 1)
+    watchedRef.current[lessonId] = durationSec
+    persistWatchProgress(lessonId, durationSec, true)
 
     const currentIndex = course.videos.findIndex(v => v.id === selectedVideo.id)
     const nextIndex = currentIndex + 1
