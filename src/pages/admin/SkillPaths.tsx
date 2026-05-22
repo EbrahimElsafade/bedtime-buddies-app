@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { useSkillPaths } from '@/hooks/useSkillPaths'
 import { getMultilingualText } from '@/utils/multilingualUtils'
+import MaterialIcon from '@/components/ui/MaterialIcon'
 
 const AdminSkillPaths = () => {
   const navigate = useNavigate()
