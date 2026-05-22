@@ -1,6 +1,8 @@
 import { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
+import MaterialIcon from '@/components/ui/MaterialIcon'
 import type { SkillPathTheme } from './skillPathThemes'
+
 
 interface HeroSkillPathCardProps {
   icon: ReactNode
