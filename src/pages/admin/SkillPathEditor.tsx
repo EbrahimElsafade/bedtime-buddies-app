@@ -130,8 +130,30 @@ const SkillPathEditor = () => {
         <CardContent className="grid gap-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-[120px_1fr_120px]">
             <div>
-              <Label>Icon (emoji)</Label>
-              <Input value={icon} onChange={(e) => setIcon(e.target.value)} maxLength={4} />
+              <Label>Icon</Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  value={icon}
+                  onChange={(e) => setIcon(e.target.value)}
+                  placeholder="e.g. code"
+                />
+                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-md border bg-muted">
+                  <MaterialIcon name={icon} className="text-2xl" />
+                </div>
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Google Material Symbol name (e.g. <code>code</code>, <code>palette</code>,{' '}
+                <code>psychology</code>). Browse names at{' '}
+                <a
+                  href="https://fonts.google.com/icons"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline"
+                >
+                  fonts.google.com/icons
+                </a>
+                . Emojis still work for backward compatibility.
+              </p>
             </div>
             <div>
               <Label>Name (EN) *</Label>
