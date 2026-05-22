@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { ArrowLeft, Clock, Play, Lock, ChevronLeft, CheckCircle2 } from 'lucide-react'
@@ -97,30 +97,35 @@ const CourseLessons = () => {
     // click "Mark as completed" to count the lesson toward course progress.
   }
 
-  const handleMarkCompleted = async () => {
-    if (!courseId || !selectedVideo) {
-      toast({ title: 'Cannot mark complete', description: 'Missing course or lesson.', variant: 'destructive' })
-      return
-    }
-    if (!user) {
-      toast({ title: 'Sign in required', description: 'Please log in to track progress.' })
-      navigate('/login')
-      return
-    }
-    if (completedLessons.includes(selectedVideo.id)) return
-    const duration = Math.max(selectedVideo.duration || 0, 1)
+  // Auto-track watch time for the currently selected lesson and persist
+  // progress to Supabase. The RPC marks the lesson complete automatically
+  // once watched/duration crosses the 85% threshold — no manual button.
+  const watchedRef = useRef<Record<string, number>>({})
+  const lastSavedRef = useRef<Record<string, number>>({})
+
+  const persistWatchProgress = async (
+    lessonId: string,
+    durationSec: number,
+    explicit = false,
+  ) => {
+    if (!courseId || !user) return
+    const watched = Math.min(
+      Math.round(watchedRef.current[lessonId] ?? 0),
+      Math.max(durationSec, 1),
+    )
+    if (!explicit && watched - (lastSavedRef.current[lessonId] ?? 0) < 5) return
+    lastSavedRef.current[lessonId] = watched
     const { error } = await supabase.rpc('record_course_lesson_watch_progress', {
       _user_id: user.id,
       _course_id: courseId,
-      _lesson_id: selectedVideo.id,
-      _watched_seconds: duration,
-      _duration_seconds: duration,
-      _explicit_complete: true,
+      _lesson_id: lessonId,
+      _watched_seconds: watched,
+      _duration_seconds: Math.max(durationSec, 1),
+      _explicit_complete: false,
       _completion_threshold: 85,
     })
     if (error) {
       console.error('record_course_lesson_watch_progress error', error)
-      toast({ title: 'Failed to save progress', description: error.message, variant: 'destructive' })
       return
     }
     await Promise.all([
@@ -128,11 +133,50 @@ const CourseLessons = () => {
       refreshStats(),
       refreshFinishedContent(),
     ])
-    toast({ title: t('course.completed', { defaultValue: 'Completed' }) })
   }
+
+  useEffect(() => {
+    if (!selectedVideo || !user || !courseId) return
+    if (!isPremium && !selectedVideo.isFree) return
+    const lessonId = selectedVideo.id
+    const durationSec = Math.max(selectedVideo.duration || 0, 1)
+    if (completedLessons.includes(lessonId)) return
+
+    const tickInterval = setInterval(() => {
+      if (document.visibilityState !== 'visible') return
+      const current = watchedRef.current[lessonId] ?? 0
+      if (current >= durationSec) return
+      watchedRef.current[lessonId] = current + 1
+    }, 1000)
+
+    const saveInterval = setInterval(() => {
+      persistWatchProgress(lessonId, durationSec)
+    }, 10000)
+
+    const onHide = () => {
+      if (document.visibilityState === 'hidden') {
+        persistWatchProgress(lessonId, durationSec)
+      }
+    }
+    document.addEventListener('visibilitychange', onHide)
+
+    return () => {
+      clearInterval(tickInterval)
+      clearInterval(saveInterval)
+      document.removeEventListener('visibilitychange', onHide)
+      persistWatchProgress(lessonId, durationSec, true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedVideo?.id, user?.id, courseId, isPremium])
 
   const handleVideoEnd = () => {
     if (!course?.videos || !selectedVideo) return
+
+    // Mark current lesson as fully watched on natural end.
+    const lessonId = selectedVideo.id
+    const durationSec = Math.max(selectedVideo.duration || 0, 1)
+    watchedRef.current[lessonId] = durationSec
+    persistWatchProgress(lessonId, durationSec, true)
 
     const currentIndex = course.videos.findIndex(v => v.id === selectedVideo.id)
     const nextIndex = currentIndex + 1
@@ -292,39 +336,27 @@ const CourseLessons = () => {
                   </div>
                 </div>
 
-                {/* Explicit completion button — only marks lesson done when user clicks */}
+                {/* Auto-tracked course progress — completion is granted as you watch */}
                 {isAuthenticated && (isPremium || selectedVideo.isFree) && (
-                  <div className="flex flex-col gap-2 rounded-lg border border-border bg-white p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex-1">
-                      <div className="mb-1 flex items-center justify-between text-xs font-medium text-primary-foreground/80">
-                        <span className="tabular-nums">{Math.round(courseProgress)}%</span>
+                  <div className="flex flex-col gap-2 rounded-lg border border-border bg-white p-3 shadow-sm">
+                    <div className="flex items-center justify-between text-xs font-medium text-primary-foreground/80">
+                      <span className="flex items-center gap-2">
+                        {completedLessons.includes(selectedVideo.id) && (
+                          <CheckCircle2 className="h-4 w-4 text-green-600" />
+                        )}
                         <span className="tabular-nums">
-                          {completedLessons.length}/{totalLessons}
+                          {Math.round(courseProgress)}%
                         </span>
-                      </div>
-                      <Progress
-                        value={courseProgress}
-                        className="sp-progress--animated h-2"
-                        indicatorClassName="sp-progress-indicator--animated"
-                      />
+                      </span>
+                      <span className="tabular-nums">
+                        {completedLessons.length}/{totalLessons}
+                      </span>
                     </div>
-                    <Button
-                      onClick={handleMarkCompleted}
-                      disabled={completedLessons.includes(selectedVideo.id)}
-                      variant={
-                        completedLessons.includes(selectedVideo.id)
-                          ? 'secondary'
-                          : 'default'
-                      }
-                      className="shrink-0 transition-all duration-300"
-                    >
-                      <CheckCircle2 className="me-2 h-4 w-4" />
-                      {completedLessons.includes(selectedVideo.id)
-                        ? t('course.completed', { defaultValue: 'Completed' })
-                        : t('course.markCompleted', {
-                            defaultValue: 'Mark as completed',
-                          })}
-                    </Button>
+                    <Progress
+                      value={courseProgress}
+                      className="sp-progress--animated h-2"
+                      indicatorClassName="sp-progress-indicator--animated"
+                    />
                   </div>
                 )}
               </div>
