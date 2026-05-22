@@ -14,6 +14,7 @@ import { useSkillPath } from '@/hooks/useSkillPaths'
 import { useCoursesData } from '@/hooks/useCourseData'
 import { getLocalized } from '@/utils/getLocalized'
 import { SKILL_PATH_THEMES, type SkillPathTheme } from '@/components/home/skillPathThemes'
+import MaterialIcon from '@/components/ui/MaterialIcon'
 
 const SkillPathEditor = () => {
   const { id } = useParams<{ id: string }>()
