@@ -1,7 +1,9 @@
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
+import MaterialIcon from '@/components/ui/MaterialIcon'
 import type { SkillPathTheme } from './skillPathThemes'
+
 
 interface SkillPathCardProps {
   icon: ReactNode
