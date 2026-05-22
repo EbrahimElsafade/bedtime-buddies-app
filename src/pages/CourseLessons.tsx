@@ -336,39 +336,27 @@ const CourseLessons = () => {
                   </div>
                 </div>
 
-                {/* Explicit completion button — only marks lesson done when user clicks */}
+                {/* Auto-tracked course progress — completion is granted as you watch */}
                 {isAuthenticated && (isPremium || selectedVideo.isFree) && (
-                  <div className="flex flex-col gap-2 rounded-lg border border-border bg-white p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
-                    <div className="flex-1">
-                      <div className="mb-1 flex items-center justify-between text-xs font-medium text-primary-foreground/80">
-                        <span className="tabular-nums">{Math.round(courseProgress)}%</span>
+                  <div className="flex flex-col gap-2 rounded-lg border border-border bg-white p-3 shadow-sm">
+                    <div className="flex items-center justify-between text-xs font-medium text-primary-foreground/80">
+                      <span className="flex items-center gap-2">
+                        {completedLessons.includes(selectedVideo.id) && (
+                          <CheckCircle2 className="h-4 w-4 text-green-600" />
+                        )}
                         <span className="tabular-nums">
-                          {completedLessons.length}/{totalLessons}
+                          {Math.round(courseProgress)}%
                         </span>
-                      </div>
-                      <Progress
-                        value={courseProgress}
-                        className="sp-progress--animated h-2"
-                        indicatorClassName="sp-progress-indicator--animated"
-                      />
+                      </span>
+                      <span className="tabular-nums">
+                        {completedLessons.length}/{totalLessons}
+                      </span>
                     </div>
-                    <Button
-                      onClick={handleMarkCompleted}
-                      disabled={completedLessons.includes(selectedVideo.id)}
-                      variant={
-                        completedLessons.includes(selectedVideo.id)
-                          ? 'secondary'
-                          : 'default'
-                      }
-                      className="shrink-0 transition-all duration-300"
-                    >
-                      <CheckCircle2 className="me-2 h-4 w-4" />
-                      {completedLessons.includes(selectedVideo.id)
-                        ? t('course.completed', { defaultValue: 'Completed' })
-                        : t('course.markCompleted', {
-                            defaultValue: 'Mark as completed',
-                          })}
-                    </Button>
+                    <Progress
+                      value={courseProgress}
+                      className="sp-progress--animated h-2"
+                      indicatorClassName="sp-progress-indicator--animated"
+                    />
                   </div>
                 )}
               </div>
