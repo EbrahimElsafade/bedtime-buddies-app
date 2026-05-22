@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { useSkillPaths } from '@/hooks/useSkillPaths'
 import { getMultilingualText } from '@/utils/multilingualUtils'
+import MaterialIcon from '@/components/ui/MaterialIcon'
 
 const AdminSkillPaths = () => {
   const navigate = useNavigate()
@@ -66,7 +67,7 @@ const AdminSkillPaths = () => {
                   className="flex items-center justify-between rounded-lg border p-4"
                 >
                   <div className="flex items-center gap-4">
-                    <span className="text-3xl">{p.icon}</span>
+                    <MaterialIcon name={p.icon} className="text-3xl" />
                     <div>
                       <p className="font-semibold">
                         {getMultilingualText(p.name, 'en', 'en') || '(untitled)'}

@@ -1,7 +1,9 @@
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
+import MaterialIcon from '@/components/ui/MaterialIcon'
 import type { SkillPathTheme } from './skillPathThemes'
+
 
 interface SkillPathCardProps {
   icon: ReactNode
@@ -37,7 +39,7 @@ const SkillPathCard = ({
         className="pointer-events-none absolute -bottom-6 -right-4 z-0 select-none text-[8rem] leading-none grayscale rtl:-right-auto rtl:-left-4"
         style={{ opacity: 0.5, filter: 'grayscale(100%) brightness(0) invert(1)' }}
       >
-        {icon}
+        <MaterialIcon name={icon} className="text-[8rem]" />
       </div>
 
       <div className="relative z-10">
