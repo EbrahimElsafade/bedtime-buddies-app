@@ -38,7 +38,7 @@ const HeroSkillPathCard = ({
         className="pointer-events-none absolute -bottom-4 -right-2 z-0 select-none text-[5rem] leading-none rtl:-right-auto rtl:-left-2"
         style={{ opacity: 0.5, filter: 'grayscale(100%) brightness(0) invert(1)' }}
       >
-        {icon}
+        <MaterialIcon name={icon} className="text-[5rem]" />
       </div>
 
       {/* Text content */}
