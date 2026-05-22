@@ -77,7 +77,8 @@
   }
 
   /* Apply Cairo font for Arabic content */
-  html[lang="ar"] body:not(.material-symbols-rounded) html[lang="ar"] *:not(.material-symbols-rounded) {
+  html[lang="ar"] body:not(.material-symbols-rounded),
+  html[lang="ar"] *:not(.material-symbols-rounded) {
     font-family: "Cairo", sans-serif !important;
   }
 
