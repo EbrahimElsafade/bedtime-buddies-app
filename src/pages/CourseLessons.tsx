@@ -14,7 +14,7 @@ import { useCourseData } from '@/hooks/useCourseData'
 import { useAuth } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
 import GoogleDrivePlayer from '@/components/course/GoogleDrivePlayer'
-import { getImageUrl } from '@/utils/imageUtils'
+
 import { getLocalized } from '@/utils/getLocalized'
 import { useTranslation } from 'react-i18next'
 import { useGamification } from '@/hooks/useGamification'
