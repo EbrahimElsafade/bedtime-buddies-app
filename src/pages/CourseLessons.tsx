@@ -5,7 +5,7 @@ import { ArrowLeft, Clock, Play, Lock, ChevronLeft, CheckCircle2 } from 'lucide-
 import { useLoading } from '@/contexts/LoadingContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
+
 import { Progress } from '@/components/ui/progress'
 
 import { Dialog, DialogContent } from '@/components/ui/dialog'
