@@ -33,17 +33,17 @@ const SkillPathCard = ({
         `sp-theme--${theme}`,
       )}
     >
-      {/* Decorative background icon — emerges from lower area of the card */}
+      {/* Decorative background icon — right side for LTR, left side for RTL/Arabic */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-6 -right-4 z-0 select-none text-[8rem] leading-none grayscale rtl:-right-auto rtl:-left-4"
+        className="pointer-events-none absolute -bottom-6 -right-4 z-0 select-none text-[8rem] leading-none grayscale rtl:right-auto rtl:-left-4"
         style={{ opacity: 0.5, filter: 'grayscale(100%) brightness(0) invert(1)' }}
       >
         <MaterialIcon name={icon} className="text-[8rem]" />
       </div>
 
-      <div className="relative z-10">
-        <h3 className="mb-2 font-bold text-current drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)]">
+      <div className="relative z-10 rtl:pl-24">
+        <h3 className="mb-2 mt-4 text-[2rem] font-bold leading-tight text-current drop-shadow-[0_1px_4px_rgba(0,0,0,0.4)] md:text-[2rem] sm:text-2xl">
           {title}
         </h3>
         {showDescription && description && (

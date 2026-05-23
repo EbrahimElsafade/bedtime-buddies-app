@@ -5,7 +5,7 @@ import { ArrowLeft, Clock, Play, Lock, ChevronLeft, CheckCircle2 } from 'lucide-
 import { useLoading } from '@/contexts/LoadingContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
+
 import { Progress } from '@/components/ui/progress'
 
 import { Dialog, DialogContent } from '@/components/ui/dialog'
@@ -14,7 +14,7 @@ import { useCourseData } from '@/hooks/useCourseData'
 import { useAuth } from '@/contexts/AuthContext'
 import { cn } from '@/lib/utils'
 import GoogleDrivePlayer from '@/components/course/GoogleDrivePlayer'
-import { getImageUrl } from '@/utils/imageUtils'
+
 import { getLocalized } from '@/utils/getLocalized'
 import { useTranslation } from 'react-i18next'
 import { useGamification } from '@/hooks/useGamification'
@@ -264,180 +264,172 @@ const CourseLessons = () => {
           />
         </div>
 
-        {/* Content */}
-        <div className="flex flex-col gap-8 lg:flex-row">
-          {/* Video Player */}
-          <div className="lg:flex-[2]">
-            {selectedVideo ? (
-              <div className="grid gap-4">
-                <div className="aspect-video overflow-hidden rounded-lg bg-black">
-                  {selectedVideo.videoUrl ? (
-                    <GoogleDrivePlayer
-                      fileId={selectedVideo.videoUrl}
-                      title={getLocalized(selectedVideo, 'title', lang)}
-                      className="rounded-lg"
-                      onVideoEnd={handleVideoEnd}
-                      showCountdownOnEnd={getNextVideoExists()}
-                      
-                    />
-                  ) : selectedVideo.videoPath ? (
-                    <div className="flex h-full items-center justify-center text-secondary">
-                      <p>{t('course.legacyVideoFormat')}</p>
-                    </div>
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-secondary">
-                      <p>{t('course.noVideoSource')}</p>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <h3 className="mb-2 font-bubbly text-xl text-primary-foreground">
-                    {getLocalized(selectedVideo, 'title', lang)}
-                  </h3>
-
-                  <div className="mb-2 flex items-center gap-2 text-sm text-primary-foreground">
-                    <Clock className="size-4" />
-
-                    <span>
-                      {Math.floor(selectedVideo.duration / 60)}:
-                      {String(selectedVideo.duration % 60).padStart(2, '0')}{' '}
-                      {t('duration')}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Auto-tracked course progress — completion is granted as you watch */}
-                {isAuthenticated && (isPremium || selectedVideo.isFree) && (
-                  <div className="flex flex-col gap-2 rounded-lg border border-border bg-white p-3 shadow-sm">
-                    <div className="flex items-center justify-between text-xs font-medium text-primary-foreground/80">
-                      <span className="flex items-center gap-2">
-                        {completedLessons.includes(selectedVideo.id) && (
-                          <CheckCircle2 className="h-4 w-4 text-green-600" />
-                        )}
-                        <span className="tabular-nums">
-                          {Math.round(courseProgress)}%
-                        </span>
-                      </span>
-                      <span className="tabular-nums">
-                        {completedLessons.length}/{totalLessons}
-                      </span>
-                    </div>
-                    <Progress
-                      value={courseProgress}
-                      className="sp-progress--animated h-2"
-                      indicatorClassName="sp-progress-indicator--animated"
-                    />
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="flex aspect-video items-center justify-center rounded-lg bg-secondary">
-                <p className="text-center text-muted-foreground">
-                  {t('course.selectVideo')}
+        {/* Unified Course Player Container */}
+        <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-xl">
+          <div className="flex flex-col lg:flex-row">
+            {/* Lessons sidebar */}
+            <aside className="order-2 w-full border-t border-border bg-secondary/40 lg:order-1 lg:max-h-[calc(100vh-10rem)] lg:w-[340px] lg:flex-shrink-0 lg:overflow-y-auto lg:border-r lg:border-t-0 rtl:lg:border-l rtl:lg:border-r-0">
+              <div className="sticky top-0 z-10 border-b border-border bg-white/95 px-4 py-3 backdrop-blur">
+                <h2 className="font-bubbly text-sm font-bold text-primary-foreground">
+                  {t('course.lessons')}
+                </h2>
+                <p className="mt-0.5 text-xs text-primary-foreground/60 tabular-nums">
+                  {completedLessons.length}/{totalLessons} · {Math.round(courseProgress)}%
                 </p>
               </div>
-            )}
-          </div>
-
-          {/* Video List */}
-          <div className="max-h-[55vh] pe-4 flex-1 overflow-y-scroll">
-            <div className="space-y-3">
-              {course.videos && course.videos.length > 0 ? (
-                course.videos.map(video => {
-                  const isCompleted = completedLessons.includes(video.id)
-                  const isCurrent = selectedVideo?.id === video.id
-                  const isLocked = !isPremium && !video.isFree
-                  const watch = lessonProgress[video.id]
-                  return (
-                    <Card
-                      key={video.id}
-                      className={cn(
-                        'group cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md',
-                        isCurrent && 'border-primary-foreground shadow-md ring-2 ring-primary-foreground/30',
-                        isCompleted && !isCurrent && 'border-green-500/60 bg-green-500/5',
-                        isLocked && 'opacity-90',
-                      )}
-                      onClick={() => handleVideoSelect(video)}
-                    >
-                      <CardContent className="p-3">
-                        <div className="flex items-start gap-3">
-                          <div className="relative h-16 w-24 flex-shrink-0">
-                            <img
-                              src={getImageUrl(video.thumbnailPath)}
-                              alt={getLocalized(video, 'title', lang)}
-                              className="h-full w-full rounded object-cover"
-                            />
-                            {isLocked && (
-                              <div className="absolute inset-0 flex items-center justify-center rounded bg-black/50">
-                                <Lock className="h-6 w-6 text-secondary" />
-                              </div>
-                            )}
-                            {isCompleted && !isLocked && (
-                              <div className="absolute inset-0 flex items-center justify-center rounded bg-green-600/70 transition-opacity">
-                                <CheckCircle2 className="h-7 w-7 text-white drop-shadow" />
-                              </div>
-                            )}
-                            {!isCompleted && !isLocked && (
-                              <div className="absolute inset-0 flex items-center justify-center rounded opacity-0 transition-opacity group-hover:opacity-100">
-                                <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-foreground">
-                                  <Play className="h-4 w-4 text-secondary" />
-                                </div>
-                              </div>
+              <div className="space-y-2 p-3">
+                {course.videos && course.videos.length > 0 ? (
+                  course.videos.map((video, idx) => {
+                    const isCompleted = completedLessons.includes(video.id)
+                    const isCurrent = selectedVideo?.id === video.id
+                    const isLocked = !isPremium && !video.isFree
+                    const watch = lessonProgress[video.id]
+                    return (
+                      <button
+                        key={video.id}
+                        onClick={() => handleVideoSelect(video)}
+                        className={cn(
+                          'group flex w-full items-start gap-3 rounded-xl border border-transparent p-3 text-left transition-all duration-200 hover:bg-white hover:shadow-sm rtl:text-right',
+                          isCurrent &&
+                            'border-primary-foreground/30 bg-white shadow-md ring-1 ring-primary-foreground/20',
+                          isCompleted && !isCurrent && 'border-green-500/30 bg-green-500/5',
+                          isLocked && 'opacity-80',
+                        )}
+                      >
+                        <div
+                          className={cn(
+                            'flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold tabular-nums transition-colors',
+                            isCompleted
+                              ? 'bg-green-600 text-white'
+                              : isCurrent
+                              ? 'bg-primary-foreground text-white'
+                              : isLocked
+                              ? 'bg-muted text-muted-foreground'
+                              : 'bg-secondary text-primary-foreground',
+                          )}
+                        >
+                          {isCompleted ? (
+                            <CheckCircle2 className="h-4 w-4" />
+                          ) : isLocked ? (
+                            <Lock className="h-3.5 w-3.5" />
+                          ) : isCurrent ? (
+                            <Play className="h-3.5 w-3.5 fill-current" />
+                          ) : (
+                            idx + 1
+                          )}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5">
+                            <h4
+                              className={cn(
+                                'truncate text-sm font-medium text-primary-foreground',
+                                isCompleted && 'text-green-700',
+                              )}
+                            >
+                              {getLocalized(video, 'title', lang)}
+                            </h4>
+                            {video.isFree && !isCompleted && (
+                              <Badge variant="secondary" className="px-1 py-0 text-[10px]">
+                                {t('common:free', 'Free')}
+                              </Badge>
                             )}
                           </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2">
-                              <h4
-                                className={cn(
-                                  'truncate text-sm font-medium text-primary-foreground transition-colors',
-                                  isCompleted && 'text-green-700',
-                                )}
-                              >
-                                {getLocalized(video, 'title', lang)}
-                              </h4>
-                              {video.isFree && !isCompleted && (
-                                <Badge
-                                  variant="secondary"
-                                  className="px-1.5 py-0 text-xs"
-                                >
-                                  {t('common:free', 'Free')}
-                                </Badge>
-                              )}
-                              {isCompleted && (
-                                <Badge className="gap-1 bg-green-600 px-1.5 py-0 text-xs text-white hover:bg-green-600">
-                                  <CheckCircle2 className="h-3 w-3" />
-                                  {t('course.completed', { defaultValue: 'Completed' })}
-                                </Badge>
-                              )}
-                              {isCurrent && !isCompleted && (
-                                <Badge variant="outline" className="px-1.5 py-0 text-xs">
-                                  ●
-                                </Badge>
-                              )}
-                            </div>
-                            <div className="mt-1 flex items-center gap-2 text-xs text-primary-foreground/70">
-                              <Clock className="mx-1 h-3 w-3" />
-                              <span>
-                                {Math.floor(video.duration / 60)}:
-                                {String(video.duration % 60).padStart(2, '0')}
+                          <div className="mt-1 flex items-center gap-2 text-xs text-primary-foreground/60">
+                            <Clock className="h-3 w-3" />
+                            <span className="tabular-nums">
+                              {Math.floor(video.duration / 60)}:
+                              {String(video.duration % 60).padStart(2, '0')}
+                            </span>
+                            {watch && !isCompleted && watch.watchedPercent > 0 && (
+                              <span className="tabular-nums text-primary-foreground/50">
+                                · {Math.round(watch.watchedPercent)}%
                               </span>
-                              {watch && !isCompleted && watch.watchedPercent > 0 && (
-                                <span className="tabular-nums text-primary-foreground/60">
-                                  · {Math.round(watch.watchedPercent)}%
-                                </span>
-                              )}
-                            </div>
+                            )}
                           </div>
                         </div>
-                      </CardContent>
-                    </Card>
-                  )
-                })
+                      </button>
+                    )
+                  })
+                ) : (
+                  <p className="py-4 text-center text-sm text-muted-foreground">
+                    {t('course.noVideos')}
+                  </p>
+                )}
+              </div>
+            </aside>
+
+            {/* Video player */}
+            <div className="order-1 flex-1 bg-white lg:order-2">
+              {selectedVideo ? (
+                <div className="flex flex-col">
+                  <div className="aspect-video w-full overflow-hidden bg-black">
+                    {selectedVideo.videoUrl ? (
+                      <GoogleDrivePlayer
+                        fileId={selectedVideo.videoUrl}
+                        title={getLocalized(selectedVideo, 'title', lang)}
+                        className=""
+                        onVideoEnd={handleVideoEnd}
+                        showCountdownOnEnd={getNextVideoExists()}
+                      />
+                    ) : selectedVideo.videoPath ? (
+                      <div className="flex h-full items-center justify-center text-white">
+                        <p>{t('course.legacyVideoFormat')}</p>
+                      </div>
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-white">
+                        <p>{t('course.noVideoSource')}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-4 p-5">
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-bubbly text-xl text-primary-foreground md:text-2xl">
+                          {getLocalized(selectedVideo, 'title', lang)}
+                        </h3>
+                        <div className="mt-1 flex items-center gap-2 text-sm text-primary-foreground/70">
+                          <Clock className="h-4 w-4" />
+                          <span className="tabular-nums">
+                            {Math.floor(selectedVideo.duration / 60)}:
+                            {String(selectedVideo.duration % 60).padStart(2, '0')}{' '}
+                            {t('duration')}
+                          </span>
+                        </div>
+                      </div>
+                      {completedLessons.includes(selectedVideo.id) && (
+                        <Badge className="gap-1 bg-green-600 text-white hover:bg-green-600">
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          {t('course.completed', { defaultValue: 'Completed' })}
+                        </Badge>
+                      )}
+                    </div>
+
+                    {isAuthenticated && (isPremium || selectedVideo.isFree) && (
+                      <div className="flex flex-col gap-2 rounded-xl border border-border bg-secondary/40 p-3">
+                        <div className="flex items-center justify-between text-xs font-medium text-primary-foreground/80">
+                          <span className="tabular-nums">
+                            {Math.round(courseProgress)}%
+                          </span>
+                          <span className="tabular-nums">
+                            {completedLessons.length}/{totalLessons}
+                          </span>
+                        </div>
+                        <Progress
+                          value={courseProgress}
+                          className="sp-progress--animated h-2"
+                          indicatorClassName="sp-progress-indicator--animated"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
               ) : (
-                <p className="py-4 text-center text-muted-foreground">
-                  {t('course.noVideos')}
-                </p>
+                <div className="flex aspect-video items-center justify-center bg-secondary">
+                  <p className="text-center text-muted-foreground">
+                    {t('course.selectVideo')}
+                  </p>
+                </div>
               )}
             </div>
           </div>

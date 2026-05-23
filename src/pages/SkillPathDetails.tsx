@@ -5,6 +5,7 @@ import { BookOpen, Clock } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
+import MaterialIcon from '@/components/ui/MaterialIcon'
 import { useSkillPath, useSkillPathProgress } from '@/hooks/useSkillPaths'
 import { useCoursesData } from '@/hooks/useCourseData'
 import { getLocalized } from '@/utils/getLocalized'
@@ -42,7 +43,9 @@ const SkillPathDetails = () => {
       <div className="container mx-auto max-w-7xl">
         <div className="mb-8 rounded-2xl border border-white/10 bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 p-6 backdrop-blur-xl">
           <div className="mb-4 flex items-center gap-4">
-            <div className="text-5xl">{path.icon}</div>
+            <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-2xl bg-white/10 text-primary-foreground">
+              <MaterialIcon name={path.icon} className="text-5xl" />
+            </div>
             <div className="flex-1">
               <h1 className="text-2xl font-bold md:text-3xl">{title}</h1>
               {description && <p className="text-muted-foreground">{description}</p>}
@@ -55,7 +58,11 @@ const SkillPathDetails = () => {
                 {stats.completed} / {stats.total} {t('skillPaths:skillPaths.courses')}
               </span>
             </div>
-            <Progress value={progress} />
+            <Progress
+              value={progress}
+              className="sp-progress--animated h-2"
+              indicatorClassName="sp-progress-indicator--animated"
+            />
           </div>
         </div>
 
