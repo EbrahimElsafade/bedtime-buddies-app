@@ -362,21 +362,20 @@ const CourseLessons = () => {
             <div className="order-1 flex-1 bg-white lg:order-2">
               {selectedVideo ? (
                 <div className="flex flex-col">
-                  <div className="aspect-video w-full overflow-hidden bg-black">
+                  <div className="w-full bg-black">
                     {selectedVideo.videoUrl ? (
                       <GoogleDrivePlayer
                         fileId={selectedVideo.videoUrl}
                         title={getLocalized(selectedVideo, 'title', lang)}
-                        className=""
                         onVideoEnd={handleVideoEnd}
                         showCountdownOnEnd={getNextVideoExists()}
                       />
                     ) : selectedVideo.videoPath ? (
-                      <div className="flex h-full items-center justify-center text-white">
+                      <div className="flex aspect-video items-center justify-center text-white">
                         <p>{t('course.legacyVideoFormat')}</p>
                       </div>
                     ) : (
-                      <div className="flex h-full items-center justify-center text-white">
+                      <div className="flex aspect-video items-center justify-center text-white">
                         <p>{t('course.noVideoSource')}</p>
                       </div>
                     )}
