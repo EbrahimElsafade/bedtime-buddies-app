@@ -31,12 +31,16 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "
   const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
   const thumbUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`;
 
-  // On mobile: show thumbnail + play button. Tap plays inline (no popup overlay).
   if (isMobile) {
     return (
       <div className={cn("relative w-full overflow-hidden bg-black", "aspect-[16/18]", className)}>
         {!playing ? (
-          <button type="button" onClick={() => setPlaying(true)} aria-label={`Play ${title}`} className="group ">
+          <button
+            type="button"
+            onClick={() => setPlaying(true)}
+            aria-label={`Play ${title}`}
+            className="group absolute inset-0 w-full h-full"
+          >
             <img
               src={thumbUrl}
               alt={title}
@@ -52,13 +56,22 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "
             </div>
           </button>
         ) : (
-          <iframe
-            src={embedUrl + "?autoplay=1"}
-            title={title}
-            className="absolute inset-0 h-full w-full border-0"
-            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-            allowFullScreen
-          />
+          <div className="absolute inset-0 w-full h-full">
+            <iframe
+              src={embedUrl + "?autoplay=1"}
+              title={title}
+              className="border-0"
+              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+              allowFullScreen
+              style={{
+                width: "300%",
+                height: "300%",
+                transform: "scale(0.3333)",
+                transformOrigin: "top left",
+                pointerEvents: "auto",
+              }}
+            />
+          </div>
         )}
       </div>
     );
