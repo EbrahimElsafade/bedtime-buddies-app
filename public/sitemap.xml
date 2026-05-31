@@ -197,6 +197,18 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://thedolphoon.com/courses/fc1498ff-813f-4ccc-b465-efed21d5412b</loc>
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://thedolphoon.com/courses/fc1498ff-813f-4ccc-b465-efed21d5412b/lessons</loc>
+    <lastmod>2026-05-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://thedolphoon.com/courses/5c626d60-f3d7-4048-bf77-1209c092006e</loc>
     <lastmod>2026-02-04</lastmod>
     <changefreq>monthly</changefreq>
