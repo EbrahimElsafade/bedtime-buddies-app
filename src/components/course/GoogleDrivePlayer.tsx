@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Play, Pause } from "lucide-react";
+import { Play, X } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface GoogleDrivePlayerProps {
@@ -13,8 +13,7 @@ interface GoogleDrivePlayerProps {
 
 const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "Video player", className }) => {
   const isMobile = useIsMobile();
-  const [playing, setPlaying] = useState(false);
-  const [showPauseHint, setShowPauseHint] = useState(false);
+  const [open, setOpen] = useState(false);
 
   if (!fileId) {
     return (
@@ -32,75 +31,70 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "
   const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
   const thumbUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`;
 
-  const handleOverlayTap = () => {
-    // Brief visual feedback when user taps (since we block iframe interaction)
-    setShowPauseHint(true);
-    setTimeout(() => setShowPauseHint(false), 800);
-  };
-
   if (isMobile) {
     return (
-      <div className={cn("relative w-full bg-black aspect-[16/18]", className)} style={{ overflow: "hidden" }}>
-        {!playing ? (
-          /* ── Thumbnail + play button ── */
-          <button
-            type="button"
-            onClick={() => setPlaying(true)}
-            aria-label={`Play ${title}`}
-            className="group absolute inset-0 w-full h-full"
-          >
-            <img
-              src={thumbUrl}
-              alt={title}
-              className="absolute inset-0 h-full w-full object-cover opacity-80"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).style.display = "none";
-              }}
-            />
-            <div className="absolute inset-0 flex items-center justify-center bg-black/40 transition-colors group-hover:bg-black/30">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/95 shadow-2xl transition-transform group-active:scale-95">
-                <Play className="ml-1 h-7 w-7 fill-primary-foreground text-primary-foreground" />
-              </div>
+      <>
+        {/* Thumbnail with play button */}
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label={`Play ${title}`}
+          className={cn("group relative block w-full overflow-hidden bg-black aspect-[16/18]", className)}
+        >
+          <img
+            src={thumbUrl}
+            alt={title}
+            className="absolute inset-0 h-full w-full object-cover opacity-80"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).style.display = "none";
+            }}
+          />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40 transition-colors group-hover:bg-black/30">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/95 shadow-2xl transition-transform group-active:scale-95">
+              <Play className="ml-1 h-7 w-7 fill-primary-foreground text-primary-foreground" />
             </div>
-          </button>
-        ) : (
-          <>
-            {/* ── The actual iframe ── */}
-            <iframe
-              src={`${embedUrl}?autoplay=1`}
-              title={title}
-              className="absolute inset-0 w-full h-full border-0"
-              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-              allowFullScreen
-              style={{ pointerEvents: "none" }}
-            />
+          </div>
+        </button>
 
-            {/* ── Transparent overlay — blocks all taps reaching the iframe ── */}
-            <div
-              className="absolute inset-0 z-10 w-full h-full"
-              style={{ background: "transparent" }}
-              onTouchStart={handleOverlayTap}
-              onClick={handleOverlayTap}
-            />
+        {/* Fullscreen modal — only mounts iframe when open */}
+        {open && (
+          <div
+            className="fixed inset-0 z-[999] bg-black flex flex-col"
+            style={{ top: 0, left: 0, right: 0, bottom: 0 }}
+          >
+            {/* Close button */}
+            <div className="relative flex items-center justify-end px-4 py-3 bg-black shrink-0">
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Close video"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-white active:scale-95"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
 
-            {/* ── Optional tap feedback ── */}
-            {showPauseHint && (
-              <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-black/50">
-                  <Pause className="h-6 w-6 fill-white text-white" />
-                </div>
-              </div>
-            )}
-          </>
+            {/* iframe fills remaining height */}
+            <div className="flex-1 w-full relative">
+              <iframe
+                src={`${embedUrl}?autoplay=1`}
+                title={title}
+                className="absolute inset-0 w-full h-full border-0"
+                allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </div>
         )}
-      </div>
+      </>
     );
   }
 
+  // Desktop — plain inline embed
   return (
     <div className={cn("relative w-full overflow-hidden bg-black aspect-video", className)}>
       <iframe
-        src={`${embedUrl}?autoplay=1`}
+        src={embedUrl}
         title={title}
         className="absolute inset-0 h-full w-full border-0"
         allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
