@@ -28,12 +28,12 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "
     );
   }
 
-  const embedUrl = `https://drive.google.com/file/d/${fileId}/preview?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&disablekb=1`;
+  const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
   const thumbUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`;
 
   if (isMobile) {
     return (
-      <div className={cn("relative w-full overflow-hidden bg-black aspect-[16/18]", className)}>
+      <div className={cn("relative w-full bg-black aspect-[16/18]", className)} style={{ overflow: "hidden" }}>
         {!playing ? (
           <button
             type="button"
@@ -56,13 +56,25 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "
             </div>
           </button>
         ) : (
-          <iframe
-            src={embedUrl}
-            title={title}
-            className="absolute inset-0 w-full h-full border-0"
-            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-            allowFullScreen
-          />
+          <>
+            {/* Overlay blocks the bottom control bar area */}
+            <div className="absolute bottom-0 left-0 right-0 bg-black z-10" style={{ height: "22%" }} />
+            {/* Overlay blocks the top bar */}
+            <div className="absolute top-0 left-0 right-0 bg-black z-10" style={{ height: "6%" }} />
+            <iframe
+              src={`${embedUrl}?autoplay=1`}
+              title={title}
+              className="absolute border-0"
+              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+              allowFullScreen
+              style={{
+                top: "-6%",
+                left: 0,
+                width: "100%",
+                height: "128%",
+              }}
+            />
+          </>
         )}
       </div>
     );
@@ -71,7 +83,7 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "
   return (
     <div className={cn("relative w-full overflow-hidden bg-black aspect-video", className)}>
       <iframe
-        src={embedUrl}
+        src={`${embedUrl}?autoplay=1`}
         title={title}
         className="absolute inset-0 h-full w-full border-0"
         allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
