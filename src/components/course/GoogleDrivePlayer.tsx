@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Play } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -14,18 +14,6 @@ interface GoogleDrivePlayerProps {
 const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "Video player", className }) => {
   const isMobile = useIsMobile();
   const [playing, setPlaying] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-    const observer = new ResizeObserver((entries) => {
-      const { width, height } = entries[0].contentRect;
-      setContainerSize({ width, height });
-    });
-    observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, []);
 
   if (!fileId) {
     return (
@@ -40,16 +28,12 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "
     );
   }
 
-  const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
+  const embedUrl = `https://drive.google.com/file/d/${fileId}/preview?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0&disablekb=1`;
   const thumbUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`;
 
   if (isMobile) {
-    const scale = 3;
-    const scaledWidth = containerSize.width * scale;
-    const scaledHeight = containerSize.height * scale;
-
     return (
-      <div ref={containerRef} className={cn("relative w-full overflow-hidden bg-black aspect-[16/18]", className)}>
+      <div className={cn("relative w-full overflow-hidden bg-black aspect-[16/18]", className)}>
         {!playing ? (
           <button
             type="button"
@@ -71,21 +55,15 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "
               </div>
             </div>
           </button>
-        ) : containerSize.width > 0 ? (
+        ) : (
           <iframe
-            src={embedUrl + "?autoplay=1"}
+            src={embedUrl}
             title={title}
-            className="absolute top-0 left-0 border-0 origin-top-left"
+            className="absolute inset-0 w-full h-full border-0"
             allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
             allowFullScreen
-            style={{
-              width: scaledWidth,
-              height: scaledHeight,
-              transform: `scale(${1 / scale})`,
-              transformOrigin: "top left",
-            }}
           />
-        ) : null}
+        )}
       </div>
     );
   }
