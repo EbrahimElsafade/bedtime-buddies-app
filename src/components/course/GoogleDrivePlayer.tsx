@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
-import { Play } from "lucide-react";
+import { Play, Pause } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface GoogleDrivePlayerProps {
@@ -14,6 +14,7 @@ interface GoogleDrivePlayerProps {
 const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "Video player", className }) => {
   const isMobile = useIsMobile();
   const [playing, setPlaying] = useState(false);
+  const [showPauseHint, setShowPauseHint] = useState(false);
 
   if (!fileId) {
     return (
@@ -31,10 +32,17 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "
   const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
   const thumbUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`;
 
+  const handleOverlayTap = () => {
+    // Brief visual feedback when user taps (since we block iframe interaction)
+    setShowPauseHint(true);
+    setTimeout(() => setShowPauseHint(false), 800);
+  };
+
   if (isMobile) {
     return (
       <div className={cn("relative w-full bg-black aspect-[16/18]", className)} style={{ overflow: "hidden" }}>
         {!playing ? (
+          /* ── Thumbnail + play button ── */
           <button
             type="button"
             onClick={() => setPlaying(true)}
@@ -57,23 +65,32 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "
           </button>
         ) : (
           <>
-            {/* Overlay blocks the bottom control bar area */}
-            <div className="absolute bottom-0 left-0 right-0 bg-black z-10" style={{ height: "22%" }} />
-            {/* Overlay blocks the top bar */}
-            <div className="absolute top-0 left-0 right-0 bg-black z-10" style={{ height: "6%" }} />
+            {/* ── The actual iframe ── */}
             <iframe
               src={`${embedUrl}?autoplay=1`}
               title={title}
-              className="absolute border-0"
+              className="absolute inset-0 w-full h-full border-0"
               allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
               allowFullScreen
-              style={{
-                top: "-6%",
-                left: 0,
-                width: "100%",
-                height: "128%",
-              }}
+              style={{ pointerEvents: "none" }}
             />
+
+            {/* ── Transparent overlay — blocks all taps reaching the iframe ── */}
+            <div
+              className="absolute inset-0 z-10 w-full h-full"
+              style={{ background: "transparent" }}
+              onTouchStart={handleOverlayTap}
+              onClick={handleOverlayTap}
+            />
+
+            {/* ── Optional tap feedback ── */}
+            {showPauseHint && (
+              <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-black/50">
+                  <Pause className="h-6 w-6 fill-white text-white" />
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>
