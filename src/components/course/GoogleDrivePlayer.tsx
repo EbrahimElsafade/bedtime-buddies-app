@@ -36,12 +36,7 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "
     return (
       <div className={cn("relative w-full overflow-hidden bg-black", "aspect-[16/18]", className)}>
         {!playing ? (
-          <button
-            type="button"
-            onClick={() => setPlaying(true)}
-            aria-label={`Play ${title}`}
-            className="group absolute inset-0 w-full h-full"
-          >
+          <button type="button" onClick={() => setPlaying(true)} aria-label={`Play ${title}`} className="group ">
             <img
               src={thumbUrl}
               alt={title}
