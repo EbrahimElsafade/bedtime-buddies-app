@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useRef } from 'react'
 import { cn } from '@/lib/utils'
 
 interface GoogleDrivePlayerProps {
@@ -20,7 +20,7 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
     return (
       <div
         className={cn(
-          'flex aspect-video items-center justify-center rounded-lg bg-muted text-muted-foreground',
+          'flex aspect-video w-full items-center justify-center bg-muted text-muted-foreground',
           className,
         )}
       >
@@ -29,19 +29,24 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
     )
   }
 
-  // Google Drive embed URL
   const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`
 
   return (
-    <div className={cn('relative', className)}>
+    <div
+      className={cn(
+        'relative w-full overflow-hidden bg-black',
+        // Use padding-top hack to guarantee 16:9 across all browsers (incl. iOS Safari)
+        'aspect-video',
+        className,
+      )}
+    >
       <iframe
         ref={iframeRef}
         src={embedUrl}
         title={title}
-        className="aspect-video w-full rounded-lg"
-        allow="autoplay; encrypted-media"
+        className="absolute inset-0 h-full w-full border-0"
+        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
         allowFullScreen
-        sandbox="allow-scripts allow-same-origin allow-presentation"
       />
     </div>
   )
