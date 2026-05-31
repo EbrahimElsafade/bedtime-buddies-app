@@ -56,7 +56,13 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "
             </div>
           </button>
         ) : (
-          <>
+          <div
+            style={{
+              height: "623px",
+              marginTop: "-200px",
+              position: "relative",
+            }}
+          >
             {/* Overlay blocks the bottom control bar area */}
             <div className="absolute bottom-0 left-0 right-0 bg-black z-10" style={{ height: "22%" }} />
             {/* Overlay blocks the top bar */}
@@ -74,7 +80,7 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "
                 height: "128%",
               }}
             />
-          </>
+          </div>
         )}
       </div>
     );
