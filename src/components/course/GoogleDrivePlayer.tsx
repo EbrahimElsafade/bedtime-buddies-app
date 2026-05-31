@@ -18,10 +18,8 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "
   if (!fileId) {
     return (
       <div
-        className={cn(
-          "flex aspect-[16/18] w-full items-center justify-center bg-muted text-muted-foreground",
-          className,
-        )}
+        className={cn("flex w-full items-center justify-center bg-muted text-muted-foreground", className)}
+        style={{ height: "360px" }}
       >
         <p>No video available</p>
       </div>
@@ -39,47 +37,99 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "
           type="button"
           onClick={() => setOpen(true)}
           aria-label={`Play ${title}`}
-          className={cn("group relative block w-full overflow-hidden bg-black aspect-[16/18]", className)}
+          className={cn("group relative block w-full overflow-hidden bg-black", className)}
+          style={{ height: "260px" }}
         >
           <img
             src={thumbUrl}
             alt={title}
-            className="absolute inset-0 h-full w-full object-cover opacity-80"
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              opacity: 0.8,
+            }}
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).style.display = "none";
             }}
           />
-          <div className="absolute inset-0 flex items-center justify-center bg-black/40 transition-colors group-hover:bg-black/30">
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "rgba(0,0,0,0.4)",
+            }}
+          >
             <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/95 shadow-2xl transition-transform group-active:scale-95">
               <Play className="ml-1 h-7 w-7 fill-primary-foreground text-primary-foreground" />
             </div>
           </div>
         </button>
 
-        {/* Fullscreen modal — only mounts iframe when open */}
+        {/* Fullscreen modal */}
         {open && (
           <div
-            className="fixed inset-0 z-[999] bg-black flex flex-col"
-            style={{ top: 0, left: 0, right: 0, bottom: 0 }}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 999,
+              backgroundColor: "#000",
+              display: "flex",
+              flexDirection: "column",
+            }}
           >
             {/* Close button */}
-            <div className="relative flex items-center justify-end px-4 py-3 bg-black shrink-0">
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                padding: "12px 16px",
+                backgroundColor: "#000",
+                flexShrink: 0,
+              }}
+            >
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Close video"
-                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-white active:scale-95"
+                style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "50%",
+                  backgroundColor: "rgba(255,255,255,0.2)",
+                  color: "#fff",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "none",
+                  cursor: "pointer",
+                }}
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            {/* iframe fills remaining height */}
-            <div className="flex-1 w-full relative">
+            {/* iframe fills all remaining space */}
+            <div style={{ flex: 1, position: "relative", width: "100%" }}>
               <iframe
                 src={`${embedUrl}?autoplay=1`}
                 title={title}
-                className="absolute inset-0 w-full h-full border-0"
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  width: "100%",
+                  height: "100%",
+                  border: "none",
+                }}
                 allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
                 allowFullScreen
               />
@@ -92,11 +142,18 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "
 
   // Desktop — plain inline embed
   return (
-    <div className={cn("relative w-full overflow-hidden bg-black aspect-video", className)}>
+    <div className={cn("relative w-full overflow-hidden bg-black", className)} style={{ height: "450px" }}>
       <iframe
         src={embedUrl}
         title={title}
-        className="absolute inset-0 h-full w-full border-0"
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          border: "none",
+        }}
         allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
         allowFullScreen
       />
