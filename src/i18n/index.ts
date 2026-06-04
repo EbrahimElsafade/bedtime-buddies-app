@@ -1,10 +1,29 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
-import HttpBackend from 'i18next-http-backend'
+
+// Dynamically import all locale resources from src/locales
+const localeModules = import.meta.glob<Record<string, any>>(
+  './locales/**/*.json',
+  { eager: true }
+)
+
+// Transform the dynamic imports into i18n resources
+const resources: Record<string, Record<string, any>> = {
+  ar: {},
+  en: {},
+  fr: {},
+}
+
+Object.entries(localeModules).forEach(([path, module]) => {
+  const match = path.match(/\.\/(locales)\/([a-z]{2})\/([a-z]+)\.json$/)
+  if (match) {
+    const [, , lang, namespace] = match
+    resources[lang][namespace] = module.default || module
+  }
+})
 
 i18n
-  .use(HttpBackend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
@@ -20,27 +39,8 @@ i18n
       lookupLocalStorage: 'i18nextLng',
       lookupFromPathIndex: 0,
     },
-    backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json',
-    },
+    resources,
     defaultNS: 'common',
-    ns: [
-      'common',
-      'navigation',
-      'auth',
-      'hero',
-      'stories',
-      'features',
-      'admin',
-      'misc',
-      'premium',
-      'subscription',
-      'notFound',
-      'games',
-      'courses',
-      'story',
-      'social',
-    ],
   })
 
 // Handle RTL direction for Arabic

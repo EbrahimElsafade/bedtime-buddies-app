@@ -1,0 +1,29 @@
+{
+  "featured": {
+    "title": "القصص المميزة"
+  },
+  "popular": "القصص الشائعة",
+  "free": "القصة المجانية لليوم",
+  "entertainment": "قصص الترفيه",
+  "viewAll": "عرض جميع القصص",
+  "readNow": "اقرأ الآن",
+  "duration": "دقيقة",
+  "category": {
+    "daily": "يومي",
+    "food": "طعام",
+    "jobs": "وظائف",
+    "religion": "دينية"
+  },
+  "type": {
+    "free": "مجاني",
+    "premium": "مميز"
+  },
+  "allStories": "تصفح القصص",
+  "browseCollection": "اكتشف قصص رائعة من مجموعتنا",
+  "searchStories": "البحث في القصص...",
+  "allCategories": "جميع الفئات",
+  "noStoriesFound": "لم يتم العثور على قصص تطابق بحثك",
+  "noStoriesAvailable": "لا توجد قصص متاحة في الوقت الحالي",
+  "backToStories": "العودة للقصص",
+  "autoPlay": "تشغيل تلقائي"
+}
