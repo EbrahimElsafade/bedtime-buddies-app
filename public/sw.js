@@ -3,15 +3,19 @@ function isWorkboxCacheForThisRegistration(name) {
   return hasWorkboxBucket || name === "locale-json-cache" || name === "supabase-cache" || name === "google-fonts-cache" || name === "images-cache";
 }
 
+async function clearAppCaches() {
+  const cacheNames = await caches.keys();
+  const appCacheNames = cacheNames.filter(isWorkboxCacheForThisRegistration);
+  await Promise.allSettled(appCacheNames.map((name) => caches.delete(name)));
+}
+
 self.addEventListener("install", () => self.skipWaiting());
 
 self.addEventListener("activate", (event) =>
   event.waitUntil(
     (async () => {
       try {
-        const cacheNames = await caches.keys();
-        const appCacheNames = cacheNames.filter(isWorkboxCacheForThisRegistration);
-        await Promise.allSettled(appCacheNames.map((name) => caches.delete(name)));
+        await clearAppCaches();
         await self.clients.claim();
         const windowClients = await self.clients.matchAll({ type: "window" });
         await Promise.allSettled(windowClients.map((client) => client.navigate(client.url)));
