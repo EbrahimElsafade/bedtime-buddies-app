@@ -1,0 +1,12 @@
+
+{
+  "message": {
+    "title": "Premium Story",
+    "description": "This is a premium story. Subscribe to our premium plan to unlock this story and many more!",
+    "subscriptionButton": "See Subscription Plans",
+    "loginButton": "Log In"
+  },
+  "tag": "PREMIUM",
+  "unlock": "Unlock Premium Features",
+  "upgrade": "Upgrade to Premium"
+}

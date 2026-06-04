@@ -1,0 +1,129 @@
+{
+  "courses": {
+    "featured": "Cours en Vedette",
+    "viewAll": "Voir Tous les Cours",
+    "startCourse": "Commencer le Cours",
+    "lessons": "leçons",
+    "title": "Cours en Vedette",
+    "years": "ans"
+  },
+  "subscription": {
+    "title": "S'abonner pour le Contenu Premium",
+    "description": "Débloquez toutes les histoires, jeux et cours avec notre abonnement premium",
+    "cta": "S'abonner Maintenant"
+  },
+  "footer": {
+    "description": "Créer des expériences de divertissement et d'apprentissage magiques pour les enfants du monde entier",
+    "company": "Entreprise",
+    "about": "À Propos",
+    "contact": "Contact",
+    "support": "Support",
+    "resources": "Ressources",
+    "blog": "Blog",
+    "help": "Centre d'Aide",
+    "legal": "Légal",
+    "privacy": "Politique de Confidentialité",
+    "terms": "Conditions d'Utilisation",
+    "rights": "Tous droits réservés"
+  },
+  "layout": {
+    "appName": "Dolphoon",
+    "subscribe": "S'abonner",
+    "copyright": "Tous droits réservés"
+  },
+  "profile": {
+    "title": "Profil",
+    "settings": "Paramètres",
+    "preferences": "Préférences"
+  },
+  "games": {
+    "title": "Jeux Interactifs",
+    "description": "Jeux amusants et éducatifs pour les enfants.",
+    "comingSoon": "Plus de Jeux Bientôt"
+  },
+  "notFound": {
+    "title": "Page Non Trouvée",
+    "description": "La page que vous recherchez n'existe pas.",
+    "backHome": "Retour à l'Accueil"
+  },
+  "pricing": {
+    "title": "Choisissez Votre Plan",
+    "monthly": "Mensuel",
+    "yearly": "Annuel (Économisez 20%)",
+    "selectPlan": "Choisir le Plan",
+    "currentPlan": "Plan Actuel"
+  },
+  "languages": {
+    "english": "English",
+    "arabic": "العربية",
+    "french": "Français"
+  },
+  "lang": {
+    "ar-eg": "Arabe égyptien",
+    "ar-fos7a": "Arabe classique",
+    "ar-su": "Arabe classique",
+    "fr": "Français",
+    "en": "Anglais"
+  },
+  "accessibility": {
+    "languageSelection": "Sélectionner la langue",
+    "toggleTheme": "Basculer le thème",
+    "menu": "Menu"
+  },
+  "popup": {
+    "special": "Offre Spéciale !",
+    "limitedTime": "Offre Limitée",
+    "unlock": "Débloquez les Fonctionnalités Premium",
+    "feature1": "Accès illimité à tout le contenu",
+    "feature2": "Expérience sans publicité",
+    "feature3": "Téléchargements hors ligne",
+    "month": "mois",
+    "off": "RÉDUCTION",
+    "subscribe": "S'abonner Maintenant",
+    "later": "Plus Tard"
+  },
+  "free": {
+    "story": "Histoire Gratuit du Jour",
+    "viewAll": "Voir Tout le Contenu",
+    "tag": "GRATUIT"
+  },
+  "popular": {
+    "title": "Contenu Populaire"
+  },
+  "entertainment": {
+    "title": "Histoires de Divertissement"
+  },
+  "premium": {
+    "tag": "PREMIUM"
+  },
+  "button": {
+    "readStory": "Lire l'Histoire",
+    "readNow": "Lire Maintenant",
+    "premium": "Premium",
+    "startLearning": "Commencer l'Apprentissage",
+    "viewAll": "Voir Tout",
+    "exploreStories": "Explorer les Histoires",
+    "startFreeTrial": "Commencer l'Essai Gratuit",
+    "watchDemo": "Voir la Démo",
+    "subscribeNow": "S'abonner Maintenant",
+    "maybeLater": "Plus Tard",
+    "goBack": "Retourner",
+    "tryAgain": "Réessayer"
+  },
+  "duration": "min",
+  "subscribe": {
+    "title": "S'abonner pour le Contenu Premium",
+    "subtitle": "Débloquez toutes les histoires, jeux et cours avec notre abonnement premium",
+    "button": "S'abonner Maintenant"
+  },
+  "stats": {
+    "lessonsLabel": "Leçons interactives",
+    "lessonsValue": "+200",
+    "pathsLabel": "Parcours d'apprentissage",
+    "pathsValue": "4",
+    "ageLabel": "Tranche d'âge",
+    "ageValue": "8-16",
+    "priceLabel": "Par mois",
+    "priceValue": "100 EGP"
+  }
+}
