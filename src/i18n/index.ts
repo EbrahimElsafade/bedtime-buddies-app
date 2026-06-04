@@ -1,14 +1,29 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
-import HttpBackend from 'i18next-http-backend'
+
+// Bundle locales at build time to avoid runtime fetches that can fail/timeout
+// on production hosts (CDN, service worker, etc.)
+const modules = import.meta.glob('../../public/locales/*/*.json', {
+  eager: true,
+  import: 'default',
+}) as Record<string, Record<string, unknown>>
+
+const resources: Record<string, Record<string, Record<string, unknown>>> = {}
+for (const [path, content] of Object.entries(modules)) {
+  const match = path.match(/\/locales\/([^/]+)\/([^/]+)\.json$/)
+  if (!match) continue
+  const [, lng, ns] = match
+  resources[lng] ??= {}
+  resources[lng][ns] = content
+}
 
 i18n
-  .use(HttpBackend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
-    lng: 'ar', // Force Arabic as default
+    resources,
+    lng: 'ar',
     fallbackLng: 'ar',
     debug: false,
     interpolation: {
@@ -19,9 +34,6 @@ i18n
       caches: ['localStorage'],
       lookupLocalStorage: 'i18nextLng',
       lookupFromPathIndex: 0,
-    },
-    backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json',
     },
     defaultNS: 'common',
     ns: [
