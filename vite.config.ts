@@ -22,6 +22,8 @@ const httpsOptions = (() => {
 })()
 
 // https://vitejs.dev/config/
+const pkg = JSON.parse(fs.readFileSync('./package.json', 'utf-8'))
+
 export default defineConfig(({ mode }) => ({
   server: {
     host: '::',
@@ -36,5 +38,10 @@ export default defineConfig(({ mode }) => ({
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+  },
+  define: {
+    __APP_VERSION__: JSON.stringify(pkg.version || '0.0.0'),
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
+    __BUILD_MODE__: JSON.stringify(mode),
   },
 }))
