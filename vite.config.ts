@@ -39,6 +39,10 @@ export default defineConfig(({ mode }) => ({
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3 MB
+        skipWaiting: true,
+        clientsClaim: true,
+        cleanupOutdatedCaches: true,
+        navigateFallbackDenylist: [/^\/api/, /^\/sw-killswitch/],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/brxbtgzaumryxflkykpp\.supabase\.co\/.*/i,
