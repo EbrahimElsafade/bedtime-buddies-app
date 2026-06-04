@@ -54,8 +54,10 @@ const checkRateLimit = (ip: string): { allowed: boolean; remaining: number; rese
 
 // Allowed origins for CORS
 const allowedOrigins = [
-  'https://dolphoon.com',
-  'https://www.dolphoon.com',
+  'https://thedolphoon.com',
+  'https://www.thedolphoon.com',
+  'https://bedtime-buddies-app.lovable.app',
+  'https://id-preview--48f2e5e4-e552-4808-92bf-085dd78e1132.lovable.app',
   'https://brxbtgzaumryxflkykpp.supabase.co',
   'http://localhost:5173',
   'http://localhost:8080',
