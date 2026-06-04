@@ -51,16 +51,6 @@
   <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
 
 
-  <!-- iOS PWA -->
-  <!-- NOTE: Chrome DevTools may show a false deprecation warning here.
-  iOS Safari still requires apple-mobile-web-app-capable.
-  Do NOT remove. -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Dolphoon">
-
-  <meta name="mobile-web-app-capable" content="yes">
-
   <!-- Theme -->
   <meta name="theme-color" content="#8B5CF6">
   <meta name="msapplication-TileColor" content="#8B5CF6">
@@ -75,30 +65,32 @@
   <script>
     (function () {
       try {
-        var KILL_VERSION = '2026-06-04-1';
+        var KILL_VERSION = '2026-06-04-2';
         var KEY = '__dolphoon_sw_kill';
         if (localStorage.getItem(KEY) === KILL_VERSION) return;
 
         var didWork = false;
 
+        var cleanupTasks = [];
+
         if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.getRegistrations().then(function (regs) {
-            regs.forEach(function (r) { didWork = true; r.unregister(); });
-          }).catch(function () {});
+          cleanupTasks.push(
+            navigator.serviceWorker.getRegistrations().then(function (regs) {
+              return Promise.all(regs.map(function (r) { didWork = true; return r.unregister(); }));
+            }).catch(function () {})
+          );
         }
 
         if (typeof caches !== 'undefined' && caches.keys) {
-          caches.keys().then(function (keys) {
+          cleanupTasks.push(caches.keys().then(function (keys) {
             return Promise.all(keys.map(function (k) { didWork = true; return caches.delete(k); }));
-          }).then(function () {
+          }).catch(function () {}));
+        }
+
+        if (cleanupTasks.length) {
+          Promise.all(cleanupTasks).then(function () {
             localStorage.setItem(KEY, KILL_VERSION);
-            if (didWork) {
-              // Hard reload once so users get the fresh bundle immediately.
-              setTimeout(function () { location.reload(); }, 50);
-            }
-          }).catch(function () {
-            localStorage.setItem(KEY, KILL_VERSION);
-          });
+          }).catch(function () { localStorage.setItem(KEY, KILL_VERSION); });
         } else {
           localStorage.setItem(KEY, KILL_VERSION);
         }
