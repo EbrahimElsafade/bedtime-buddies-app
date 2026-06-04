@@ -25,7 +25,10 @@
     "legacyVideoFormat": "Legacy video format - please update to Google Drive",
     "noVideoSource": "No video source available",
     "markCompleted": "Mark as completed",
-    "completed": "Completed"
+    "completed": "Completed",
+    "watchLesson": "Watch lesson",
+    "openInDrive": "Open in Google Drive",
+    "closeVideo": "Close video"
   },
   "toast": {
     "premiumRequired": "Premium Required",
