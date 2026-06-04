@@ -96,6 +96,7 @@ function App() {
                     <Route path="reset-password" element={<ResetPassword />} />
                     <Route path="skill-paths" element={<SkillPathsPage />} />
                     <Route path="skill-path/:id" element={<SkillPathDetails />} />
+                    <Route path="status" element={<Status />} />
                   </Route>
 
                   {/* Admin Routes */}
