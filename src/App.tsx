@@ -35,6 +35,7 @@ import ResetPassword from "./pages/ResetPassword";
 import NotFound from "./pages/NotFound";
 import SkillPathsPage from "./pages/SkillPaths";
 import SkillPathDetails from "./pages/SkillPathDetails";
+import Status from "./pages/Status";
 
 // Code-split admin routes — they are only used by a small subset of users
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
