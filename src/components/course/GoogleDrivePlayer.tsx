@@ -1,102 +1,180 @@
-import React, { useState } from "react";
-import { cn } from "@/lib/utils";
-import { Play } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
+import React, { useEffect, useState } from 'react'
+import { Play, X } from 'lucide-react'
+import * as DialogPrimitive from '@radix-ui/react-dialog'
+import { useTranslation } from 'react-i18next'
+import { cn } from '@/lib/utils'
+import { usePreferDrivePopup } from '@/hooks/use-mobile'
+import {
+  Dialog,
+  DialogClose,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
+  getGoogleDriveEmbedUrl,
+  getGoogleDriveThumbnailUrl,
+  normalizeGoogleDriveFileId,
+} from '@/utils/googleDriveVideo'
+import './google-drive-embed.css'
 
 interface GoogleDrivePlayerProps {
-  fileId: string;
-  title?: string;
-  className?: string;
-  onVideoEnd?: () => void;
-  showCountdownOnEnd?: boolean;
+  fileId: string
+  title?: string
+  className?: string
+  onVideoEnd?: () => void
+  showCountdownOnEnd?: boolean
 }
 
-const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({ fileId, title = "Video player", className }) => {
-  const isMobile = useIsMobile();
-  const [playing, setPlaying] = useState(false);
+const DriveIframe: React.FC<{ embedSrc: string; title: string; className?: string }> = ({
+  embedSrc,
+  title,
+  className,
+}) => (
+  <div className={cn('google-drive-embed-container', className)}>
+    <div className="gdrive-toolbar-cover" aria-hidden />
+    <iframe
+      src={embedSrc}
+      title={title}
+      allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+      allowFullScreen
+    />
+  </div>
+)
 
-  if (!fileId) {
+interface DrivePosterProps {
+  thumbUrl: string
+  onPlay: () => void
+  playLabel: string
+}
+
+const DrivePoster: React.FC<DrivePosterProps> = ({ thumbUrl, onPlay, playLabel }) => (
+  <div className="google-drive-embed-poster">
+    <img
+      src={thumbUrl}
+      alt=""
+      className="google-drive-embed-poster__image"
+      onError={(e) => {
+        ;(e.currentTarget as HTMLImageElement).style.display = 'none'
+      }}
+    />
+    <div className="google-drive-embed-poster__scrim">
+      <button
+        type="button"
+        className="google-drive-embed-poster__play"
+        onClick={onPlay}
+        aria-label={playLabel}
+      >
+        <Play className="h-8 w-8 fill-current sm:h-10 sm:w-10" />
+      </button>
+    </div>
+  </div>
+)
+
+interface DriveVideoDialogProps {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  title: string
+  embedSrc: string
+  closeLabel: string
+}
+
+const DriveVideoDialog: React.FC<DriveVideoDialogProps> = ({
+  open,
+  onOpenChange,
+  title,
+  embedSrc,
+  closeLabel,
+}) => (
+  <Dialog open={open} onOpenChange={onOpenChange}>
+    <DialogPortal>
+      <DialogOverlay className="google-drive-dialog-overlay" />
+      <DialogPrimitive.Content
+        className="google-drive-dialog-content"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
+        <DialogTitle className="sr-only">{title}</DialogTitle>
+
+        <div className="google-drive-embed-dialog">
+          <div className="gdrive-toolbar-cover" aria-hidden />
+          {open && (
+            <iframe
+              src={embedSrc}
+              title={title}
+              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+              allowFullScreen
+            />
+          )}
+        </div>
+
+        <DialogClose className="google-drive-dialog-close" aria-label={closeLabel}>
+          <X />
+          <span className="sr-only">{closeLabel}</span>
+        </DialogClose>
+      </DialogPrimitive.Content>
+    </DialogPortal>
+  </Dialog>
+)
+
+/**
+ * Native Google Drive player.
+ * - &lt; 1024px: poster + fullscreen popup
+ * - ≥ 1024px: inline iframe on desktop
+ */
+const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
+  fileId,
+  title = 'Video player',
+  className,
+}) => {
+  const { t } = useTranslation('courses')
+  const preferPopup = usePreferDrivePopup()
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const normalizedId = normalizeGoogleDriveFileId(fileId)
+
+  useEffect(() => {
+    setDialogOpen(false)
+  }, [normalizedId])
+
+  if (!normalizedId) {
     return (
       <div
         className={cn(
-          "flex aspect-[16/18] w-full items-center justify-center bg-muted text-muted-foreground",
+          'flex aspect-video w-full min-h-[200px] items-center justify-center bg-muted text-muted-foreground',
           className,
         )}
       >
         <p>No video available</p>
       </div>
-    );
+    )
   }
 
-  const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
-  const thumbUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`;
+  const embedSrc = `${getGoogleDriveEmbedUrl(normalizedId)}?autoplay=1`
+  const thumbUrl = getGoogleDriveThumbnailUrl(normalizedId)
 
-  if (isMobile) {
+  if (!preferPopup) {
     return (
-      <div className={cn("relative w-full bg-black aspect-[16/18]", className)} style={{ overflow: "hidden" }}>
-        {!playing ? (
-          <button
-            type="button"
-            onClick={() => setPlaying(true)}
-            aria-label={`Play ${title}`}
-            className="group absolute inset-0 w-full h-full"
-          >
-            <img
-              src={thumbUrl}
-              alt={title}
-              className="absolute inset-0 h-full w-full object-cover opacity-80"
-              onError={(e) => {
-                (e.currentTarget as HTMLImageElement).style.display = "none";
-              }}
-            />
-            <div className="absolute inset-0 flex items-center justify-center bg-black/40 transition-colors group-hover:bg-black/30">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/95 shadow-2xl transition-transform group-active:scale-95">
-                <Play className="ml-1 h-7 w-7 fill-primary-foreground text-primary-foreground" />
-              </div>
-            </div>
-          </button>
-        ) : (
-          <div
-            style={{
-              height: "623px",
-              marginTop: "-200px",
-              position: "relative",
-            }}
-          >
-            {/* Overlay blocks the bottom control bar area */}
-            <div className="absolute bottom-0 left-0 right-0 bg-black z-10" style={{ height: "22%" }} />
-            {/* Overlay blocks the top bar */}
-            <div className="absolute top-0 left-0 right-0 bg-black z-10" style={{ height: "6%" }} />
-            <iframe
-              src={`${embedUrl}?autoplay=1`}
-              title={title}
-              className="absolute border-0"
-              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-              allowFullScreen
-              style={{
-                top: "-6%",
-                left: 0,
-                width: "100%",
-                height: "128%",
-              }}
-            />
-          </div>
-        )}
+      <div className={cn('relative', className)}>
+        <DriveIframe embedSrc={embedSrc} title={title} />
       </div>
-    );
+    )
   }
 
   return (
-    <div className={cn("relative w-full overflow-hidden bg-black aspect-video", className)}>
-      <iframe
-        src={`${embedUrl}?autoplay=1`}
+    <div className={cn('relative', className)}>
+      <DrivePoster
+        thumbUrl={thumbUrl}
+        onPlay={() => setDialogOpen(true)}
+        playLabel={t('course.watchLesson')}
+      />
+      <DriveVideoDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
         title={title}
-        className="absolute inset-0 h-full w-full border-0"
-        allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-        allowFullScreen
+        embedSrc={embedSrc}
+        closeLabel={t('course.closeVideo')}
       />
     </div>
-  );
-};
+  )
+}
 
-export default GoogleDrivePlayer;
+export default GoogleDrivePlayer
