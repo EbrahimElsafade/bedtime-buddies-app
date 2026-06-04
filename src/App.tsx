@@ -15,7 +15,7 @@ import Layout from "@/components/Layout";
 import AdminLayout from "@/components/AdminLayout";
 import AdminRoute from "@/components/AdminRoute";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import PWAInstallPrompt from "@/components/PWAInstallPrompt";
+
 import { GlobalLoader } from "@/components/GlobalLoader";
 
 import Index from "./pages/Index";
@@ -76,7 +76,6 @@ function App() {
                     <Toaster />
                   <GlobalLoader />
                   <BrowserRouter>
-                  <PWAInstallPrompt />
                 <Routes>
                   {/* Public Routes with Layout */}
                   <Route path="/" element={<Layout />}>
