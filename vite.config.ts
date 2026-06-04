@@ -41,7 +41,7 @@ export default defineConfig(({ mode }) => ({
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3 MB
         runtimeCaching: [
           {
-            urlPattern: ({ url }) => url.origin === self.location.origin && url.pathname.startsWith('/locales/'),
+            urlPattern: /\/locales\/.*\.json$/,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'locale-json-cache',
