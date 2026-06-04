@@ -4,7 +4,7 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 
 // Bundle locales at build time to avoid runtime fetches that can fail/timeout
 // on production hosts (CDN, service worker, etc.)
-const modules = import.meta.glob('/public/locales/*/*.json', {
+const modules = import.meta.glob('../../public/locales/*/*.json', {
   eager: true,
   import: 'default',
 }) as Record<string, Record<string, unknown>>
