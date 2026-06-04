@@ -1,0 +1,93 @@
+{
+  "courses": {
+    "exploreTitle": "Explorez Nos Cours",
+    "searchPlaceholder": "Rechercher des cours...",
+    "allCourses": "Tous les Cours",
+    "noResults": "Aucun cours ne correspond à vos critères de recherche",
+    "lessons": "Leçons",
+    "years": "Ans",
+    "loginToView": "Veuillez vous connecter pour voir les cours"
+  },
+  "course": {
+    "content": "Contenu du Cours",
+    "overview": "Aperçu",
+    "about": "À Propos de ce Cours",
+    "whatYouLearn": "Ce que Vous Apprendrez",
+    "instructor": "Instructeur",
+    "communicateWithASpecialist": "communiquer avec un spécialiste",
+    "lessons": "Leçons",
+    "error": "Erreur de Chargement du Cours",
+    "errorDesc": "Un problème est survenu lors du chargement de ce cours. Veuillez réessayer.",
+    "notFound": "Cours Non Trouvé",
+    "notFoundDesc": "Le cours que vous recherchez n'existe pas.",
+    "selectVideo": "Sélectionnez une leçon dans la liste pour commencer à regarder",
+    "noVideos": "Aucune leçon disponible pour ce cours",
+    "legacyVideoFormat": "Format vidéo ancien - veuillez mettre à jour vers Google Drive",
+    "noVideoSource": "Aucune source vidéo disponible",
+    "markCompleted": "Marquer comme terminé",
+    "completed": "Terminé",
+    "watchLesson": "Regarder la leçon",
+    "openInDrive": "Ouvrir dans Google Drive",
+    "closeVideo": "Fermer la vidéo"
+  },
+  "toast": {
+    "premiumRequired": "Premium Requis",
+    "upgradeToPremium": "Passez à premium pour accéder à cette leçon",
+    "loginRequired": "Connexion Requise",
+    "pleaseLoginToStart": "Veuillez vous connecter pour commencer ce cours"
+  },
+  "button": {
+    "backToCourses": "Retour aux Cours",
+    "startLearning": "Commencer l'Apprentissage",
+    "communicateWithASpecialist": "Contacter un Spécialiste"
+  },
+  "free": {
+    "tag": "Gratuit"
+  },
+  "premium": {
+    "tag": "Premium",
+    "modal": {
+      "title": "Contenu Premium",
+      "description": "Ce cours n'est disponible que pour les membres premium",
+      "benefit1": "Déverrouillez l'accès à tous les cours premium",
+      "benefit2": "Obtenez du contenu d'apprentissage et des fonctionnalités exclusives",
+      "benefit3": "Soutenez notre mission d'éducation des enfants",
+      "subscribeButton": "S'abonner à Premium"
+    }
+  },
+  "duration": "min",
+  "contact": {
+    "title": "Contacter un Spécialiste",
+    "description": "Remplissez le formulaire ci-dessous et nous vous répondrons dès que possible.",
+    "name": "Nom",
+    "namePlaceholder": "Entrez votre nom",
+    "email": "Email",
+    "emailPlaceholder": "Entrez votre email",
+    "phone": "Téléphone",
+    "phonePlaceholder": "Entrez votre numéro de téléphone",
+    "message": "Message",
+    "messagePlaceholder": "Comment pouvons-nous vous aider?",
+    "submit": "Envoyer le Message",
+    "cancel": "Annuler",
+    "successTitle": "Message Envoyé!",
+    "successMessage": "Nous avons reçu votre message et vous répondrons bientôt.",
+    "errorTitle": "Échec de l'Envoi",
+    "errorMessage": "Une erreur s'est produite lors de l'envoi de votre message. Veuillez réessayer."
+    ,
+    "close": "Fermer",
+    "validation": {
+      "nameRequired": "Le nom est requis",
+      "nameTooLong": "Le nom est trop long",
+      "emailInvalid": "Adresse e-mail invalide",
+      "emailTooLong": "L'email est trop long",
+      "phoneRequired": "Le numéro de téléphone est requis",
+      "phoneTooLong": "Le numéro de téléphone est trop long",
+      "messageRequired": "Le message est requis",
+      "messageTooLong": "Le message est trop long"
+    },
+    "whatsappTitle": "Restez en contact",
+    "contactViaWhatsapp": "Contactez via WhatsApp",
+    "whatsappDescription": "Vous pouvez également nous contacter sur WhatsApp pour une réponse plus rapide.",
+    "whatsappMessage": "Vous voulez une réponse plus rapide ? Envoyez-nous un message sur WhatsApp et nous vous répondrons bientôt."
+  }
+}

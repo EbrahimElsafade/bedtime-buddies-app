@@ -1,15 +1,30 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
-import HttpBackend from 'i18next-http-backend'
+import type { Resource } from 'i18next'
+
+const localeModules = import.meta.glob('./locales/*/*.json', { eager: true }) as Record<
+  string,
+  { default: Record<string, unknown> }
+>
+
+const resources = Object.entries(localeModules).reduce<Resource>((acc, [path, module]) => {
+  const match = path.match(/\.\/locales\/([^/]+)\/([^/]+)\.json$/)
+  if (!match) return acc
+
+  const [, lng, ns] = match
+  acc[lng] = acc[lng] || {}
+  acc[lng][ns] = module.default
+  return acc
+}, {})
 
 i18n
-  .use(HttpBackend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     lng: 'ar', // Force Arabic as default
     fallbackLng: 'ar',
+    resources,
     debug: false,
     interpolation: {
       escapeValue: false,
@@ -19,9 +34,6 @@ i18n
       caches: ['localStorage'],
       lookupLocalStorage: 'i18nextLng',
       lookupFromPathIndex: 0,
-    },
-    backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json',
     },
     defaultNS: 'common',
     ns: [
@@ -40,6 +52,8 @@ i18n
       'courses',
       'story',
       'social',
+      'meta',
+      'skillPaths',
     ],
   })
 

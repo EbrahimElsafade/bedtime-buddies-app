@@ -1,0 +1,29 @@
+{
+  "featured": {
+    "title": "Featured Stories"
+  },
+  "popular": "Popular Stories",
+  "free": "Free Story of the Day",
+  "entertainment": "Entertainment Stories",
+  "viewAll": "View All Stories",
+  "readNow": "Read Now",
+  "duration": "min",
+  "category": {
+    "daily": "daily",
+    "food": "food",
+    "jobs": "jobs",
+    "religion": "religion"
+  },
+  "type": {
+    "free": "Free",
+    "premium": "Premium"
+  },
+  "allStories": "Browse Stories",
+  "browseCollection": "Discover amazing stories from our collection",
+  "searchStories": "Search stories...",
+  "allCategories": "All Categories",
+  "noStoriesFound": "No stories found matching your search",
+  "noStoriesAvailable": "No stories available at the moment",
+  "backToStories": "Back to Stories",
+  "autoPlay": "Auto-Play"
+}
