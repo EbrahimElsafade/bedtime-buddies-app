@@ -265,8 +265,8 @@ const CourseLessons = () => {
         </div>
 
         {/* Unified Course Player Container */}
-        <div className="rounded-2xl border border-border bg-white shadow-xl">
-          <div className="flex flex-col lg:flex-row lg:overflow-hidden lg:rounded-2xl">
+        <div className="overflow-hidden rounded-2xl border border-border bg-white shadow-xl">
+          <div className="flex flex-col lg:flex-row">
             {/* Lessons sidebar */}
             <aside className="order-2 w-full border-t border-border bg-secondary/40 lg:order-1 lg:max-h-[calc(100vh-10rem)] lg:w-[340px] lg:flex-shrink-0 lg:overflow-y-auto lg:border-r lg:border-t-0 rtl:lg:border-l rtl:lg:border-r-0">
               <div className="sticky top-0 z-10 border-b border-border bg-white/95 px-4 py-3 backdrop-blur">
@@ -359,10 +359,10 @@ const CourseLessons = () => {
             </aside>
 
             {/* Video player */}
-            <div className="order-1 min-w-0 flex-1 bg-white lg:order-2">
+            <div className="order-1 flex-1 bg-white lg:order-2">
               {selectedVideo ? (
                 <div className="flex flex-col">
-                  <div className="w-full min-w-0 bg-black">
+                  <div className="w-full bg-black">
                     {selectedVideo.videoUrl ? (
                       <GoogleDrivePlayer
                         fileId={selectedVideo.videoUrl}

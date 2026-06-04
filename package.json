@@ -5,14 +5,13 @@
   "type": "module",
   "scripts": {
     "host": "bun run dev",
-    "predev": "npx tsx scripts/generate-sitemap.ts",
+    "predev": "bunx tsx scripts/generate-sitemap.ts",
     "dev": "vite",
-    "prebuild": "npx tsx scripts/generate-sitemap.ts",
+    "prebuild": "bunx tsx scripts/generate-sitemap.ts",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "test:drive-player": "npm run build && node scripts/verify-drive-player.mjs"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
