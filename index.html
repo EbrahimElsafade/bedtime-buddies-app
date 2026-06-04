@@ -71,6 +71,43 @@
 
 <body>
   <div id="root"></div>
+
+  <!-- One-time cache/SW kill switch for returning devices stuck on old bundles.
+       Bump KILL_VERSION any time you need to force ALL existing devices to wipe caches. -->
+  <script>
+    (function () {
+      try {
+        var KILL_VERSION = '2026-06-04-1';
+        var KEY = '__dolphoon_sw_kill';
+        if (localStorage.getItem(KEY) === KILL_VERSION) return;
+
+        var didWork = false;
+
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function (regs) {
+            regs.forEach(function (r) { didWork = true; r.unregister(); });
+          }).catch(function () {});
+        }
+
+        if (typeof caches !== 'undefined' && caches.keys) {
+          caches.keys().then(function (keys) {
+            return Promise.all(keys.map(function (k) { didWork = true; return caches.delete(k); }));
+          }).then(function () {
+            localStorage.setItem(KEY, KILL_VERSION);
+            if (didWork) {
+              // Hard reload once so users get the fresh bundle immediately.
+              setTimeout(function () { location.reload(); }, 50);
+            }
+          }).catch(function () {
+            localStorage.setItem(KEY, KILL_VERSION);
+          });
+        } else {
+          localStorage.setItem(KEY, KILL_VERSION);
+        }
+      } catch (e) { /* ignore */ }
+    })();
+  </script>
+
   <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
   <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   <script type="module" src="/src/main.tsx"></script>
