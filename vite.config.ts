@@ -34,6 +34,10 @@ export default defineConfig(({ mode }) => ({
     mode === 'development' && componentTagger(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: null,
+      devOptions: {
+        enabled: false,
+      },
       includeAssets: ['favicon.ico', 'icons/*.png', 'coloring/*.svg'],
       manifest: false, // We use our own manifest.json in public folder
       workbox: {
