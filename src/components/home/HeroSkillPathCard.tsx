@@ -35,7 +35,7 @@ const HeroSkillPathCard = ({
       {/* Decorative background icon — same system as main cards */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-4 -right-2 z-0 select-none text-[5rem] leading-none rtl:-right-auto rtl:-left-2"
+        className="pointer-events-none absolute -bottom-4 -right-2 z-0 select-none text-[5rem] leading-none rtl:right-auto rtl:-left-2"
         style={{ opacity: 0.5, filter: 'grayscale(100%) brightness(0) invert(1)' }}
       >
         <MaterialIcon name={icon} className="text-[5rem]" />
