@@ -33,6 +33,20 @@ const CourseLessons = () => {
   
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
+  const [isTabletRange, setIsTabletRange] = useState(false)
+  const [tabletSidebarOpen, setTabletSidebarOpen] = useState(false)
+
+  useEffect(() => {
+    const mql = window.matchMedia('(min-width: 780px) and (max-width: 1290px)')
+    const onChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      setIsTabletRange(e.matches)
+      if (!e.matches) setTabletSidebarOpen(false)
+    }
+    onChange(mql)
+    mql.addEventListener('change', onChange)
+    return () => mql.removeEventListener('change', onChange)
+  }, [])
+
   
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
