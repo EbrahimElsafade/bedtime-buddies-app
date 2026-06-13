@@ -286,7 +286,7 @@ const CourseLessons = () => {
               variant="secondary"
               size="sm"
               onClick={() => setTabletSidebarOpen(v => !v)}
-              className="absolute end-3 top-3 z-30 shadow-md"
+              className="absolute end-3 top-3 z-30 bg-white shadow-md hover:bg-white"
               aria-expanded={tabletSidebarOpen}
               aria-label={tabletSidebarOpen ? 'Hide lessons' : 'Show lessons'}
             >
