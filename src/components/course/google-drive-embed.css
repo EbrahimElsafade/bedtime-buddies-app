@@ -220,11 +220,3 @@ html[dir="rtl"] .google-drive-dialog-close {
   right: auto;
 }
 
-/* iOS-only play button inside dialog (autoplay blocked) */
-.google-drive-dialog-ios-play {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 20;
-}
