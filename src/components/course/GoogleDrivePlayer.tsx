@@ -155,7 +155,7 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
     )
   }
 
-  const embedSrc = `${getGoogleDriveEmbedUrl(normalizedId)}?autoplay=1`
+  const embedSrc = `${getGoogleDriveEmbedUrl(normalizedId)}?autoplay=1&mute=1`
   const thumbUrl = getGoogleDriveThumbnailUrl(normalizedId)
 
   if (!preferPopup) {
