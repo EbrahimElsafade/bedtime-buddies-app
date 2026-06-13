@@ -53,7 +53,9 @@
   background: hsl(var(--primary));
   color: hsl(var(--primary-foreground));
   box-shadow: 0 10px 40px rgb(0 0 0 / 0.45);
-  transition: transform 0.15s ease, opacity 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    opacity 0.15s ease;
 }
 
 .google-drive-embed-poster__play:hover {
@@ -101,11 +103,11 @@
   overflow: hidden;
 }
 
-.google-drive-dialog-content[data-state='open'] {
+.google-drive-dialog-content[data-state="open"] {
   animation: google-drive-dialog-fade-in 0.2s ease-out;
 }
 
-.google-drive-dialog-content[data-state='closed'] {
+.google-drive-dialog-content[data-state="closed"] {
   animation: google-drive-dialog-fade-out 0.15s ease-in;
 }
 
@@ -176,9 +178,15 @@
   position: absolute;
   inset: 0;
   width: 100%;
-  height: 125%;
-  margin-top: -18%;
+  height: 100%;
   border: 0;
+}
+
+@media (max-width: 500px) {
+  .google-drive-embed-dialog iframe {
+    height: 125%;
+    margin-top: -18%;
+  }
 }
 
 /* Cover Drive "open in new window" chrome inside iframe (cross-origin) */
@@ -195,19 +203,19 @@
 }
 
 /* LTR: toolbar cover on physical right */
-html[dir='ltr'] .gdrive-toolbar-cover {
+html[dir="ltr"] .gdrive-toolbar-cover {
   right: 0;
   left: auto;
 }
 
 /* RTL (Arabic): toolbar cover on physical right; close stays physical left */
-html[dir='rtl'] .gdrive-toolbar-cover {
+html[dir="rtl"] .gdrive-toolbar-cover {
   right: 0;
   left: auto;
 }
 
-html[dir='ltr'] .google-drive-dialog-close,
-html[dir='rtl'] .google-drive-dialog-close {
+html[dir="ltr"] .google-drive-dialog-close,
+html[dir="rtl"] .google-drive-dialog-close {
   left: max(1rem, env(safe-area-inset-left, 0px));
   right: auto;
 }
