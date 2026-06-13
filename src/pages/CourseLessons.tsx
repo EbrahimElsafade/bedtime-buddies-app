@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { ArrowLeft, Clock, Play, Lock, ChevronLeft, CheckCircle2 } from 'lucide-react'
+import { ArrowLeft, Clock, Play, Lock, ChevronLeft, CheckCircle2, Menu, X } from 'lucide-react'
 import { useLoading } from '@/contexts/LoadingContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -33,6 +33,20 @@ const CourseLessons = () => {
   
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
+  const [isTabletRange, setIsTabletRange] = useState(false)
+  const [tabletSidebarOpen, setTabletSidebarOpen] = useState(false)
+
+  useEffect(() => {
+    const mql = window.matchMedia('(min-width: 780px) and (max-width: 1290px)')
+    const onChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      setIsTabletRange(e.matches)
+      if (!e.matches) setTabletSidebarOpen(false)
+    }
+    onChange(mql)
+    mql.addEventListener('change', onChange)
+    return () => mql.removeEventListener('change', onChange)
+  }, [])
+
   
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
@@ -265,10 +279,32 @@ const CourseLessons = () => {
         </div>
 
         {/* Unified Course Player Container */}
-        <div className="rounded-2xl border border-border bg-white shadow-xl">
+        <div className="relative rounded-2xl border border-border bg-white shadow-xl">
+          {isTabletRange && (
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => setTabletSidebarOpen(v => !v)}
+              className="absolute end-3 top-3 z-30 shadow-md"
+              aria-expanded={tabletSidebarOpen}
+              aria-label={tabletSidebarOpen ? 'Hide lessons' : 'Show lessons'}
+            >
+              {tabletSidebarOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+              <span className="ms-2">{t('course.lessons')}</span>
+            </Button>
+          )}
           <div className="flex flex-col lg:flex-row lg:overflow-hidden lg:rounded-2xl">
             {/* Lessons sidebar */}
-            <aside className="order-2 w-full border-t border-border bg-secondary/40 lg:order-1 lg:max-h-[calc(100vh-10rem)] lg:w-[340px] lg:flex-shrink-0 lg:overflow-y-auto lg:border-r lg:border-t-0 rtl:lg:border-l rtl:lg:border-r-0">
+            <aside
+              className={cn(
+                'order-2 w-full border-t border-border bg-secondary/40 lg:order-1 lg:max-h-[calc(100vh-10rem)] lg:w-[340px] lg:flex-shrink-0 lg:overflow-y-auto lg:border-r lg:border-t-0 rtl:lg:border-l rtl:lg:border-r-0',
+                isTabletRange &&
+                  (tabletSidebarOpen
+                    ? 'absolute inset-y-0 end-0 z-20 !w-[340px] !max-w-[85%] !max-h-full overflow-y-auto border-s border-t-0 shadow-2xl rtl:border-e rtl:border-s-0'
+                    : 'hidden'),
+              )}
+            >
               <div className="sticky top-0 z-10 border-b border-border bg-white/95 px-4 py-3 backdrop-blur">
                 <h2 className="font-bubbly text-sm font-bold text-primary-foreground">
                   {t('course.lessons')}
