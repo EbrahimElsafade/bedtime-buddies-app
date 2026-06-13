@@ -4,7 +4,6 @@ import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { usePreferDrivePopup } from '@/hooks/use-mobile'
-import { useIsIOS } from '@/hooks/use-ios-detect'
 import {
   Dialog,
   DialogClose,
