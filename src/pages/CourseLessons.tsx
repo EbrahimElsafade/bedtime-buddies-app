@@ -37,7 +37,7 @@ const CourseLessons = () => {
   const [tabletSidebarOpen, setTabletSidebarOpen] = useState(false)
 
   useEffect(() => {
-    const mql = window.matchMedia('(min-width: 780px) and (max-width: 1290px)')
+    const mql = window.matchMedia('(max-width: 1290px)')
     const onChange = (e: MediaQueryListEvent | MediaQueryList) => {
       setIsTabletRange(e.matches)
       if (!e.matches) setTabletSidebarOpen(false)
