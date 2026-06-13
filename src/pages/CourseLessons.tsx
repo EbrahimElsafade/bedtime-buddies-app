@@ -301,7 +301,7 @@ const CourseLessons = () => {
                 'order-2 w-full border-t border-border bg-secondary/40 lg:order-1 lg:max-h-[calc(100vh-10rem)] lg:w-[340px] lg:flex-shrink-0 lg:overflow-y-auto lg:border-r lg:border-t-0 rtl:lg:border-l rtl:lg:border-r-0',
                 isTabletRange &&
                   (tabletSidebarOpen
-                    ? 'absolute inset-y-0 end-0 z-20 !w-[340px] !max-w-[85%] !max-h-full overflow-y-auto border-s border-t-0 shadow-2xl rtl:border-e rtl:border-s-0'
+                    ? 'absolute inset-y-0 end-0 z-20 !w-[340px] !max-w-[85%] !max-h-full overflow-y-auto border-s border-t-0 bg-white shadow-2xl rtl:border-e rtl:border-s-0'
                     : 'hidden'),
               )}
             >
