@@ -130,10 +130,17 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
   const preferPopup = usePreferDrivePopup()
   const [dialogOpen, setDialogOpen] = useState(false)
   const normalizedId = normalizeGoogleDriveFileId(fileId)
+  const prevIdRef = useRef<string | null>(null)
 
   useEffect(() => {
-    setDialogOpen(false)
-  }, [normalizedId])
+    if (preferPopup && prevIdRef.current && prevIdRef.current !== normalizedId) {
+      // User switched to a different lesson — auto-open the player.
+      setDialogOpen(true)
+    } else if (prevIdRef.current !== normalizedId) {
+      setDialogOpen(false)
+    }
+    prevIdRef.current = normalizedId
+  }, [normalizedId, preferPopup])
 
   if (!normalizedId) {
     return (
