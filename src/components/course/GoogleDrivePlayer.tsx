@@ -79,23 +79,13 @@ interface DriveVideoDialogProps {
   closeLabel: string
 }
 
-const DriveVideoDialog: React.FC<DriveVideoDialogProps & { showIosPlay?: boolean }> = ({
+const DriveVideoDialog: React.FC<DriveVideoDialogProps> = ({
   open,
   onOpenChange,
   title,
   embedSrc,
   closeLabel,
-  showIosPlay = false,
 }) => {
-  const { t } = useTranslation('courses')
-  const [iosStarted, setIosStarted] = useState(false)
-
-  useEffect(() => {
-    if (!open) setIosStarted(false)
-  }, [open])
-
-  const shouldLoadIframe = open && (!showIosPlay || iosStarted)
-
   return (
   <Dialog open={open} onOpenChange={onOpenChange}>
     <DialogPortal>
@@ -108,23 +98,13 @@ const DriveVideoDialog: React.FC<DriveVideoDialogProps & { showIosPlay?: boolean
 
         <div className="google-drive-embed-dialog">
           <div className="gdrive-toolbar-cover" aria-hidden />
-          {shouldLoadIframe && (
+          {open && (
             <iframe
               src={embedSrc}
               title={title}
               allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
               allowFullScreen
             />
-          )}
-          {showIosPlay && !iosStarted && (
-            <button
-              type="button"
-              className="google-drive-embed-poster__play google-drive-dialog-ios-play"
-              onClick={() => setIosStarted(true)}
-              aria-label={t('course.watchLesson')}
-            >
-              <Play className="h-8 w-8 fill-current sm:h-10 sm:w-10" />
-            </button>
           )}
         </div>
 
