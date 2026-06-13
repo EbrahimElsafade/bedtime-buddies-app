@@ -130,7 +130,6 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
 }) => {
   const { t } = useTranslation('courses')
   const preferPopup = usePreferDrivePopup()
-  const isIOS = useIsIOS()
   const [dialogOpen, setDialogOpen] = useState(false)
   const normalizedId = normalizeGoogleDriveFileId(fileId)
   const prevIdRef = useRef<string | null>(null)
@@ -182,7 +181,6 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
         title={title}
         embedSrc={embedSrc}
         closeLabel={t('course.closeVideo')}
-        showIosPlay={isIOS}
       />
     </div>
   )
