@@ -173,18 +173,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://thedolphoon.com/courses/0b069bc4-be3d-4ba6-b510-92291a597857</loc>
-    <lastmod>2026-03-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/courses/0b069bc4-be3d-4ba6-b510-92291a597857/lessons</loc>
-    <lastmod>2026-03-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://thedolphoon.com/courses/4db83088-2eac-49e6-8b0b-425847a93a9c</loc>
     <lastmod>2026-01-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -257,14 +245,14 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://thedolphoon.com/courses/ad363153-4f5b-43da-b9ed-dede892c0179</loc>
-    <lastmod>2025-12-15</lastmod>
+    <loc>https://thedolphoon.com/courses/0b069bc4-be3d-4ba6-b510-92291a597857</loc>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://thedolphoon.com/courses/ad363153-4f5b-43da-b9ed-dede892c0179/lessons</loc>
-    <lastmod>2025-12-15</lastmod>
+    <loc>https://thedolphoon.com/courses/0b069bc4-be3d-4ba6-b510-92291a597857/lessons</loc>
+    <lastmod>2026-03-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -277,6 +265,18 @@
   <url>
     <loc>https://thedolphoon.com/courses/8b9fdd34-0a81-4de2-9a0d-78899040ee0c/lessons</loc>
     <lastmod>2026-02-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://thedolphoon.com/courses/ad363153-4f5b-43da-b9ed-dede892c0179</loc>
+    <lastmod>2025-12-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://thedolphoon.com/courses/ad363153-4f5b-43da-b9ed-dede892c0179/lessons</loc>
+    <lastmod>2025-12-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
