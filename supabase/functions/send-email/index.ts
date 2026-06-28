@@ -168,6 +168,20 @@ const handler = async (req: Request): Promise<Response> => {
     const safePhone = phone ? escapeHtml(phone) : '';
     const safeMessage = escapeHtml(message);
 
+    // Persist to database using service role (RLS bypass is safe here:
+    // input is already validated, honeypot-checked, and IP rate-limited).
+    const { error: dbError } = await supabaseAdmin
+      .from("specialist_requests")
+      .insert({ name, email, phone, message });
+
+    if (dbError) {
+      console.error("Failed to persist specialist request:", dbError);
+      return new Response(
+        JSON.stringify({ success: false, error: "Failed to save your request. Please try again later." }),
+        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
     console.log("Sending email from:", email, "Name:", name);
 
     const emailResponse = await resend.emails.send({
