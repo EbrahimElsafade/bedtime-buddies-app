@@ -69,15 +69,30 @@ const allowedOrigins = [
   'http://localhost:8080',
 ];
 
+const isAllowedOrigin = (origin: string | null): boolean => {
+  if (!origin) return false;
+  if (allowedOrigins.includes(origin)) return true;
+  // Allow any Lovable preview/sandbox subdomain
+  try {
+    const { hostname } = new URL(origin);
+    return (
+      hostname.endsWith(".lovableproject.com") ||
+      hostname.endsWith(".lovable.app") ||
+      hostname.endsWith(".lovable.dev")
+    );
+  } catch {
+    return false;
+  }
+};
+
 const getCorsHeaders = (origin: string | null) => {
-  const allowedOrigin = origin && allowedOrigins.includes(origin) 
-    ? origin 
-    : allowedOrigins[0];
-  
+  const allowedOrigin = isAllowedOrigin(origin) ? (origin as string) : allowedOrigins[0];
+
   return {
     "Access-Control-Allow-Origin": allowedOrigin,
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
     "Access-Control-Allow-Credentials": "true",
+    "Vary": "Origin",
   };
 };
 
