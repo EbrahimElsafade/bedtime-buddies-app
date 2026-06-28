@@ -85,21 +85,10 @@ export const ContactFormModal = ({
   const onSubmit = async (data: ContactFormData) => {
     setIsSubmitting(true)
     try {
-      // Save to database
-      const { error: dbError } = await supabase
-        .from('specialist_requests')
-        .insert({
-          name: data.name,
-          email: data.email,
-          phone: data.phone,
-          message: data.message,
-        })
-
-      if (dbError) {
-        throw new Error(dbError.message)
-      }
-
-      // Also send email notification
+      // Submissions go exclusively through the edge function, which validates
+      // input, enforces a honeypot, IP rate-limits, and persists to the DB
+      // using elevated server credentials. Direct client inserts are blocked
+      // by RLS to prevent bot writes.
       const { data: response, error } = await supabase.functions.invoke(
         'send-email',
         {
@@ -114,14 +103,11 @@ export const ContactFormModal = ({
       )
 
       if (error) {
-        logger.warn('Email notification failed but request was saved:', error)
+        throw new Error(error.message)
       }
 
       if (response && !response.success) {
-        logger.warn(
-          'Email notification failed but request was saved:',
-          response.error,
-        )
+        throw new Error(response.error || 'Failed to submit request')
       }
 
       toast({
