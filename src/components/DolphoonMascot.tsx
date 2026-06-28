@@ -44,7 +44,7 @@ export function DolphoonMascot({
       <img
         src={dolphoonLogo}
         alt="Dolphoon the dolphin"
-        className={` ${sizeClasses[size]} ${animate ? expressionClasses[expression] : ''} rounded-full drop-shadow-lg transition-all duration-1000`}
+        className={` ${sizeClasses[size]} ${animate ? expressionClasses[expression] : ''} drop-shadow-lg transition-all duration-1000`}
       />
 
       {/* Animated bubbles */}
