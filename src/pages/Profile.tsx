@@ -220,7 +220,7 @@ const Profile = () => {
 
           {/* Subscription Tab */}
           <TabsContent value="subscription">
-            <SubscriptionTab isPremium={profile.is_premium} t={t} />
+            <SubscriptionTab isPremium={isMembershipActive(profile)} t={t} />
           </TabsContent>
         </Tabs>
       </div>
