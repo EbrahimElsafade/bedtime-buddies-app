@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Play, X } from 'lucide-react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { Loader2, Play, X } from 'lucide-react'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
@@ -25,6 +25,10 @@ interface GoogleDrivePlayerProps {
   className?: string
   onVideoEnd?: () => void
   showCountdownOnEnd?: boolean
+  onNext?: () => void
+  onPrev?: () => void
+  hasNext?: boolean
+  hasPrev?: boolean
 }
 
 const DriveIframe: React.FC<{ embedSrc: string; title: string; className?: string }> = ({
@@ -81,7 +85,17 @@ interface DriveVideoDialogProps {
   isIOS: boolean
   tapToPlayLabel: string
   playLabel: string
+  onNext?: () => void
+  onPrev?: () => void
+  hasNext?: boolean
+  hasPrev?: boolean
+  loadingLabel: string
 }
+
+const SWIPE_THRESHOLD = 60
+const SWIPE_MAX_HORIZONTAL_RATIO = 0.6 // |dx| must be < 0.6 * |dy|
+const SWIPE_MAX_DURATION = 800
+const TRANSITION_MS = 550
 
 const DriveVideoDialog: React.FC<DriveVideoDialogProps> = ({
   open,
@@ -92,18 +106,75 @@ const DriveVideoDialog: React.FC<DriveVideoDialogProps> = ({
   isIOS,
   tapToPlayLabel,
   playLabel,
+  onNext,
+  onPrev,
+  hasNext,
+  hasPrev,
+  loadingLabel,
 }) => {
   // On iOS, autoplay in a cross-origin iframe is blocked. We defer mounting
   // the iframe until the user taps our overlay — the tap becomes the user
   // gesture that allows playback to start.
   const [iosPlayRequested, setIosPlayRequested] = useState(false)
+  const [transitioning, setTransitioning] = useState(false)
 
+  // Reset iOS overlay whenever the dialog closes or the source changes.
   useEffect(() => {
     if (!open) setIosPlayRequested(false)
   }, [open])
 
-  const shouldMountIframe = !isIOS || iosPlayRequested
-  const showIosOverlay = isIOS && !iosPlayRequested && open
+  const prevSrcRef = useRef(embedSrc)
+  useEffect(() => {
+    if (prevSrcRef.current !== embedSrc) {
+      prevSrcRef.current = embedSrc
+      if (open) {
+        setIosPlayRequested(false)
+        setTransitioning(true)
+        const t = setTimeout(() => setTransitioning(false), TRANSITION_MS)
+        return () => clearTimeout(t)
+      }
+    }
+  }, [embedSrc, open])
+
+  const shouldMountIframe = (!isIOS || iosPlayRequested) && !transitioning
+  const showIosOverlay = isIOS && !iosPlayRequested && open && !transitioning
+
+  // Swipe handling — attached to edge strips (iframe swallows its own touches).
+  const touchRef = useRef<{ x: number; y: number; t: number } | null>(null)
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    const t = e.touches[0]
+    if (!t) return
+    touchRef.current = { x: t.clientX, y: t.clientY, t: Date.now() }
+  }, [])
+
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      const start = touchRef.current
+      touchRef.current = null
+      if (!start) return
+      if (transitioning) return
+      const end = e.changedTouches[0]
+      if (!end) return
+      const dx = end.clientX - start.x
+      const dy = end.clientY - start.y
+      const dt = Date.now() - start.t
+      if (dt > SWIPE_MAX_DURATION) return
+      if (Math.abs(dy) < SWIPE_THRESHOLD) return
+      if (Math.abs(dx) > Math.abs(dy) * SWIPE_MAX_HORIZONTAL_RATIO) return
+      if (dy < 0 && hasNext && onNext) {
+        onNext()
+      } else if (dy > 0 && hasPrev && onPrev) {
+        onPrev()
+      }
+    },
+    [hasNext, hasPrev, onNext, onPrev, transitioning],
+  )
+
+  const swipeHandlers = {
+    onTouchStart: handleTouchStart,
+    onTouchEnd: handleTouchEnd,
+  }
 
   return (
   <Dialog open={open} onOpenChange={onOpenChange}>
@@ -140,6 +211,29 @@ const DriveVideoDialog: React.FC<DriveVideoDialogProps> = ({
               </span>
             </button>
           )}
+
+          {transitioning && (
+            <div className="google-drive-loading-overlay" role="status" aria-live="polite">
+              <Loader2 className="h-10 w-10 animate-spin" />
+              <span className="sr-only">{loadingLabel}</span>
+            </div>
+          )}
+
+          {/* Edge swipe capture strips — thin, don't cover video controls. */}
+          {(hasNext || hasPrev) && (
+            <>
+              <div
+                className="google-drive-swipe-zone google-drive-swipe-zone--left"
+                aria-hidden
+                {...swipeHandlers}
+              />
+              <div
+                className="google-drive-swipe-zone google-drive-swipe-zone--right"
+                aria-hidden
+                {...swipeHandlers}
+              />
+            </>
+          )}
         </div>
 
         <DialogClose className="google-drive-dialog-close" aria-label={closeLabel}>
@@ -161,6 +255,10 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
   fileId,
   title = 'Video player',
   className,
+  onNext,
+  onPrev,
+  hasNext,
+  hasPrev,
 }) => {
   const { t } = useTranslation('courses')
   const preferPopup = usePreferDrivePopup()
@@ -219,6 +317,11 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
         isIOS={isIOS}
         tapToPlayLabel={t('course.tapToPlay', 'Tap to start video')}
         playLabel={t('course.watchLesson')}
+        onNext={onNext}
+        onPrev={onPrev}
+        hasNext={hasNext}
+        hasPrev={hasPrev}
+        loadingLabel={t('course.loadingVideo', 'Loading video')}
       />
     </div>
   )
