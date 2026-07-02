@@ -180,7 +180,7 @@ const Profile = () => {
               setChildName={setChildName}
               profileLanguage={profileLanguage}
               setProfileLanguage={setProfileLanguage}
-              isPremium={profile?.is_premium || false}
+              isPremium={isMembershipActive(profile)}
               onSave={handleSaveProfile}
               onLogout={handleLogout}
             />
