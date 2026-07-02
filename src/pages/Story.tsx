@@ -14,6 +14,7 @@ import { StoryContent } from '@/components/story/StoryContent'
 import { PremiumMessage } from '@/components/story/PremiumMessage'
 import { getMultilingualText } from '@/utils/multilingualUtils'
 import { logger } from '@/utils/logger'
+import { isMembershipActive } from '@/utils/membership'
 
 const Story = () => {
   const { id } = useParams<{ id: string }>()
