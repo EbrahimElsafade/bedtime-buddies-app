@@ -13,6 +13,7 @@ import { FavoriteItem, FavoriteStory, FavoriteCourse } from '@/types/favorites'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { useUserRole } from '@/hooks/useUserRole'
+import { isMembershipActive } from '@/utils/membership'
 
 interface FavoritesListProps {
   type: 'story' | 'course'
