@@ -302,12 +302,18 @@ const Users = () => {
       {
         accessorKey: "is_premium",
         header: ({ column }) => <DataTableColumnHeader column={column} title={t("users.status")} />,
-        cell: ({ row }) =>
-          row.original.is_premium ? (
+        cell: ({ row }) => {
+          const u = row.original;
+          if (!u.is_premium) {
+            return <Badge variant="outline">{t("users.free")}</Badge>;
+          }
+          const active = isMembershipActive(u as any);
+          return active ? (
             <Badge className="bg-moon-DEFAULT hover:bg-moon-dark">{t("users.premium")}</Badge>
           ) : (
-            <Badge variant="outline">{t("users.free")}</Badge>
-          ),
+            <Badge variant="destructive">{t("users.expired")}</Badge>
+          );
+        },
       },
       {
         accessorKey: "subscription_period",
