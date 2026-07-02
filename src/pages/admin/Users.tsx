@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { MoreHorizontal, Search, User, RefreshCw, ShieldCheck, UserPlus, Pencil, Trash2, Loader2, AlertTriangle, Key, Crown } from "lucide-react";
+import { isMembershipActive } from "@/utils/membership";
 
 type UserWithRole = {
   id: string;
