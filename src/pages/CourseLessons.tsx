@@ -24,6 +24,7 @@ import { CourseCertificateSection } from '@/components/course/CourseCertificateS
 import { useCourseProgress } from '@/hooks/useCourseProgress'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from '@/hooks/use-toast'
+import { isMembershipActive } from '@/utils/membership'
 
 const CourseLessons = () => {
   const { id: courseId } = useParams<{ id: string }>()
