@@ -259,3 +259,44 @@ html[dir="rtl"] .google-drive-dialog-close {
   right: auto;
 }
 
+/* Loading overlay while a new lesson is being loaded */
+.google-drive-loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(0 0 0 / 0.75);
+  color: #fff;
+  pointer-events: none;
+}
+
+/* Swipe capture zones — narrow vertical strips on the left/right edges.
+   Kept thin so they don't block the native video controls in the iframe. */
+.google-drive-swipe-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 44px;
+  z-index: 15;
+  background: transparent;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.google-drive-swipe-zone--left {
+  left: 0;
+}
+
+.google-drive-swipe-zone--right {
+  right: 0;
+}
+
+@media (min-width: 500px) {
+  .google-drive-swipe-zone {
+    width: 64px;
+  }
+}
+
+
