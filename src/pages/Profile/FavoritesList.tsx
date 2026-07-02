@@ -29,8 +29,9 @@ export const FavoritesList = ({
   t,
 }: FavoritesListProps) => {
   const navigate = useNavigate()
-  const { user } = useAuth()
-  const { isPremium } = useUserRole(user)
+  const { user, profile } = useAuth()
+  const { isPremium: roleIsPremium } = useUserRole(user)
+  const isPremium = isMembershipActive(profile) || roleIsPremium
   const { t: tPremium } = useTranslation('premium')
 
   const getTitle = (item: FavoriteItem) => {
