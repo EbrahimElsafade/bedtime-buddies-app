@@ -21,6 +21,7 @@ import { getCategoryText } from '@/utils/courseUtils'
 import { CoursePremiumModal } from '@/components/course/CoursePremiumModal'
 import { CourseCertificateSection } from '@/components/course/CourseCertificateSection'
 import { useCourseProgress } from '@/hooks/useCourseProgress'
+import { isMembershipActive } from '@/utils/membership'
 // import { WhatsappSubscribeButton } from '@/components/WhatsappSubscribeButton'
 
 const Course = () => {
