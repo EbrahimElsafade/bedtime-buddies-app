@@ -4,6 +4,7 @@ import * as DialogPrimitive from '@radix-ui/react-dialog'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { usePreferDrivePopup } from '@/hooks/use-mobile'
+import { useIsIOS } from '@/hooks/use-ios-detect'
 import {
   Dialog,
   DialogClose,
@@ -77,6 +78,9 @@ interface DriveVideoDialogProps {
   title: string
   embedSrc: string
   closeLabel: string
+  isIOS: boolean
+  tapToPlayLabel: string
+  playLabel: string
 }
 
 const DriveVideoDialog: React.FC<DriveVideoDialogProps> = ({
@@ -85,7 +89,22 @@ const DriveVideoDialog: React.FC<DriveVideoDialogProps> = ({
   title,
   embedSrc,
   closeLabel,
+  isIOS,
+  tapToPlayLabel,
+  playLabel,
 }) => {
+  // On iOS, autoplay in a cross-origin iframe is blocked. We defer mounting
+  // the iframe until the user taps our overlay — the tap becomes the user
+  // gesture that allows playback to start.
+  const [iosPlayRequested, setIosPlayRequested] = useState(false)
+
+  useEffect(() => {
+    if (!open) setIosPlayRequested(false)
+  }, [open])
+
+  const shouldMountIframe = !isIOS || iosPlayRequested
+  const showIosOverlay = isIOS && !iosPlayRequested && open
+
   return (
   <Dialog open={open} onOpenChange={onOpenChange}>
     <DialogPortal>
@@ -98,13 +117,28 @@ const DriveVideoDialog: React.FC<DriveVideoDialogProps> = ({
 
         <div className="google-drive-embed-dialog">
           <div className="gdrive-toolbar-cover" aria-hidden />
-          {open && (
+          {open && shouldMountIframe && (
             <iframe
               src={embedSrc}
               title={title}
               allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
               allowFullScreen
             />
+          )}
+          {showIosOverlay && (
+            <button
+              type="button"
+              className="google-drive-ios-tap-overlay"
+              onClick={() => setIosPlayRequested(true)}
+              aria-label={playLabel}
+            >
+              <span className="google-drive-ios-tap-overlay__play">
+                <Play className="h-10 w-10 fill-current" />
+              </span>
+              <span className="google-drive-ios-tap-overlay__label">
+                {tapToPlayLabel}
+              </span>
+            </button>
           )}
         </div>
 
@@ -130,6 +164,7 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
 }) => {
   const { t } = useTranslation('courses')
   const preferPopup = usePreferDrivePopup()
+  const isIOS = useIsIOS()
   const [dialogOpen, setDialogOpen] = useState(false)
   const normalizedId = normalizeGoogleDriveFileId(fileId)
   const prevIdRef = useRef<string | null>(null)
@@ -181,6 +216,9 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
         title={title}
         embedSrc={embedSrc}
         closeLabel={t('course.closeVideo')}
+        isIOS={isIOS}
+        tapToPlayLabel={t('course.tapToPlay', 'Tap to start video')}
+        playLabel={t('course.watchLesson')}
       />
     </div>
   )
