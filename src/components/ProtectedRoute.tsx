@@ -2,6 +2,7 @@ import { Navigate, useLocation } from 'react-router-dom'
 import { useAuth } from '@/contexts/AuthContext'
 import { ReactNode, useEffect, useState } from 'react'
 import { Loader2 } from 'lucide-react'
+import { isMembershipActive } from '@/utils/membership'
 
 interface ProtectedRouteProps {
   children: ReactNode
@@ -41,7 +42,7 @@ const ProtectedRoute = ({
     if (!isAuthenticated) {
       return <Navigate to="/login" replace state={{ from: location.pathname }} />
     }
-    if (requirePremium && !profile?.is_premium) {
+    if (requirePremium && !isMembershipActive(profile)) {
       return <Navigate to="/subscription" replace />
     }
     return <>{children}</>
@@ -61,7 +62,7 @@ const ProtectedRoute = ({
     return <Navigate to="/login" replace state={{ from: location.pathname }} />
   }
 
-  if (requirePremium && !profile?.is_premium) {
+  if (requirePremium && !isMembershipActive(profile)) {
     return <Navigate to="/subscription" replace />
   }
 

@@ -21,6 +21,7 @@ import { getCategoryText } from '@/utils/courseUtils'
 import { CoursePremiumModal } from '@/components/course/CoursePremiumModal'
 import { CourseCertificateSection } from '@/components/course/CourseCertificateSection'
 import { useCourseProgress } from '@/hooks/useCourseProgress'
+import { isMembershipActive } from '@/utils/membership'
 // import { WhatsappSubscribeButton } from '@/components/WhatsappSubscribeButton'
 
 const Course = () => {
@@ -35,7 +36,7 @@ const Course = () => {
   const { data: categories = [] } = useCourseCategories()
   const { isFavorite, addFavorite, removeFavorite } = useCourseFavorites()
   const { isPremium: roleIsPremium, isLoading: roleLoading } = useUserRole(user)
-  const isPremium = profile?.is_premium ?? roleIsPremium
+  const isPremium = isMembershipActive(profile) || roleIsPremium
   const effectiveRoleLoading = roleLoading && !isProfileLoaded
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)

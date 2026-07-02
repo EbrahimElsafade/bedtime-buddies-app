@@ -56,7 +56,9 @@ export const useUserRole = (user: User | null) => {
 
   const isAdmin = role === 'admin';
   const isEditor = role === 'editor' || isAdmin;
-  const isPremium = role === 'premium' || isEditor;
+  // Role-based premium is limited to staff (editor/admin). End-user premium is
+  // determined by `isMembershipActive(profile)` — see src/utils/membership.ts.
+  const isPremium = isEditor;
   const canAccessAdmin = role === 'admin';
   const canEditContent = role === 'editor' || role === 'admin';
 

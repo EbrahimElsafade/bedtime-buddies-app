@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { useAuth } from '@/contexts/AuthContext'
+import { isMembershipActive } from '@/utils/membership'
 
 const Index = () => {
   const { profile } = useAuth()
@@ -59,7 +60,7 @@ const Index = () => {
 
       <FeaturedCourses />
 
-      {!profile?.is_premium && <SubscribeBanner />}
+      {!isMembershipActive(profile) && <SubscribeBanner />}
     </div>
   )
 }

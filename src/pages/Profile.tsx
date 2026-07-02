@@ -16,6 +16,7 @@ import { FavoritesList } from './Profile/FavoritesList'
 import { SubscriptionTab } from './Profile/SubscriptionTab'
 import { SubscriptionProfile } from './Profile/SubscriptionProfile'
 import { FinishedContentTab } from './Profile/FinishedContentTab'
+import { isMembershipActive } from '@/utils/membership'
 
 const VALID_TABS = ['profile', 'finished-content', 'story-favorites', 'course-favorites', 'subscription'] as const
 type TabValue = typeof VALID_TABS[number]
@@ -179,7 +180,7 @@ const Profile = () => {
               setChildName={setChildName}
               profileLanguage={profileLanguage}
               setProfileLanguage={setProfileLanguage}
-              isPremium={profile?.is_premium || false}
+              isPremium={isMembershipActive(profile)}
               onSave={handleSaveProfile}
               onLogout={handleLogout}
             />
@@ -219,7 +220,7 @@ const Profile = () => {
 
           {/* Subscription Tab */}
           <TabsContent value="subscription">
-            <SubscriptionTab isPremium={profile.is_premium} t={t} />
+            <SubscriptionTab isPremium={isMembershipActive(profile)} t={t} />
           </TabsContent>
         </Tabs>
       </div>

@@ -24,6 +24,7 @@ import { CourseCertificateSection } from '@/components/course/CourseCertificateS
 import { useCourseProgress } from '@/hooks/useCourseProgress'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from '@/hooks/use-toast'
+import { isMembershipActive } from '@/utils/membership'
 
 const CourseLessons = () => {
   const { id: courseId } = useParams<{ id: string }>()
@@ -51,7 +52,7 @@ const CourseLessons = () => {
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
   const profileLoading = !!user && !isProfileLoaded
-  const isPremium = profile?.is_premium ?? false
+  const isPremium = isMembershipActive(profile)
   const { refreshStats, refreshFinishedContent } = useGamification()
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const {

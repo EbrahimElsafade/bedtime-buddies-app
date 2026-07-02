@@ -13,6 +13,7 @@ import { FavoriteItem, FavoriteStory, FavoriteCourse } from '@/types/favorites'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { useUserRole } from '@/hooks/useUserRole'
+import { isMembershipActive } from '@/utils/membership'
 
 interface FavoritesListProps {
   type: 'story' | 'course'
@@ -28,8 +29,9 @@ export const FavoritesList = ({
   t,
 }: FavoritesListProps) => {
   const navigate = useNavigate()
-  const { user } = useAuth()
-  const { isPremium } = useUserRole(user)
+  const { user, profile } = useAuth()
+  const { isPremium: roleIsPremium } = useUserRole(user)
+  const isPremium = isMembershipActive(profile) || roleIsPremium
   const { t: tPremium } = useTranslation('premium')
 
   const getTitle = (item: FavoriteItem) => {

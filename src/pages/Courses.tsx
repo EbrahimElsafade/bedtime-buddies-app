@@ -4,6 +4,7 @@ import { Helmet } from 'react-helmet-async'
 import { Search, BookOpen, Clock, User } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useUserRole } from '@/hooks/useUserRole'
+import { isMembershipActive } from '@/utils/membership'
 import { Input } from '@/components/ui/input'
 import { useLoading } from '@/contexts/LoadingContext'
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll'
@@ -35,8 +36,9 @@ const Courses = () => {
   const { t } = useTranslation(['courses', 'meta', 'common', 'premium', 'misc'])
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const navigate = useNavigate()
-  const { user, isAuthenticated } = useAuth()
-  const { isPremium } = useUserRole(user)
+  const { user, isAuthenticated, profile } = useAuth()
+  const { isPremium: roleIsPremium } = useUserRole(user)
+  const isPremium = isMembershipActive(profile) || roleIsPremium
 
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: courses = [], isLoading } = useCoursesData()
