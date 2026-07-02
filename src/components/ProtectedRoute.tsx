@@ -42,7 +42,7 @@ const ProtectedRoute = ({
     if (!isAuthenticated) {
       return <Navigate to="/login" replace state={{ from: location.pathname }} />
     }
-    if (requirePremium && !profile?.is_premium) {
+    if (requirePremium && !isMembershipActive(profile)) {
       return <Navigate to="/subscription" replace />
     }
     return <>{children}</>
