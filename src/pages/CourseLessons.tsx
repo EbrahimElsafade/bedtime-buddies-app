@@ -174,11 +174,43 @@ const CourseLessons = () => {
     }
   }
 
-  const getNextVideoExists = (): boolean => {
-    if (!course?.videos || !selectedVideo) return false
-    const currentIndex = course.videos.findIndex(v => v.id === selectedVideo.id)
-    return currentIndex + 1 < course.videos.length
+  const getCurrentIndex = (): number => {
+    if (!course?.videos || !selectedVideo) return -1
+    return course.videos.findIndex(v => v.id === selectedVideo.id)
   }
+
+  const getNextVideoExists = (): boolean => {
+    const i = getCurrentIndex()
+    return i >= 0 && i + 1 < (course?.videos?.length ?? 0)
+  }
+
+  const canGoToVideo = (video: CourseVideo | undefined): boolean => {
+    if (!video) return false
+    // Match the gating used by handleVideoSelect.
+    return Boolean(isPremium || video.isFree)
+  }
+
+  const goToOffset = (offset: number) => {
+    if (!course?.videos) return
+    const i = getCurrentIndex()
+    if (i < 0) return
+    const target = course.videos[i + offset]
+    if (!canGoToVideo(target)) return
+    handleVideoSelect(target)
+  }
+
+  const hasNextLesson = (() => {
+    const i = getCurrentIndex()
+    if (i < 0 || !course?.videos) return false
+    return canGoToVideo(course.videos[i + 1])
+  })()
+
+  const hasPrevLesson = (() => {
+    const i = getCurrentIndex()
+    if (i <= 0 || !course?.videos) return false
+    return canGoToVideo(course.videos[i - 1])
+  })()
+
 
   
 
