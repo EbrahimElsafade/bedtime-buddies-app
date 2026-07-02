@@ -15,6 +15,7 @@ import { supabase } from '@/integrations/supabase/client'
 import { useAuth } from '@/contexts/AuthContext'
 import { Lock, Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import { isMembershipActive } from '@/utils/membership'
 
 const VALID_CATEGORIES = ['all', 'single', 'multi'] as const
 type GameCategory = typeof VALID_CATEGORIES[number]
