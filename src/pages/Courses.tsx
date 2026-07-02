@@ -36,8 +36,9 @@ const Courses = () => {
   const { t } = useTranslation(['courses', 'meta', 'common', 'premium', 'misc'])
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const navigate = useNavigate()
-  const { user, isAuthenticated } = useAuth()
-  const { isPremium } = useUserRole(user)
+  const { user, isAuthenticated, profile } = useAuth()
+  const { isPremium: roleIsPremium } = useUserRole(user)
+  const isPremium = isMembershipActive(profile) || roleIsPremium
 
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: courses = [], isLoading } = useCoursesData()
