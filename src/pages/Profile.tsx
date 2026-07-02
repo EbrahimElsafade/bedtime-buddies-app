@@ -16,6 +16,7 @@ import { FavoritesList } from './Profile/FavoritesList'
 import { SubscriptionTab } from './Profile/SubscriptionTab'
 import { SubscriptionProfile } from './Profile/SubscriptionProfile'
 import { FinishedContentTab } from './Profile/FinishedContentTab'
+import { isMembershipActive } from '@/utils/membership'
 
 const VALID_TABS = ['profile', 'finished-content', 'story-favorites', 'course-favorites', 'subscription'] as const
 type TabValue = typeof VALID_TABS[number]
