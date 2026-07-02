@@ -87,9 +87,9 @@ const Story = () => {
     }
   }
 
-  // Check premium access: free story OR authenticated with premium/admin role OR profile flag
+  // Central membership check: free story OR authenticated user with an ACTIVE paid membership
   const canAccessStory =
-    story.is_free || (isAuthenticated && profile?.is_premium)
+    story.is_free || (isAuthenticated && isMembershipActive(profile))
 
   const handleLanguageChange = newLanguage => {
     setIsLoading(true)
