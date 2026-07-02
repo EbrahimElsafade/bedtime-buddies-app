@@ -216,6 +216,9 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
         title={title}
         embedSrc={embedSrc}
         closeLabel={t('course.closeVideo')}
+        isIOS={isIOS}
+        tapToPlayLabel={t('course.tapToPlay', 'Tap to start video')}
+        playLabel={t('course.watchLesson')}
       />
     </div>
   )
