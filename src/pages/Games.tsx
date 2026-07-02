@@ -86,11 +86,10 @@ const Games = () => {
         .eq('id', user.id)
         .single()
 
-      if (
-        data?.is_premium &&
-        (!data.subscription_end || new Date(data.subscription_end) > new Date())
-      ) {
+      if (isMembershipActive(data)) {
         setHasPremium(true)
+      } else {
+        setHasPremium(false)
       }
     }
 
