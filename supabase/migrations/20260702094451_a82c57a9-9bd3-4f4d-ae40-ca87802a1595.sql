@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Public can view all lessons of published courses" ON public.course_lessons;
