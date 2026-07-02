@@ -52,7 +52,7 @@ const CourseLessons = () => {
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
   const profileLoading = !!user && !isProfileLoaded
-  const isPremium = profile?.is_premium ?? false
+  const isPremium = isMembershipActive(profile)
   const { refreshStats, refreshFinishedContent } = useGamification()
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const {
