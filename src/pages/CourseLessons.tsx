@@ -438,6 +438,10 @@ const CourseLessons = () => {
                         title={getLocalized(selectedVideo, 'title', lang)}
                         onVideoEnd={handleVideoEnd}
                         showCountdownOnEnd={getNextVideoExists()}
+                        onNext={() => goToOffset(1)}
+                        onPrev={() => goToOffset(-1)}
+                        hasNext={hasNextLesson}
+                        hasPrev={hasPrevLesson}
                       />
                     ) : selectedVideo.videoPath ? (
                       <div className="flex aspect-video items-center justify-center text-white">
