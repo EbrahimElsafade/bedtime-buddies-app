@@ -12,10 +12,10 @@ import { z } from "npm:zod@^3.25.76";
 var list_stories_default = defineTool({
   name: "list_stories",
   title: "List stories",
-  description: "List published stories on Dolphoon with title, category, and premium status.",
+  description: "List published stories on Dolphoon with title, category, and free/premium status.",
   inputSchema: {
     limit: z.number().int().min(1).max(50).default(20).describe("Max stories to return."),
-    category: z.string().optional().describe("Filter by category slug or name.")
+    category: z.string().optional().describe("Filter by category.")
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ limit, category }) => {
@@ -23,7 +23,7 @@ var list_stories_default = defineTool({
       process.env.SUPABASE_URL,
       process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY
     );
-    let query = supabase.from("stories").select("id, title, category, is_premium, is_published").eq("is_published", true).limit(limit);
+    let query = supabase.from("stories").select("id, title, category, is_free, duration").eq("is_published", true).limit(limit);
     if (category) query = query.eq("category", category);
     const { data, error } = await query;
     if (error) return { content: [{ type: "text", text: error.message }], isError: true };
@@ -41,17 +41,20 @@ import { z as z2 } from "npm:zod@^3.25.76";
 var list_courses_default = defineTool2({
   name: "list_courses",
   title: "List courses",
-  description: "List published courses on Dolphoon.",
+  description: "List published courses on Dolphoon with title, instructor, and free/premium status.",
   inputSchema: {
-    limit: z2.number().int().min(1).max(50).default(20).describe("Max courses to return.")
+    limit: z2.number().int().min(1).max(50).default(20).describe("Max courses to return."),
+    language: z2.enum(["en", "ar", "fr"]).default("en").describe("Language for title/description.")
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
-  handler: async ({ limit }) => {
+  handler: async ({ limit, language }) => {
     const supabase = createClient2(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY
     );
-    const { data, error } = await supabase.from("courses").select("id, title, description, is_premium, is_published").eq("is_published", true).limit(limit);
+    const { data, error } = await supabase.from("courses").select(
+      `id, title_${language}, description_${language}, instructor_name_${language}, is_free, min_age, max_age`
+    ).eq("is_published", true).limit(limit);
     if (error) return { content: [{ type: "text", text: error.message }], isError: true };
     return {
       content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
@@ -67,7 +70,7 @@ import { z as z3 } from "npm:zod@^3.25.76";
 var search_content_default = defineTool3({
   name: "search_content",
   title: "Search content",
-  description: "Search published stories and courses on Dolphoon by title keyword.",
+  description: "Search published Dolphoon stories and English-titled courses by title keyword.",
   inputSchema: {
     query: z3.string().trim().min(1).describe("Keyword to search titles for."),
     limit: z3.number().int().min(1).max(25).default(10)
@@ -80,8 +83,8 @@ var search_content_default = defineTool3({
     );
     const pattern = `%${query}%`;
     const [stories, courses] = await Promise.all([
-      supabase.from("stories").select("id, title, is_premium").eq("is_published", true).ilike("title", pattern).limit(limit),
-      supabase.from("courses").select("id, title, is_premium").eq("is_published", true).ilike("title", pattern).limit(limit)
+      supabase.from("stories").select("id, title, is_free").eq("is_published", true).ilike("title", pattern).limit(limit),
+      supabase.from("courses").select("id, title_en, is_free").eq("is_published", true).ilike("title_en", pattern).limit(limit)
     ]);
     const result = { stories: stories.data ?? [], courses: courses.data ?? [] };
     return {

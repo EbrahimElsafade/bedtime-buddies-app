@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { defineTool } from "@lovable.dev/mcp-js";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
@@ -8,10 +7,10 @@ declare const process: { env: Record<string, string | undefined> };
 export default defineTool({
   name: "list_stories",
   title: "List stories",
-  description: "List published stories on Dolphoon with title, category, and premium status.",
+  description: "List published stories on Dolphoon with title, category, and free/premium status.",
   inputSchema: {
     limit: z.number().int().min(1).max(50).default(20).describe("Max stories to return."),
-    category: z.string().optional().describe("Filter by category slug or name."),
+    category: z.string().optional().describe("Filter by category."),
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
   handler: async ({ limit, category }) => {
@@ -21,7 +20,7 @@ export default defineTool({
     );
     let query = supabase
       .from("stories")
-      .select("id, title, category, is_premium, is_published")
+      .select("id, title, category, is_free, duration")
       .eq("is_published", true)
       .limit(limit);
     if (category) query = query.eq("category", category);

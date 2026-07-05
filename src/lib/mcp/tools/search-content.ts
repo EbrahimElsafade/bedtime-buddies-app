@@ -7,7 +7,7 @@ declare const process: { env: Record<string, string | undefined> };
 export default defineTool({
   name: "search_content",
   title: "Search content",
-  description: "Search published stories and courses on Dolphoon by title keyword.",
+  description: "Search published Dolphoon stories and English-titled courses by title keyword.",
   inputSchema: {
     query: z.string().trim().min(1).describe("Keyword to search titles for."),
     limit: z.number().int().min(1).max(25).default(10),
@@ -22,15 +22,15 @@ export default defineTool({
     const [stories, courses] = await Promise.all([
       supabase
         .from("stories")
-        .select("id, title, is_premium")
+        .select("id, title, is_free")
         .eq("is_published", true)
         .ilike("title", pattern)
         .limit(limit),
       supabase
         .from("courses")
-        .select("id, title, is_premium")
+        .select("id, title_en, is_free")
         .eq("is_published", true)
-        .ilike("title", pattern)
+        .ilike("title_en", pattern)
         .limit(limit),
     ]);
     const result = { stories: stories.data ?? [], courses: courses.data ?? [] };
