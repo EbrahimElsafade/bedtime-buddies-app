@@ -2,6 +2,8 @@ import { defineTool } from "@lovable.dev/mcp-js";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 
+declare const process: { env: Record<string, string | undefined> };
+
 export default defineTool({
   name: "search_content",
   title: "Search content",
@@ -31,10 +33,7 @@ export default defineTool({
         .ilike("title", pattern)
         .limit(limit),
     ]);
-    const result = {
-      stories: stories.data ?? [],
-      courses: courses.data ?? [],
-    };
+    const result = { stories: stories.data ?? [], courses: courses.data ?? [] };
     return {
       content: [{ type: "text", text: JSON.stringify(result, null, 2) }],
       structuredContent: result,
