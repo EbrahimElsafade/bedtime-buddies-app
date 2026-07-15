@@ -219,40 +219,8 @@ const Courses = () => {
                 const isKnowledgeStation =
                   category?.name.toLowerCase() === 'knowledge station'
 
-                if (!isAuthenticated) {
-                  return (
-                    <div
-                      key={course.id}
-                      onClick={() => navigate('/login')}
-                      className="cursor-pointer"
-                    >
-                      <Card className="story-card relative z-10 h-[500px] overflow-hidden border-primary/20 bg-secondary/70 backdrop-blur-sm">
-                        <div className="relative aspect-[16/9]">
-                          <img
-                            src={getImageUrl(course.coverImagePath)}
-                            alt={getLocalized(course, 'title', lang)}
-                            className="h-full w-full overflow-hidden object-cover"
-                            onError={e => {
-                              e.currentTarget.src =
-                                'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
-                            }}
-                          />
-                        </div>
-                        <div className="flex flex-1 flex-col items-center justify-center p-6 text-center">
-                          <h3 className="mb-2 line-clamp-1 font-bubbly text-lg text-primary-foreground">
-                            {getLocalized(course, 'title', lang)}
-                          </h3>
-                          <p className="mb-4 text-sm text-muted-foreground">
-                            {t('courses.loginToView')}
-                          </p>
-                          <Button className="w-full">
-                            {t('common:login')}
-                          </Button>
-                        </div>
-                      </Card>
-                    </div>
-                  )
-                }
+
+
 
                 return (
                   <Link
