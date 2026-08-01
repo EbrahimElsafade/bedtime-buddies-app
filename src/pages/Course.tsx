@@ -307,7 +307,23 @@ const Course = () => {
                 </div>
               )}
 
-              <div className="flex gap-4">
+              {!course.isFree && (
+                <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-primary/30 bg-secondary/40 p-4">
+                  <CoursePrice priceEgp={course.price} withLabel />
+                  {hasAccess ? (
+                    <Badge className="bg-green-600 hover:bg-green-700">
+                      {t('purchase.owned')}
+                    </Badge>
+                  ) : (
+                    <BuyCourseButton
+                      courseTitle={getLocalized(course, 'title', lang)}
+                      priceEgp={course.price}
+                    />
+                  )}
+                </div>
+              )}
+
+              <div className="flex flex-wrap gap-4">
                 <Button variant="accent" onClick={handleStartCourse}>
                   {t('button.startLearning')}
                 </Button>
@@ -318,6 +334,7 @@ const Course = () => {
                 >
                   {t('button.communicateWithASpecialist')}
                 </Button>
+
 
                 {/* <WhatsappSubscribeButton
                   className="!w-fit"
