@@ -512,15 +512,9 @@ const CourseLessons = () => {
         <DialogContent className="max-w-2xl">
           <CoursePremiumModal
             courseTitle={getLocalized(course, 'title', lang)}
-            onSubscriptionClick={() => {
-              setShowPremiumModal(false)
-              if (!isAuthenticated) {
-                navigate('/login')
-              } else {
-                navigate('/profile?tab=subscription')
-              }
-            }}
+            priceEgp={course.price}
           />
+
         </DialogContent>
       </Dialog>
     </div>
