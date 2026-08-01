@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { Home, BookOpen, User, LibraryBig } from 'lucide-react'
+import { Home, User, LibraryBig } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
 import { Navbar } from './navigation/Navbar'
