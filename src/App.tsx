@@ -116,6 +116,7 @@ function App() {
                     <Route path="stories/edit/:id" element={<AdminStoryEditor />} />
                     <Route path="stories/options" element={<AdminStoryOptions />} />
                     <Route path="users" element={<AdminUsers />} />
+                    <Route path="users/:userId" element={<AdminUserEditor />} />
                     <Route path="courses" element={<AdminCourses />} />
                     <Route path="courses/options" element={<AdminCourseOptions />} />
                     <Route path="courses/new" element={<AdminCoursesEditor />} />
