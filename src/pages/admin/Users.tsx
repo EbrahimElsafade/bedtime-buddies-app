@@ -39,6 +39,7 @@ type UserRole = "user" | "editor" | "admin";
 
 const Users = () => {
   const { t } = useTranslation("admin");
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
 
   // Create user state
