@@ -67,7 +67,8 @@
       "benefit1": "Accès à vie à toutes les leçons de ce cours",
       "benefit2": "Regardez à votre rythme, sur tous les appareils",
       "benefit3": "Certificat à la fin du cours"
-    }
+    },
+    "oneTime": "Paiement unique"
   },
   "purchased": {
     "title": "Mes cours achetés",
@@ -77,7 +78,6 @@
     "continue": "Continuer l'apprentissage"
   },
   "duration": "min",
-
   "contact": {
     "title": "Contacter un Spécialiste",
     "description": "Remplissez le formulaire ci-dessous et nous vous répondrons dès que possible.",
@@ -94,8 +94,7 @@
     "successTitle": "Message Envoyé!",
     "successMessage": "Nous avons reçu votre message et vous répondrons bientôt.",
     "errorTitle": "Échec de l'Envoi",
-    "errorMessage": "Une erreur s'est produite lors de l'envoi de votre message. Veuillez réessayer."
-    ,
+    "errorMessage": "Une erreur s'est produite lors de l'envoi de votre message. Veuillez réessayer.",
     "close": "Fermer",
     "validation": {
       "nameRequired": "Le nom est requis",

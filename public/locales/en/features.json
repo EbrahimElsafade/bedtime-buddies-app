@@ -1,4 +1,3 @@
-
 {
   "title": "Why Choose Dolphoon?",
   "subtitle": "Discover the magic of our carefully crafted entertainment and learning content",
@@ -29,5 +28,9 @@
   "games": {
     "title": "Interactive Games",
     "desc": "Fun educational games that complement our stories and courses"
+  },
+  "lifetime": {
+    "title": "Buy Only What You Need",
+    "desc": "Purchase only the courses you need and enjoy lifetime access with no recurring subscription."
   }
 }

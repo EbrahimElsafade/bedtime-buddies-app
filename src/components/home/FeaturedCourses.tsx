@@ -18,7 +18,6 @@ import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 import { getCategoryText } from '@/utils/courseUtils'
 import { CoursePrice } from '@/components/course/CoursePrice'
-import { BuyCourseButton } from '@/components/course/BuyCourseButton'
 import { useMyPurchasedCourseIds } from '@/hooks/useCoursePurchases'
 
 const FeaturedCourses = () => {

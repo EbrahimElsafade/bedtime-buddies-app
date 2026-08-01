@@ -67,7 +67,8 @@
       "benefit1": "Lifetime access to all lessons in this course",
       "benefit2": "Watch at your own pace, on any device",
       "benefit3": "Certificate once you complete the course"
-    }
+    },
+    "oneTime": "One-time purchase"
   },
   "purchased": {
     "title": "My Purchased Courses",
@@ -77,7 +78,6 @@
     "continue": "Continue Learning"
   },
   "duration": "min",
-
   "contact": {
     "title": "Contact a Specialist",
     "description": "Fill out the form below and we'll get back to you as soon as possible.",
