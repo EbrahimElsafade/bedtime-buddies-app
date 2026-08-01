@@ -82,10 +82,17 @@ const FeaturedCourses = () => {
                       </Badge>
                     )}
                     {!course.is_free && (
-                      <Badge className="absolute left-2 top-2 bg-gradient-to-r from-purple-500 to-pink-500">
-                        {t('premium:tag')}
+                      <Badge className="absolute left-2 top-2 gap-1.5 bg-gradient-to-r from-purple-500 to-pink-500">
+                        <CoursePrice
+                          priceEgp={course.price}
+                          className="text-sm leading-none text-white"
+                        />
+                        <span className="text-[10px] leading-none text-white/80">
+                          {t('courses:purchase.oneTime')}
+                        </span>
                       </Badge>
                     )}
+
                   </div>
 
                   <CardHeader className="grid gap-4 py-0">
