@@ -82,10 +82,17 @@ const FeaturedCourses = () => {
                       </Badge>
                     )}
                     {!course.is_free && (
-                      <Badge className="absolute left-2 top-2 bg-gradient-to-r from-purple-500 to-pink-500">
-                        {t('premium:tag')}
+                      <Badge className="absolute left-2 top-2 gap-1.5 bg-gradient-to-r from-purple-500 to-pink-500">
+                        <CoursePrice
+                          priceEgp={course.price}
+                          className="text-sm leading-none text-white"
+                        />
+                        <span className="text-[10px] leading-none text-white/80">
+                          {t('courses:purchase.oneTime')}
+                        </span>
                       </Badge>
                     )}
+
                   </div>
 
                   <CardHeader className="grid gap-4 py-0">
@@ -156,24 +163,15 @@ const FeaturedCourses = () => {
                       )}
                     </div>
 
-                    {!course.is_free && (
-                      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-primary/20 pt-3">
-                        <div className="flex items-center gap-2 rounded-full border border-primary/30 bg-primary/20 px-3 py-1.5">
-                          <CoursePrice
-                            priceEgp={course.price}
-                            className="text-base leading-none"
-                          />
-                          <span className="text-[11px] leading-none text-primary-foreground/70">
-                            {t('courses:purchase.oneTime')}
-                          </span>
-                        </div>
-                        {ownedCourseIds.includes(course.id) && (
-                          <Badge className="bg-green-600 hover:bg-green-700">
-                            {t('courses:purchase.owned')}
-                          </Badge>
-                        )}
+                    {!course.is_free && ownedCourseIds.includes(course.id) && (
+                      <div className="flex items-center justify-end border-t border-primary/20 pt-3">
+                        <Badge className="bg-green-600 hover:bg-green-700">
+                          {t('courses:purchase.owned')}
+                        </Badge>
                       </div>
                     )}
+
+
 
                   </CardContent>
                 </Card>
