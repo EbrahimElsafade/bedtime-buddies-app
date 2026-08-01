@@ -97,7 +97,15 @@
     "oneYear": "سنة واحدة (تلقائي)",
     "customEndDate": "تاريخ انتهاء مخصص",
     "noUsersFound": "لم يتم العثور على مستخدمين",
-    "showing_users": "عرض {{showing}} من {{total}} مستخدم"
+    "showing_users": "عرض {{showing}} من {{total}} مستخدم",
+    "userInformation": "معلومات المستخدم",
+    "subscriptionSectionTitle": "الاشتراك الشهري / السنوي (للإدارة فقط)",
+    "subscriptionSectionDesc": "إعدادات اشتراك داخلية لا تظهر للمستخدمين.",
+    "searchCourses": "ابحث عن الدورات...",
+    "noCoursesFound": "لا توجد دورات",
+    "userUpdated": "تم تحديث المستخدم بنجاح",
+    "courseAccess": "الدورات المشتراة",
+    "courseAccessDesc": "الدورات المحددة تبقى متاحة لهذا المستخدم بشكل دائم."
   },
   "stories": {
     "title": "إدارة القصص",
