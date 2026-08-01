@@ -54,28 +54,8 @@ const Users = () => {
     role: "user" as UserRole,
   });
 
-  // Edit user state
-  const [editOpen, setEditOpen] = useState(false);
-  const [editLoading, setEditLoading] = useState(false);
-  const [editUser, setEditUser] = useState<UserWithRole | null>(null);
-  const [editForm, setEditForm] = useState({
-    parentName: "",
-    childName: "",
-    language: "",
-    isPremium: false,
-    subscriptionStart: "",
-    subscriptionDuration: "yearly" as "yearly" | "custom",
-    subscriptionEnd: "",
-  });
+  // Password state
 
-  const [grantedCourseIds, setGrantedCourseIds] = useState<string[]>([]);
-  const { data: allCourses = [] } = useCoursesData();
-  const { data: userOwnedCourseIds = [] } = useUserPurchasedCourseIds(editUser?.id);
-  const syncCoursePurchases = useSyncUserCoursePurchases();
-
-  useEffect(() => {
-    setGrantedCourseIds(userOwnedCourseIds);
-  }, [userOwnedCourseIds]);
 
   // Password state
   const [passwordOpen, setPasswordOpen] = useState(false);
