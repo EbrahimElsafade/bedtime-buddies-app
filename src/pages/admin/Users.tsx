@@ -1,4 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useCoursesData } from "@/hooks/useCourseData";
+import { useUserPurchasedCourseIds, useSyncUserCoursePurchases } from "@/hooks/useCoursePurchases";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { ColumnDef } from "@tanstack/react-table";
@@ -64,6 +67,15 @@ const Users = () => {
     subscriptionDuration: "yearly" as "yearly" | "custom",
     subscriptionEnd: "",
   });
+
+  const [grantedCourseIds, setGrantedCourseIds] = useState<string[]>([]);
+  const { data: allCourses = [] } = useCoursesData();
+  const { data: userOwnedCourseIds = [] } = useUserPurchasedCourseIds(editUser?.id);
+  const syncCoursePurchases = useSyncUserCoursePurchases();
+
+  useEffect(() => {
+    setGrantedCourseIds(userOwnedCourseIds);
+  }, [userOwnedCourseIds]);
 
   // Password state
   const [passwordOpen, setPasswordOpen] = useState(false);
@@ -203,6 +215,7 @@ const Users = () => {
         subscriptionStart: editForm.isPremium && editForm.subscriptionStart ? editForm.subscriptionStart : null,
         subscriptionEnd,
       });
+      await syncCoursePurchases(editUser.id, grantedCourseIds, userOwnedCourseIds);
       toast.success("User updated successfully");
       setEditOpen(false);
       refetch();
@@ -574,6 +587,27 @@ const Users = () => {
                 )}
               </div>
             )}
+            <div className="space-y-2 rounded-lg border p-4">
+              <Label>{t("users.courseAccess") || "Permanent Course Access"}</Label>
+              <p className="text-sm text-muted-foreground">
+                {t("users.courseAccessDesc") || "Selected courses stay unlocked for this user forever."}
+              </p>
+              <div className="max-h-48 space-y-2 overflow-y-auto pt-2">
+                {allCourses.map((course) => (
+                  <label key={course.id} className="flex items-center gap-2 text-sm">
+                    <Checkbox
+                      checked={grantedCourseIds.includes(course.id)}
+                      onCheckedChange={(checked) =>
+                        setGrantedCourseIds((ids) =>
+                          checked ? [...ids, course.id] : ids.filter((id) => id !== course.id),
+                        )
+                      }
+                    />
+                    <span>{course.title_en || course.title}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditOpen(false)}>{t("forms.cancel")}</Button>
