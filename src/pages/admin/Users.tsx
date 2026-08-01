@@ -143,69 +143,11 @@ const Users = () => {
     }
   };
 
-  // EDIT
+  // EDIT — navigates to the dedicated admin user editor page
   const openEdit = (user: UserWithRole) => {
-    setEditUser(user);
-    const hasCustomEnd = user.subscription_end && user.subscription_start
-      ? (() => {
-          const autoEnd = new Date(user.subscription_start!);
-          autoEnd.setFullYear(autoEnd.getFullYear() + 1);
-          return autoEnd.toISOString().split("T")[0] !== user.subscription_end.split("T")[0];
-        })()
-      : false;
-    setEditForm({
-      parentName: user.parent_name,
-      childName: user.child_name || "",
-      language: user.preferred_language,
-      isPremium: user.is_premium,
-      subscriptionStart: user.subscription_start?.split("T")[0] || "",
-      subscriptionDuration: hasCustomEnd ? "custom" : "yearly",
-      subscriptionEnd: user.subscription_end?.split("T")[0] || "",
-    });
-    setEditOpen(true);
+    navigate(`/admin/users/${user.id}`);
   };
 
-  const handleEdit = async () => {
-    if (!editUser || !editForm.parentName) {
-      toast.error("Parent name is required");
-      return;
-    }
-
-    let subscriptionEnd: string | null = null;
-    if (editForm.isPremium && editForm.subscriptionStart) {
-      if (editForm.subscriptionDuration === "yearly") {
-        const start = new Date(editForm.subscriptionStart);
-        start.setFullYear(start.getFullYear() + 1);
-        subscriptionEnd = start.toISOString().split("T")[0];
-      } else if (editForm.subscriptionEnd) {
-        subscriptionEnd = editForm.subscriptionEnd;
-      }
-    }
-
-    setEditLoading(true);
-    try {
-      await callApi({
-        action: "update",
-        userId: editUser.id,
-        parentName: editForm.parentName,
-        childName: editForm.childName || null,
-        preferredLanguage: editForm.language,
-        isPremium: editForm.isPremium,
-        subscriptionTier: editForm.isPremium ? "yearly" : null,
-        subscriptionStart: editForm.isPremium && editForm.subscriptionStart ? editForm.subscriptionStart : null,
-        subscriptionEnd,
-      });
-      await syncCoursePurchases(editUser.id, grantedCourseIds, userOwnedCourseIds);
-      toast.success("User updated successfully");
-      setEditOpen(false);
-      refetch();
-    } catch (error) {
-      logger.error("Edit user error:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to update user");
-    } finally {
-      setEditLoading(false);
-    }
-  };
 
   // CHANGE PASSWORD
   const openPassword = (user: UserWithRole) => {
