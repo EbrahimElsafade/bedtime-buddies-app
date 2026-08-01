@@ -459,12 +459,33 @@ const CourseLessons = () => {
                           </span>
                         </div>
                       </div>
-                      {completedLessons.includes(selectedVideo.id) && (
+                      {completedLessons.includes(selectedVideo.id) ? (
                         <Badge className="gap-1 bg-green-600 text-white hover:bg-green-600">
                           <CheckCircle2 className="h-3.5 w-3.5" />
                           {t('course.completed', { defaultValue: 'Completed' })}
                         </Badge>
+                      ) : (
+                        isAuthenticated &&
+                        (isPremium || selectedVideo.isFree) && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="gap-1"
+                            onClick={() =>
+                              markLessonComplete(
+                                selectedVideo.id,
+                                Math.max(selectedVideo.duration || 1, 1),
+                              )
+                            }
+                          >
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                            {t('course.markCompleted', {
+                              defaultValue: 'Mark as completed',
+                            })}
+                          </Button>
+                        )
                       )}
+
                     </div>
 
                     {isAuthenticated && (isPremium || selectedVideo.isFree) && (
