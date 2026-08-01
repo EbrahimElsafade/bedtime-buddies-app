@@ -1,14 +1,15 @@
-import { Button } from "@/components/ui/button";
-import { useTranslation } from "react-i18next";
-import { Crown, Star } from "lucide-react";
+import { useTranslation } from 'react-i18next'
+import { Crown, Star } from 'lucide-react'
+import { BuyCourseButton } from '@/components/course/BuyCourseButton'
+import { CoursePrice } from '@/components/course/CoursePrice'
 
 interface CoursePremiumModalProps {
-  onSubscriptionClick: () => void;
-  courseTitle?: string;
+  courseTitle?: string
+  priceEgp?: number
 }
 
-export const CoursePremiumModal = ({ onSubscriptionClick, courseTitle }: CoursePremiumModalProps) => {
-  const { t } = useTranslation('courses');
+export const CoursePremiumModal = ({ courseTitle, priceEgp }: CoursePremiumModalProps) => {
+  const { t } = useTranslation('courses')
 
   return (
     <div className="text-center space-y-6">
@@ -21,42 +22,44 @@ export const CoursePremiumModal = ({ onSubscriptionClick, courseTitle }: CourseP
 
       <div className="space-y-2">
         <h2 className="text-2xl font-bubbly text-primary-foreground">
-          {t('premium.modal.title')}
+          {t('purchase.modal.title')}
         </h2>
         <p className="text-primary-foreground/80">
-          {courseTitle && `"${courseTitle}" - `}{t('premium.modal.description')}
+          {courseTitle && `"${courseTitle}" - `}{t('purchase.modal.description')}
         </p>
       </div>
 
-      <div className="bg-primary/10 rounded-lg p-4 space-y-3">
+      <div className="flex justify-center">
+        <CoursePrice priceEgp={priceEgp} withLabel className="text-center" />
+      </div>
+
+      <div className="bg-primary/10 rounded-lg p-4 space-y-3 text-start">
         <div className="flex items-start gap-3">
           <Star className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
           <p className="text-sm text-primary-foreground/90">
-            {t('premium.modal.benefit1')}
+            {t('purchase.modal.benefit1')}
           </p>
         </div>
         <div className="flex items-start gap-3">
           <Star className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
           <p className="text-sm text-primary-foreground/90">
-            {t('premium.modal.benefit2')}
+            {t('purchase.modal.benefit2')}
           </p>
         </div>
         <div className="flex items-start gap-3">
           <Star className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
           <p className="text-sm text-primary-foreground/90">
-            {t('premium.modal.benefit3')}
+            {t('purchase.modal.benefit3')}
           </p>
         </div>
       </div>
 
-      <Button 
-        onClick={onSubscriptionClick}
+      <BuyCourseButton
+        courseTitle={courseTitle || ''}
+        priceEgp={priceEgp}
         variant="default"
         className="w-full"
-      >
-        <Crown className="w-4 h-4 mr-2" />
-        {t('premium.modal.subscribeButton')}
-      </Button>
+      />
     </div>
-  );
-};
+  )
+}
