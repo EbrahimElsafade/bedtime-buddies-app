@@ -1,4 +1,4 @@
-import { Gamepad2, Languages, LibraryBig } from 'lucide-react'
+import { Gamepad2, Languages, LibraryBig, BadgeCheck } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 const Features = () => {
