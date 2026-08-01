@@ -224,10 +224,6 @@ const Profile = () => {
             <PurchasedCoursesTab />
           </TabsContent>
 
-          {/* Subscription Tab */}
-          <TabsContent value="subscription">
-            <SubscriptionTab isPremium={isMembershipActive(profile)} t={t} />
-          </TabsContent>
         </Tabs>
       </div>
     </div>
