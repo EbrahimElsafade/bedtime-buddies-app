@@ -17,7 +17,7 @@ import { useFeaturedCourses, useCourseCategories } from '@/hooks/useCourseData'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 import { getCategoryText } from '@/utils/courseUtils'
-import { CoursePrice } from '@/components/course/CoursePrice'
+import { CoursePriceBadge } from '@/components/course/CoursePriceBadge'
 import { useMyPurchasedCourseIds } from '@/hooks/useCoursePurchases'
 
 const FeaturedCourses = () => {
@@ -82,15 +82,10 @@ const FeaturedCourses = () => {
                       </Badge>
                     )}
                     {!course.is_free && (
-                      <Badge className="absolute left-2 top-2 gap-1.5 bg-gradient-to-r from-purple-500 to-pink-500">
-                        <CoursePrice
-                          priceEgp={course.price}
-                          className="text-sm leading-none text-white"
-                        />
-                        <span className="text-[10px] leading-none text-white/80">
-                          {t('courses:purchase.oneTime')}
-                        </span>
-                      </Badge>
+                      <CoursePriceBadge
+                        priceEgp={course.price}
+                        className="absolute left-2 top-2"
+                      />
                     )}
 
                   </div>

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { BookOpen, Clock } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card'
+import { CoursePriceBadge } from '@/components/course/CoursePriceBadge'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import MaterialIcon from '@/components/ui/MaterialIcon'
@@ -83,9 +84,10 @@ const SkillPathDetails = () => {
                     {course.is_free ? (
                       <Badge className="absolute left-2 top-2 bg-green-500">{t('courses:free.tag')}</Badge>
                     ) : (
-                      <Badge className="absolute left-2 top-2 bg-gradient-to-r from-purple-500 to-pink-500">
-                        {t('premium:tag')}
-                      </Badge>
+                      <CoursePriceBadge
+                        priceEgp={course.price}
+                        className="absolute left-2 top-2"
+                      />
                     )}
                   </div>
                   <CardHeader className="grid gap-2 py-0">

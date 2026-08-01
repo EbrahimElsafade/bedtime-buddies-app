@@ -25,8 +25,7 @@ import { getLocalized } from '@/utils/getLocalized'
 import { getCategoryText } from '@/utils/courseUtils'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTranslation } from 'react-i18next'
-import { CoursePrice } from '@/components/course/CoursePrice'
-import { BuyCourseButton } from '@/components/course/BuyCourseButton'
+import { CoursePriceBadge } from '@/components/course/CoursePriceBadge'
 import { useMyPurchasedCourseIds } from '@/hooks/useCoursePurchases'
 
 const Courses = () => {
@@ -259,9 +258,10 @@ const Courses = () => {
                           </Badge>
                         )}
                         {!course.is_free && (
-                          <Badge className="absolute left-2 top-2 bg-gradient-to-r from-purple-500 to-pink-500">
-                            {t('premium:tag')}
-                          </Badge>
+                          <CoursePriceBadge
+                            priceEgp={course.price}
+                            className="absolute left-2 top-2"
+                          />
                         )}
                       </div>
 
@@ -334,23 +334,14 @@ const Courses = () => {
                           )}
                         </div>
 
-                        {!course.isFree && (
-                          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-primary/20 pt-3">
-                            <CoursePrice priceEgp={course.price} />
-                            {ownedCourseIds.includes(course.id) || isPremium ? (
+                        {!course.isFree &&
+                          (ownedCourseIds.includes(course.id) || isPremium) && (
+                            <div className="flex items-center justify-end border-t border-primary/20 pt-3">
                               <Badge className="bg-green-600 hover:bg-green-700">
                                 {t('purchase.owned')}
                               </Badge>
-                            ) : (
-                              <BuyCourseButton
-                                size="sm"
-                                courseTitle={getLocalized(course, 'title', lang)}
-                                priceEgp={course.price}
-                                label={t('purchase.buyThis')}
-                              />
-                            )}
-                          </div>
-                        )}
+                            </div>
+                          )}
                       </CardContent>
 
                     </Card>
