@@ -41,6 +41,8 @@ const Course = () => {
   const { isFavorite, addFavorite, removeFavorite } = useCourseFavorites()
   const { isPremium: roleIsPremium, isLoading: roleLoading } = useUserRole(user)
   const isPremium = isMembershipActive(profile) || roleIsPremium
+  const { hasAccess } = useCourseAccess(courseId)
+
   const effectiveRoleLoading = roleLoading && !isProfileLoaded
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
