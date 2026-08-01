@@ -27,7 +27,7 @@ const Profile = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const { user, profile, isAuthenticated, updateProfile, logout } = useAuth()
   const { setIsLoading: setGlobalLoading } = useLoading()
-  const { t, i18n } = useTranslation(['common', 'auth', 'meta', 'subscription'])
+  const { t, i18n } = useTranslation(['common', 'auth', 'meta', 'subscription', 'courses'])
   const { language } = useLanguage()
   const { favorites: storyFavorites } = useStoryFavorites()
   const { favorites: courseFavorites } = useCourseFavorites()
