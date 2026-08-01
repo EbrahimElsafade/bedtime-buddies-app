@@ -17,6 +17,9 @@ import { useFeaturedCourses, useCourseCategories } from '@/hooks/useCourseData'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 import { getCategoryText } from '@/utils/courseUtils'
+import { CoursePrice } from '@/components/course/CoursePrice'
+import { BuyCourseButton } from '@/components/course/BuyCourseButton'
+import { useMyPurchasedCourseIds } from '@/hooks/useCoursePurchases'
 
 const FeaturedCourses = () => {
   const { t } = useTranslation(['misc', 'stories', 'premium', 'courses', 'auth'])
@@ -25,6 +28,7 @@ const FeaturedCourses = () => {
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
+  const { data: ownedCourseIds = [] } = useMyPurchasedCourseIds()
   if (isLoading || !featuredCourses.length) return null
 
   return (
@@ -152,6 +156,24 @@ const FeaturedCourses = () => {
                         </div>
                       )}
                     </div>
+
+                    {!course.is_free && (
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-primary/20 pt-3">
+                        <CoursePrice priceEgp={course.price} />
+                        {ownedCourseIds.includes(course.id) ? (
+                          <Badge className="bg-green-600 hover:bg-green-700">
+                            {t('courses:purchase.owned')}
+                          </Badge>
+                        ) : (
+                          <BuyCourseButton
+                            size="sm"
+                            courseTitle={getLocalized(course, 'title', lang)}
+                            priceEgp={course.price}
+                            label={t('courses:purchase.buyThis')}
+                          />
+                        )}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </Link>
