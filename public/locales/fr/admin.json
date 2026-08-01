@@ -86,7 +86,15 @@
     "oneYear": "1 an (auto)",
     "customEndDate": "Date de fin personnalisée",
     "noUsersFound": "Aucun utilisateur trouvé",
-    "showing_users": "Affichage de {{showing}} sur {{total}} utilisateurs"
+    "showing_users": "Affichage de {{showing}} sur {{total}} utilisateurs",
+    "userInformation": "Informations utilisateur",
+    "subscriptionSectionTitle": "Abonnement mensuel / annuel (admin uniquement)",
+    "subscriptionSectionDesc": "Paramètres d'abonnement internes, invisibles pour les utilisateurs.",
+    "searchCourses": "Rechercher des cours...",
+    "noCoursesFound": "Aucun cours trouvé",
+    "userUpdated": "Utilisateur mis à jour avec succès",
+    "courseAccess": "Cours achetés",
+    "courseAccessDesc": "Les cours sélectionnés restent débloqués définitivement pour cet utilisateur."
   },
   "stories": {
     "title": "Gestion des Histoires",

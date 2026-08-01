@@ -43,6 +43,7 @@ const AdminStories = lazy(() => import("./pages/admin/Stories"));
 const AdminStoryEditor = lazy(() => import("./pages/admin/StoryEditor"));
 const AdminStoryOptions = lazy(() => import("./pages/admin/StoryOptions"));
 const AdminUsers = lazy(() => import("./pages/admin/Users"));
+const AdminUserEditor = lazy(() => import("./pages/admin/UserEditor"));
 const AdminCourses = lazy(() => import("./pages/admin/Courses"));
 const AdminCourseOptions = lazy(() => import("./pages/admin/CourseOptions"));
 const AdminCoursesEditor = lazy(() => import("./pages/admin/CourseEditor"));
@@ -116,6 +117,7 @@ function App() {
                     <Route path="stories/edit/:id" element={<AdminStoryEditor />} />
                     <Route path="stories/options" element={<AdminStoryOptions />} />
                     <Route path="users" element={<AdminUsers />} />
+                    <Route path="users/:userId" element={<AdminUserEditor />} />
                     <Route path="courses" element={<AdminCourses />} />
                     <Route path="courses/options" element={<AdminCourseOptions />} />
                     <Route path="courses/new" element={<AdminCoursesEditor />} />

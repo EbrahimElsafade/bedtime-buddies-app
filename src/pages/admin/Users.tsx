@@ -1,7 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
-import { useCoursesData } from "@/hooks/useCourseData";
-import { useUserPurchasedCourseIds, useSyncUserCoursePurchases } from "@/hooks/useCoursePurchases";
-import { Checkbox } from "@/components/ui/checkbox";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { ColumnDef } from "@tanstack/react-table";
@@ -40,6 +39,7 @@ type UserRole = "user" | "editor" | "admin";
 
 const Users = () => {
   const { t } = useTranslation("admin");
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
 
   // Create user state
@@ -54,28 +54,8 @@ const Users = () => {
     role: "user" as UserRole,
   });
 
-  // Edit user state
-  const [editOpen, setEditOpen] = useState(false);
-  const [editLoading, setEditLoading] = useState(false);
-  const [editUser, setEditUser] = useState<UserWithRole | null>(null);
-  const [editForm, setEditForm] = useState({
-    parentName: "",
-    childName: "",
-    language: "",
-    isPremium: false,
-    subscriptionStart: "",
-    subscriptionDuration: "yearly" as "yearly" | "custom",
-    subscriptionEnd: "",
-  });
+  // Password state
 
-  const [grantedCourseIds, setGrantedCourseIds] = useState<string[]>([]);
-  const { data: allCourses = [] } = useCoursesData();
-  const { data: userOwnedCourseIds = [] } = useUserPurchasedCourseIds(editUser?.id);
-  const syncCoursePurchases = useSyncUserCoursePurchases();
-
-  useEffect(() => {
-    setGrantedCourseIds(userOwnedCourseIds);
-  }, [userOwnedCourseIds]);
 
   // Password state
   const [passwordOpen, setPasswordOpen] = useState(false);
@@ -163,69 +143,11 @@ const Users = () => {
     }
   };
 
-  // EDIT
+  // EDIT — navigates to the dedicated admin user editor page
   const openEdit = (user: UserWithRole) => {
-    setEditUser(user);
-    const hasCustomEnd = user.subscription_end && user.subscription_start
-      ? (() => {
-          const autoEnd = new Date(user.subscription_start!);
-          autoEnd.setFullYear(autoEnd.getFullYear() + 1);
-          return autoEnd.toISOString().split("T")[0] !== user.subscription_end.split("T")[0];
-        })()
-      : false;
-    setEditForm({
-      parentName: user.parent_name,
-      childName: user.child_name || "",
-      language: user.preferred_language,
-      isPremium: user.is_premium,
-      subscriptionStart: user.subscription_start?.split("T")[0] || "",
-      subscriptionDuration: hasCustomEnd ? "custom" : "yearly",
-      subscriptionEnd: user.subscription_end?.split("T")[0] || "",
-    });
-    setEditOpen(true);
+    navigate(`/admin/users/${user.id}`);
   };
 
-  const handleEdit = async () => {
-    if (!editUser || !editForm.parentName) {
-      toast.error("Parent name is required");
-      return;
-    }
-
-    let subscriptionEnd: string | null = null;
-    if (editForm.isPremium && editForm.subscriptionStart) {
-      if (editForm.subscriptionDuration === "yearly") {
-        const start = new Date(editForm.subscriptionStart);
-        start.setFullYear(start.getFullYear() + 1);
-        subscriptionEnd = start.toISOString().split("T")[0];
-      } else if (editForm.subscriptionEnd) {
-        subscriptionEnd = editForm.subscriptionEnd;
-      }
-    }
-
-    setEditLoading(true);
-    try {
-      await callApi({
-        action: "update",
-        userId: editUser.id,
-        parentName: editForm.parentName,
-        childName: editForm.childName || null,
-        preferredLanguage: editForm.language,
-        isPremium: editForm.isPremium,
-        subscriptionTier: editForm.isPremium ? "yearly" : null,
-        subscriptionStart: editForm.isPremium && editForm.subscriptionStart ? editForm.subscriptionStart : null,
-        subscriptionEnd,
-      });
-      await syncCoursePurchases(editUser.id, grantedCourseIds, userOwnedCourseIds);
-      toast.success("User updated successfully");
-      setEditOpen(false);
-      refetch();
-    } catch (error) {
-      logger.error("Edit user error:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to update user");
-    } finally {
-      setEditLoading(false);
-    }
-  };
 
   // CHANGE PASSWORD
   const openPassword = (user: UserWithRole) => {
@@ -521,102 +443,8 @@ const Users = () => {
         </CardContent>
       </Card>
 
-      {/* Edit Dialog */}
-      <Dialog open={editOpen} onOpenChange={setEditOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t("users.editUser")}</DialogTitle>
-            <DialogDescription>{t("users.editUserDesc")}</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label>{t("users.parentName")} *</Label>
-              <Input value={editForm.parentName} onChange={(e) => setEditForm((f) => ({ ...f, parentName: e.target.value }))} />
-            </div>
-            <div className="space-y-2">
-              <Label>{t("users.childName")}</Label>
-              <Input value={editForm.childName} onChange={(e) => setEditForm((f) => ({ ...f, childName: e.target.value }))} />
-            </div>
-            <div className="space-y-2">
-              <Label>{t("users.preferredLanguage")}</Label>
-              <Select value={editForm.language} onValueChange={(v) => setEditForm((f) => ({ ...f, language: v }))}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="ar-eg">مصري</SelectItem>
-                  <SelectItem value="ar-fos7a">فصحي</SelectItem>
-                  <SelectItem value="fr">français</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <Label className="flex items-center gap-2">
-                  <Crown className="h-4 w-4 text-yellow-500" />
-                  {t("users.premiumStatus")}
-                </Label>
-                <p className="text-sm text-muted-foreground">{t("users.premiumStatusDesc")}</p>
-              </div>
-              <Switch checked={editForm.isPremium} onCheckedChange={(v) => setEditForm((f) => ({ ...f, isPremium: v }))} />
-            </div>
-            {editForm.isPremium && (
-              <div className="space-y-3">
-                <div className="space-y-2">
-                  <Label>{t("users.startDate")}</Label>
-                  <Input type="date" value={editForm.subscriptionStart} onChange={(e) => setEditForm((f) => ({ ...f, subscriptionStart: e.target.value }))} />
-                </div>
-                <div className="space-y-2">
-                  <Label>{t("users.subscriptionDuration") || "Subscription Duration"}</Label>
-                  <Select value={editForm.subscriptionDuration} onValueChange={(v) => setEditForm((f) => ({ ...f, subscriptionDuration: v as "yearly" | "custom" }))}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="yearly">{t("users.oneYear") || "1 Year (auto)"}</SelectItem>
-                      <SelectItem value="custom">{t("users.customEndDate") || "Custom End Date"}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                {editForm.subscriptionDuration === "yearly" && (
-                  <p className="text-xs text-muted-foreground">{t("users.yearlySubscriptionNote")}</p>
-                )}
-                {editForm.subscriptionDuration === "custom" && (
-                  <div className="space-y-2">
-                    <Label>{t("users.endDate")}</Label>
-                    <Input type="date" value={editForm.subscriptionEnd} onChange={(e) => setEditForm((f) => ({ ...f, subscriptionEnd: e.target.value }))} />
-                    <p className="text-xs text-muted-foreground">{t("users.leaveEmptyForUnlimited")}</p>
-                  </div>
-                )}
-              </div>
-            )}
-            <div className="space-y-2 rounded-lg border p-4">
-              <Label>{t("users.courseAccess") || "Permanent Course Access"}</Label>
-              <p className="text-sm text-muted-foreground">
-                {t("users.courseAccessDesc") || "Selected courses stay unlocked for this user forever."}
-              </p>
-              <div className="max-h-48 space-y-2 overflow-y-auto pt-2">
-                {allCourses.map((course) => (
-                  <label key={course.id} className="flex items-center gap-2 text-sm">
-                    <Checkbox
-                      checked={grantedCourseIds.includes(course.id)}
-                      onCheckedChange={(checked) =>
-                        setGrantedCourseIds((ids) =>
-                          checked ? [...ids, course.id] : ids.filter((id) => id !== course.id),
-                        )
-                      }
-                    />
-                    <span>{course.title_en || course.title}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setEditOpen(false)}>{t("forms.cancel")}</Button>
-            <Button onClick={handleEdit} disabled={editLoading}>
-              {editLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />{t("forms.saving")}</> : t("forms.saveChanges")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+
+
 
       {/* Password Dialog */}
       <Dialog open={passwordOpen} onOpenChange={(open) => { setPasswordOpen(open); if (!open) setPasswordUser(null); }}>

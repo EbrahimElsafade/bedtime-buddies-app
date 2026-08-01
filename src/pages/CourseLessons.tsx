@@ -113,9 +113,12 @@ const CourseLessons = () => {
     // click "Mark as completed" to count the lesson toward course progress.
   }
 
-  // Mark the lesson as completed shortly after the user opens it.
-  // We don't gate completion on watched seconds because playback speed
-  // (e.g. 2x) would otherwise prevent reaching the threshold.
+  // Completion is recorded only from real playback signals:
+  //  - the video reaching its end (handleVideoEnd)
+  //  - watch progress crossing the completion threshold
+  //  - the explicit "Mark as completed" action
+  // Simply opening/selecting a lesson never records progress, so a fresh
+  // course correctly shows 0%.
   const completedRef = useRef<Record<string, boolean>>({})
 
   const markLessonComplete = async (lessonId: string, durationSec: number) => {
@@ -147,20 +150,6 @@ const CourseLessons = () => {
     ])
   }
 
-  useEffect(() => {
-    if (!selectedVideo || !user || !courseId) return
-    if (!isPremium && !selectedVideo.isFree) return
-    const lessonId = selectedVideo.id
-    if (completedLessons.includes(lessonId)) return
-    const durationSec = Math.max(selectedVideo.duration || 1, 1)
-
-    const timer = setTimeout(() => {
-      markLessonComplete(lessonId, durationSec)
-    }, 3000)
-
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedVideo?.id, user?.id, courseId, isPremium, completedLessons])
 
   const handleVideoEnd = () => {
     if (!course?.videos || !selectedVideo) return
@@ -470,12 +459,33 @@ const CourseLessons = () => {
                           </span>
                         </div>
                       </div>
-                      {completedLessons.includes(selectedVideo.id) && (
+                      {completedLessons.includes(selectedVideo.id) ? (
                         <Badge className="gap-1 bg-green-600 text-white hover:bg-green-600">
                           <CheckCircle2 className="h-3.5 w-3.5" />
                           {t('course.completed', { defaultValue: 'Completed' })}
                         </Badge>
+                      ) : (
+                        isAuthenticated &&
+                        (isPremium || selectedVideo.isFree) && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="gap-1"
+                            onClick={() =>
+                              markLessonComplete(
+                                selectedVideo.id,
+                                Math.max(selectedVideo.duration || 1, 1),
+                              )
+                            }
+                          >
+                            <CheckCircle2 className="h-3.5 w-3.5" />
+                            {t('course.markCompleted', {
+                              defaultValue: 'Mark as completed',
+                            })}
+                          </Button>
+                        )
                       )}
+
                     </div>
 
                     {isAuthenticated && (isPremium || selectedVideo.isFree) && (

@@ -14,12 +14,10 @@ import { useGamification } from '@/hooks/useGamification'
 import { ProfileInfo } from './Profile/ProfileInfo'
 import { FavoritesList } from './Profile/FavoritesList'
 import { PurchasedCoursesTab } from '@/pages/Profile/PurchasedCoursesTab'
-import { SubscriptionTab } from './Profile/SubscriptionTab'
-import { SubscriptionProfile } from './Profile/SubscriptionProfile'
 import { FinishedContentTab } from './Profile/FinishedContentTab'
 import { isMembershipActive } from '@/utils/membership'
 
-const VALID_TABS = ['profile', 'finished-content', 'story-favorites', 'course-favorites', 'subscription'] as const
+const VALID_TABS = ['profile', 'finished-content', 'story-favorites', 'course-favorites', 'purchased-courses'] as const
 type TabValue = typeof VALID_TABS[number]
 
 const Profile = () => {
@@ -169,9 +167,6 @@ const Profile = () => {
             <TabsTrigger className='min-w-fit' value="purchased-courses">
               {t('courses:purchased.title')}
             </TabsTrigger>
-            <TabsTrigger className='min-w-fit' value="subscription">
-              {t('common:subscription')}
-            </TabsTrigger>
           </TabsList>
 
           {/* Profile Tab */}
@@ -227,10 +222,6 @@ const Profile = () => {
             <PurchasedCoursesTab />
           </TabsContent>
 
-          {/* Subscription Tab */}
-          <TabsContent value="subscription">
-            <SubscriptionTab isPremium={isMembershipActive(profile)} t={t} />
-          </TabsContent>
         </Tabs>
       </div>
     </div>
