@@ -1,7 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
-import { useCoursesData } from "@/hooks/useCourseData";
-import { useUserPurchasedCourseIds, useSyncUserCoursePurchases } from "@/hooks/useCoursePurchases";
-import { Checkbox } from "@/components/ui/checkbox";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { ColumnDef } from "@tanstack/react-table";
