@@ -372,11 +372,9 @@ const Course = () => {
         <DialogContent className="max-w-2xl">
           <CoursePremiumModal
             courseTitle={getLocalized(course, 'title', lang)}
-            onSubscriptionClick={() => {
-              setShowPremiumModal(false)
-              navigate('/profile?tab=subscription')
-            }}
+            priceEgp={course.price}
           />
+
         </DialogContent>
       </Dialog>
     </div>
