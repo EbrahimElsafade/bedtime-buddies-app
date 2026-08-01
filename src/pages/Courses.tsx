@@ -329,7 +329,26 @@ const Courses = () => {
                             </div>
                           )}
                         </div>
+
+                        {!course.isFree && (
+                          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-primary/20 pt-3">
+                            <CoursePrice priceEgp={course.price} />
+                            {ownedCourseIds.includes(course.id) || isPremium ? (
+                              <Badge className="bg-green-600 hover:bg-green-700">
+                                {t('purchase.owned')}
+                              </Badge>
+                            ) : (
+                              <BuyCourseButton
+                                size="sm"
+                                courseTitle={getLocalized(course, 'title', lang)}
+                                priceEgp={course.price}
+                                label={t('purchase.buyThis')}
+                              />
+                            )}
+                          </div>
+                        )}
                       </CardContent>
+
                     </Card>
                   </Link>
                 )
