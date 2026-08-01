@@ -60,7 +60,6 @@ const Index = () => {
 
       <FeaturedCourses />
 
-      {!isMembershipActive(profile) && <SubscribeBanner />}
     </div>
   )
 }
