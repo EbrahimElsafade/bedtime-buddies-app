@@ -169,9 +169,6 @@ const Profile = () => {
             <TabsTrigger className='min-w-fit' value="purchased-courses">
               {t('courses:purchased.title')}
             </TabsTrigger>
-            <TabsTrigger className='min-w-fit' value="subscription">
-              {t('common:subscription')}
-            </TabsTrigger>
           </TabsList>
 
           {/* Profile Tab */}
