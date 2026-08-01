@@ -22,6 +22,10 @@ import { CoursePremiumModal } from '@/components/course/CoursePremiumModal'
 import { CourseCertificateSection } from '@/components/course/CourseCertificateSection'
 import { useCourseProgress } from '@/hooks/useCourseProgress'
 import { isMembershipActive } from '@/utils/membership'
+import { CoursePrice } from '@/components/course/CoursePrice'
+import { BuyCourseButton } from '@/components/course/BuyCourseButton'
+import { useCourseAccess } from '@/hooks/useCourseAccess'
+
 // import { WhatsappSubscribeButton } from '@/components/WhatsappSubscribeButton'
 
 const Course = () => {
@@ -37,6 +41,8 @@ const Course = () => {
   const { isFavorite, addFavorite, removeFavorite } = useCourseFavorites()
   const { isPremium: roleIsPremium, isLoading: roleLoading } = useUserRole(user)
   const isPremium = isMembershipActive(profile) || roleIsPremium
+  const { hasAccess } = useCourseAccess(courseId)
+
   const effectiveRoleLoading = roleLoading && !isProfileLoaded
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
@@ -307,7 +313,23 @@ const Course = () => {
                 </div>
               )}
 
-              <div className="flex gap-4">
+              {!course.isFree && (
+                <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-primary/30 bg-secondary/40 p-4">
+                  <CoursePrice priceEgp={course.price} withLabel />
+                  {hasAccess ? (
+                    <Badge className="bg-green-600 hover:bg-green-700">
+                      {t('purchase.owned')}
+                    </Badge>
+                  ) : (
+                    <BuyCourseButton
+                      courseTitle={getLocalized(course, 'title', lang)}
+                      priceEgp={course.price}
+                    />
+                  )}
+                </div>
+              )}
+
+              <div className="flex flex-wrap gap-4">
                 <Button variant="accent" onClick={handleStartCourse}>
                   {t('button.startLearning')}
                 </Button>
@@ -318,6 +340,7 @@ const Course = () => {
                 >
                   {t('button.communicateWithASpecialist')}
                 </Button>
+
 
                 {/* <WhatsappSubscribeButton
                   className="!w-fit"
@@ -372,11 +395,9 @@ const Course = () => {
         <DialogContent className="max-w-2xl">
           <CoursePremiumModal
             courseTitle={getLocalized(course, 'title', lang)}
-            onSubscriptionClick={() => {
-              setShowPremiumModal(false)
-              navigate('/profile?tab=subscription')
-            }}
+            priceEgp={course.price}
           />
+
         </DialogContent>
       </Dialog>
     </div>

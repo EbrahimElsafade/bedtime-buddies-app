@@ -25,6 +25,9 @@ import { getLocalized } from '@/utils/getLocalized'
 import { getCategoryText } from '@/utils/courseUtils'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useTranslation } from 'react-i18next'
+import { CoursePrice } from '@/components/course/CoursePrice'
+import { BuyCourseButton } from '@/components/course/BuyCourseButton'
+import { useMyPurchasedCourseIds } from '@/hooks/useCoursePurchases'
 
 const Courses = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -43,6 +46,7 @@ const Courses = () => {
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: courses = [], isLoading } = useCoursesData()
   const { data: categories = [] } = useCourseCategories()
+  const { data: ownedCourseIds = [] } = useMyPurchasedCourseIds()
 
   const handleSearchChange = (value: string) => {
     const newParams = new URLSearchParams(searchParams)
@@ -329,7 +333,26 @@ const Courses = () => {
                             </div>
                           )}
                         </div>
+
+                        {!course.isFree && (
+                          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-primary/20 pt-3">
+                            <CoursePrice priceEgp={course.price} />
+                            {ownedCourseIds.includes(course.id) || isPremium ? (
+                              <Badge className="bg-green-600 hover:bg-green-700">
+                                {t('purchase.owned')}
+                              </Badge>
+                            ) : (
+                              <BuyCourseButton
+                                size="sm"
+                                courseTitle={getLocalized(course, 'title', lang)}
+                                priceEgp={course.price}
+                                label={t('purchase.buyThis')}
+                              />
+                            )}
+                          </div>
+                        )}
                       </CardContent>
+
                     </Card>
                   </Link>
                 )

@@ -107,6 +107,7 @@ const CourseEditor = () => {
     category: '',
     minAge: 3,
     maxAge: 12,
+    price: 100,
     isFree: true,
     isFeatured: false,
     coverImagePath: null as string | null,
@@ -239,6 +240,7 @@ const CourseEditor = () => {
         category: (c.category as string) || '',
         minAge: (c.min_age as number) ?? 3,
         maxAge: (c.max_age as number) ?? 12,
+        price: Number(c.price ?? 100),
         isFree: (c.is_free as boolean) ?? true,
         isFeatured: (c.is_published as boolean) ?? false,
         coverImagePath: (c.cover_image as string | null) || null,
@@ -479,6 +481,7 @@ const CourseEditor = () => {
             cover_image: coverImageUrl,
             min_age: courseData.minAge,
             max_age: courseData.maxAge,
+            price: courseData.price,
             is_free: courseData.isFree,
             is_published: courseData.isFeatured,
             lessons: courseLessons.length,
@@ -514,6 +517,7 @@ const CourseEditor = () => {
             cover_image: coverImageUrl,
             min_age: courseData.minAge,
             max_age: courseData.maxAge,
+            price: courseData.price,
             is_free: courseData.isFree,
             is_published: courseData.isFeatured,
             lessons: courseLessons.length,
@@ -852,6 +856,24 @@ const CourseEditor = () => {
                           required
                         />
                       </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="course-price">Course Price (EGP)</Label>
+                      <Input
+                        id="course-price"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={courseData.price}
+                        onChange={e =>
+                          setCourseData({
+                            ...courseData,
+                            price: parseFloat(e.target.value) || 0,
+                          })
+                        }
+                        disabled={courseData.isFree}
+                      />
                     </div>
 
                     <div className="flex items-center justify-between">

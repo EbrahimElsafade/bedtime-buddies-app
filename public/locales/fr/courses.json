@@ -55,7 +55,29 @@
       "subscribeButton": "S'abonner à Premium"
     }
   },
+  "purchase": {
+    "priceLabel": "Prix du cours",
+    "buy": "Acheter le cours",
+    "buyThis": "Acheter ce cours",
+    "owned": "Acquis",
+    "whatsappMessage": "Bonjour, je souhaite acheter le cours \"{{course}}\" sur Dolphoon. (Prix : {{price}})",
+    "modal": {
+      "title": "Possédez ce cours",
+      "description": "Achetez ce cours pour débloquer toutes les leçons — accès permanent, sans abonnement.",
+      "benefit1": "Accès à vie à toutes les leçons de ce cours",
+      "benefit2": "Regardez à votre rythme, sur tous les appareils",
+      "benefit3": "Certificat à la fin du cours"
+    }
+  },
+  "purchased": {
+    "title": "Mes cours achetés",
+    "description": "Les cours que vous possédez définitivement.",
+    "empty": "Vous n'avez encore acheté aucun cours.",
+    "browse": "Parcourir les cours",
+    "continue": "Continuer l'apprentissage"
+  },
   "duration": "min",
+
   "contact": {
     "title": "Contacter un Spécialiste",
     "description": "Remplissez le formulaire ci-dessous et nous vous répondrons dès que possible.",

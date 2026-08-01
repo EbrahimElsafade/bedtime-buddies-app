@@ -25,6 +25,7 @@ import { useCourseProgress } from '@/hooks/useCourseProgress'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from '@/hooks/use-toast'
 import { isMembershipActive } from '@/utils/membership'
+import { useCourseAccess } from '@/hooks/useCourseAccess'
 
 const CourseLessons = () => {
   const { id: courseId } = useParams<{ id: string }>()
@@ -52,7 +53,7 @@ const CourseLessons = () => {
   const { setIsLoading, setLoadingMessage } = useLoading()
   const { data: course, isLoading, error } = useCourseData(courseId)
   const profileLoading = !!user && !isProfileLoaded
-  const isPremium = isMembershipActive(profile)
+  const { hasAccess: isPremium } = useCourseAccess(courseId)
   const { refreshStats, refreshFinishedContent } = useGamification()
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const {
@@ -512,15 +513,9 @@ const CourseLessons = () => {
         <DialogContent className="max-w-2xl">
           <CoursePremiumModal
             courseTitle={getLocalized(course, 'title', lang)}
-            onSubscriptionClick={() => {
-              setShowPremiumModal(false)
-              if (!isAuthenticated) {
-                navigate('/login')
-              } else {
-                navigate('/profile?tab=subscription')
-              }
-            }}
+            priceEgp={course.price}
           />
+
         </DialogContent>
       </Dialog>
     </div>

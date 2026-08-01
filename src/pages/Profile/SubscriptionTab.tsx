@@ -9,9 +9,6 @@ import {
 } from '@/components/ui/card'
 import { useAuth } from '@/contexts/AuthContext'
 import { useTranslation } from 'react-i18next'
-import { useCountry } from '@/contexts/CountryContext'
-import { getCurrencySymbol } from '@/utils/getPlanPrice'
-import { PricingCard } from '@/components/ui/PricingCard'
 
 interface SubscriptionTabProps {
   isPremium: boolean
@@ -21,8 +18,6 @@ interface SubscriptionTabProps {
 export const SubscriptionTab = ({ isPremium, t }: SubscriptionTabProps) => {
   const navigate = useNavigate()
   const { isAuthenticated } = useAuth()
-  const { t: tSub } = useTranslation('subscription')
-  const { countryCode, loading } = useCountry()
 
   // If user is premium, show premium status
   if (isPremium) {
@@ -70,43 +65,6 @@ export const SubscriptionTab = ({ isPremium, t }: SubscriptionTabProps) => {
         </CardContent>
       </Card>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <PricingCard
-          planType="monthly"
-          title={tSub('plans.monthly.name')}
-          description={tSub('plans.monthly.description')}
-          features={
-            Object.values(
-              tSub('plans.monthly.features', {
-                returnObjects: true,
-              }) as string[],
-            ) || []
-          }
-          isLoading={loading}
-          countryCode={countryCode}
-          periodLabel={`/ ${tSub('month')}`}
-          currencyLabel={tSub(`currency.${getCurrencySymbol(countryCode)}`)}
-        />
-        <PricingCard
-          planType="yearly"
-          title={tSub('plans.yearly.name')}
-          description={tSub('plans.yearly.description')}
-          features={
-            Object.values(
-              tSub('plans.yearly.features', {
-                returnObjects: true,
-              }) as string[],
-            ) || []
-          }
-          isPopular={true}
-          showMostPopularBadge={true}
-          isLoading={loading}
-          countryCode={countryCode}
-          mostPopularLabel={tSub('mostPopular')}
-          periodLabel={`/ ${tSub('year')}`}
-          currencyLabel={tSub(`currency.${getCurrencySymbol(countryCode)}`)}
-        />
-      </div>
     </div>
   )
 }

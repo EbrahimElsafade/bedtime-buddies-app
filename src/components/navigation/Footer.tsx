@@ -32,12 +32,6 @@ export const Footer = ({ navItems }: FooterProps) => {
                 {item.name}
               </Link>
             ))}
-            <Link
-              to="/subscription"
-              className="text-coral-DEFAULT text-sm hover:text-coral-dark"
-            >
-              {t('misc:layout.subscribe')}
-            </Link>
           </div>
 
           <SocialMediaFooter />

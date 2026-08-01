@@ -195,6 +195,47 @@ export type Database = {
           },
         ]
       }
+      course_purchases: {
+        Row: {
+          course_id: string
+          created_at: string
+          granted_at: string
+          granted_by: string | null
+          id: string
+          source: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          source?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          granted_at?: string
+          granted_by?: string | null
+          id?: string
+          source?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_purchases_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       courses: {
         Row: {
           category: string
@@ -225,6 +266,7 @@ export type Database = {
           lessons: number | null
           max_age: number | null
           min_age: number | null
+          price: number
           title_ar: string | null
           title_en: string
           title_fr: string | null
@@ -260,6 +302,7 @@ export type Database = {
           lessons?: number | null
           max_age?: number | null
           min_age?: number | null
+          price?: number
           title_ar?: string | null
           title_en: string
           title_fr?: string | null
@@ -295,6 +338,7 @@ export type Database = {
           lessons?: number | null
           max_age?: number | null
           min_age?: number | null
+          price?: number
           title_ar?: string | null
           title_en?: string
           title_fr?: string | null
@@ -881,6 +925,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      has_course_access: {
+        Args: { _course_id: string; _user_id: string }
+        Returns: boolean
+      }
       has_premium_access: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {
@@ -890,6 +938,10 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: { _user_id?: string }; Returns: boolean }
+      owns_course: {
+        Args: { _course_id: string; _user_id: string }
+        Returns: boolean
+      }
       record_content_progress: {
         Args: {
           _content_id: string

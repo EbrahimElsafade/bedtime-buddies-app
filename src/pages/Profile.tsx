@@ -13,6 +13,7 @@ import { useLoading } from '@/contexts/LoadingContext'
 import { useGamification } from '@/hooks/useGamification'
 import { ProfileInfo } from './Profile/ProfileInfo'
 import { FavoritesList } from './Profile/FavoritesList'
+import { PurchasedCoursesTab } from '@/pages/Profile/PurchasedCoursesTab'
 import { SubscriptionTab } from './Profile/SubscriptionTab'
 import { SubscriptionProfile } from './Profile/SubscriptionProfile'
 import { FinishedContentTab } from './Profile/FinishedContentTab'
@@ -26,7 +27,7 @@ const Profile = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const { user, profile, isAuthenticated, updateProfile, logout } = useAuth()
   const { setIsLoading: setGlobalLoading } = useLoading()
-  const { t, i18n } = useTranslation(['common', 'auth', 'meta', 'subscription'])
+  const { t, i18n } = useTranslation(['common', 'auth', 'meta', 'subscription', 'courses'])
   const { language } = useLanguage()
   const { favorites: storyFavorites } = useStoryFavorites()
   const { favorites: courseFavorites } = useCourseFavorites()
@@ -165,6 +166,9 @@ const Profile = () => {
             <TabsTrigger className='min-w-fit' value="course-favorites">
               {t('common:courseFavorites')}
             </TabsTrigger>
+            <TabsTrigger className='min-w-fit' value="purchased-courses">
+              {t('courses:purchased.title')}
+            </TabsTrigger>
             <TabsTrigger className='min-w-fit' value="subscription">
               {t('common:subscription')}
             </TabsTrigger>
@@ -216,6 +220,11 @@ const Profile = () => {
               language={language}
               t={t}
             />
+          </TabsContent>
+
+          {/* Purchased Courses Tab */}
+          <TabsContent value="purchased-courses">
+            <PurchasedCoursesTab />
           </TabsContent>
 
           {/* Subscription Tab */}
