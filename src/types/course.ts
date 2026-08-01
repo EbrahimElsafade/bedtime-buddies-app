@@ -39,6 +39,8 @@ export type Course = {
   description_ar: string;
   description_fr: string;
   category: string; 
+  price: number; // purchase price in EGP
+
   minAge: number;
   maxAge: number;
   duration: number; // total in seconds
