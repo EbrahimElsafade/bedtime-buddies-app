@@ -1,59 +1,54 @@
-## What I verified now
+# Course-Based Purchase Model
 
-- The project is currently **published** and **public**.
-- Lovable URLs are connected:
-  - Preview: `https://id-preview--48f2e5e4-e552-4808-92bf-085dd78e1132.lovable.app`
-  - Published: `https://bedtime-buddies-app.lovable.app`
-  - Custom domain: `https://thedolphoon.com`
-- From the server side, `https://thedolphoon.com/` returns **HTTP 200**, and the `.lovable.app` URL redirects to it.
-- Frontend Supabase client points to the correct Supabase project: `https://brxbtgzaumryxflkykpp.supabase.co`.
-- `.env` is not ignored by `.gitignore`, so the classic Vite/Supabase env issue does not appear to be the cause.
-- I found old/incorrect domain references in some Edge Function CORS allowlists:
-  - `https://dolphoon.com`
-  - `https://www.dolphoon.com`
-  - localhost dev URLs
-  - Missing `https://thedolphoon.com`
-  - Missing `https://bedtime-buddies-app.lovable.app`
+Move the public site from promoting monthly/yearly plans to selling individual courses, without removing any existing subscription machinery.
 
-## Plan
+## 1. Database
 
-1. **Clean production URL configuration**
-   - Update Edge Function CORS allowlists to include the real live domains:
-     - `https://thedolphoon.com`
-     - `https://www.thedolphoon.com`
-     - `https://bedtime-buddies-app.lovable.app`
-     - current Lovable preview domain if needed
-   - Remove the obsolete `dolphoon.com` references.
-   - Keep or remove localhost depending on production-only vs local-dev needs; for this recovery I will keep localhost only if it is clearly isolated to development CORS and cannot affect live routing.
+New column on `courses`:
+- `price` (numeric, not null, default `100`) — the price in EGP. Existing courses get 100 automatically.
 
-2. **Confirm Supabase connection consistency**
-   - Keep the frontend Supabase client connected to `brxbtgzaumryxflkykpp.supabase.co`.
-   - Verify Edge Functions use `Deno.env.get("SUPABASE_URL")` and `SUPABASE_SERVICE_ROLE_KEY`, not hardcoded localhost.
-   - Add safer missing-secret checks where functions currently use non-null assertions.
+New table `course_purchases`:
+- `user_id`, `course_id`, `granted_by`, `granted_at`, `source` (`admin_grant` by default), timestamps
+- unique on (`user_id`, `course_id`) — ownership is permanent, no expiry column
+- Users can read their own rows; admins can read/insert/delete all. Grants to `authenticated` and `service_role`.
 
-3. **Re-deploy backend functions if changed**
-   - Deploy updated Edge Functions so CORS/domain changes are live immediately.
+New helper function `has_course_access(_user_id, _course_id)` returning true when the user is an admin, has an active premium subscription, or owns the course. Used by the lesson/video access checks so ownership works everywhere the current premium check works — including the signed-video-URL edge function.
 
-4. **Force a fresh frontend deployment**
-   - Make a minimal safe frontend change if needed, such as bumping the existing cache-kill version in `index.html`, so Lovable has a new frontend bundle to publish.
-   - Keep the PWA disabled and keep the service-worker kill switch safe.
+## 2. Pricing display
 
-5. **Publish recovery steps**
-   - You will open the Publish dialog and click **Update/Publish** after changes are ready.
-   - If you specifically want an unpublish/re-publish cycle, use Lovable’s publish/domain settings to temporarily remove/unpublish the live deployment, then publish again. I can guide you, but I cannot fully unpublish from code.
-   - Confirm publish visibility remains **public**.
+Course price is stored once in EGP. A new `src/utils/getCoursePrice.ts` converts it to the visitor's detected country currency using the same country/currency list already used by the subscription pricing, so a course shows `100 EGP` in Egypt and the converted amount elsewhere. Currency labels reuse the existing `subscription:currency.*` translations.
 
-6. **Validate live site after publishing**
-   - Test:
-     - `https://thedolphoon.com/`
-     - `https://www.thedolphoon.com/` if configured
-     - `https://bedtime-buddies-app.lovable.app/`
-   - Check browser network/console for failed document loads, CORS errors, Supabase errors, or old service-worker behavior.
+## 3. Public site changes
 
-## Important note
+- Homepage: remove the monthly/yearly `SubscribeBanner`.
+- Footer: remove the subscription link.
+- `/subscription` route stays reachable by direct URL but is no longer linked anywhere public (used for manual/internal flows).
+- Course cards (courses list, homepage featured courses, skill path pages): show the price and a "Buy This Course" action for courses the user doesn't own. Owned courses show an "Owned" badge instead.
+- Course details page: a clear "Course Price / 100 EGP" block with a "Buy Course" button, styled to match the existing layout.
+- The premium/locked-lesson popup (`CoursePremiumModal`) becomes a purchase prompt: course title, price, and "Buy Course".
+- All user-facing "Subscribe / Upgrade / Premium plan" wording on course surfaces becomes purchase wording ("Buy Course", "Own This Course"). Story/game premium wording is left untouched.
 
-The exact browser message `thedolphoon.com refused to connect` is normally DNS/CDN/domain routing or browser/network-level, not Supabase. However, cleaning all live URL references and republishing a fresh build is a reasonable recovery step before escalating to Lovable domain support.
+## 4. WhatsApp purchase flow
 
-<presentation-actions>
-<presentation-link url="https://docs.lovable.dev/tips-tricks/troubleshooting">Troubleshooting docs</presentation-link>
-</presentation-actions>
+Buying opens WhatsApp (same number as today) with a course-specific message, e.g. `Hello, I'm interested in purchasing the Graphic Design Course on Dolphoon.` plus the displayed price. The existing WhatsApp button component is extended with a course mode; the subscription mode stays for the admin/internal page.
+
+## 5. Admin panel
+
+- Course editor: a "Course Price (EGP)" number field, default 100, saved with the course.
+- Users section: in the edit-user dialog, a searchable checkbox list of published courses to grant or revoke permanent access. Saving diffs the selection and inserts/deletes `course_purchases` rows. The existing premium toggle, tier, and subscription dates stay exactly as they are.
+
+## 6. User profile
+
+New "My Purchased Courses" tab/section listing owned courses (thumbnail, title, "Owned" badge, "Continue Learning" button to the course). Empty state: "You haven't purchased any courses yet." with a button to browse courses. Fully responsive, matching current profile UI.
+
+## 7. Access logic
+
+A single `useCourseAccess(courseId)` hook returns whether the current user can watch paid lessons: admin, active premium membership, or course ownership. It is used by the course page, lesson player, and lesson list so the three stay consistent. Free lessons remain open to visitors, and the full lesson list stays visible to everyone.
+
+## 8. Translations
+
+New keys in `courses.json` for en/ar/fr: price label, buy button, owned badge, purchase modal copy, WhatsApp message, purchased-courses section and empty state. Arabic is written first.
+
+## 9. Verification
+
+After implementation: typecheck, then browser checks for visitor / free user / owner / premium / admin on the courses list, course page, lesson player popup, profile section, and admin grant dialog — at mobile, tablet, and desktop widths. Confirm the WhatsApp link contains the course name, and that existing subscription admin controls and story/game access are unchanged.
