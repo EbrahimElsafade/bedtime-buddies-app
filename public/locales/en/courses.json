@@ -55,7 +55,29 @@
       "subscribeButton": "Subscribe to Premium"
     }
   },
+  "purchase": {
+    "priceLabel": "Course Price",
+    "buy": "Buy Course",
+    "buyThis": "Buy This Course",
+    "owned": "Owned",
+    "whatsappMessage": "Hello, I'm interested in purchasing the \"{{course}}\" course on Dolphoon. (Price: {{price}})",
+    "modal": {
+      "title": "Own This Course",
+      "description": "Buy this course to unlock every lesson — permanent access, no subscription needed.",
+      "benefit1": "Lifetime access to all lessons in this course",
+      "benefit2": "Watch at your own pace, on any device",
+      "benefit3": "Certificate once you complete the course"
+    }
+  },
+  "purchased": {
+    "title": "My Purchased Courses",
+    "description": "Courses you permanently own.",
+    "empty": "You haven't purchased any courses yet.",
+    "browse": "Browse Courses",
+    "continue": "Continue Learning"
+  },
   "duration": "min",
+
   "contact": {
     "title": "Contact a Specialist",
     "description": "Fill out the form below and we'll get back to you as soon as possible.",
