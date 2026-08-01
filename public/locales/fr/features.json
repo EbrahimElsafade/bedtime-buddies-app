@@ -1,4 +1,3 @@
-
 {
   "title": "Pourquoi Choisir Dolphoon ?",
   "subtitle": "Découvrez la magie de notre contenu de divertissement et d'apprentissage soigneusement créé",
@@ -29,5 +28,9 @@
   "games": {
     "title": "Jeux Interactifs",
     "desc": "Jeux éducatifs amusants qui complètent nos histoires et cours"
+  },
+  "lifetime": {
+    "title": "Achetez seulement ce qu'il vous faut",
+    "desc": "Achetez uniquement les cours dont vous avez besoin et profitez d'un accès à vie, sans abonnement."
   }
 }
