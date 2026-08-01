@@ -159,21 +159,23 @@ const FeaturedCourses = () => {
 
                     {!course.is_free && (
                       <div className="flex flex-wrap items-center justify-between gap-2 border-t border-primary/20 pt-3">
-                        <CoursePrice priceEgp={course.price} />
-                        {ownedCourseIds.includes(course.id) ? (
+                        <div className="flex items-center gap-2 rounded-full border border-primary/30 bg-primary/20 px-3 py-1.5">
+                          <CoursePrice
+                            priceEgp={course.price}
+                            className="text-base leading-none"
+                          />
+                          <span className="text-[11px] leading-none text-primary-foreground/70">
+                            {t('courses:purchase.oneTime')}
+                          </span>
+                        </div>
+                        {ownedCourseIds.includes(course.id) && (
                           <Badge className="bg-green-600 hover:bg-green-700">
                             {t('courses:purchase.owned')}
                           </Badge>
-                        ) : (
-                          <BuyCourseButton
-                            size="sm"
-                            courseTitle={getLocalized(course, 'title', lang)}
-                            priceEgp={course.price}
-                            label={t('courses:purchase.buyThis')}
-                          />
                         )}
                       </div>
                     )}
+
                   </CardContent>
                 </Card>
               </Link>
