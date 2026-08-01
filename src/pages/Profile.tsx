@@ -14,8 +14,6 @@ import { useGamification } from '@/hooks/useGamification'
 import { ProfileInfo } from './Profile/ProfileInfo'
 import { FavoritesList } from './Profile/FavoritesList'
 import { PurchasedCoursesTab } from '@/pages/Profile/PurchasedCoursesTab'
-import { SubscriptionTab } from './Profile/SubscriptionTab'
-import { SubscriptionProfile } from './Profile/SubscriptionProfile'
 import { FinishedContentTab } from './Profile/FinishedContentTab'
 import { isMembershipActive } from '@/utils/membership'
 
