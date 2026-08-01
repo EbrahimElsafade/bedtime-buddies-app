@@ -17,7 +17,7 @@ const Layout = () => {
     { name: t('navigation:home'), path: '/', icon: Home, key: 'home' },
     { name: t('navigation:courses'), path: '/courses', icon: LibraryBig, key: 'courses' },
     { name: t('navigation:paths'), path: '/skill-paths', icon: LibraryBig, key: 'paths' },
-    { name: t('navigation:stories'), path: '/stories', icon: BookOpen, key: 'stories' },
+    // Stories entry hidden from menu/footer (route still available directly)
     {
       name: t('navigation:profile'),
       path: isAuthenticated ? '/profile' : '/login',
