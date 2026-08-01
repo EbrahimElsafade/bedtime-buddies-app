@@ -22,6 +22,10 @@ import { CoursePremiumModal } from '@/components/course/CoursePremiumModal'
 import { CourseCertificateSection } from '@/components/course/CourseCertificateSection'
 import { useCourseProgress } from '@/hooks/useCourseProgress'
 import { isMembershipActive } from '@/utils/membership'
+import { CoursePrice } from '@/components/course/CoursePrice'
+import { BuyCourseButton } from '@/components/course/BuyCourseButton'
+import { useCourseAccess } from '@/hooks/useCourseAccess'
+
 // import { WhatsappSubscribeButton } from '@/components/WhatsappSubscribeButton'
 
 const Course = () => {
