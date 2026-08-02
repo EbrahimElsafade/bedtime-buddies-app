@@ -163,16 +163,6 @@ const FeaturedCourses = () => {
                       )}
                     </div>
 
-                    {!course.is_free && ownedCourseIds.includes(course.id) && (
-                      <div className="flex items-center justify-end border-t border-primary/20 pt-3">
-                        <Badge className="bg-green-600 hover:bg-green-700">
-                          {t('courses:purchase.owned')}
-                        </Badge>
-                      </div>
-                    )}
-
-
-
                   </CardContent>
                 </Card>
               </Link>
