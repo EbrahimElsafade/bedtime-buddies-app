@@ -255,7 +255,6 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
   fileId,
   title = 'Video player',
   className,
-  onVideoEnd,
   onNext,
   onPrev,
   hasNext,
@@ -267,22 +266,6 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
   const [dialogOpen, setDialogOpen] = useState(false)
   const normalizedId = normalizeGoogleDriveFileId(fileId)
   const prevIdRef = useRef<string | null>(null)
-
-  // Google Drive embeds are cross-origin and do not expose an ended event.
-  // Keep the completion callback wired for player implementations that can
-  // report it; Drive lessons are completed with the explicit action below
-  // the player rather than by merely opening the video.
-  const handleDialogOpenChange = useCallback(
-    (open: boolean) => {
-      setDialogOpen(open)
-      if (!open && onVideoEnd) {
-        // Closing the popup is not proof that the lesson was watched, so do
-        // not call onVideoEnd here. This reference prevents the completion
-        // callback from being accidentally dropped by this wrapper.
-      }
-    },
-    [onVideoEnd],
-  )
 
   useEffect(() => {
     if (preferPopup && prevIdRef.current && prevIdRef.current !== normalizedId) {
@@ -327,7 +310,7 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
       />
       <DriveVideoDialog
         open={dialogOpen}
-        onOpenChange={handleDialogOpenChange}
+        onOpenChange={setDialogOpen}
         title={title}
         embedSrc={embedSrc}
         closeLabel={t('course.closeVideo')}
