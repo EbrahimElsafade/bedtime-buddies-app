@@ -81,7 +81,12 @@ const FeaturedCourses = () => {
                         {t('courses:free.tag')}
                       </Badge>
                     )}
-                    {!course.is_free && (
+                    {!course.is_free && ownedCourseIds.includes(course.id) && (
+                      <Badge className="absolute left-2 top-2 bg-green-600 hover:bg-green-700">
+                        {t('courses:purchase.owned')}
+                      </Badge>
+                    )}
+                    {!course.is_free && !ownedCourseIds.includes(course.id) && (
                       <CoursePriceBadge
                         priceEgp={course.price}
                         className="absolute left-2 top-2"
@@ -157,16 +162,6 @@ const FeaturedCourses = () => {
                         </div>
                       )}
                     </div>
-
-                    {!course.is_free && ownedCourseIds.includes(course.id) && (
-                      <div className="flex items-center justify-end border-t border-primary/20 pt-3">
-                        <Badge className="bg-green-600 hover:bg-green-700">
-                          {t('courses:purchase.owned')}
-                        </Badge>
-                      </div>
-                    )}
-
-
 
                   </CardContent>
                 </Card>
