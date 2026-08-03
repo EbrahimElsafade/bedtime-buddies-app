@@ -269,6 +269,8 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
   onPrev,
   hasNext,
   hasPrev,
+  onWatchTick,
+  watchTickInterval = 15,
 }) => {
   const { t } = useTranslation('courses')
   const preferPopup = usePreferDrivePopup()
@@ -286,6 +288,31 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
     }
     prevIdRef.current = normalizedId
   }, [normalizedId, preferPopup])
+
+  // Watch heartbeat: counts seconds while the video surface is mounted and the
+  // page is visible, and reports them in batches to the parent.
+  const tickRef = useRef(onWatchTick)
+  tickRef.current = onWatchTick
+  const watchActive = normalizedId ? (preferPopup ? dialogOpen : true) : false
+
+  useEffect(() => {
+    if (!watchActive || !tickRef.current) return
+    const step = Math.max(watchTickInterval, 5)
+    let elapsed = 0
+    const id = setInterval(() => {
+      if (document.visibilityState !== 'visible') return
+      elapsed += 1
+      if (elapsed >= step) {
+        tickRef.current?.(elapsed)
+        elapsed = 0
+      }
+    }, 1000)
+    return () => {
+      if (elapsed > 0) tickRef.current?.(elapsed)
+      clearInterval(id)
+    }
+  }, [watchActive, normalizedId, watchTickInterval])
+
 
   if (!normalizedId) {
     return (
