@@ -9,8 +9,10 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { useCoursesData } from '@/hooks/useCourseData'
 import { useMyPurchasedCourseIds } from '@/hooks/useCoursePurchases'
+import { useCoursesProgress } from '@/hooks/useCourseProgress'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 
@@ -22,6 +24,8 @@ export const PurchasedCoursesTab = () => {
   const { data: courses = [], isLoading } = useCoursesData()
 
   const owned = courses.filter(course => ownedCourseIds.includes(course.id))
+  const { data: progressMap = {} } = useCoursesProgress(owned.map(c => c.id))
+
 
   return (
     <Card>
@@ -56,15 +60,33 @@ export const PurchasedCoursesTab = () => {
                   alt={getLocalized(course, 'title', lang)}
                   className="h-20 w-28 flex-shrink-0 rounded-md object-cover"
                 />
-                <div className="grid content-between gap-2">
+                <div className="grid min-w-0 flex-1 content-between gap-2">
                   <span className="font-bubbly text-primary-foreground">
                     {getLocalized(course, 'title', lang)}
                   </span>
+                  {(progressMap[course.id]?.total ?? 0) > 0 && (
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <span>
+                          {t('course.lessonsCompleted', {
+                            completed: progressMap[course.id].completed,
+                            total: progressMap[course.id].total,
+                          })}
+                        </span>
+                        <span>{progressMap[course.id].percent}%</span>
+                      </div>
+                      <Progress
+                        value={progressMap[course.id].percent}
+                        className="h-1.5"
+                      />
+                    </div>
+                  )}
                   <span className="flex items-center gap-2 text-sm text-muted-foreground">
                     <BookOpen className="h-4 w-4" />
                     {t('purchased.continue')}
                   </span>
                 </div>
+
               </Link>
             ))}
           </div>

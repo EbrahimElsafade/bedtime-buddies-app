@@ -6,6 +6,7 @@ import { useLoading } from '@/contexts/LoadingContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
+import { Progress } from '@/components/ui/progress'
 import { useToast } from '@/components/ui/use-toast'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { useCourseData, useCourseCategories } from '@/hooks/useCourseData'
@@ -47,7 +48,8 @@ const Course = () => {
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const [isContactModalOpen, setIsContactModalOpen] = useState(false)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
-  const { courseProgress, isComplete } = useCourseProgress(courseId)
+  const { courseProgress, isComplete, completedLessons, totalLessons } =
+    useCourseProgress(courseId)
 
   // Compute category from course data
   const category = course
@@ -351,7 +353,19 @@ const Course = () => {
             </div>
           </div>
 
-          {/* Progress / certificate is shown only inside the lessons page */}
+          {hasAccess && totalLessons > 0 && (
+            <div className="mt-6 rounded-xl border border-primary/20 bg-secondary/30 p-4">
+              <div className="mb-2 flex items-center justify-between text-sm">
+                <span className="font-bubbly text-primary-foreground">
+                  {t('course.progress')}
+                </span>
+                <span className="text-muted-foreground">
+                  {completedLessons.length}/{totalLessons} &middot; {courseProgress}%
+                </span>
+              </div>
+              <Progress value={courseProgress} className="h-2" />
+            </div>
+          )}
 
           {/* Overview Section */}
 

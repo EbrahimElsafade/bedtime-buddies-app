@@ -28,7 +28,9 @@
     "completed": "Completed",
     "watchLesson": "Watch lesson",
     "openInDrive": "Open in Google Drive",
-    "closeVideo": "Close video"
+    "closeVideo": "Close video",
+    "progress": "Course progress",
+    "lessonsCompleted": "{{completed}} of {{total}} lessons completed"
   },
   "toast": {
     "premiumRequired": "Premium Required",
