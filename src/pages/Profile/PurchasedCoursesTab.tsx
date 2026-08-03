@@ -9,8 +9,10 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import { useCoursesData } from '@/hooks/useCourseData'
 import { useMyPurchasedCourseIds } from '@/hooks/useCoursePurchases'
+import { useCoursesProgress } from '@/hooks/useCourseProgress'
 import { getImageUrl } from '@/utils/imageUtils'
 import { getLocalized } from '@/utils/getLocalized'
 
@@ -22,6 +24,8 @@ export const PurchasedCoursesTab = () => {
   const { data: courses = [], isLoading } = useCoursesData()
 
   const owned = courses.filter(course => ownedCourseIds.includes(course.id))
+  const { data: progressMap = {} } = useCoursesProgress(owned.map(c => c.id))
+
 
   return (
     <Card>
