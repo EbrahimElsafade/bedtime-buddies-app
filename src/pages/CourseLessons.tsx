@@ -482,6 +482,8 @@ const CourseLessons = () => {
                         onPrev={() => goToOffset(-1)}
                         hasNext={hasNextLesson}
                         hasPrev={hasPrevLesson}
+                        onWatchTick={handleWatchTick}
+
                       />
                     ) : selectedVideo.videoPath ? (
                       <div className="flex aspect-video items-center justify-center text-white">
