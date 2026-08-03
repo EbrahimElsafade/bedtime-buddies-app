@@ -30,10 +30,19 @@ const EMPTY: CourseProgress = {
 export const courseProgressKey = (courseId?: string, userId?: string) =>
   ['course-progress', courseId, userId] as const
 
+export const coursesProgressKey = (courseIds: string[], userId?: string) =>
+  ['courses-progress', [...courseIds].sort().join(','), userId] as const
+
+/** Percentage helper shared by the single and batched variants. */
+const pct = (completed: number, total: number) =>
+  total <= 0 ? 0 : Math.min(100, Math.round((completed / total) * 100))
+
 /**
  * Accurate course progress:
  *  - Total lessons = COUNT(course_lessons.id) for the course (source of truth).
- *  - Completed lessons = rows in `user_section_progress` for this user+course.
+ *  - Completed lessons = rows in `user_section_progress` for this user+course,
+ *    intersected with the lessons that still exist in the course. Stale rows
+ *    (lessons deleted or moved) can never inflate the percentage.
  *  - Per-lesson watch data comes from `course_lesson_watch_progress` so the UI
  *    can show partial progress, completion checks, and last-watched info.
  */
@@ -47,14 +56,15 @@ export const useCourseProgress = (courseId: string | undefined) => {
     queryFn: async (): Promise<CourseProgress> => {
       if (!courseId) return EMPTY
 
-      // Total lessons — always derived from the actual lessons table.
-      const { count: totalCount, error: countError } = await supabase
+      // Lesson IDs are the source of truth for both the total and the filter.
+      const { data: lessonRows, error: lessonError } = await supabase
         .from('course_lessons')
-        .select('id', { count: 'exact', head: true })
+        .select('id')
         .eq('course_id', courseId)
 
-      if (countError) throw countError
-      const totalLessons = totalCount ?? 0
+      if (lessonError) throw lessonError
+      const lessonIds = new Set((lessonRows ?? []).map(r => r.id as string))
+      const totalLessons = lessonIds.size
 
       if (!user || !isAuthenticated) {
         return { ...EMPTY, totalLessons }
@@ -79,14 +89,20 @@ export const useCourseProgress = (courseId: string | undefined) => {
       if (completedRes.error) throw completedRes.error
       if (watchRes.error) throw watchRes.error
 
-      const completedLessons = (completedRes.data ?? []).map(
-        d => d.content_id as string,
+      const completedLessons = Array.from(
+        new Set(
+          (completedRes.data ?? [])
+            .map(d => d.content_id as string)
+            .filter(id => lessonIds.has(id)),
+        ),
       )
 
       const lessonProgress: Record<string, CourseLessonProgress> = {}
       for (const row of watchRes.data ?? []) {
-        lessonProgress[row.lesson_id as string] = {
-          lessonId: row.lesson_id as string,
+        const lessonId = row.lesson_id as string
+        if (!lessonIds.has(lessonId)) continue
+        lessonProgress[lessonId] = {
+          lessonId,
           watchedSeconds: Number(row.watched_seconds ?? 0),
           durationSeconds: Number(row.duration_seconds ?? 0),
           watchedPercent: Number(row.watched_percent ?? 0),
@@ -95,21 +111,13 @@ export const useCourseProgress = (courseId: string | undefined) => {
         }
       }
 
-      const safeTotal = totalLessons > 0 ? totalLessons : 0
-      const progress =
-        safeTotal === 0
-          ? 0
-          : Math.min(
-              100,
-              Math.round((completedLessons.length / safeTotal) * 100),
-            )
-
       return {
         completedLessons,
         lessonProgress,
-        totalLessons: safeTotal,
-        courseProgress: progress,
-        isComplete: safeTotal > 0 && completedLessons.length >= safeTotal,
+        totalLessons,
+        courseProgress: pct(completedLessons.length, totalLessons),
+        isComplete:
+          totalLessons > 0 && completedLessons.length >= totalLessons,
       }
     },
   })
@@ -123,4 +131,72 @@ export const useCourseProgress = (courseId: string | undefined) => {
         queryKey: courseProgressKey(courseId, user?.id),
       }),
   }
+}
+
+export interface CourseProgressSummary {
+  completed: number
+  total: number
+  percent: number
+  isComplete: boolean
+}
+
+/**
+ * Batched progress for a list of courses (course lists, purchased courses).
+ * Uses the exact same rules as `useCourseProgress`, so numbers always match.
+ */
+export const useCoursesProgress = (courseIds: string[]) => {
+  const { user, isAuthenticated } = useAuth()
+
+  return useQuery({
+    queryKey: coursesProgressKey(courseIds, user?.id),
+    enabled: courseIds.length > 0,
+    queryFn: async (): Promise<Record<string, CourseProgressSummary>> => {
+      const { data: lessonRows, error: lessonError } = await supabase
+        .from('course_lessons')
+        .select('id, course_id')
+        .in('course_id', courseIds)
+
+      if (lessonError) throw lessonError
+
+      const lessonsByCourse = new Map<string, Set<string>>()
+      for (const row of lessonRows ?? []) {
+        const courseId = row.course_id as string
+        if (!lessonsByCourse.has(courseId)) lessonsByCourse.set(courseId, new Set())
+        lessonsByCourse.get(courseId)!.add(row.id as string)
+      }
+
+      const completedByCourse = new Map<string, Set<string>>()
+      if (user && isAuthenticated) {
+        const { data, error } = await supabase
+          .from('user_section_progress')
+          .select('content_id, parent_id')
+          .eq('user_id', user.id)
+          .eq('content_type', 'course_lesson')
+          .in('parent_id', courseIds)
+
+        if (error) throw error
+        for (const row of data ?? []) {
+          const courseId = row.parent_id as string
+          const lessonId = row.content_id as string
+          if (!lessonsByCourse.get(courseId)?.has(lessonId)) continue
+          if (!completedByCourse.has(courseId))
+            completedByCourse.set(courseId, new Set())
+          completedByCourse.get(courseId)!.add(lessonId)
+        }
+      }
+
+      const result: Record<string, CourseProgressSummary> = {}
+      for (const courseId of courseIds) {
+        const total = lessonsByCourse.get(courseId)?.size ?? 0
+        const completed = completedByCourse.get(courseId)?.size ?? 0
+        result[courseId] = {
+          completed,
+          total,
+          percent: pct(completed, total),
+          isComplete: total > 0 && completed >= total,
+        }
+      }
+      return result
+    },
+  })
 }
