@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import { ArrowLeft, Clock, Play, Lock, ChevronLeft, CheckCircle2, Menu, X } from 'lucide-react'
@@ -32,6 +33,7 @@ const CourseLessons = () => {
   const navigate = useNavigate()
   const { t } = useTranslation(['courses', 'meta', 'common'])
   const { isAuthenticated, user, profile, isProfileLoaded } = useAuth()
+  const queryClient = useQueryClient()
   
   const [selectedVideo, setSelectedVideo] = useState<CourseVideo | null>(null)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
