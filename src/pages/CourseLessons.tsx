@@ -113,13 +113,22 @@ const CourseLessons = () => {
     // click "Mark as completed" to count the lesson toward course progress.
   }
 
-  // Completion is recorded only from real playback signals:
-  //  - the video reaching its end (handleVideoEnd)
-  //  - watch progress crossing the completion threshold
+  // Completion is recorded from real signals:
+  //  - the watch heartbeat crossing the completion threshold (85%)
   //  - the explicit "Mark as completed" action
   // Simply opening/selecting a lesson never records progress, so a fresh
   // course correctly shows 0%.
   const completedRef = useRef<Record<string, boolean>>({})
+  const watchedRef = useRef<Record<string, number>>({})
+
+  const refreshAllProgress = async () => {
+    await Promise.all([
+      refetchProgress(),
+      refreshStats(),
+      refreshFinishedContent(),
+      queryClient.invalidateQueries({ queryKey: ['courses-progress'] }),
+    ])
+  }
 
   const markLessonComplete = async (lessonId: string, durationSec: number) => {
     if (!courseId || !user) return
@@ -143,19 +152,58 @@ const CourseLessons = () => {
       completedRef.current[lessonId] = false
       return
     }
-    await Promise.all([
-      refetchProgress(),
-      refreshStats(),
-      refreshFinishedContent(),
-    ])
+    await refreshAllProgress()
   }
 
+  /**
+   * Watch heartbeat coming from the Drive player. Google Drive gives us no
+   * playback events, so we accumulate visible watch time and let the database
+   * decide when the lesson crosses the completion threshold.
+   */
+  const handleWatchTick = async (seconds: number) => {
+    if (!courseId || !user || !selectedVideo) return
+    if (!isPremium && !selectedVideo.isFree) return
+    const lessonId = selectedVideo.id
+    const durationSec = Math.max(selectedVideo.duration || 0, 0)
+    const base =
+      watchedRef.current[lessonId] ??
+      lessonProgress[lessonId]?.watchedSeconds ??
+      0
+    const nextWatched = base + seconds
+    watchedRef.current[lessonId] = nextWatched
+
+    const { data, error } = await supabase.rpc(
+      'record_course_lesson_watch_progress',
+      {
+        _user_id: user.id,
+        _course_id: courseId,
+        _lesson_id: lessonId,
+        _watched_seconds: Math.round(nextWatched),
+        _duration_seconds: Math.round(durationSec),
+        _explicit_complete: false,
+        _completion_threshold: 85,
+      },
+    )
+    if (error) {
+      console.error('watch tick error', error)
+      return
+    }
+    const result = (data ?? {}) as {
+      completed?: boolean
+      newly_completed?: boolean
+    }
+    if (result.completed) completedRef.current[lessonId] = true
+    if (result.newly_completed || result.completed) {
+      await refreshAllProgress()
+    }
+  }
 
   const handleVideoEnd = () => {
     if (!course?.videos || !selectedVideo) return
     const lessonId = selectedVideo.id
     const durationSec = Math.max(selectedVideo.duration || 1, 1)
     markLessonComplete(lessonId, durationSec)
+
 
     const currentIndex = course.videos.findIndex(v => v.id === selectedVideo.id)
     const nextIndex = currentIndex + 1
