@@ -29,7 +29,17 @@ interface GoogleDrivePlayerProps {
   onPrev?: () => void
   hasNext?: boolean
   hasPrev?: boolean
+  /**
+   * Called periodically with the number of seconds the video has been open and
+   * visible since the last tick. Google Drive runs in a cross-origin iframe, so
+   * real playback events are unavailable — this heartbeat is the only reliable
+   * watch signal we can produce.
+   */
+  onWatchTick?: (secondsSinceLastTick: number) => void
+  /** Heartbeat interval in seconds (default 15). */
+  watchTickInterval?: number
 }
+
 
 const DriveIframe: React.FC<{ embedSrc: string; title: string; className?: string }> = ({
   embedSrc,
