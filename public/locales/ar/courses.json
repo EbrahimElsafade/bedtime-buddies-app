@@ -27,7 +27,9 @@
     "completed": "مكتمل",
     "watchLesson": "مشاهدة الدرس",
     "openInDrive": "فتح في Google Drive",
-    "closeVideo": "إغلاق الفيديو"
+    "closeVideo": "إغلاق الفيديو",
+    "progress": "تقدم الدورة",
+    "lessonsCompleted": "تم إكمال {{completed}} من {{total}} درس"
   },
   "toast": {
     "premiumRequired": "مطلوب اشتراك مميز",
