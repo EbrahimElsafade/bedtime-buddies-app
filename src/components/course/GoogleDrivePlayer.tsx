@@ -36,8 +36,9 @@ interface GoogleDrivePlayerProps {
    * watch signal we can produce.
    */
   onWatchTick?: (secondsSinceLastTick: number) => void
-  /** Heartbeat interval in seconds (default 15). */
+  /** Heartbeat interval in seconds (default 10). */
   watchTickInterval?: number
+
 }
 
 
@@ -270,7 +271,7 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
   hasNext,
   hasPrev,
   onWatchTick,
-  watchTickInterval = 15,
+  watchTickInterval = 10,
 }) => {
   const { t } = useTranslation('courses')
   const preferPopup = usePreferDrivePopup()
