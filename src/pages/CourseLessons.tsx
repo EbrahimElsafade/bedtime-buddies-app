@@ -130,6 +130,7 @@ const CourseLessons = () => {
       refetchProgress(),
       refreshStats(),
       refreshFinishedContent(),
+      queryClient.invalidateQueries({ queryKey: ['course-progress'] }),
       queryClient.invalidateQueries({ queryKey: ['courses-progress'] }),
     ])
   }
