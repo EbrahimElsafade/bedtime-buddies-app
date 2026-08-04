@@ -116,12 +116,14 @@ const CourseLessons = () => {
   }
 
   // Completion is recorded from real signals:
-  //  - the watch heartbeat crossing the completion threshold (85%)
+  //  - the watch heartbeat reaching the end of the lesson duration (95%)
   //  - the explicit "Mark as completed" action
   // Simply opening/selecting a lesson never records progress, so a fresh
   // course correctly shows 0%.
+  const COMPLETION_THRESHOLD = 95
   const completedRef = useRef<Record<string, boolean>>({})
   const watchedRef = useRef<Record<string, number>>({})
+
 
   const refreshAllProgress = async () => {
     await Promise.all([
