@@ -148,7 +148,7 @@ const CourseLessons = () => {
         _watched_seconds: safeDuration,
         _duration_seconds: safeDuration,
         _explicit_complete: true,
-        _completion_threshold: 85,
+        _completion_threshold: COMPLETION_THRESHOLD,
       },
     )
     if (error) {
@@ -162,13 +162,21 @@ const CourseLessons = () => {
   /**
    * Watch heartbeat coming from the Drive player. Google Drive gives us no
    * playback events, so we accumulate visible watch time and let the database
-   * decide when the lesson crosses the completion threshold.
+   * complete the lesson once the watched time reaches the end of the video.
    */
   const handleWatchTick = async (seconds: number) => {
     if (!courseId || !user || !selectedVideo) return
     if (!isPremium && !selectedVideo.isFree) return
     const lessonId = selectedVideo.id
+    // Already finished — never report again (no duplicate points on replay).
+    if (completedRef.current[lessonId] || completedLessons.includes(lessonId)) {
+      completedRef.current[lessonId] = true
+      return
+    }
     const durationSec = Math.max(selectedVideo.duration || 0, 0)
+    // Without a stored duration there is nothing to compare against; the
+    // manual "Mark as completed" button stays the only path.
+    if (durationSec <= 0) return
     const base =
       watchedRef.current[lessonId] ??
       lessonProgress[lessonId]?.watchedSeconds ??
@@ -185,7 +193,7 @@ const CourseLessons = () => {
         _watched_seconds: Math.round(nextWatched),
         _duration_seconds: Math.round(durationSec),
         _explicit_complete: false,
-        _completion_threshold: 85,
+        _completion_threshold: COMPLETION_THRESHOLD,
       },
     )
     if (error) {
@@ -197,10 +205,11 @@ const CourseLessons = () => {
       newly_completed?: boolean
     }
     if (result.completed) completedRef.current[lessonId] = true
-    if (result.newly_completed || result.completed) {
+    if (result.newly_completed) {
       await refreshAllProgress()
     }
   }
+
 
   const handleVideoEnd = () => {
     if (!course?.videos || !selectedVideo) return
