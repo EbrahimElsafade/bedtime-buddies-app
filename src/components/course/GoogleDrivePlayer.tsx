@@ -271,7 +271,7 @@ const GoogleDrivePlayer: React.FC<GoogleDrivePlayerProps> = ({
   hasNext,
   hasPrev,
   onWatchTick,
-  watchTickInterval = 15,
+  watchTickInterval = 10,
 }) => {
   const { t } = useTranslation('courses')
   const preferPopup = usePreferDrivePopup()
