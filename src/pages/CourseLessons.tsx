@@ -493,7 +493,13 @@ const CourseLessons = () => {
                         onPrev={() => goToOffset(-1)}
                         hasNext={hasNextLesson}
                         hasPrev={hasPrevLesson}
-                        onWatchTick={handleWatchTick}
+                        onWatchTick={
+                          completedLessons.includes(selectedVideo.id)
+                            ? undefined
+                            : handleWatchTick
+                        }
+                        watchTickInterval={10}
+
 
                       />
                     ) : selectedVideo.videoPath ? (
