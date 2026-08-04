@@ -36,8 +36,9 @@ interface GoogleDrivePlayerProps {
    * watch signal we can produce.
    */
   onWatchTick?: (secondsSinceLastTick: number) => void
-  /** Heartbeat interval in seconds (default 15). */
+  /** Heartbeat interval in seconds (default 10). */
   watchTickInterval?: number
+
 }
 
 
