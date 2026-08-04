@@ -204,9 +204,13 @@ const CourseLessons = () => {
       completed?: boolean
       newly_completed?: boolean
     }
-    if (result.completed) completedRef.current[lessonId] = true
-    if (result.newly_completed) {
+    // `newly_completed` only fires when the whole COURSE finishes, so refresh
+    // as soon as THIS lesson flips to completed — that's what moves the bar.
+    if (result.completed && !completedRef.current[lessonId]) {
+      completedRef.current[lessonId] = true
       await refreshAllProgress()
+    } else if (result.completed) {
+      completedRef.current[lessonId] = true
     }
   }
 
