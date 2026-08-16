@@ -103,8 +103,12 @@ export const CourseCertificateSection = ({
             courseTitle={course.title_en || ''}
             courseTitleAr={course.title_ar || undefined}
             courseTitleFr={course.title_fr || undefined}
-            completionDate={new Date().toLocaleDateString()}
-            certificateId={course.id.slice(0, 15).toUpperCase()}
+            completionDate={new Date(
+              completionDate ?? Date.now(),
+            ).toLocaleDateString()}
+            certificateId={(completionId ?? course.id)
+              .slice(0, 15)
+              .toUpperCase()}
           />
         </DialogContent>
       </Dialog>
