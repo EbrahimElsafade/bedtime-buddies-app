@@ -77,7 +77,7 @@ export const useCourseProgress = (courseId: string | undefined) => {
         return { ...EMPTY, totalLessons }
       }
 
-      const [completedRes, watchRes] = await Promise.all([
+      const [completedRes, watchRes, finishedRes] = await Promise.all([
         supabase
           .from('user_section_progress')
           .select('content_id')
@@ -91,10 +91,18 @@ export const useCourseProgress = (courseId: string | undefined) => {
           )
           .eq('user_id', user.id)
           .eq('course_id', courseId),
+        supabase
+          .from('user_finished_content')
+          .select('id, finished_at')
+          .eq('user_id', user.id)
+          .eq('content_type', 'course')
+          .eq('content_id', courseId)
+          .maybeSingle(),
       ])
 
       if (completedRes.error) throw completedRes.error
       if (watchRes.error) throw watchRes.error
+      if (finishedRes.error) throw finishedRes.error
 
       const completedLessons = Array.from(
         new Set(
