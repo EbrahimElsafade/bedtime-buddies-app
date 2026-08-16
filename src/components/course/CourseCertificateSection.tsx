@@ -23,7 +23,12 @@ interface CourseCertificateSectionProps {
   course: Pick<Course, 'id' | 'title_en' | 'title_ar' | 'title_fr'>
   studentName: string
   progress: number
+  /** Must come from the persisted course completion record. */
   isComplete: boolean
+  /** Persisted `user_finished_content` id — used as the certificate id. */
+  completionId?: string
+  /** Persisted completion timestamp — used as the issuing date. */
+  completionDate?: string
   compact?: boolean
 }
 
@@ -32,6 +37,8 @@ export const CourseCertificateSection = ({
   studentName,
   progress,
   isComplete,
+  completionId,
+  completionDate,
   compact = false,
 }: CourseCertificateSectionProps) => {
   const { t } = useTranslation(['common'])
