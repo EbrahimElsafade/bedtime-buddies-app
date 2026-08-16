@@ -23,6 +23,7 @@ import { useGamification } from '@/hooks/useGamification'
 import { CoursePremiumModal } from '@/components/course/CoursePremiumModal'
 import { CourseCertificateSection } from '@/components/course/CourseCertificateSection'
 import { useCourseProgress } from '@/hooks/useCourseProgress'
+import { useLessonCompletion } from '@/hooks/useLessonCompletion'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from '@/hooks/use-toast'
 import { isMembershipActive } from '@/utils/membership'
@@ -347,7 +348,9 @@ const CourseLessons = () => {
             course={course}
             studentName={profile?.child_name || profile?.parent_name || ''}
             progress={courseProgress}
-            isComplete={isComplete}
+            isComplete={isCompletionPersisted}
+            completionId={completionId ?? undefined}
+            completionDate={completionDate ?? undefined}
             compact
           />
         </div>
