@@ -126,13 +126,21 @@ export const useCourseProgress = (courseId: string | undefined) => {
         }
       }
 
+      const finished = finishedRes.data as
+        | { id: string; finished_at: string }
+        | null
+
       return {
         completedLessons,
         lessonProgress,
         totalLessons,
         courseProgress: pct(completedLessons.length, totalLessons),
         isComplete:
-          totalLessons > 0 && completedLessons.length >= totalLessons,
+          !!finished ||
+          (totalLessons > 0 && completedLessons.length >= totalLessons),
+        isCompletionPersisted: !!finished,
+        completionId: finished?.id ?? null,
+        completionDate: finished?.finished_at ?? null,
       }
     },
   })
