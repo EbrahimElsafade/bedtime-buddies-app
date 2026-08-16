@@ -533,6 +533,7 @@ const CourseLessons = () => {
                             size="sm"
                             variant="outline"
                             className="gap-1"
+                            disabled={pendingLessonId === selectedVideo.id}
                             onClick={() =>
                               markLessonComplete(
                                 selectedVideo.id,
