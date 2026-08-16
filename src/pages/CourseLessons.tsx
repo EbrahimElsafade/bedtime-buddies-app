@@ -23,6 +23,7 @@ import { useGamification } from '@/hooks/useGamification'
 import { CoursePremiumModal } from '@/components/course/CoursePremiumModal'
 import { CourseCertificateSection } from '@/components/course/CourseCertificateSection'
 import { useCourseProgress } from '@/hooks/useCourseProgress'
+import { useLessonCompletion } from '@/hooks/useLessonCompletion'
 import { supabase } from '@/integrations/supabase/client'
 import { toast } from '@/hooks/use-toast'
 import { isMembershipActive } from '@/utils/membership'
@@ -62,10 +63,12 @@ const CourseLessons = () => {
     completedLessons,
     lessonProgress,
     courseProgress,
-    isComplete,
+    isCompletionPersisted,
+    completionId,
+    completionDate,
     totalLessons,
-    refetch: refetchProgress,
   } = useCourseProgress(courseId)
+  const { recordProgress, pendingLessonId } = useLessonCompletion(courseId)
 
   // (Premium gating now happens per-lesson via the modal triggered in handleVideoSelect)
 
@@ -121,43 +124,42 @@ const CourseLessons = () => {
   // Simply opening/selecting a lesson never records progress, so a fresh
   // course correctly shows 0%.
   const COMPLETION_THRESHOLD = 95
-  const completedRef = useRef<Record<string, boolean>>({})
   const watchedRef = useRef<Record<string, number>>({})
+  const serverCompletedRef = useRef<Record<string, boolean>>({})
 
-
-  const refreshAllProgress = async () => {
-    await Promise.all([
-      refetchProgress(),
-      refreshStats(),
-      refreshFinishedContent(),
-      queryClient.invalidateQueries({ queryKey: ['course-progress'] }),
-      queryClient.invalidateQueries({ queryKey: ['courses-progress'] }),
-    ])
+  const refreshGamification = async () => {
+    await Promise.all([refreshStats(), refreshFinishedContent()])
   }
 
+  /** Explicit "Mark as completed" — always retryable, always awaited. */
   const markLessonComplete = async (lessonId: string, durationSec: number) => {
     if (!courseId || !user) return
-    if (completedRef.current[lessonId]) return
-    completedRef.current[lessonId] = true
     const safeDuration = Math.max(durationSec, 1)
-    const { error } = await supabase.rpc(
-      'record_course_lesson_watch_progress',
-      {
-        _user_id: user.id,
-        _course_id: courseId,
-        _lesson_id: lessonId,
-        _watched_seconds: safeDuration,
-        _duration_seconds: safeDuration,
-        _explicit_complete: true,
-        _completion_threshold: COMPLETION_THRESHOLD,
-      },
-    )
-    if (error) {
-      console.error('record_course_lesson_watch_progress error', error)
-      completedRef.current[lessonId] = false
-      return
+    try {
+      const result = await recordProgress({
+        lessonId,
+        watchedSeconds: safeDuration,
+        durationSeconds: safeDuration,
+        explicitComplete: true,
+        completionThreshold: COMPLETION_THRESHOLD,
+      })
+      if (!result) return
+      serverCompletedRef.current[lessonId] = result.completed
+      await refreshGamification()
+      toast({
+        title: t('course.lessonCompleted', {
+          defaultValue: 'Lesson completed',
+        }),
+      })
+    } catch (err) {
+      console.error('record_course_lesson_watch_progress error', err)
+      toast({
+        variant: 'destructive',
+        title: t('course.completionFailed', {
+          defaultValue: 'Could not save your progress. Please try again.',
+        }),
+      })
     }
-    await refreshAllProgress()
   }
 
   /**
@@ -169,11 +171,8 @@ const CourseLessons = () => {
     if (!courseId || !user || !selectedVideo) return
     if (!isPremium && !selectedVideo.isFree) return
     const lessonId = selectedVideo.id
-    // Already finished — never report again (no duplicate points on replay).
-    if (completedRef.current[lessonId] || completedLessons.includes(lessonId)) {
-      completedRef.current[lessonId] = true
-      return
-    }
+    // Already finished on the server — never report again (no duplicate points).
+    if (serverCompletedRef.current[lessonId]) return
     const durationSec = Math.max(selectedVideo.duration || 0, 0)
     // Without a stored duration there is nothing to compare against; the
     // manual "Mark as completed" button stays the only path.
@@ -185,33 +184,20 @@ const CourseLessons = () => {
     const nextWatched = base + seconds
     watchedRef.current[lessonId] = nextWatched
 
-    const { data, error } = await supabase.rpc(
-      'record_course_lesson_watch_progress',
-      {
-        _user_id: user.id,
-        _course_id: courseId,
-        _lesson_id: lessonId,
-        _watched_seconds: Math.round(nextWatched),
-        _duration_seconds: Math.round(durationSec),
-        _explicit_complete: false,
-        _completion_threshold: COMPLETION_THRESHOLD,
-      },
-    )
-    if (error) {
-      console.error('watch tick error', error)
-      return
-    }
-    const result = (data ?? {}) as {
-      completed?: boolean
-      newly_completed?: boolean
-    }
-    // `newly_completed` only fires when the whole COURSE finishes, so refresh
-    // as soon as THIS lesson flips to completed — that's what moves the bar.
-    if (result.completed && !completedRef.current[lessonId]) {
-      completedRef.current[lessonId] = true
-      await refreshAllProgress()
-    } else if (result.completed) {
-      completedRef.current[lessonId] = true
+    try {
+      const result = await recordProgress({
+        lessonId,
+        watchedSeconds: nextWatched,
+        durationSeconds: durationSec,
+        completionThreshold: COMPLETION_THRESHOLD,
+      })
+      if (!result) return
+      if (result.completed) {
+        serverCompletedRef.current[lessonId] = true
+        await refreshGamification()
+      }
+    } catch (err) {
+      console.error('watch tick error', err)
     }
   }
 
@@ -362,7 +348,9 @@ const CourseLessons = () => {
             course={course}
             studentName={profile?.child_name || profile?.parent_name || ''}
             progress={courseProgress}
-            isComplete={isComplete}
+            isComplete={isCompletionPersisted}
+            completionId={completionId ?? undefined}
+            completionDate={completionDate ?? undefined}
             compact
           />
         </div>
@@ -545,6 +533,7 @@ const CourseLessons = () => {
                             size="sm"
                             variant="outline"
                             className="gap-1"
+                            disabled={pendingLessonId === selectedVideo.id}
                             onClick={() =>
                               markLessonComplete(
                                 selectedVideo.id,

@@ -9,8 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { FileImage, FileText } from 'lucide-react'
+import { FileImage, FileText, Printer } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import { toast } from '@/hooks/use-toast'
 import dolphoonLogo from '@/assets/dolphoon-logo-removebg-preview.png'
 
 const CERT_STRINGS: Record<string, Record<string, string>> = {
@@ -94,8 +95,14 @@ export const CertificateTemplate = ({
       link.click()
     } catch (err) {
       console.error('Failed to generate certificate PNG', err)
+      toast({
+        variant: 'destructive',
+        title: t('certificateGenerationFailed', {
+          defaultValue: 'Could not generate the certificate. Please try again.',
+        }),
+      })
     }
-  }, [certificateId, getCanvas])
+  }, [certificateId, getCanvas, t])
 
   const handleDownloadPdf = useCallback(async () => {
     try {
@@ -111,8 +118,49 @@ export const CertificateTemplate = ({
       pdf.save(`certificate-${certificateId}.pdf`)
     } catch (err) {
       console.error('Failed to generate certificate PDF', err)
+      toast({
+        variant: 'destructive',
+        title: t('certificateGenerationFailed', {
+          defaultValue: 'Could not generate the certificate. Please try again.',
+        }),
+      })
     }
-  }, [certificateId, getCanvas])
+  }, [certificateId, getCanvas, t])
+
+  /** Print the certificate itself (isolated print window, exact layout). */
+  const handlePrint = useCallback(async () => {
+    try {
+      const canvas = await getCanvas()
+      if (!canvas) return
+      const dataUrl = canvas.toDataURL('image/png')
+      const win = window.open('', '_blank')
+      if (!win) throw new Error('popup blocked')
+      win.document.write(
+        `<html><head><title>certificate-${certificateId}</title>` +
+          `<style>@page{size:landscape;margin:0}` +
+          `html,body{margin:0;padding:0}` +
+          `img{width:100%;height:auto;display:block}</style></head>` +
+          `<body><img src="${dataUrl}" /></body></html>`,
+      )
+      win.document.close()
+      win.focus()
+      const img = win.document.querySelector('img')
+      const doPrint = () => {
+        win.print()
+        win.close()
+      }
+      if (img && !img.complete) img.onload = doPrint
+      else setTimeout(doPrint, 200)
+    } catch (err) {
+      console.error('Failed to print certificate', err)
+      toast({
+        variant: 'destructive',
+        title: t('certificatePrintFailed', {
+          defaultValue: 'Could not open the print dialog. Please try again.',
+        }),
+      })
+    }
+  }, [certificateId, getCanvas, t])
 
   return (
     <div className="space-y-4">
@@ -200,7 +248,7 @@ export const CertificateTemplate = ({
       </div>
 
       {/* Download Buttons */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <Button onClick={handleDownloadPng} className="flex-1 gap-2">
           <FileImage className="h-4 w-4" />
           {t('downloadPng')}
@@ -212,6 +260,10 @@ export const CertificateTemplate = ({
         >
           <FileText className="h-4 w-4" />
           {t('downloadPdf')}
+        </Button>
+        <Button onClick={handlePrint} variant="outline" className="flex-1 gap-2">
+          <Printer className="h-4 w-4" />
+          {t('printCertificate', { defaultValue: 'Print' })}
         </Button>
       </div>
     </div>

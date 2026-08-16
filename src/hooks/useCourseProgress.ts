@@ -17,6 +17,10 @@ export interface CourseProgress {
   totalLessons: number
   courseProgress: number // 0-100
   isComplete: boolean
+  /** Persisted `user_finished_content` row — the only certificate gate. */
+  isCompletionPersisted: boolean
+  completionId: string | null
+  completionDate: string | null
 }
 
 const EMPTY: CourseProgress = {
@@ -25,6 +29,9 @@ const EMPTY: CourseProgress = {
   totalLessons: 0,
   courseProgress: 0,
   isComplete: false,
+  isCompletionPersisted: false,
+  completionId: null,
+  completionDate: null,
 }
 
 export const courseProgressKey = (courseId?: string, userId?: string) =>
@@ -70,7 +77,7 @@ export const useCourseProgress = (courseId: string | undefined) => {
         return { ...EMPTY, totalLessons }
       }
 
-      const [completedRes, watchRes] = await Promise.all([
+      const [completedRes, watchRes, finishedRes] = await Promise.all([
         supabase
           .from('user_section_progress')
           .select('content_id')
@@ -84,10 +91,18 @@ export const useCourseProgress = (courseId: string | undefined) => {
           )
           .eq('user_id', user.id)
           .eq('course_id', courseId),
+        supabase
+          .from('user_finished_content')
+          .select('id, finished_at')
+          .eq('user_id', user.id)
+          .eq('content_type', 'course')
+          .eq('content_id', courseId)
+          .maybeSingle(),
       ])
 
       if (completedRes.error) throw completedRes.error
       if (watchRes.error) throw watchRes.error
+      if (finishedRes.error) throw finishedRes.error
 
       const completedLessons = Array.from(
         new Set(
@@ -111,13 +126,21 @@ export const useCourseProgress = (courseId: string | undefined) => {
         }
       }
 
+      const finished = finishedRes.data as
+        | { id: string; finished_at: string }
+        | null
+
       return {
         completedLessons,
         lessonProgress,
         totalLessons,
         courseProgress: pct(completedLessons.length, totalLessons),
         isComplete:
-          totalLessons > 0 && completedLessons.length >= totalLessons,
+          !!finished ||
+          (totalLessons > 0 && completedLessons.length >= totalLessons),
+        isCompletionPersisted: !!finished,
+        completionId: finished?.id ?? null,
+        completionDate: finished?.finished_at ?? null,
       }
     },
   })
