@@ -17,6 +17,10 @@ export interface CourseProgress {
   totalLessons: number
   courseProgress: number // 0-100
   isComplete: boolean
+  /** Persisted `user_finished_content` row — the only certificate gate. */
+  isCompletionPersisted: boolean
+  completionId: string | null
+  completionDate: string | null
 }
 
 const EMPTY: CourseProgress = {
@@ -25,6 +29,9 @@ const EMPTY: CourseProgress = {
   totalLessons: 0,
   courseProgress: 0,
   isComplete: false,
+  isCompletionPersisted: false,
+  completionId: null,
+  completionDate: null,
 }
 
 export const courseProgressKey = (courseId?: string, userId?: string) =>
