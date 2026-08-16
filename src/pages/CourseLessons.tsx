@@ -62,10 +62,12 @@ const CourseLessons = () => {
     completedLessons,
     lessonProgress,
     courseProgress,
-    isComplete,
+    isCompletionPersisted,
+    completionId,
+    completionDate,
     totalLessons,
-    refetch: refetchProgress,
   } = useCourseProgress(courseId)
+  const { recordProgress, pendingLessonId } = useLessonCompletion(courseId)
 
   // (Premium gating now happens per-lesson via the modal triggered in handleVideoSelect)
 
