@@ -29,7 +29,9 @@
     "openInDrive": "فتح في Google Drive",
     "closeVideo": "إغلاق الفيديو",
     "progress": "تقدم الدورة",
-    "lessonsCompleted": "تم إكمال {{completed}} من {{total}} درس"
+    "lessonsCompleted": "تم إكمال {{completed}} من {{total}} درس",
+    "lessonCompleted": "تم إكمال الدرس",
+    "completionFailed": "لم نتمكن من حفظ تقدمك. يرجى المحاولة مرة أخرى."
   },
   "toast": {
     "premiumRequired": "مطلوب اشتراك مميز",
