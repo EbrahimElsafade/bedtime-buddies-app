@@ -30,7 +30,9 @@
     "openInDrive": "Ouvrir dans Google Drive",
     "closeVideo": "Fermer la vidéo",
     "progress": "Progression du cours",
-    "lessonsCompleted": "{{completed}} sur {{total}} leçons terminées"
+    "lessonsCompleted": "{{completed}} sur {{total}} leçons terminées",
+    "lessonCompleted": "Leçon terminée",
+    "completionFailed": "Impossible d'enregistrer votre progression. Veuillez réessayer."
   },
   "toast": {
     "premiumRequired": "Premium Requis",

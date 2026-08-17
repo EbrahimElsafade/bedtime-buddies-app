@@ -30,7 +30,9 @@
     "openInDrive": "Open in Google Drive",
     "closeVideo": "Close video",
     "progress": "Course progress",
-    "lessonsCompleted": "{{completed}} of {{total}} lessons completed"
+    "lessonsCompleted": "{{completed}} of {{total}} lessons completed",
+    "lessonCompleted": "Lesson completed",
+    "completionFailed": "Could not save your progress. Please try again."
   },
   "toast": {
     "premiumRequired": "Premium Required",

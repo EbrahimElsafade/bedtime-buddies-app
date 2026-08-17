@@ -1,14 +1,5 @@
 {
-  "loading": {
-    "default": "Chargement...",
-    "stories": "Chargement des histoires...",
-    "story": "Chargement de l'histoire...",
-    "courses": "Chargement des cours...",
-    "course": "Chargement du cours...",
-    "profile": "Chargement du profil...",
-    "data": "Chargement des données...",
-    "more": "Chargement de plus..."
-  },
+  "loading": "Chargement...",
   "pagination": {
     "showingAll": "Affichage de tous les {{count}} éléments",
     "scrollForMore": "Affichage de {{loaded}} sur {{total}} - faites défiler pour plus"
@@ -47,7 +38,6 @@
   "passwordTooShort": "Le mot de passe doit contenir au moins 6 caractères",
   "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
   "passwordChanged": "Mot de passe changé avec succès",
-  "personalInformation": "Informations Personnelles",
   "logout": "Déconnexion",
   "providers": {
     "google": "Google",
@@ -163,7 +153,6 @@
   "openMenu": "Ouvrir le menu",
   "view": "Voir",
   "noDataFound": "Aucune donnée trouvée",
-  "loading": "Chargement...",
   "untitled": "Sans titre",
   "getCertificate": "Obtenir le Certificat",
   "certificateId": "ID du certificat",
@@ -179,5 +168,8 @@
   "courseProgress": "Progression du cours",
   "completeAllLessonsTooltip": "Terminez toutes les leçons pour débloquer le certificat",
   "certificateUnlocked": "Certificat débloqué",
-  "certificateLocked": "Certificat verrouillé"
+  "certificateLocked": "Certificat verrouillé",
+  "printCertificate": "Imprimer",
+  "certificateGenerationFailed": "Impossible de générer le certificat. Veuillez réessayer.",
+  "certificatePrintFailed": "Impossible d'ouvrir la boîte de dialogue d'impression. Veuillez réessayer."
 }
