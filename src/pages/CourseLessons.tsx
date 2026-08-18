@@ -57,6 +57,8 @@ const CourseLessons = () => {
   const { data: course, isLoading, error } = useCourseData(courseId)
   const profileLoading = !!user && !isProfileLoaded
   const { hasAccess: isPremium } = useCourseAccess(courseId)
+  const { data: videoSource, isLoading: videoSourceLoading } =
+    useLessonVideoSource(selectedVideo?.id)
   const { refreshStats, refreshFinishedContent } = useGamification()
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const {
