@@ -46,7 +46,7 @@ export const useCourseData = (courseId: string | undefined) => {
 
       // Transform lessons to match our interface
       const videos: CourseVideo[] =
-        lessonsData?.map((lesson: LessonRow) => {
+        lessonsData?.map((lesson: Omit<LessonRow, 'video_url' | 'video_path'>) => {
           return {
             id: lesson.id,
             title_en: lesson.title_en || lesson.title || '',
@@ -55,8 +55,8 @@ export const useCourseData = (courseId: string | undefined) => {
             description_en: lesson.description_en || lesson.description || '',
             description_ar: lesson.description_ar || '',
             description_fr: lesson.description_fr || '',
-            videoPath: lesson.video_path || '',
-            videoUrl: lesson.video_url || '',
+            videoPath: '',
+            videoUrl: '',
             thumbnailPath: lesson.thumbnail_path || '',
             duration: lesson.duration,
             isFree: lesson.is_free ?? courseData.is_free,
