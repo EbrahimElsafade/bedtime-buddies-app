@@ -28,6 +28,7 @@ import { supabase } from '@/integrations/supabase/client'
 import { toast } from '@/hooks/use-toast'
 import { isMembershipActive } from '@/utils/membership'
 import { useCourseAccess } from '@/hooks/useCourseAccess'
+import { useLessonVideoSource } from '@/hooks/useLessonVideoSource'
 
 const CourseLessons = () => {
   const { id: courseId } = useParams<{ id: string }>()
