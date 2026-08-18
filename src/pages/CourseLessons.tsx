@@ -476,9 +476,9 @@ const CourseLessons = () => {
               {selectedVideo ? (
                 <div className="flex flex-col">
                   <div className="w-full min-w-0 bg-black">
-                    {selectedVideo.videoUrl ? (
+                    {videoSource?.videoUrl ? (
                       <GoogleDrivePlayer
-                        fileId={selectedVideo.videoUrl}
+                        fileId={videoSource.videoUrl}
                         title={getLocalized(selectedVideo, 'title', lang)}
                         onVideoEnd={handleVideoEnd}
                         showCountdownOnEnd={getNextVideoExists()}
@@ -495,7 +495,11 @@ const CourseLessons = () => {
 
 
                       />
-                    ) : selectedVideo.videoPath ? (
+                    ) : videoSourceLoading ? (
+                      <div className="flex aspect-video items-center justify-center text-white">
+                        <p>{t('loading.course', { ns: 'common' })}</p>
+                      </div>
+                    ) : videoSource?.videoPath ? (
                       <div className="flex aspect-video items-center justify-center text-white">
                         <p>{t('course.legacyVideoFormat')}</p>
                       </div>
