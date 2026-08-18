@@ -27,10 +27,15 @@ export const useCourseData = (courseId: string | undefined) => {
         throw courseError
       }
 
-      // Fetch course lessons/videos
+      // Fetch course lessons/videos.
+      // NOTE: video_url / video_path are intentionally NOT selected — they are
+      // protected server-side and fetched per lesson via the
+      // `get_lesson_video_source` RPC once access is verified.
       const { data: lessonsData, error: lessonsError } = await supabase
         .from('course_lessons')
-        .select('*')
+        .select(
+          'id, course_id, title, description, duration, created_at, updated_at, thumbnail_path, lesson_order, title_en, title_ar, title_fr, description_en, description_ar, description_fr, is_free',
+        )
         .eq('course_id', courseId)
         .order('lesson_order', { ascending: true })
 
