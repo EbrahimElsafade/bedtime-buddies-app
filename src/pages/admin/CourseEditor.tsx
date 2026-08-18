@@ -184,12 +184,12 @@ const CourseEditor = () => {
         throw courseError
       }
 
-      // Fetch course lessons
-      const { data: lessons, error: lessonsError } = await supabase
-        .from('course_lessons')
-        .select('*')
-        .eq('course_id', id)
-        .order('lesson_order', { ascending: true })
+      // Fetch course lessons (staff-only RPC: video sources are not readable
+      // through the table for security reasons)
+      const { data: lessons, error: lessonsError } = await supabase.rpc(
+        'admin_get_course_lessons',
+        { _course_id: id },
+      )
 
       if (lessonsError) {
         logger.error('Lessons fetch error:', lessonsError)

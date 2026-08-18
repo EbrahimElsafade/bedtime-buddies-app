@@ -27,10 +27,15 @@ export const useCourseData = (courseId: string | undefined) => {
         throw courseError
       }
 
-      // Fetch course lessons/videos
+      // Fetch course lessons/videos.
+      // NOTE: video_url / video_path are intentionally NOT selected — they are
+      // protected server-side and fetched per lesson via the
+      // `get_lesson_video_source` RPC once access is verified.
       const { data: lessonsData, error: lessonsError } = await supabase
         .from('course_lessons')
-        .select('*')
+        .select(
+          'id, course_id, title, description, duration, created_at, updated_at, thumbnail_path, lesson_order, title_en, title_ar, title_fr, description_en, description_ar, description_fr, is_free',
+        )
         .eq('course_id', courseId)
         .order('lesson_order', { ascending: true })
 
@@ -41,7 +46,7 @@ export const useCourseData = (courseId: string | undefined) => {
 
       // Transform lessons to match our interface
       const videos: CourseVideo[] =
-        lessonsData?.map((lesson: LessonRow) => {
+        lessonsData?.map((lesson: Omit<LessonRow, 'video_url' | 'video_path'>) => {
           return {
             id: lesson.id,
             title_en: lesson.title_en || lesson.title || '',
@@ -50,8 +55,8 @@ export const useCourseData = (courseId: string | undefined) => {
             description_en: lesson.description_en || lesson.description || '',
             description_ar: lesson.description_ar || '',
             description_fr: lesson.description_fr || '',
-            videoPath: lesson.video_path || '',
-            videoUrl: lesson.video_url || '',
+            videoPath: '',
+            videoUrl: '',
             thumbnailPath: lesson.thumbnail_path || '',
             duration: lesson.duration,
             isFree: lesson.is_free ?? courseData.is_free,

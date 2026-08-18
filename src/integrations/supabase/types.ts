@@ -905,6 +905,35 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_get_course_lessons: {
+        Args: { _course_id: string }
+        Returns: {
+          course_id: string
+          created_at: string | null
+          description: string
+          description_ar: string | null
+          description_en: string | null
+          description_fr: string | null
+          duration: number
+          id: string
+          is_free: boolean
+          lesson_order: number
+          thumbnail_path: string | null
+          title: string
+          title_ar: string | null
+          title_en: string | null
+          title_fr: string | null
+          updated_at: string | null
+          video_path: string | null
+          video_url: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "course_lessons"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       calculate_course_duration: {
         Args: { course_uuid: string }
         Returns: number
@@ -916,6 +945,13 @@ export type Database = {
       check_story_completion: {
         Args: { _story_id: string; _user_id: string }
         Returns: boolean
+      }
+      get_lesson_video_source: {
+        Args: { _lesson_id: string }
+        Returns: {
+          video_path: string
+          video_url: string
+        }[]
       }
       get_user_gamification_stats: { Args: { _user_id: string }; Returns: Json }
       has_any_role: {

@@ -28,6 +28,7 @@ import { supabase } from '@/integrations/supabase/client'
 import { toast } from '@/hooks/use-toast'
 import { isMembershipActive } from '@/utils/membership'
 import { useCourseAccess } from '@/hooks/useCourseAccess'
+import { useLessonVideoSource } from '@/hooks/useLessonVideoSource'
 
 const CourseLessons = () => {
   const { id: courseId } = useParams<{ id: string }>()
@@ -57,6 +58,8 @@ const CourseLessons = () => {
   const { data: course, isLoading, error } = useCourseData(courseId)
   const profileLoading = !!user && !isProfileLoaded
   const { hasAccess: isPremium } = useCourseAccess(courseId)
+  const { data: videoSource, isLoading: videoSourceLoading } =
+    useLessonVideoSource(selectedVideo?.id)
   const { refreshStats, refreshFinishedContent } = useGamification()
   const lang = document.documentElement.lang as 'en' | 'ar' | 'fr'
   const {
@@ -476,9 +479,9 @@ const CourseLessons = () => {
               {selectedVideo ? (
                 <div className="flex flex-col">
                   <div className="w-full min-w-0 bg-black">
-                    {selectedVideo.videoUrl ? (
+                    {videoSource?.videoUrl ? (
                       <GoogleDrivePlayer
-                        fileId={selectedVideo.videoUrl}
+                        fileId={videoSource.videoUrl}
                         title={getLocalized(selectedVideo, 'title', lang)}
                         onVideoEnd={handleVideoEnd}
                         showCountdownOnEnd={getNextVideoExists()}
@@ -495,7 +498,11 @@ const CourseLessons = () => {
 
 
                       />
-                    ) : selectedVideo.videoPath ? (
+                    ) : videoSourceLoading ? (
+                      <div className="flex aspect-video items-center justify-center text-white">
+                        <p>{t('loading.course', { ns: 'common' })}</p>
+                      </div>
+                    ) : videoSource?.videoPath ? (
                       <div className="flex aspect-video items-center justify-center text-white">
                         <p>{t('course.legacyVideoFormat')}</p>
                       </div>

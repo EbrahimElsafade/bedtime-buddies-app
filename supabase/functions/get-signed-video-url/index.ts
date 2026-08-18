@@ -108,10 +108,14 @@ Deno.serve(async (req) => {
           if (lesson.is_free || course.is_free) {
             // Free content - allow
           } else if (userId) {
-            const { data: premium } = await adminClient.rpc("has_premium_access", { _user_id: userId });
-            if (!premium) {
+            // Paid lesson: allow purchasers, active members and admins.
+            const { data: allowed } = await adminClient.rpc("has_course_access", {
+              _user_id: userId,
+              _course_id: (lesson as any).course_id,
+            });
+            if (!allowed) {
               return new Response(
-                JSON.stringify({ error: "Premium access required" }),
+                JSON.stringify({ error: "Course purchase required" }),
                 { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } }
               );
             }
