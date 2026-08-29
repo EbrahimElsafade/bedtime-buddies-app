@@ -33,7 +33,7 @@ export const BuyCourseButton = ({
 }: BuyCourseButtonProps) => {
   const { t } = useTranslation('courses')
   const { countryCode } = useCountry()
-  const price = formatCoursePrice(priceEgp, countryCode)
+  const price = formatCoursePrice({ priceEgp, priceUsd }, countryCode)
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault()
