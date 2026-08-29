@@ -9,6 +9,7 @@ const WHATSAPP_NUMBER = '201036443209'
 interface BuyCourseButtonProps {
   courseTitle: string
   priceEgp?: number
+  priceUsd?: number
   className?: string
   variant?: 'default' | 'accent' | 'secondary' | 'outline'
   size?: 'default' | 'sm' | 'lg'
@@ -23,6 +24,7 @@ interface BuyCourseButtonProps {
 export const BuyCourseButton = ({
   courseTitle,
   priceEgp,
+  priceUsd,
   className,
   variant = 'accent',
   size = 'default',
@@ -31,7 +33,7 @@ export const BuyCourseButton = ({
 }: BuyCourseButtonProps) => {
   const { t } = useTranslation('courses')
   const { countryCode } = useCountry()
-  const price = formatCoursePrice(priceEgp, countryCode)
+  const price = formatCoursePrice({ priceEgp, priceUsd }, countryCode)
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault()

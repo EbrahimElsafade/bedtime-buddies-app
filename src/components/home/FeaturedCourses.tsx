@@ -89,6 +89,7 @@ const FeaturedCourses = () => {
                     {!course.is_free && !ownedCourseIds.includes(course.id) && (
                       <CoursePriceBadge
                         priceEgp={course.price}
+                        priceUsd={course.priceUsd}
                         className="absolute left-2 top-2"
                       />
                     )}

@@ -5,11 +5,12 @@ import { cn } from '@/lib/utils'
 
 interface CoursePriceBadgeProps {
   priceEgp?: number
+  priceUsd?: number
   className?: string
 }
 
 /** Price badge shown on course cards in place of the old "Premium" tag. */
-export const CoursePriceBadge = ({ priceEgp, className }: CoursePriceBadgeProps) => {
+export const CoursePriceBadge = ({ priceEgp, priceUsd, className }: CoursePriceBadgeProps) => {
   const { t } = useTranslation('courses')
 
   return (
@@ -19,7 +20,11 @@ export const CoursePriceBadge = ({ priceEgp, className }: CoursePriceBadgeProps)
         className,
       )}
     >
-      <CoursePrice priceEgp={priceEgp} className="text-sm leading-none text-white" />
+      <CoursePrice
+        priceEgp={priceEgp}
+        priceUsd={priceUsd}
+        className="text-sm leading-none text-white"
+      />
       <span className="text-[10px] leading-none text-white/80">
         {t('purchase.oneTime')}
       </span>

@@ -1,37 +1,46 @@
-import { getCurrencySymbol, getPlanPrice } from './getPlanPrice'
-
 /**
- * Course prices are stored once in EGP on the course row.
- *
- * To keep pricing consistent with the existing subscription price table, the
- * EGP amount is scaled by the same country ratio already used for the yearly
- * plan (country price / Egypt price).
+ * Courses have two explicit prices set by admins:
+ * - `price` (EGP) shown to visitors inside Egypt (and when detection fails)
+ * - `price_usd` (USD) shown to every other visitor
  */
-const getCountryRatio = (countryCode: string): number => {
-  const base = getPlanPrice('EG', 'yearly')
-  const local = getPlanPrice(countryCode, 'yearly')
-  if (!base || !local) return 1
-  return local / base
-}
 
 export const DEFAULT_COURSE_PRICE_EGP = 100
 
-/** Converted numeric price for the visitor's country. */
-export const getCoursePrice = (priceEgp: number | undefined, countryCode: string): number => {
-  const base = typeof priceEgp === 'number' && priceEgp > 0 ? priceEgp : DEFAULT_COURSE_PRICE_EGP
-  const converted = base * getCountryRatio(countryCode)
-  return Math.round(converted * 100) / 100
+export interface CoursePriceInput {
+  priceEgp?: number
+  priceUsd?: number
 }
 
-/** Currency code (EGP, USD, ...) matching the visitor's country. */
-export const getCourseCurrency = (countryCode: string): string => getCurrencySymbol(countryCode)
+const isEgypt = (countryCode: string | null | undefined) =>
+  !countryCode || countryCode.toUpperCase() === 'EG'
 
-/** Ready-to-render "100 EGP" style string. */
+const round = (amount: number) =>
+  Number.isInteger(amount) ? amount : Number(amount.toFixed(2))
+
+/** Amount + currency for the visitor's country. */
+export const getCoursePrice = (
+  { priceEgp, priceUsd }: CoursePriceInput,
+  countryCode: string | null | undefined,
+): { amount: number; currency: string } => {
+  const egp = typeof priceEgp === 'number' && priceEgp > 0 ? priceEgp : DEFAULT_COURSE_PRICE_EGP
+
+  if (isEgypt(countryCode)) {
+    return { amount: round(egp), currency: 'EGP' }
+  }
+
+  // Fall back to the EGP price (labeled EGP) until an admin sets a USD price.
+  if (typeof priceUsd === 'number' && priceUsd > 0) {
+    return { amount: round(priceUsd), currency: 'USD' }
+  }
+
+  return { amount: round(egp), currency: 'EGP' }
+}
+
+/** Ready-to-render "100 EGP" / "10 USD" string. */
 export const formatCoursePrice = (
-  priceEgp: number | undefined,
-  countryCode: string,
+  input: CoursePriceInput,
+  countryCode: string | null | undefined,
 ): string => {
-  const amount = getCoursePrice(priceEgp, countryCode)
-  const rounded = Number.isInteger(amount) ? amount : Number(amount.toFixed(2))
-  return `${rounded} ${getCourseCurrency(countryCode)}`
+  const { amount, currency } = getCoursePrice(input, countryCode)
+  return `${amount} ${currency}`
 }

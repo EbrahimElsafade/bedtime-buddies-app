@@ -5,14 +5,15 @@ import { cn } from '@/lib/utils'
 
 interface CoursePriceProps {
   priceEgp?: number
+  priceUsd?: number
   className?: string
   withLabel?: boolean
 }
 
-export const CoursePrice = ({ priceEgp, className, withLabel }: CoursePriceProps) => {
+export const CoursePrice = ({ priceEgp, priceUsd, className, withLabel }: CoursePriceProps) => {
   const { t } = useTranslation('courses')
   const { countryCode } = useCountry()
-  const price = formatCoursePrice(priceEgp, countryCode)
+  const price = formatCoursePrice({ priceEgp, priceUsd }, countryCode)
 
   if (withLabel) {
     return (

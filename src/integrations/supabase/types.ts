@@ -267,6 +267,7 @@ export type Database = {
           max_age: number | null
           min_age: number | null
           price: number
+          price_usd: number
           title_ar: string | null
           title_en: string
           title_fr: string | null
@@ -303,6 +304,7 @@ export type Database = {
           max_age?: number | null
           min_age?: number | null
           price?: number
+          price_usd?: number
           title_ar?: string | null
           title_en: string
           title_fr?: string | null
@@ -339,6 +341,7 @@ export type Database = {
           max_age?: number | null
           min_age?: number | null
           price?: number
+          price_usd?: number
           title_ar?: string | null
           title_en?: string
           title_fr?: string | null
