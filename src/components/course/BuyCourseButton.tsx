@@ -24,6 +24,7 @@ interface BuyCourseButtonProps {
 export const BuyCourseButton = ({
   courseTitle,
   priceEgp,
+  priceUsd,
   className,
   variant = 'accent',
   size = 'default',
