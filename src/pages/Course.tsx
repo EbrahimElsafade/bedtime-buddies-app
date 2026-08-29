@@ -326,7 +326,6 @@ const Course = () => {
                     <BuyCourseButton
                       courseTitle={getLocalized(course, 'title', lang)}
                       priceEgp={course.price}
-            priceUsd={course.priceUsd}
                       priceUsd={course.priceUsd}
                     />
                   )}
@@ -412,7 +411,6 @@ const Course = () => {
           <CoursePremiumModal
             courseTitle={getLocalized(course, 'title', lang)}
             priceEgp={course.price}
-            priceUsd={course.priceUsd}
           />
 
         </DialogContent>
