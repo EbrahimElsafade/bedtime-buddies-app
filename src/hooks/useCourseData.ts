@@ -81,6 +81,7 @@ export const useCourseData = (courseId: string | undefined) => {
         description_fr: course.description_fr || '',
         category: courseData.category || '',
         price: Number(courseData.price ?? 100),
+        priceUsd: Number(courseData.price_usd ?? 0),
         minAge: courseData.min_age || 3,
         maxAge: courseData.max_age || 12,
         duration: totalDuration,
