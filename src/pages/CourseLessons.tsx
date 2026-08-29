@@ -594,6 +594,7 @@ const CourseLessons = () => {
           <CoursePremiumModal
             courseTitle={getLocalized(course, 'title', lang)}
             priceEgp={course.price}
+            priceUsd={course.priceUsd}
           />
 
         </DialogContent>

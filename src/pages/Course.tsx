@@ -317,7 +317,7 @@ const Course = () => {
 
               {!course.isFree && (
                 <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-primary/30 bg-secondary/40 p-4">
-                  <CoursePrice priceEgp={course.price} withLabel />
+                  <CoursePrice priceEgp={course.price} priceUsd={course.priceUsd} withLabel />
                   {hasAccess ? (
                     <Badge className="bg-green-600 hover:bg-green-700">
                       {t('purchase.owned')}
@@ -326,6 +326,8 @@ const Course = () => {
                     <BuyCourseButton
                       courseTitle={getLocalized(course, 'title', lang)}
                       priceEgp={course.price}
+            priceUsd={course.priceUsd}
+                      priceUsd={course.priceUsd}
                     />
                   )}
                 </div>
@@ -410,6 +412,7 @@ const Course = () => {
           <CoursePremiumModal
             courseTitle={getLocalized(course, 'title', lang)}
             priceEgp={course.price}
+            priceUsd={course.priceUsd}
           />
 
         </DialogContent>

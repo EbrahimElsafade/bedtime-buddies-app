@@ -86,6 +86,7 @@ const SkillPathDetails = () => {
                     ) : (
                       <CoursePriceBadge
                         priceEgp={course.price}
+                        priceUsd={course.priceUsd}
                         className="absolute left-2 top-2"
                       />
                     )}
