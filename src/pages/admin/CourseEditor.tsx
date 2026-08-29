@@ -108,6 +108,7 @@ const CourseEditor = () => {
     minAge: 3,
     maxAge: 12,
     price: 100,
+    priceUsd: 0,
     isFree: true,
     isFeatured: false,
     coverImagePath: null as string | null,
@@ -241,6 +242,7 @@ const CourseEditor = () => {
         minAge: (c.min_age as number) ?? 3,
         maxAge: (c.max_age as number) ?? 12,
         price: Number(c.price ?? 100),
+        priceUsd: Number(c.price_usd ?? 0),
         isFree: (c.is_free as boolean) ?? true,
         isFeatured: (c.is_published as boolean) ?? false,
         coverImagePath: (c.cover_image as string | null) || null,
@@ -482,6 +484,7 @@ const CourseEditor = () => {
             min_age: courseData.minAge,
             max_age: courseData.maxAge,
             price: courseData.price,
+            price_usd: courseData.priceUsd ?? 0,
             is_free: courseData.isFree,
             is_published: courseData.isFeatured,
             lessons: courseLessons.length,
@@ -518,6 +521,7 @@ const CourseEditor = () => {
             min_age: courseData.minAge,
             max_age: courseData.maxAge,
             price: courseData.price,
+            price_usd: courseData.priceUsd ?? 0,
             is_free: courseData.isFree,
             is_published: courseData.isFeatured,
             lessons: courseLessons.length,
@@ -874,6 +878,30 @@ const CourseEditor = () => {
                         }
                         disabled={courseData.isFree}
                       />
+                      <p className="text-xs text-muted-foreground">
+                        Shown to visitors inside Egypt.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="course-price-usd">Course Price (USD)</Label>
+                      <Input
+                        id="course-price-usd"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={courseData.priceUsd ?? 0}
+                        onChange={e =>
+                          setCourseData({
+                            ...courseData,
+                            priceUsd: parseFloat(e.target.value) || 0,
+                          })
+                        }
+                        disabled={courseData.isFree}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Shown to visitors outside Egypt.
+                      </p>
                     </div>
 
                     <div className="flex items-center justify-between">
