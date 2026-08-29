@@ -5,11 +5,12 @@ import { cn } from '@/lib/utils'
 
 interface CoursePriceBadgeProps {
   priceEgp?: number
+  priceUsd?: number
   className?: string
 }
 
 /** Price badge shown on course cards in place of the old "Premium" tag. */
-export const CoursePriceBadge = ({ priceEgp, className }: CoursePriceBadgeProps) => {
+export const CoursePriceBadge = ({ priceEgp, priceUsd, className }: CoursePriceBadgeProps) => {
   const { t } = useTranslation('courses')
 
   return (
