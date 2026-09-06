@@ -180,5 +180,11 @@
   "certificateLocked": "Certificate locked",
   "printCertificate": "Print",
   "certificateGenerationFailed": "Could not generate the certificate. Please try again.",
-  "certificatePrintFailed": "Could not open the print dialog. Please try again."
+  "certificatePrintFailed": "Could not open the print dialog. Please try again.",
+  "referralPrompt": {
+    "question": "How did you hear about us?",
+    "placeholder": "e.g. Facebook, a friend, school...",
+    "send": "Send",
+    "notNow": "Not now"
+  }
 }
