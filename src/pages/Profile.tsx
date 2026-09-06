@@ -171,6 +171,7 @@ const Profile = () => {
 
           {/* Profile Tab */}
           <TabsContent value="profile">
+            <ReferralSourcePrompt />
             <ProfileInfo
               name={name}
               setName={setName}
