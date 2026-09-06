@@ -31,6 +31,7 @@ type UserWithRole = {
   subscription_tier: string | null;
   subscription_start: string | null;
   subscription_end: string | null;
+  referral_source: string | null;
   roles: Array<{ role: string }>;
   created_at: string;
 };
@@ -283,6 +284,13 @@ const Users = () => {
           const order = { admin: 0, editor: 1, user: 2 };
           return order[getUserRole(a.original)] - order[getUserRole(b.original)];
         },
+      },
+      {
+        accessorKey: "referral_source",
+        header: t("users.referralSource"),
+        cell: ({ row }) => (
+          <span className="text-sm text-muted-foreground">{row.original.referral_source || "—"}</span>
+        ),
       },
       {
         accessorKey: "created_at",

@@ -7,6 +7,7 @@ import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Helmet } from 'react-helmet-async'
 import { useAuth } from '@/contexts/AuthContext'
+import { ReferralSourcePrompt } from '@/components/profile/ReferralSourcePrompt'
 
 const Index = () => {
   const { profile } = useAuth()
@@ -44,6 +45,8 @@ const Index = () => {
       </Helmet>
 
       <Hero />
+
+      <ReferralSourcePrompt />
 
       <StatsBar
         stats={[

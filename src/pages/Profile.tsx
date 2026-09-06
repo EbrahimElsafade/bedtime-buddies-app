@@ -12,6 +12,7 @@ import { useStoryFavorites, useCourseFavorites } from '@/hooks/useFavorites'
 import { useLoading } from '@/contexts/LoadingContext'
 import { useGamification } from '@/hooks/useGamification'
 import { ProfileInfo } from './Profile/ProfileInfo'
+import { ReferralSourcePrompt } from '@/components/profile/ReferralSourcePrompt'
 import { FavoritesList } from './Profile/FavoritesList'
 import { PurchasedCoursesTab } from '@/pages/Profile/PurchasedCoursesTab'
 import { FinishedContentTab } from './Profile/FinishedContentTab'
@@ -171,6 +172,7 @@ const Profile = () => {
 
           {/* Profile Tab */}
           <TabsContent value="profile">
+            <ReferralSourcePrompt />
             <ProfileInfo
               name={name}
               setName={setName}

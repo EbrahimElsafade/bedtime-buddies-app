@@ -105,7 +105,8 @@
     "noCoursesFound": "لا توجد دورات",
     "userUpdated": "تم تحديث المستخدم بنجاح",
     "courseAccess": "الدورات المشتراة",
-    "courseAccessDesc": "الدورات المحددة تبقى متاحة لهذا المستخدم بشكل دائم."
+    "courseAccessDesc": "الدورات المحددة تبقى متاحة لهذا المستخدم بشكل دائم.",
+    "referralSource": "كيف عرفنا"
   },
   "stories": {
     "title": "إدارة القصص",

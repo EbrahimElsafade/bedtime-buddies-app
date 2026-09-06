@@ -171,5 +171,11 @@
   "certificateLocked": "الشهادة مقفلة",
   "printCertificate": "طباعة",
   "certificateGenerationFailed": "لم نتمكن من إنشاء الشهادة. يرجى المحاولة مرة أخرى.",
-  "certificatePrintFailed": "لم نتمكن من فتح نافذة الطباعة. يرجى المحاولة مرة أخرى."
+  "certificatePrintFailed": "لم نتمكن من فتح نافذة الطباعة. يرجى المحاولة مرة أخرى.",
+  "referralPrompt": {
+    "question": "كيف عرفت عنا؟",
+    "placeholder": "مثلاً: فيسبوك، صديق، المدرسة...",
+    "send": "إرسال",
+    "notNow": "ليس الآن"
+  }
 }

@@ -124,7 +124,8 @@
     "noCoursesFound": "No courses found",
     "userUpdated": "User updated successfully",
     "courseAccess": "Purchased Courses",
-    "courseAccessDesc": "Selected courses stay unlocked for this user forever."
+    "courseAccessDesc": "Selected courses stay unlocked for this user forever.",
+    "referralSource": "Heard about us"
   },
   "stories": {
     "title": "Story Management",

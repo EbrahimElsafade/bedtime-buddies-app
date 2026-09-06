@@ -94,7 +94,8 @@
     "noCoursesFound": "Aucun cours trouvé",
     "userUpdated": "Utilisateur mis à jour avec succès",
     "courseAccess": "Cours achetés",
-    "courseAccessDesc": "Les cours sélectionnés restent débloqués définitivement pour cet utilisateur."
+    "courseAccessDesc": "Les cours sélectionnés restent débloqués définitivement pour cet utilisateur.",
+    "referralSource": "Nous a connus par"
   },
   "stories": {
     "title": "Gestion des Histoires",

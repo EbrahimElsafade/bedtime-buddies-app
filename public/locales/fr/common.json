@@ -171,5 +171,11 @@
   "certificateLocked": "Certificat verrouillé",
   "printCertificate": "Imprimer",
   "certificateGenerationFailed": "Impossible de générer le certificat. Veuillez réessayer.",
-  "certificatePrintFailed": "Impossible d'ouvrir la boîte de dialogue d'impression. Veuillez réessayer."
+  "certificatePrintFailed": "Impossible d'ouvrir la boîte de dialogue d'impression. Veuillez réessayer.",
+  "referralPrompt": {
+    "question": "Comment avez-vous entendu parler de nous ?",
+    "placeholder": "ex. Facebook, un ami, l'école...",
+    "send": "Envoyer",
+    "notNow": "Plus tard"
+  }
 }
