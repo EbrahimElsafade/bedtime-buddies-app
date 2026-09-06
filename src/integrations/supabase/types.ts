@@ -395,6 +395,8 @@ export type Database = {
           parent_name: string
           preferred_language: string
           profile_image: string | null
+          referral_prompt_dismissed_at: string | null
+          referral_source: string | null
           skills: string[] | null
           subscription_end: string | null
           subscription_start: string | null
@@ -412,6 +414,8 @@ export type Database = {
           parent_name: string
           preferred_language?: string
           profile_image?: string | null
+          referral_prompt_dismissed_at?: string | null
+          referral_source?: string | null
           skills?: string[] | null
           subscription_end?: string | null
           subscription_start?: string | null
@@ -429,6 +433,8 @@ export type Database = {
           parent_name?: string
           preferred_language?: string
           profile_image?: string | null
+          referral_prompt_dismissed_at?: string | null
+          referral_source?: string | null
           skills?: string[] | null
           subscription_end?: string | null
           subscription_start?: string | null
