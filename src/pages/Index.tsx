@@ -46,6 +46,8 @@ const Index = () => {
 
       <Hero />
 
+      <ReferralSourcePrompt />
+
       <StatsBar
         stats={[
           { label: t('misc:stats.lessonsLabel'), value: t('misc:stats.lessonsValue') },
