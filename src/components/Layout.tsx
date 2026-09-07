@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Navbar } from './navigation/Navbar'
 import { Footer } from './navigation/Footer'
 import { MobileNavigation } from './navigation/MobileNavigation'
+import { ReferralSourcePrompt } from '@/components/profile/ReferralSourcePrompt'
 
 const Layout = () => {
   const { isAuthenticated } = useAuth()
@@ -34,6 +35,7 @@ const Layout = () => {
       </main>
       <Footer navItems={navItems} />
       <MobileNavigation navItems={navItems} isActive={isActive} />
+      <ReferralSourcePrompt />
     </div>
   )
 }
