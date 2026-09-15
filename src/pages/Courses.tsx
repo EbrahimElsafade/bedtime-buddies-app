@@ -229,10 +229,10 @@ const Courses = () => {
                   <Link
                     key={course.id}
                     to={`/courses/${course.id}`}
-                    className="block"
+                    className="block h-full min-w-0"
                   >
                     <Card
-                      className={`story-card relative z-10 grid cursor-pointer gap-4 overflow-hidden backdrop-blur-sm transition-transform hover:scale-105 ${
+                      className={`story-card relative z-10 grid h-full min-w-0 cursor-pointer gap-4 overflow-hidden backdrop-blur-sm transition-transform hover:scale-[1.02] ${
                         isKnowledgeStation
                           ? 'border-[#0080004f] bg-[#00ff0029]'
                           : 'border-primary/20 bg-secondary/70'
@@ -266,8 +266,8 @@ const Courses = () => {
                         )}
                       </div>
 
-                      <CardHeader className="grid gap-4 py-0">
-                        <CardTitle className="text-xl text-primary-foreground">
+                      <CardHeader className="grid min-w-0 gap-4 py-0">
+                        <CardTitle className="break-words text-xl leading-snug text-primary-foreground">
                           {getLocalized(course, 'title', lang)}
                         </CardTitle>
 
@@ -277,9 +277,9 @@ const Courses = () => {
                       </CardHeader>
 
                       <CardContent className="grid gap-4">
-                        <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex min-w-0 flex-wrap items-start justify-between gap-2">
                           {course.instructor && (
-                            <div className="flex items-center gap-2">
+                            <div className="flex min-w-0 items-center gap-2">
                               <Avatar className="h-6 w-6">
                                 <AvatarImage
                                   src={
@@ -297,7 +297,7 @@ const Courses = () => {
                                   <User className="h-3 w-3" />
                                 </AvatarFallback>
                               </Avatar>
-                              <span className="text-sm text-primary-foreground">
+                              <span className="min-w-0 break-words text-sm text-primary-foreground">
                                 {getLocalized(course.instructor, 'name', lang)}
                               </span>
                             </div>
@@ -305,11 +305,11 @@ const Courses = () => {
 
                           <Badge
                             variant="secondary"
-                            className={
+                            className={`max-w-full whitespace-normal break-words text-center ${
                               isKnowledgeStation
                                 ? 'bg-[#0080004f] text-secondary'
                                 : 'bg-primary/30 text-primary-foreground'
-                            }
+                            }`}
                           >
                             {getCategoryText(category, 'name', lang) ||
                               course.category ||
@@ -317,17 +317,17 @@ const Courses = () => {
                           </Badge>
                         </div>
 
-                        <div className="flex items-center justify-between text-sm text-primary-foreground">
-                          <div className="flex items-center gap-2">
-                            <BookOpen className="mr-1 h-4 w-4" />
-                            <span>
+                        <div className="flex flex-wrap items-center justify-between gap-2 text-sm text-primary-foreground">
+                          <div className="flex min-w-0 items-center gap-2">
+                            <BookOpen className="h-4 w-4 shrink-0" />
+                            <span className="whitespace-nowrap">
                               {course.lessons} {t('misc:courses.lessons')}
                             </span>
                           </div>
                           {course.duration > 0 && (
-                            <div className="flex items-center gap-2">
-                              <Clock className="mr-1 h-4 w-4" />
-                              <span>
+                            <div className="flex min-w-0 items-center gap-2">
+                              <Clock className="h-4 w-4 shrink-0" />
+                              <span className="whitespace-nowrap">
                                 {Math.floor(course.duration / 60)}{' '}
                                 {t('misc:duration')}
                               </span>
