@@ -1,15 +1,13 @@
 # Dolphoon
 
-> Dolphoon is a youth learning and entertainment platform offering interactive stories, educational courses, skill paths, and games for young people aged 13–18, with content in Arabic, English, and French.
+> Dolphoon is a multilingual learning platform offering practical online courses and structured skill paths for young people aged 13–18 in Arabic, English, and French.
 
 ## Pages
 
-- [Home](/): Overview of Dolphoon — stories, courses, skill paths, and games for young people.
+- [Home](/): Overview of Dolphoon's practical courses and skill paths for young people aged 13–18.
 - [Courses](/courses): Educational courses on programming, AI, languages, and design for ages 13–18.
 - [Skill Paths](/skill-paths): Structured learning journeys that combine multiple courses into progressive curricula.
-- [Stories](/stories): Interactive stories crafted to engage young people while teaching valuable lessons.
-- [Games](/games): Educational games that make learning fun.
-- [Subscription](/subscription): Premium plans for unlimited access to all content.
+- [Course Access](/subscription): Choose and purchase the right course for your learning goals.
 
 ## Optional
 
