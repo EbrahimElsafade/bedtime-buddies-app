@@ -19,10 +19,8 @@ interface SitemapEntry {
 
 const staticEntries: SitemapEntry[] = [
   { path: "/", changefreq: "weekly", priority: "1.0" },
-  { path: "/stories", changefreq: "weekly", priority: "0.9" },
   { path: "/courses", changefreq: "weekly", priority: "0.9" },
   { path: "/skill-paths", changefreq: "weekly", priority: "0.9" },
-  { path: "/games", changefreq: "weekly", priority: "0.8" },
   { path: "/subscription", changefreq: "monthly", priority: "0.7" },
   { path: "/login", changefreq: "yearly", priority: "0.3" },
   { path: "/register", changefreq: "yearly", priority: "0.3" },
@@ -33,19 +31,6 @@ async function fetchDynamicEntries(): Promise<SitemapEntry[]> {
   const entries: SitemapEntry[] = []
 
   try {
-    const { data: stories } = await supabase
-      .from("stories")
-      .select("id, updated_at")
-      .eq("is_published", true)
-    stories?.forEach(s =>
-      entries.push({
-        path: `/stories/${s.id}`,
-        lastmod: s.updated_at?.slice(0, 10),
-        changefreq: "monthly",
-        priority: "0.7",
-      }),
-    )
-
     const { data: courses } = await supabase
       .from("courses")
       .select("id, updated_at")
@@ -65,17 +50,6 @@ async function fetchDynamicEntries(): Promise<SitemapEntry[]> {
       })
     })
 
-    const { data: games } = await supabase
-      .from("games")
-      .select("game_id")
-      .eq("is_active", true)
-    games?.forEach(g =>
-      entries.push({
-        path: `/games/${g.game_id}`,
-        changefreq: "monthly",
-        priority: "0.6",
-      }),
-    )
   } catch (err) {
     console.warn("sitemap: skipping dynamic entries —", err)
   }
