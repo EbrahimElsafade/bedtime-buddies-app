@@ -63,11 +63,11 @@ const FeaturedCourses = () => {
                       : 'border-primary/20 bg-secondary/70'
                   }`}
                 >
-                  <div className="relative aspect-[16/9]">
+                  <div className="relative">
                     <img
                       src={getImageUrl(course.coverImagePath)}
                       alt={getLocalized(course, 'title', lang)}
-                      className="h-full w-full overflow-hidden object-cover"
+                      className="w-full overflow-hidden object-cover"
                       onError={e => {
                         e.currentTarget.src =
                           'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=1000'
