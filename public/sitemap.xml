@@ -6,11 +6,6 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://thedolphoon.com/stories</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
     <loc>https://thedolphoon.com/courses</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
@@ -19,11 +14,6 @@
     <loc>https://thedolphoon.com/skill-paths</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/games</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://thedolphoon.com/subscription</loc>
@@ -39,102 +29,6 @@
     <loc>https://thedolphoon.com/register</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/stories/2e861809-1e03-4e61-bf10-6e3d75165a1f</loc>
-    <lastmod>2026-01-16</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/stories/d75b63f9-29d7-441f-beab-1928a171e360</loc>
-    <lastmod>2025-12-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/stories/f14697fd-947e-4527-a086-5edbe62f55af</loc>
-    <lastmod>2025-11-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/stories/363f31b5-104f-4af2-9300-daf72a8eeedd</loc>
-    <lastmod>2026-01-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/stories/7d68f13f-0442-4d5a-b9d3-5460fcc7b0b0</loc>
-    <lastmod>2025-12-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/stories/92cf3a3e-79f9-4203-9ab5-f8098e89c053</loc>
-    <lastmod>2025-11-03</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/stories/1e5c7f96-f2ac-4924-8c5d-26557a7f33ee</loc>
-    <lastmod>2025-10-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/stories/a3a02efa-0bf5-4593-9d80-1901619ca4cd</loc>
-    <lastmod>2025-12-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/stories/0b0a8189-90e2-42b6-bfc7-fcf17ebfa502</loc>
-    <lastmod>2025-12-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/stories/555495bd-4429-4fdc-a63f-447a7effd273</loc>
-    <lastmod>2025-12-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/stories/370b3cac-ce7c-41ed-945f-713ccfe7f4ed</loc>
-    <lastmod>2025-12-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/stories/70a92963-8832-4b7b-881c-d6d0bb0a9771</loc>
-    <lastmod>2025-12-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/stories/d6336a11-11fa-4985-b272-04fb00c5e15d</loc>
-    <lastmod>2025-12-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/stories/00b7e03d-4c94-4eb0-9daf-ffdf9835c4d0</loc>
-    <lastmod>2025-12-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/stories/d9d9aaa3-adbf-498f-814b-207da27ceb53</loc>
-    <lastmod>2025-12-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/stories/a91b624e-bb5c-40e8-9543-6c3f15c6114b</loc>
-    <lastmod>2025-11-09</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://thedolphoon.com/courses/58e10aeb-b9f4-4def-b2e2-01978e766e7a</loc>
@@ -313,51 +207,6 @@
   <url>
     <loc>https://thedolphoon.com/courses/8b9fdd34-0a81-4de2-9a0d-78899040ee0c/lessons</loc>
     <lastmod>2026-02-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/games/rock-paper-scissors</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/games/choose-color</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/games/guess-number</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/games/puzzle</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/games/tic-tac-toe</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/games/hangman</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/games/memory</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/games/snake</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://thedolphoon.com/games/snake-ladder</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
