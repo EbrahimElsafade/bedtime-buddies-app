@@ -10,6 +10,8 @@ interface BuyCourseButtonProps {
   courseTitle: string
   priceEgp?: number
   priceUsd?: number
+  discountEgp?: number
+  discountUsd?: number
   className?: string
   variant?: 'default' | 'accent' | 'secondary' | 'outline'
   size?: 'default' | 'sm' | 'lg'
@@ -19,12 +21,14 @@ interface BuyCourseButtonProps {
 
 /**
  * Opens WhatsApp with a course-specific purchase message.
- * The course name (and displayed price) are always included.
+ * The course name and the final (discounted) price are always included.
  */
 export const BuyCourseButton = ({
   courseTitle,
   priceEgp,
   priceUsd,
+  discountEgp,
+  discountUsd,
   className,
   variant = 'accent',
   size = 'default',
@@ -33,7 +37,7 @@ export const BuyCourseButton = ({
 }: BuyCourseButtonProps) => {
   const { t } = useTranslation('courses')
   const { countryCode } = useCountry()
-  const price = formatCoursePrice({ priceEgp, priceUsd }, countryCode)
+  const price = formatCoursePrice({ priceEgp, priceUsd, discountEgp, discountUsd }, countryCode)
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault()

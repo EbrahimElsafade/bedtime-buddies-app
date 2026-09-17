@@ -244,6 +244,8 @@ export type Database = {
           description_ar: string | null
           description_en: string
           description_fr: string | null
+          discount_percent: number
+          discount_percent_usd: number
           id: string
           instructor_avatar: string | null
           instructor_bio: string | null
@@ -281,6 +283,8 @@ export type Database = {
           description_ar?: string | null
           description_en: string
           description_fr?: string | null
+          discount_percent?: number
+          discount_percent_usd?: number
           id?: string
           instructor_avatar?: string | null
           instructor_bio?: string | null
@@ -318,6 +322,8 @@ export type Database = {
           description_ar?: string | null
           description_en?: string
           description_fr?: string | null
+          discount_percent?: number
+          discount_percent_usd?: number
           id?: string
           instructor_avatar?: string | null
           instructor_bio?: string | null
