@@ -39,8 +39,10 @@ export type Course = {
   description_ar: string;
   description_fr: string;
   category: string; 
-  price: number; // purchase price in EGP
-  priceUsd?: number; // purchase price in USD (outside Egypt)
+  price: number; // original purchase price in EGP
+  priceUsd?: number; // original purchase price in USD (outside Egypt)
+  discountPercent?: number; // discount % applied to the EGP price
+  discountPercentUsd?: number; // discount % applied to the USD price
 
   minAge: number;
   maxAge: number;
