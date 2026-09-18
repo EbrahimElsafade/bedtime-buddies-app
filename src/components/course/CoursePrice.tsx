@@ -31,7 +31,7 @@ export const CoursePrice = ({
   const originalPrice = `${originalAmount} ${currency}`;
 
   const discountTag = hasDiscount ? (
-    <span className="rounded-full bg-accent/20 px-1.5 py-0.5 text-[10.5px] font-semibold leading-none">
+    <span className="rounded-full bg-accent/20 px-1.5 py-0.5 text-[11px] font-semibold leading-none">
       {t("purchase.discountTag", { percent: discountPercent, defaultValue: "-{{percent}}%" })}
     </span>
   ) : null;
