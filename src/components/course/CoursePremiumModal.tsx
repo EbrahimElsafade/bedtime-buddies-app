@@ -7,9 +7,11 @@ interface CoursePremiumModalProps {
   courseTitle?: string
   priceEgp?: number
   priceUsd?: number
+  discountEgp?: number
+  discountUsd?: number
 }
 
-export const CoursePremiumModal = ({ courseTitle, priceEgp, priceUsd }: CoursePremiumModalProps) => {
+export const CoursePremiumModal = ({ courseTitle, priceEgp, priceUsd, discountEgp, discountUsd }: CoursePremiumModalProps) => {
   const { t } = useTranslation('courses')
 
   return (
@@ -31,7 +33,7 @@ export const CoursePremiumModal = ({ courseTitle, priceEgp, priceUsd }: CoursePr
       </div>
 
       <div className="flex justify-center">
-        <CoursePrice priceEgp={priceEgp} priceUsd={priceUsd} withLabel className="text-center" />
+        <CoursePrice priceEgp={priceEgp} priceUsd={priceUsd} discountEgp={discountEgp} discountUsd={discountUsd} withLabel className="text-center" />
       </div>
 
       <div className="bg-primary/10 rounded-lg p-4 space-y-3 text-start">
@@ -59,6 +61,8 @@ export const CoursePremiumModal = ({ courseTitle, priceEgp, priceUsd }: CoursePr
         courseTitle={courseTitle || ''}
         priceEgp={priceEgp}
         priceUsd={priceUsd}
+        discountEgp={discountEgp}
+        discountUsd={discountUsd}
         variant="default"
         className="w-full"
       />

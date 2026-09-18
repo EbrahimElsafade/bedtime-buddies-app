@@ -72,7 +72,8 @@
       "benefit2": "Regardez à votre rythme, sur tous les appareils",
       "benefit3": "Certificat à la fin du cours"
     },
-    "oneTime": "Prix du cours"
+    "oneTime": "Prix du cours",
+    "discountTag": "-{{percent}} %"
   },
   "purchased": {
     "title": "Mes cours achetés",

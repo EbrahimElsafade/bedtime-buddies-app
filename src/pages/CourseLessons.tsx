@@ -595,6 +595,8 @@ const CourseLessons = () => {
             courseTitle={getLocalized(course, 'title', lang)}
             priceEgp={course.price}
             priceUsd={course.priceUsd}
+            discountEgp={course.discountPercent}
+            discountUsd={course.discountPercentUsd}
           />
 
         </DialogContent>
