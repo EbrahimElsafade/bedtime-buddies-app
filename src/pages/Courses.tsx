@@ -261,6 +261,8 @@ const Courses = () => {
                           <CoursePriceBadge
                             priceEgp={course.price}
                             priceUsd={course.priceUsd}
+                            discountEgp={course.discountPercent}
+                            discountUsd={course.discountPercentUsd}
                             className="absolute left-2 top-2"
                           />
                         )}
