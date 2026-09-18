@@ -109,6 +109,8 @@ const CourseEditor = () => {
     maxAge: 12,
     price: 100,
     priceUsd: 0,
+    discountPercent: 0,
+    discountPercentUsd: 0,
     isFree: true,
     isFeatured: false,
     coverImagePath: null as string | null,
@@ -243,6 +245,8 @@ const CourseEditor = () => {
         maxAge: (c.max_age as number) ?? 12,
         price: Number(c.price ?? 100),
         priceUsd: Number(c.price_usd ?? 0),
+        discountPercent: Number(c.discount_percent ?? 0),
+        discountPercentUsd: Number(c.discount_percent_usd ?? 0),
         isFree: (c.is_free as boolean) ?? true,
         isFeatured: (c.is_published as boolean) ?? false,
         coverImagePath: (c.cover_image as string | null) || null,
@@ -485,6 +489,8 @@ const CourseEditor = () => {
             max_age: courseData.maxAge,
             price: courseData.price,
             price_usd: courseData.priceUsd ?? 0,
+            discount_percent: courseData.discountPercent ?? 0,
+            discount_percent_usd: courseData.discountPercentUsd ?? 0,
             is_free: courseData.isFree,
             is_published: courseData.isFeatured,
             lessons: courseLessons.length,
@@ -522,6 +528,8 @@ const CourseEditor = () => {
             max_age: courseData.maxAge,
             price: courseData.price,
             price_usd: courseData.priceUsd ?? 0,
+            discount_percent: courseData.discountPercent ?? 0,
+            discount_percent_usd: courseData.discountPercentUsd ?? 0,
             is_free: courseData.isFree,
             is_published: courseData.isFeatured,
             lessons: courseLessons.length,
@@ -879,7 +887,38 @@ const CourseEditor = () => {
                         disabled={courseData.isFree}
                       />
                       <p className="text-xs text-muted-foreground">
-                        Shown to visitors inside Egypt.
+                        Original price shown to visitors inside Egypt.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="course-discount">Discount (%) - EGP</Label>
+                      <Input
+                        id="course-discount"
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value={courseData.discountPercent ?? 0}
+                        onChange={e =>
+                          setCourseData({
+                            ...courseData,
+                            discountPercent: Math.min(
+                              100,
+                              Math.max(0, parseFloat(e.target.value) || 0)
+                            ),
+                          })
+                        }
+                        disabled={courseData.isFree}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Final price inside Egypt:{' '}
+                        {Math.round(
+                          (courseData.price || 0) *
+                            (1 - (courseData.discountPercent || 0) / 100) *
+                            100
+                        ) / 100}{' '}
+                        EGP
                       </p>
                     </div>
 
@@ -900,7 +939,38 @@ const CourseEditor = () => {
                         disabled={courseData.isFree}
                       />
                       <p className="text-xs text-muted-foreground">
-                        Shown to visitors outside Egypt.
+                        Original price shown to visitors outside Egypt.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="course-discount-usd">Discount (%) - USD</Label>
+                      <Input
+                        id="course-discount-usd"
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="1"
+                        value={courseData.discountPercentUsd ?? 0}
+                        onChange={e =>
+                          setCourseData({
+                            ...courseData,
+                            discountPercentUsd: Math.min(
+                              100,
+                              Math.max(0, parseFloat(e.target.value) || 0)
+                            ),
+                          })
+                        }
+                        disabled={courseData.isFree}
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Final price outside Egypt:{' '}
+                        {Math.round(
+                          (courseData.priceUsd || 0) *
+                            (1 - (courseData.discountPercentUsd || 0) / 100) *
+                            100
+                        ) / 100}{' '}
+                        USD
                       </p>
                     </div>
 
