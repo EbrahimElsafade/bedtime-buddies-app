@@ -870,7 +870,7 @@ const CourseEditor = () => {
                       </div>
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="hidden space-y-2">
                       <Label htmlFor="course-price">Course Price (EGP)</Label>
                       <Input
                         id="course-price"
@@ -891,7 +891,7 @@ const CourseEditor = () => {
                       </p>
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="hidden space-y-2">
                       <Label htmlFor="course-discount">Discount (%) - EGP</Label>
                       <Input
                         id="course-discount"
@@ -922,7 +922,7 @@ const CourseEditor = () => {
                       </p>
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="hidden space-y-2">
                       <Label htmlFor="course-price-usd">Course Price (USD)</Label>
                       <Input
                         id="course-price-usd"
@@ -943,7 +943,7 @@ const CourseEditor = () => {
                       </p>
                     </div>
 
-                    <div className="space-y-2">
+                    <div className="hidden space-y-2">
                       <Label htmlFor="course-discount-usd">Discount (%) - USD</Label>
                       <Input
                         id="course-discount-usd"

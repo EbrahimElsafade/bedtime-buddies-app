@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
       if (lesson) {
         const course = (lesson as any).courses;
         if (course?.is_published) {
-          if (lesson.is_free || course.is_free) {
+          if (true) { // All courses are free
             // Free content - allow
           } else if (userId) {
             // Paid lesson: allow purchasers, active members and admins.
