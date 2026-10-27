@@ -24,7 +24,7 @@ export const useCourseAccess = (courseId?: string) => {
   return {
     ownsCourse,
     hasActiveMembership,
-    hasAccess: hasActiveMembership || ownsCourse,
+    hasAccess: true,
     isLoading: (roleLoading && !isProfileLoaded) || (!!user && purchasesLoading),
   }
 }
