@@ -412,7 +412,7 @@ const UserEditor = () => {
         </Card>
 
         {/* Purchased courses */}
-        <Card className="hidden lg:col-span-2">
+        <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle className="text-lg">{t('users.courseAccess')}</CardTitle>
             <CardDescription>{t('users.courseAccessDesc')}</CardDescription>
